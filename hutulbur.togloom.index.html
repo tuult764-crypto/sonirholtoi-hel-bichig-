@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="mn" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Сонирхолтой хэл бичиг | AI & Тоглоом</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
+
+    <style>
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 1000; justify-content: center; align-items: center; padding: 20px; }
+        .modal.active { display: flex; }
+        .modal-content { background: white; border-radius: 2rem; max-width: 600px; width: 100%; padding: 2.5rem; position: relative; max-height: 90vh; overflow-y: auto; }
+        .product-card { transition: all 0.3s; border: 1px solid #f3f4f6; }
+        .product-card:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,0,0,0.05); }
+        #cart-bar { display: none; position: fixed; bottom: 0; left: 0; right: 0; background: white; border-top: 2px solid #ffedd5; box-shadow: 0 -10px 30px rgba(0,0,0,0.1); padding: 1.2rem; z-index: 50; }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+    </style>
+</head>
+<body class="bg-stone-50 pb-32 font-sans">
+
+    <nav class="bg-white/80 backdrop-blur-md shadow-sm sticky top-0 z-50 border-b border-orange-100">
+        <div class="container mx-auto px-4">
+            <div class="flex justify-between items-center py-4">
+                <div class="flex items-center gap-3">
+                    <div class="h-10 w-10 bg-[#8b4513] rounded-full flex items-center justify-center text-white font-bold">С</div>
+                    <span class="font-black text-[#8b4513] hidden md:block tracking-tighter">СОНИРХОЛТОЙ ХЭЛ БИЧИГ</span>
+                </div>
+
+                <div class="flex gap-6 overflow-x-auto no-scrollbar px-4">
+                    <a href="#planner" class="text-sm font-bold text-gray-600 hover:text-orange-600 whitespace-nowrap">📝 Хөтөлбөр</a>
+                    <a href="#products" class="text-sm font-bold text-gray-600 hover:text-orange-600 whitespace-nowrap">🎨 Даалгавар</a>
+                    <a href="#games" class="text-sm font-bold text-gray-600 hover:text-orange-600 whitespace-nowrap">🎮 Тоглоом</a>
+                    <a href="#" class="text-sm font-bold text-gray-600 hover:text-orange-600 whitespace-nowrap">👨‍🏫 Сургалт</a>
+                </div>
+
+                <div class="relative cursor-pointer bg-orange-50 p-2 rounded-xl" onclick="openCheckout()">
+                    <span class="text-xl">🛒</span>
+                    <span id="cartBadge" class="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] w-4 h-4 flex items-center justify-center rounded-full font-bold">0</span>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="container mx-auto px-4 max-w-6xl mt-12">
+        
+        <section id="planner" class="bg-white rounded-[3rem] p-8 md:p-12 shadow-sm border border-orange-100 mb-16">
+            <div class="text-center mb-8">
+                <h2 class="text-3xl font-black text-[#8b4513]">✨ AI Хичээл төлөвлөгч</h2>
+                <p class="text-gray-500 mt-2">7 алхамт төлөвлөгөөг батлах толгойтой нь татаж аваарай</p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                <input type="text" id="managerName" placeholder="Сургалтын менежер (Жишээ: Л.ТУУЛ)" class="p-4 border rounded-2xl outline-none focus:ring-2 ring-orange-200">
+                <input type="text" id="schoolName" placeholder="Сургуулийн нэр" class="p-4 border rounded-2xl outline-none focus:ring-2 ring-orange-200">
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+                <select id="subject" class="p-4 border rounded-2xl bg-white outline-none">
+                    <option>Монгол хэл</option>
+                    <option>Уран зохиол</option>
+                    <option>Үндэсний бичиг</option>
+                </select>
+                <select id="grade" class="p-4 border rounded-2xl bg-white outline-none">
+                    <option value="6">6-р анги</option>
+                    <option value="7">7-р анги</option>
+                    <option value="8">8-р анги</option>
+                </select>
+                <input type="text" id="topic" placeholder="Хичээлийн сэдэв..." class="p-4 border rounded-2xl outline-none focus:ring-2 ring-orange-200">
+            </div>
+
+            <button onclick="generateLessonWithAI()" id="genBtn" class="w-full bg-[#8b4513] text-white py-5 rounded-2xl font-bold shadow-lg hover:bg-black transition-all">Хөтөлбөр боловсруулах</button>
+            <button id="downloadBtn" style="display:none;" onclick="downloadOfficialPDF()" class="w-full mt-4 bg-green-600 text-white py-5 rounded-2xl font-bold shadow-lg hover:bg-green-700 transition-all italic">📥 PDF Татах (Батлав толгойтой)</button>
+        </section>
+
+        <section id="games" class="mb-16">
+            <h2 class="text-2xl font-black text-[#8b4513] mb-8 flex items-center gap-3">
+                <span class="bg-purple-100 p-2 rounded-lg text-xl">🎮</span> Тоглоом & Сорил
+            </h2>
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <div class="bg-purple-50 p-8 rounded-[2.5rem] border-2 border-purple-100">
+                    <div class="flex justify-between items-center mb-6">
+                        <h3 class="font-bold text-purple-900 text-xl">🔢 Монгол бичгийн судоку</h3>
+                        <button onclick="generateSudoku()" class="text-purple-600 font-bold text-sm underline">Шинэчлэх</button>
+                    </div>
+                    <div id="sudoku-container" class="grid grid-cols-4 gap-2 w-64 h-64 mx-auto mb-6"></div>
+                    <div class="text-center text-[10px] text-purple-400 font-bold uppercase tracking-widest">᠑=1 | ᠒=2 | ᠓=3 | ᠔=4</div>
+                </div>
+
+                <div class="grid grid-cols-1 gap-4">
+                    <div class="bg-green-50 p-6 rounded-3xl border border-green-100 flex justify-between items-center">
+                        <div><h4 class="font-bold text-green-900">🧩 Үгийн сүлжээ</h4><p class="text-xs text-green-600">Нэр томьёоны сагс</p></div>
+                        <button class="bg-green-200 text-green-800 px-4 py-2 rounded-xl font-bold text-sm">Нээх</button>
+                    </div>
+                    <div class="bg-orange-50 p-6 rounded-3xl border border-orange-100 flex justify-between items-center">
+                        <div><h4 class="font-bold text-orange-900">❓ Асуулт хариулт</h4><p class="text-xs text-orange-600">Дүрмийн сорил</p></div>
+                        <button class="bg-orange-200 text-orange-800 px-4 py-2 rounded-xl font-bold text-sm">Эхлэх</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="products">
+            <h2 class="text-2xl font-black text-[#8b4513] mb-8 flex items-center gap-3">
+                <span class="bg-orange-100 p-2 rounded-lg text-xl">🎨</span> Бүтээлч даалгаврууд
+            </h2>
+            <div id="productGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"></div>
+        </section>
+    </main>
+
+    <div id="cart-bar">
+        <div class="container mx-auto max-w-4xl flex justify-between items-center">
+            <div class="text-sm font-bold text-gray-700" id="cartItemsText">Сагс хоосон</div>
+            <div class="flex items-center gap-4">
+                <span id="cartTotalText" class="text-xl font-black text-orange-700">0₮</span>
+                <button onclick="openCheckout()" class="bg-[#8b4513] text-white px-8 py-3 rounded-xl font-bold">ХУДАЛДАН АВАХ</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="checkoutModal" class="modal" onclick="if(event.target==this) closeCheckout()">
+        <div class="modal-content text-center">
+            <h2 class="text-xl font-black mb-6">Төлбөр баталгаажуулах</h2>
+            <div id="modalItemList" class="text-left mb-6 text-sm bg-stone-50 p-4 rounded-2xl"></div>
+            <div class="flex flex-col items-center gap-4 mb-6">
+                <img src="qr.png" class="w-32 h-32 rounded-2xl">
+                <div>
+                    <p class="font-black text-lg">5006069631</p>
+                    <p class="text-xs text-gray-400">МӨНХДАЛАЙ ТУУЛ (Хас банк)</p>
+                </div>
+            </div>
+            <input type="email" id="userEmail" placeholder="Файл хүлээн авах имэйл" class="w-full p-4 border rounded-2xl mb-4 text-center">
+            <button id="submitBtn" onclick="submitOrder()" class="w-full bg-[#8b4513] text-white py-4 rounded-2xl font-bold">МЭДЭЭЛЭЛ ИЛГЭЭХ</button>
+        </div>
+    </div>
+
+    <script>
+        const apiKey
