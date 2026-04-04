@@ -264,7 +264,7 @@ const OPENAI_API_KEY = "SECRET_KEY_FROM_NETLIFY";
 
             try {
                 // Хуучин OpenAI-руу ханддаг байсан хэсгийг ийм болго:
-const response = await fetch("/.netlify/chat", {
+const response = await fetch("/.netlify/functions/chat", {
     method: "POST",
     body: JSON.stringify({ prompt: fullPrompt })
 });
