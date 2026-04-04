@@ -263,11 +263,11 @@ const OPENAI_API_KEY = "SECRET_KEY_FROM_NETLIFY";
             const prompt = `Чи бол Монгол хэлний багш. ${grade}-р ангийн ${subject} хичээлийн "${topic}" сэдвээр 7 алхамт бүтээлч төлөвлөгөө гарга. Гэрийн даалгавар хэсэг заавал байх. Хариултыг зөвхөн JSON-оор өг: [{"time": "хугацаа", "teacher": "багшийн үйлдэл", "student": "сурагчийн үйлдэл", "homework": "даалгавар"}]`;
 
             try {
-                const response = await fetch("https://api.openai.com/v1/chat/completions", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json", "Authorization": `Bearer ${OPENAI_API_KEY}` },
-                    body: JSON.stringify({ model: "gpt-4o-mini", messages: [{ role: "user", content: prompt }] })
-                });
+                // Хуучин OpenAI-руу ханддаг байсан хэсгийг ийм болго:
+const response = await fetch("/.netlify/chat", {
+    method: "POST",
+    body: JSON.stringify({ prompt: fullPrompt })
+});
                 const aiData = await response.json();
                 currentPlan = JSON.parse(aiData.choices[0].message.content.replace(/```json|```/g, ""));
                 await fetch(orderURL, { method: 'POST', body: JSON.stringify({ email: currentUserEmail, action: "use", topic: topic }) });
