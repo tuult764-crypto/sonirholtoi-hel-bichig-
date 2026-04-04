@@ -251,32 +251,57 @@ const OPENAI_API_KEY = "SECRET_KEY_FROM_NETLIFY";
         }
 
         // --- 4. AI ХӨТӨЛБӨР ГАРАХ ---
+        // --- 4. AI ХӨТӨЛБӨР ГАРАХ ---
         async function generateAIPlan() {
             if(userCredits <= 0) return alert("Эрх дууссан байна!");
-            const topic = document.getElementById('topic').value;
+            
+            const topic = document.getElementById('topic').value.trim();
             const grade = document.getElementById('gradeSelect').value;
             const subject = document.getElementById('subjectSelect').value;
             const btn = document.getElementById('genBtn');
+
             if(!topic || !grade) return alert("Анги болон сэдвээ оруулна уу!");
 
-            btn.innerText = "AI Боловсруулж байна..."; btn.disabled = true;
-            const prompt = `Чи бол Монгол хэлний багш. ${grade}-р ангийн ${subject} хичээлийн "${topic}" сэдвээр 7 алхамт бүтээлч төлөвлөгөө гарга. Гэрийн даалгавар хэсэг заавал байх. Хариултыг зөвхөн JSON-оор өг: [{"time": "хугацаа", "teacher": "багшийн үйлдэл", "student": "сурагчийн үйлдэл", "homework": "даалгавар"}]`;
+            btn.innerText = "AI Боловсруулж байна..."; 
+            btn.disabled = true;
+
+            // AI-д өгөх зааварчилгаа
+            const promptInstruction = `Чи бол Монгол хэлний багш. ${grade}-р ангийн ${subject} хичээлийн "${topic}" сэдвээр 7 алхамт бүтээлч төлөвлөгөө гарга. Гэрийн даалгавар хэсэг заавал байх. Хариултыг зөвхөн цэвэр JSON-оор өг: [{"time": "хугацаа", "teacher": "багшийн үйлдэл", "student": "сурагчийн үйлдэл", "homework": "даалгавар"}]`;
 
             try {
-                // Хуучин OpenAI-руу ханддаг байсан хэсгийг ийм болго:
-const response = await fetch("/.netlify/functions/chat", {
-    method: "POST",
-    body: JSON.stringify({ prompt: fullPrompt })
-});
+                // Netlify Function руу хандах
+                const response = await fetch("/.netlify/functions/chat", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ prompt: promptInstruction })
+                });
+
+                if (!response.ok) throw new Error("Netlify функц алдаа заалаа");
+
                 const aiData = await response.json();
-                currentPlan = JSON.parse(aiData.choices[0].message.content.replace(/```json|```/g, ""));
-                await fetch(orderURL, { method: 'POST', body: JSON.stringify({ email: currentUserEmail, action: "use", topic: topic }) });
+                
+                // AI-аас ирсэн текстээс JSON-ыг салгаж авах
+                const cleanText = aiData.choices[0].message.content.replace(/```json|```/g, "").trim();
+                currentPlan = JSON.parse(cleanText);
+
+                // Sheets дээрх эрхийг хасах хүсэлт
+                await fetch(orderURL, { 
+                    method: 'POST', 
+                    body: JSON.stringify({ email: currentUserEmail, action: "use", topic: topic }) 
+                });
+
                 userCredits--;
                 document.getElementById('displayCredits').innerText = userCredits;
                 document.getElementById('downloadBtn').style.display = 'block';
                 btn.innerText = "✅ ХӨТӨЛБӨР БЭЛЭН";
-            } catch (e) { alert("Алдаа: " + e.message); }
-            finally { btn.disabled = false; }
+
+            } catch (e) { 
+                console.error("AI Error:", e);
+                alert("Алдаа гарлаа: " + e.message); 
+                btn.innerText = "АЛДАА ГАРЛАА, ДАХИН ОРОЛДОНО УУ";
+            } finally { 
+                btn.disabled = false; 
+            }
         }
 
         function downloadPDF() {
