@@ -202,7 +202,11 @@
             const prompt = `Чи бол монгол хэл, уран зохиол, үндэсний бичгийн хичээлийг 6-12 дугаар ангийн сурагчдад монголын боловсролын яамнаас баталсан монгол хэл уран зохиол үндэсний бичиг хичээлийн хөтөлбөрийн дагуу идэвхтэй сургалтын аргаар уншиж ойлгох, ярих, алдаагүй зөв бичиж сургах мөн найруулан бичиж сургадаг болгох зорилготой багш юм. ${grade}-ийн төлөвлөгөөг JSON: [{"step": "Алхам", "time": "Хугацаа", "teacher": "Багшийн үйл ажиллагаа", "student": "Сурагчийн гүйцэтгэл", "homework": "Гэрийн даалгавар"}] хэлбэрээр өг. Өгөгдөл: ${topicInfo}`;
 
             try {
-                const res = await fetch("/.netlify/functions/chat", { method: "POST", body: JSON.stringify({ prompt }) });
+                const res = await fetch("https://sonirholtoihel-bichig.netlify.app/.netlify/functions/chat", { 
+    method: "POST", 
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ prompt }) 
+});
                 const data = await res.json();
                 currentPlanData = JSON.parse(data.choices[0].message.content.replace(/```json|```/g, ""));
                 
