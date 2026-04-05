@@ -21,116 +21,113 @@
     <div id="authScreen" class="min-h-screen flex items-center justify-center px-4">
         <div class="max-w-md w-full bg-white p-10 rounded-[3rem] shadow-2xl border border-orange-100 text-center">
             <h1 class="text-2xl font-black text-orange-900 mb-2 uppercase italic">Сонирхолтой хэл бичиг</h1>
-            <p class="text-gray-400 mb-8 text-[10px] uppercase tracking-widest">Багшийн нэгдсэн систем</p>
-            <div class="space-y-4">
-                <input type="email" id="loginEmail" placeholder="Мэйл хаягаа оруулна уу" class="w-full p-4 bg-stone-50 border rounded-2xl outline-none text-center font-bold">
-                <button onclick="handleLogin()" id="loginBtn" class="w-full bg-orange-800 text-white py-4 rounded-2xl font-black shadow-lg">НЭВТРЭХ</button>
-            </div>
+            <p class="text-gray-400 mb-8 text-[10px] uppercase tracking-widest italic font-bold">Багшийн нэгдсэн систем</p>
+            <input type="email" id="loginEmail" placeholder="Мэйл хаягаа оруулна уу" class="w-full p-4 bg-stone-50 border rounded-2xl outline-none text-center font-bold mb-4 shadow-inner">
+            <button onclick="handleLogin()" id="loginBtn" class="w-full bg-orange-800 text-white py-4 rounded-2xl font-black shadow-lg hover:scale-105 transition-transform uppercase italic">Нэвтрэх</button>
         </div>
     </div>
 
     <div id="mainSystem" class="hidden">
         <nav class="bg-white border-b p-4 sticky top-0 z-50 shadow-sm">
-            <div class="container mx-auto flex justify-between items-center">
-                <span onclick="showDashboard()" class="text-lg font-black text-orange-900 italic cursor-pointer uppercase">ТУУЛ БАГШИЙН ЦАХИМ ХУУДАС</span>
-                <div class="flex items-center gap-4">
-                    <div class="text-right">
-                        <p id="displayEmail" class="text-[10px] font-bold text-gray-400"></p>
-                        <p class="text-xs font-black text-orange-600">ЭРХ: <span id="displayCredits">0</span></p>
+            <div class="container mx-auto flex justify-between items-center px-4">
+                <span onclick="showDashboard()" class="text-lg font-black text-orange-900 italic cursor-pointer uppercase">Туул багшийн цахим хуудас</span>
+                <div class="flex items-center gap-4 text-right">
+                    <div>
+                        <p id="displayEmail" class="text-[10px] font-bold text-gray-400 italic"></p>
+                        <p class="text-xs font-black text-orange-600 uppercase">ЭРХ: <span id="displayCredits">0</span></p>
                     </div>
-                    <button onclick="showSection('library')" class="bg-orange-100 text-orange-800 px-3 py-2 rounded-xl text-[10px] font-black italic shadow-sm">📂 САН</button>
                 </div>
             </div>
         </nav>
 
-        <div id="dashboardHome" class="container mx-auto px-4 py-10 max-w-6xl">
+        <div id="dashboardHome" class="container mx-auto px-4 py-10 max-w-6xl text-center">
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                <div onclick="showSection('planner')" class="bg-white p-10 rounded-[3rem] border-b-8 border-orange-200 hover:border-orange-800 transition-all cursor-pointer shadow-sm text-center">
-                    <h3 class="font-black text-xl text-gray-800 italic uppercase">Хөтөлбөр боловсруулах</h3>
+                <div onclick="showSection('planner')" class="bg-white p-10 rounded-[3rem] border-b-8 border-orange-200 hover:border-orange-800 transition-all cursor-pointer shadow-sm">
+                    <h3 class="font-black text-xl italic uppercase text-gray-800">📝 Хөтөлбөр боловсруулах</h3>
                 </div>
-                <div onclick="showSection('shop')" class="bg-white p-10 rounded-[3rem] border-b-8 border-blue-200 hover:border-blue-500 transition-all cursor-pointer shadow-sm text-center">
-                    <h3 class="font-black text-xl text-gray-800 italic uppercase">Дэлгүүр</h3>
+                <div onclick="showSection('games')" class="bg-white p-10 rounded-[3rem] border-b-8 border-green-200 hover:border-green-800 transition-all cursor-pointer shadow-sm">
+                    <h3 class="font-black text-xl italic uppercase text-gray-800">🧩 Тоглоом (Судоку)</h3>
                 </div>
-                <div onclick="showSection('games')" class="bg-white p-10 rounded-[3rem] border-b-8 border-green-200 hover:border-green-500 transition-all cursor-pointer shadow-sm text-center">
-                    <h3 class="font-black text-xl text-gray-800 italic uppercase">Тоглоом</h3>
+                <div onclick="showSection('shop')" class="bg-white p-10 rounded-[3rem] border-b-8 border-blue-200 hover:border-blue-800 transition-all cursor-pointer shadow-sm">
+                    <h3 class="font-black text-xl italic uppercase text-gray-800">🛒 Дэлгүүр / Эрх авах</h3>
                 </div>
             </div>
         </div>
 
-        <div id="plannerSection" class="section-content container mx-auto max-w-4xl px-4 py-6">
+        <div id="plannerSection" class="section-content container mx-auto max-w-5xl px-4 py-6">
             <div class="bg-white p-8 rounded-[3rem] shadow-xl border border-orange-50">
                 <button onclick="showDashboard()" class="text-sm font-bold text-orange-800 mb-6 italic">← БУЦАХ</button>
                 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6 italic">
-                    <input type="text" id="managerName" placeholder="Сургалтын менежерийн нэр..." class="p-4 border rounded-2xl bg-stone-50 font-bold outline-none">
-                    <select id="planType" onchange="togglePlanType()" class="p-4 border rounded-2xl bg-orange-50 font-bold outline-none text-orange-900">
-                        <option value="lesson">Ээлжит хичээл</option>
-                        <option value="unit">Нэгж хичээл</option>
-                    </select>
-                    <select id="gradeSelect" class="p-4 border rounded-2xl bg-stone-50 font-bold outline-none">
+                    <div class="col-span-2">
+                        <label class="block text-xs font-black text-orange-900 mb-2 uppercase italic">Хичээлийн төрөл:</label>
+                        <select id="planType" onchange="togglePlanType()" class="w-full p-4 border rounded-2xl bg-orange-50 font-black text-orange-900 outline-none">
+                            <option value="lesson">Ээлжит хичээлийн төлөвлөгөө</option>
+                            <option value="unit">Нэгж хичээлийн хөтөлбөр</option>
+                        </select>
+                    </div>
+                    <input type="text" id="managerName" placeholder="Сургалтын менежерийн нэр..." class="p-4 border rounded-2xl bg-stone-50 font-bold outline-none italic">
+                    <select id="gradeSelect" class="p-4 border rounded-2xl bg-stone-50 font-bold outline-none italic text-orange-800">
                         <option value="6-р анги">6-р анги</option><option value="7-р анги">7-р анги</option>
                         <option value="8-р анги">8-р анги</option><option value="9-р анги">9-р анги</option>
                         <option value="10-р анги">10-р анги</option><option value="11-р анги">11-р анги</option>
                         <option value="12-р анги">12-р анги</option>
                     </select>
-                    <select id="subjectSelect" class="p-4 border rounded-2xl bg-stone-50 font-bold outline-none">
-                        <option value="Монгол хэл">Монгол хэл</option><option value="Үндэсний бичиг">Үндэсний бичиг</option><option value="Уран зохиол">Уран зохиол</option>
-                    </select>
                 </div>
 
                 <div id="lessonInputs" class="space-y-4 mb-6">
-                    <input type="text" id="lessonTopic" placeholder="Хичээлийн сэдэв..." class="w-full p-4 border rounded-2xl bg-stone-50 font-bold outline-none">
+                    <input type="text" id="lessonTopic" placeholder="Хичээлийн сэдэв..." class="w-full p-4 border rounded-2xl bg-stone-50 font-bold italic outline-none">
                     <input type="number" id="duration" placeholder="Хугацаа (минут)..." class="w-full p-4 border rounded-2xl bg-stone-50 font-bold outline-none">
                 </div>
 
-                <div id="unitInputs" class="hidden space-y-4 mb-6">
-                    <div class="flex items-center gap-4">
-                        <label class="font-bold text-sm text-orange-800">ЦАГИЙН ТОО:</label>
-                        <select id="unitHours" onchange="generateUnitFields()" class="p-2 border rounded-xl bg-orange-50 font-bold">
-                            <option value="4">4 цаг</option><option value="5">5 цаг</option><option value="6">6 цаг</option>
-                            <option value="7">7 цаг</option><option value="8">8 цаг</option><option value="9">9 цаг</option><option value="10">10 цаг</option>
-                        </select>
+                <div id="unitInputs" class="hidden space-y-4 mb-6 italic">
+                    <div class="flex items-center gap-4 bg-orange-50 p-4 rounded-2xl">
+                        <label class="font-black text-sm text-orange-900 uppercase">Нэгж хичээлийн цагийн тоо:</label>
+                        <input type="number" id="unitHoursInput" oninput="generateUnitFields()" placeholder="Цагаа бичнэ үү..." class="p-2 border rounded-xl font-bold bg-white outline-none w-32 text-center">
                     </div>
-                    <div id="unitFieldsContainer" class="grid grid-cols-1 md:grid-cols-2 gap-2 bg-stone-50 p-4 rounded-2xl border-2 border-dashed border-orange-200"></div>
+                    <div id="unitFieldsContainer" class="grid grid-cols-1 md:grid-cols-2 gap-2 p-4 bg-stone-50 rounded-2xl border-2 border-dashed border-orange-200">
+                        <p class="text-xs text-gray-400 italic text-center col-span-2">Цагийн тоогоо бичихэд сэдэв оруулах талбарууд гарч ирнэ.</p>
+                    </div>
                 </div>
 
-                <button onclick="generateAIPlan()" id="genBtn" class="w-full bg-orange-800 text-white py-5 rounded-2xl font-black shadow-lg uppercase italic">Хөтөлбөр боловсруулах</button>
+                <button onclick="generateAIPlan()" id="genBtn" class="w-full bg-orange-800 text-white py-5 rounded-2xl font-black uppercase italic shadow-lg">Төлөвлөгөө боловсруулах</button>
                 
-                <div id="aiResultArea" class="hidden mt-8 p-6 bg-white rounded-2xl border border-gray-200 text-sm overflow-x-auto shadow-inner"></div>
-                <button id="downloadBtn" style="display:none;" onclick="downloadPDF()" class="w-full mt-4 bg-green-600 text-white py-5 rounded-2xl font-black italic uppercase">📥 PDF ТАТАХ</button>
+                <div id="aiResultArea" class="hidden mt-8 overflow-x-auto"></div>
+                <button id="downloadBtn" style="display:none;" onclick="downloadPDF()" class="w-full mt-4 bg-green-600 text-white py-5 rounded-2xl font-black italic uppercase shadow-lg">📥 PDF ТАТАХ</button>
             </div>
         </div>
 
-        <div id="shopSection" class="section-content px-4 py-10 container mx-auto">
-            <h2 class="font-black text-2xl mb-8 text-orange-900 italic uppercase">Сургалтын хэрэглэгдэхүүн</h2>
-            <div id="productGrid" class="grid grid-cols-1 md:grid-cols-3 gap-8"></div>
+        <div id="gamesSection" class="section-content container mx-auto max-w-4xl px-4 py-6 text-center">
+             <div class="bg-white p-10 rounded-[3rem] shadow-xl border-4 border-green-100">
+                <button onclick="showDashboard()" class="text-sm font-bold text-green-800 mb-6 italic">← БУЦАХ</button>
+                <h2 class="text-2xl font-black text-green-900 mb-6 uppercase italic">Үндэсний бичгийн тоотой судоку</h2>
+                <button onclick="generateSudoku()" class="bg-green-700 text-white px-10 py-5 rounded-2xl font-black shadow-lg mb-8 uppercase italic">Шинээр судоку үүсгэх</button>
+                <div id="sudokuContainer" class="flex justify-center mb-8 italic"></div>
+            </div>
         </div>
 
-        <div id="librarySection" class="section-content px-4 py-10 container mx-auto text-center">
-            <h2 class="font-black text-2xl mb-6 italic">📂 МИНИЙ САН</h2>
-            <div id="worksList" class="max-w-md mx-auto space-y-4"></div>
-            <button onclick="loadLibrary()" class="mt-10 text-orange-800 font-bold underline italic">Төлөв шинэчлэх</button>
+        <div id="shopSection" class="section-content px-4 py-10 container mx-auto text-center">
+            <h2 class="font-black text-2xl mb-8 text-orange-900 italic uppercase underline decoration-orange-300">Дэлгүүр & Эрх</h2>
+            <div id="productGrid" class="grid grid-cols-1 md:grid-cols-3 gap-8"></div>
         </div>
     </div>
 
     <div id="checkoutModal" class="modal" onclick="if(event.target==this) closeCheckout()">
-        <div class="bg-white p-8 rounded-[3rem] max-w-md w-full text-center border-4 border-orange-800">
-            <h2 class="text-xl font-black text-orange-800 mb-6 uppercase italic">Төлбөр төлөх</h2>
-            <div class="bg-orange-50 p-6 rounded-3xl border border-orange-100 mb-6">
-                <p class="text-[10px] font-bold text-gray-400">ХАС БАНК / 5006069631</p>
-                <p class="font-black text-orange-900 text-xl">МӨНХДАЛАЙ ТУУЛ</p>
-                <p class="text-xs mt-2 text-gray-500 font-bold">Утга: <span id="payEmail" class="text-orange-800"></span></p>
+        <div class="bg-white p-10 rounded-[3rem] max-w-md w-full text-center border-8 border-orange-100">
+            <h2 class="text-2xl font-black text-orange-900 mb-6 uppercase italic">Төлбөр төлөх</h2>
+            <div class="bg-orange-50 p-6 rounded-3xl border border-orange-100 mb-6 italic text-sm">
+                <p class="font-black text-gray-400 mb-2 uppercase italic">ХАС БАНК / 5006069631</p>
+                <p class="font-black text-orange-900 text-xl mb-4">МӨНХДАЛАЙ ТУУЛ</p>
+                <p class="text-[10px] text-gray-500 font-bold uppercase italic">Гүйлгээний утга: <span id="payEmail" class="text-orange-800"></span></p>
             </div>
-            <button onclick="submitOrder()" class="w-full bg-orange-800 text-white py-5 rounded-2xl font-black">МЭДЭЭЛЭЛ ИЛГЭЭХ</button>
-            <p id="statusMsg" class="text-sm font-bold text-green-600 mt-4"></p>
+            <button onclick="submitOrder()" class="w-full bg-orange-800 text-white py-5 rounded-2xl font-black uppercase italic shadow-lg">Илгээх</button>
         </div>
     </div>
 
     <script>
-        const orderURL = 'https://script.google.com/macros/s/AKfycbxvap4oTX4KWP1JDwq-Crv-7UHYvkhKtyR5w46uJVuXoPxlCHDavD4Hc5JsWakCxAoZOA/exec';
+        const orderURL = 'https://script.google.com/macros/s/AKfycbz7hLDO1xuLgKL799nGmRcdMeSg-WTPpCDrFJQQgjata-hGJQFqp_s7szuGPBjf6JFcig/exec';
         let currentUserEmail = "", userCredits = 0, currentPlanData = null, selectedItemName = "";
 
-        // Login logic
         async function handleLogin() {
             const email = document.getElementById('loginEmail').value.trim();
             if(!email.includes('@')) return alert("Мэйлээ зөв оруулна уу!");
@@ -143,7 +140,7 @@
                 document.getElementById('displayEmail').innerText = email;
                 document.getElementById('displayCredits').innerText = userCredits;
                 document.getElementById('payEmail').innerText = email;
-            } catch(e) { alert("Системд холбогдоход алдаа гарлаа."); }
+            } catch(e) { alert("Холболтын алдаа!"); }
         }
 
         function showSection(name) {
@@ -151,7 +148,6 @@
             document.querySelectorAll('.section-content').forEach(s => s.classList.remove('active'));
             document.getElementById(name + 'Section').classList.add('active');
             if(name === 'shop') loadProducts();
-            if(name === 'library') loadLibrary();
         }
 
         function showDashboard() {
@@ -164,61 +160,58 @@
             if(type === 'unit') {
                 document.getElementById('unitInputs').classList.remove('hidden');
                 document.getElementById('lessonInputs').classList.add('hidden');
-                generateUnitFields();
             } else {
                 document.getElementById('unitInputs').classList.add('hidden');
                 document.getElementById('lessonInputs').classList.remove('hidden');
             }
         }
 
+        // ШИНЭЧЛЭГДСЭН: Цагийн тоогоор талбар үүсгэх
         function generateUnitFields() {
-            const hours = document.getElementById('unitHours').value;
+            const hours = document.getElementById('unitHoursInput').value;
             const container = document.getElementById('unitFieldsContainer');
+            if (!hours || hours <= 0) {
+                container.innerHTML = '<p class="text-xs text-gray-400 italic text-center col-span-2">Цагийн тоогоо оруулна уу.</p>';
+                return;
+            }
+            if (hours > 20) { alert("Цагийн тоо хэт их байна!"); return; }
+
             container.innerHTML = "";
             for(let i=1; i<=hours; i++) {
-                container.innerHTML += `<input type="text" placeholder="${i}-р цагийн сэдэв..." class="unit-topic-field p-2 border rounded-xl text-xs outline-none">`;
+                container.innerHTML += `<input type="text" placeholder="${i}-р цагийн сэдэв..." class="unit-topic-field p-3 border rounded-xl text-xs font-bold italic outline-none">`;
             }
         }
 
-        // AI Generation
         async function generateAIPlan() {
-            if(userCredits <= 0 && !currentUserEmail.includes('tuult764')) return alert("Эрх дууссан байна!");
-            
+            if(userCredits <= 0 && !currentUserEmail.includes('tuult764')) return alert("Эрх дууссан!");
             const btn = document.getElementById('genBtn');
             const type = document.getElementById('planType').value;
             const grade = document.getElementById('gradeSelect').value;
-            const subject = document.getElementById('subjectSelect').value;
             
             let topicInfo = "";
             if(type === 'unit') {
                 const fields = document.querySelectorAll('.unit-topic-field');
-                const topics = Array.from(fields).map((f, i) => `${i+1}. ${f.value}`).join(', ');
-                topicInfo = `${document.getElementById('unitHours').value} цагийн нэгж хичээл. Сэдвүүд: ${topics}`;
+                const topics = Array.from(fields).map((f, i) => `${i+1}. ${f.value || 'Сэдэвгүй'}`).join(', ');
+                topicInfo = `Нэгж хичээл (${fields.length} цаг). Сэдвүүд: ${topics}`;
             } else {
                 topicInfo = `Ээлжит хичээл. Сэдэв: ${document.getElementById('lessonTopic').value}, Хугацаа: ${document.getElementById('duration').value} мин.`;
             }
 
-            btn.innerText = "AI БОЛОВСРУУЛЖ БАЙНА...";
-            // Prompt-ыг Гэрийн даалгавар баганатай болгож шинэчиллээ
-            const prompt = `Чи бол Монгол хэл, уран зохиол, үндэсний бичгийн мэргэжлийн багш. Монголын БСШУЯ-ны стандарт болон medlee.mn сайтад тулгуурлан бүтээлч сэтгэлгээ хөгжүүлэх идэвхтэй сургалтын арга ашиглан ${grade}-ийн ${subject} хичээлийн төлөвлөгөөг JSON: [{"step": "Алхам", "time": "Хугацаа", "teacher": "Багш", "student": "Сурагч", "homework": "Гэрийн даалгавар"}] хэлбэрээр өг. Өгөгдөл: ${topicInfo}`;
+            btn.innerText = "УНШИЖ БАЙНА...";
+            
+            const prompt = `Чи бол монгол хэл, уран зохиол, үндэсний бичгийн хичээлийг 6-12 дугаар ангийн сурагчдад монголын боловсролын яамнаас баталсан монгол хэл уран зохиол үндэсний бичиг хичээлийн хөтөлбөрийн дагуу идэвхтэй сургалтын аргаар уншиж ойлгох, ярих, алдаагүй зөв бичиж сургах мөн найруулан бичиж сургадаг болгох зорилготой багш юм. ${grade}-ийн төлөвлөгөөг JSON: [{"step": "Алхам", "time": "Хугацаа", "teacher": "Багшийн үйл ажиллагаа", "student": "Сурагчийн гүйцэтгэл", "homework": "Гэрийн даалгавар"}] хэлбэрээр өг. Өгөгдөл: ${topicInfo}`;
 
             try {
                 const res = await fetch("/.netlify/functions/chat", { method: "POST", body: JSON.stringify({ prompt }) });
                 const data = await res.json();
                 currentPlanData = JSON.parse(data.choices[0].message.content.replace(/```json|```/g, ""));
                 
-                let html = `<table class="w-full border-collapse border border-gray-300">
-                    <tr class="bg-gray-100 text-[10px] font-black uppercase">
-                        <th class="border p-2 w-16">Алхам</th><th class="border p-2 w-16">Хугацаа</th><th class="border p-2">Багшийн үйл ажиллагаа</th><th class="border p-2">Сурагчийн үйл ажиллагаа</th><th class="border p-2">Гэрийн даалгавар</th>
+                let html = `<table class="w-full border-collapse border-2 border-orange-800 bg-white shadow-xl text-[11px]">
+                    <tr class="bg-orange-800 text-white font-black italic uppercase">
+                        <th class="border p-3">Алхам</th><th class="border p-3">Хугацаа</th><th class="border p-3">Багшийн үйл ажиллагаа</th><th class="border p-3">Сурагч</th><th class="border p-3">Гэрийн даалгавар</th>
                     </tr>`;
                 currentPlanData.forEach(r => {
-                    html += `<tr class="text-xs font-bold">
-                        <td class="border p-2 text-center bg-stone-50">${r.step}</td>
-                        <td class="border p-2 text-center">${r.time}</td>
-                        <td class="border p-2">${r.teacher}</td>
-                        <td class="border p-2">${r.student}</td>
-                        <td class="border p-2">${r.homework || '-'}</td>
-                    </tr>`;
+                    html += `<tr><td class="border p-3 font-bold bg-orange-50 text-center italic">${r.step}</td><td class="border p-3 text-center">${r.time}</td><td class="border p-3">${r.teacher}</td><td class="border p-3">${r.student}</td><td class="border p-3 italic text-orange-900 font-bold">${r.homework || '-'}</td></tr>`;
                 });
                 document.getElementById('aiResultArea').innerHTML = html + "</table>";
                 document.getElementById('aiResultArea').classList.remove('hidden');
@@ -226,71 +219,52 @@
                 
                 fetch(orderURL, { method: 'POST', mode: 'no-cors', body: JSON.stringify({ action: "use", email: currentUserEmail }) });
                 userCredits--; document.getElementById('displayCredits').innerText = userCredits;
-            } catch(e) { alert("AI алдаа гарлаа."); } finally { btn.innerText = "✅ ХӨТӨЛБӨР БЭЛЭН"; }
+            } catch(e) { alert("AI алдаа!"); } finally { btn.innerText = "Төлөвлөгөө боловсруулах"; }
         }
 
         function downloadPDF() {
             const { jsPDF } = window.jspdf;
             const doc = new jsPDF();
-            const manager = document.getElementById('managerName').value || "..................";
-            
-            doc.setFontSize(10);
-            doc.text(`БАТЛАВ: СУРГАЛТЫН МЕНЕЖЕР: ${manager}`, 15, 20);
-            doc.text(`Огноо: 202... он ... сар ... өдөр`, 140, 20);
-            
-            doc.setFontSize(14);
-            doc.text("ХИЧЭЭЛИЙН ХӨТӨЛБӨР ТӨЛӨВЛӨГӨӨ", 105, 40, { align: "center" });
-            
+            doc.text("ХИЧЭЭЛИЙН ТӨЛӨВЛӨГӨӨ", 105, 20, { align: "center" });
             const rows = currentPlanData.map(r => [r.step, r.time, r.teacher, r.student, r.homework]);
-            doc.autoTable({
-                head: [['Алхам', 'Хугацаа', 'Багшийн үйл ажиллагаа', 'Сурагчийн үйл ажиллагаа', 'Гэрийн даалгавар']],
-                body: rows,
-                startY: 50,
-                theme: 'grid',
-                styles: { fontSize: 8 }
-            });
+            doc.autoTable({ head: [['Алхам', 'Хугацаа', 'Багш', 'Сурагч', 'Даалгавар']], body: rows, startY: 30, styles: { fontSize: 8 } });
             doc.save("tolovlogoo.pdf");
         }
 
-        // Shop logic
+        function generateSudoku() {
+            const numbers = ["᠑", "᠒", "᠓", "᠔", "᠕", "᠖", "᠗", "᠗", "᠙"];
+            let html = '<div class="grid grid-cols-9 border-4 border-black bg-white shadow-2xl">';
+            for (let i = 0; i < 81; i++) {
+                const val = Math.random() > 0.7 ? numbers[Math.floor(Math.random() * 9)] : "";
+                html += `<div class="w-10 h-10 border border-gray-300 flex items-center justify-center font-bold text-lg">${val}</div>`;
+            }
+            document.getElementById('sudokuContainer').innerHTML = html + '</div>';
+        }
+
         async function loadProducts() {
-            const prodURL = `https://script.google.com/macros/s/AKfycbxvap4oTX4KWP1JDwq-Crv-7UHYvkhKtyR5w46uJVuXoPxlCHDavD4Hc5JsWakCxAoZOA/exec`;
             try {
-                const res = await fetch(prodURL);
+                const res = await fetch(`${orderURL}?action=getProducts`);
                 const data = await res.json();
                 let html = '';
                 data.forEach(item => {
-                    html += `<div class="bg-white p-8 rounded-[3rem] shadow-sm border border-gray-100">
-                        <h4 class="font-black text-orange-900 text-lg mb-2">${item.title}</h4>
-                        <p class="text-[10px] text-gray-400 mb-6 font-bold uppercase">${item.description}</p>
-                        <div class="flex justify-between items-center">
+                    html += `<div class="bg-white p-8 rounded-[3rem] shadow-sm border border-orange-50 hover:shadow-xl transition-all">
+                        <h4 class="font-black text-orange-900 text-lg mb-2 italic">${item.title}</h4>
+                        <p class="text-[10px] text-gray-400 mb-6 font-bold uppercase italic">${item.description}</p>
+                        <div class="flex justify-between items-center bg-orange-50 p-4 rounded-2xl italic">
                             <span class="font-black text-orange-800">${item.price}₮</span>
-                            <button onclick="openCheckout('${item.title}')" class="bg-orange-800 text-white px-6 py-3 rounded-2xl text-[10px] font-black italic">🛒 АВАХ</button>
+                            <button onclick="openCheckout('${item.title}')" class="bg-orange-800 text-white px-6 py-2 rounded-xl text-[10px] font-black italic uppercase">Захиалах</button>
                         </div>
                     </div>`;
                 });
                 document.getElementById('productGrid').innerHTML = html;
-            } catch(e) { console.error("Дэлгүүрийн алдаа."); }
-        }
-
-        function loadLibrary() {
-            fetch(`${orderURL}?action=check&email=${currentUserEmail}`).then(r => r.json()).then(data => {
-                const list = document.getElementById('worksList');
-                if(data.files) {
-                    list.innerHTML = data.files.split(',').map(f => `
-                        <div class="p-4 bg-white border-2 border-orange-100 rounded-3xl flex justify-between items-center shadow-sm">
-                            <span class="font-black text-orange-900 italic text-xs uppercase">${f.trim()}</span>
-                            <button class="bg-green-600 text-white px-4 py-2 rounded-xl text-[10px] font-black">📥 ТАТАХ</button>
-                        </div>`).join('');
-                } else { list.innerHTML = "<p class='text-gray-400 font-bold'>Файл байхгүй байна.</p>"; }
-            });
+            } catch(e) { console.log("Shop error"); }
         }
 
         function openCheckout(name) { selectedItemName = name; document.getElementById('checkoutModal').classList.add('active'); }
         function closeCheckout() { document.getElementById('checkoutModal').classList.remove('active'); }
         function submitOrder() {
             fetch(orderURL, { method: 'POST', mode: 'no-cors', body: JSON.stringify({ action: "order", email: currentUserEmail, productName: selectedItemName }) })
-            .then(() => { document.getElementById('statusMsg').innerText = "✅ Илгээгдлээ. Төлбөрөө төлнө үү."; setTimeout(closeCheckout, 3000); });
+            .then(() => { alert("Мэдээлэл илгээгдлээ. Төлбөр шалгасны дараа эрх орно."); closeCheckout(); });
         }
     </script>
 </body>
