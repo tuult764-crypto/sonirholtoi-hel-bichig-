@@ -251,7 +251,7 @@
         }
 
         async function loadProducts() {
-            const url = `https://docs.google.com/spreadsheets/d/${sheetID}/gviz/tq?tqx=out:json&sheet=Products`;
+            const url = `https://script.google.com/macros/s/AKfycbxLAl4q-mORw3FsycKZummLgLkcyaSErpd7QENTiP8iRwWgWoNpTR8hobP2Ou_-NkUXHg/exec`;
             try {
                 const res = await fetch(url);
                 const text = await res.text();
