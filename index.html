@@ -74,80 +74,112 @@
 
         <div id="plannerSection" class="section-content bg-white p-8 rounded-[3rem] shadow-xl border border-orange-50">
     <button onclick="showDashboard()" class="text-sm font-bold text-orange-800 mb-6 italic">← БУЦАХ</button>
-       <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6 italic">
-    <input type="text" id="managerName" placeholder="Менежерийн нэр..." class="p-4 border rounded-2xl bg-stone-50 font-bold outline-none">
-    <input type="text" id="topic" placeholder="Хичээлийн сэдэв..." class="p-4 border rounded-2xl bg-stone-50 font-bold outline-none">
     
-    <select id="gradeSelect" class="p-4 border rounded-2xl bg-stone-50 font-bold outline-none">
-        <option value="">Анги сонгох</option>
-        <option value="6">6-р анги</option>
-        <option value="7">7-р анги</option>
-        <option value="8">8-р анги</option>
-        <option value="9">9-р анги</option>
-        <option value="10">10-р анги</option>
-        <option value="11">11-р анги</option>
-        <option value="12">12-р анги</option>
-    </select>
-    
-    <select id="subjectSelect" class="p-4 border rounded-2xl bg-stone-50 font-bold outline-none">
-        <option value="Монгол хэл">Монгол хэл</option>
-        <option value="Уран зохиол">Уран зохиол</option>
-        <option value="Үндэсний бичиг">Үндэсний бичиг</option>
-    </select>
-</div>
+    <div class="flex gap-4 mb-6">
+        <button onclick="setPlanType('unit')" id="unitBtn" class="flex-1 py-3 rounded-2xl border-2 border-orange-800 font-bold text-orange-800">НЭГЖ ХИЧЭЭЛ</button>
+        <button onclick="setPlanType('lesson')" id="lessonBtn" class="flex-1 py-3 rounded-2xl bg-orange-800 text-white font-bold">ЭЭЛЖИТ ХИЧЭЭЛ</button>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6 italic">
+        <input type="text" id="managerName" placeholder="Менежерийн нэр..." class="p-4 border rounded-2xl bg-stone-50 font-bold outline-none">
+        <input type="text" id="topic" placeholder="Хичээлийн сэдэв..." class="p-4 border rounded-2xl bg-stone-50 font-bold outline-none">
+        
+        <select id="gradeSelect" class="p-4 border rounded-2xl bg-stone-50 font-bold outline-none">
+            <option value="">Анги сонгох</option>
+            <option value="6">6-р анги</option>
+            <option value="7">7-р анги</option>
+            <option value="8">8-р анги</option>
+            <option value="9">9-р анги</option>
+            <option value="10">10-р анги</option>
+            <option value="11">11-р анги</option>
+            <option value="12">12-р анги</option>
+        </select>
+        
+        <select id="subjectSelect" class="p-4 border rounded-2xl bg-stone-50 font-bold outline-none">
+            <option value="Монгол хэл">Монгол хэл</option>
+            <option value="Уран зохиол">Уран зохиол</option>
+            <option value="Үндэсний бичиг">Үндэсний бичиг</option>
+        </select>
+    </div>
+
+    <div class="mb-6 p-4 bg-orange-50 rounded-2xl border border-orange-100">
+        <p class="text-sm font-bold text-orange-900">🎁 ШИНЭ ХЭРЭГЛЭГЧ: Эхний 2 хичээл үнэгүй</p>
+        <p class="text-xs text-orange-700 mt-1 italic">* Дараагийн нэг хичээл бүр 500₮ (Багцаар авбал хямд)</p>
     </div>
     
-    <button onclick="generateAIPlan()" id="genBtn" class="w-full bg-orange-800 text-white py-5 rounded-2xl font-black hover:bg-black transition-all shadow-lg">ХӨТӨЛБӨР БОЛОВСРУУЛАХ (1 ЭРХ)</button>
-    <button id="downloadBtn" style="display:none;" onclick="downloadPDF()" class="w-full mt-4 bg-green-600 text-white py-5 rounded-2xl font-black shadow-md italic tracking-widest">📥 PDF ТАТАХ (БАТЛАВ ТОЛГОЙТОЙ)</button>
+    <button onclick="generateAIPlan()" id="genBtn" class="w-full bg-orange-800 text-white py-5 rounded-2xl font-black shadow-lg uppercase">Хөтөлбөр боловсруулах (1 эрх)</button>
+    <button id="downloadBtn" style="display:none;" onclick="downloadPDF()" class="w-full mt-4 bg-green-600 text-white py-5 rounded-2xl font-black shadow-md italic tracking-widest uppercase">📥 PDF татах (Батлав толгойтой)</button>
+
+    <div class="mt-10 border-t pt-8">
+        <h3 class="text-center font-black text-gray-800 text-sm uppercase mb-6 italic">Эрх цэнэглэх багцууд</h3>
+        <div class="grid grid-cols-2 md:grid-cols-3 gap-3">
+            <button onclick="buyCredits(5, 2000)" class="p-4 bg-white rounded-2xl border-2 border-orange-100 hover:border-orange-800 transition-all">
+                <p class="font-black">5 хичээл</p>
+                <p class="text-xs font-bold text-gray-400">2,000₮</p>
+            </button>
+            <button onclick="buyCredits(10, 4000)" class="p-4 bg-white rounded-2xl border-2 border-orange-100 hover:border-orange-800 transition-all">
+                <p class="font-black">10 хичээл</p>
+                <p class="text-xs font-bold text-gray-400">4,000₮</p>
+            </button>
+            <button onclick="buyCredits(25, 10000)" class="p-4 bg-white rounded-2xl border-2 border-orange-100 hover:border-orange-800 transition-all">
+                <p class="font-black">25 хичээл</p>
+                <p class="text-xs font-bold text-gray-400">10,000₮</p>
+            </button>
+        </div>
+    </div>
 </div>
 
 <script>
+let currentPlanType = 'lesson';
+
+function setPlanType(type) {
+    currentPlanType = type;
+    document.getElementById('unitBtn').className = type === 'unit' ? "flex-1 py-3 rounded-2xl bg-orange-800 text-white font-bold" : "flex-1 py-3 rounded-2xl border-2 border-orange-800 font-bold text-orange-800";
+    document.getElementById('lessonBtn').className = type === 'lesson' ? "flex-1 py-3 rounded-2xl bg-orange-800 text-white font-bold" : "flex-1 py-3 rounded-2xl border-2 border-orange-800 font-bold text-orange-800";
+}
+
+function buyCredits(amount, price) {
+    cart.push({ title: `${amount} эрх (Багц)`, price: price });
+    updateCartUI();
+    openCheckout();
+}
+
 async function generateAIPlan() {
-    if(userCredits <= 0) return alert("Эрх дууссан байна!");
-    
+    if(userCredits <= 0) return alert("Үнэгүй эрх дууссан байна. Багцаар эрхээ цэнэглээрэй.");
     const topic = document.getElementById('topic').value.trim();
     const grade = document.getElementById('gradeSelect').value;
     const subject = document.getElementById('subjectSelect').value;
     const btn = document.getElementById('genBtn');
 
-    if(!topic || !grade || !subject) return alert("Мэдээллээ бүрэн оруулна уу!");
+    if(!topic || !grade) return alert("Мэдээллээ бүрэн оруулна уу!");
 
-    btn.innerText = "AI Боловсруулж байна..."; 
-    btn.disabled = true;
+    btn.innerText = "AI Боловсруулж байна..."; btn.disabled = true;
 
-    // 1. Prompt-ийг энд тодорхойлж өгсөн (Алхам 1, 2, 3 ... бүтэцтэй)
-    const fullPrompt = `Чи бол Монгол хэл, уран зохиолын мэргэшсэн багш. ${grade}-р ангийн ${subject} хичээлийн "${topic}" сэдвээр сурагчийн мэдлэг чадварыг монгол улсын боловсролын хөтөлбөрт нийцсэн багш болон сурагчийн үйл ажиллагааг уялдуулан алхамчилсан бүтээлч сэтгэлгээг хөгжүүлэх хичээлийн төлөвлөгөө гарга. 
-    Шаардлага: 
-    - Сурагчдын бүтээлч сэтгэлгээг хөгжүүлэх идэвхтэй сургалтын аргуудыг (brainstorming, jigsaw гэх мэт) ашиглах.
-    - Үйл ажиллагаа бүрийг Алхам 1, Алхам 2 гэх мэтээр нэрлэх.
-    - Багшийн болон сурагчийн үйлдлийг тодорхой бичих.
-    - Гэрийн даалгавар хэсгийг заавал оруулах.
-    Хариултыг ЗӨВХӨН цэвэр JSON хэлбэрээр өг: [{"step": "Алхам 1", "time": "5", "teacher": "багшийн үйлдэл", "student": "сурагчийн үйлдэл", "homework": "даалгавар"}]`;
+    const fullPrompt = `Чи бол Монгол хэл, уран зохиолын мэргэшсэн багш. ${grade}-р ангийн ${subject} хичээлийн "${topic}" сэдвээр ${currentPlanType === 'unit' ? 'нэгж' : 'ээлжит'} хичээлийн 7 алхамт бүтээлч төлөвлөгөө гарга. 
+    Сурагчдын бүтээлч сэтгэлгээг хөгжүүлэх идэвхтэй арга ашигла. Багш болон сурагчийн үйл ажиллагааг тус бүр бич. Гэрийн даалгавар хэсгийг заавал оруул. 
+    Хариултыг JSON: [{"step": "Алхам", "time": "5", "teacher": "үйлдэл", "student": "үйлдэл", "homework": "даалгавар"}]`;
 
     try {
         const response = await fetch("/.netlify/functions/chat", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ prompt: fullPrompt }) 
+            body: JSON.stringify({ prompt: fullPrompt })
         });
-
-        if (!response.ok) throw new Error("AI сервер холбогдоход алдаа гарлаа");
-
         const aiData = await response.json();
         const cleanText = aiData.choices[0].message.content.replace(/```json|```/g, "").trim();
         currentPlan = JSON.parse(cleanText);
-
-        // 2. Google Sheets рүү мэдээлэл илгээх (Эрх хасах)
-        await fetch(orderURL, { 
-            method: 'POST', 
-            mode: 'no-cors',
-            body: JSON.stringify({ email: currentUserEmail, action: "use", topic: topic }) 
-        });
+        
+        // Эрх хасах
+        await fetch(orderURL, { method: 'POST', mode: 'no-cors', body: JSON.stringify({ email: currentUserEmail, action: "use" }) });
 
         userCredits--;
         document.getElementById('displayCredits').innerText = userCredits;
         document.getElementById('downloadBtn').style.display = 'block';
         btn.innerText = "✅ ХӨТӨЛБӨР БЭЛЭН";
+    } catch (e) { alert("Алдаа: " + e.message); } 
+    finally { btn.disabled = false; }
+}
+</script>
 
     } catch (e) { 
         console.error("AI Error:", e);
