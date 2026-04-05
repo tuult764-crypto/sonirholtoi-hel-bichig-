@@ -231,14 +231,52 @@
             document.getElementById('checkoutModal').classList.add('active');
         }
         function closeCheckout() { document.getElementById('checkoutModal').classList.remove('active'); }
-        function submitOrder() {
+        async function submitOrder() {
+            if (cart.length === 0) return;
+            
             const btn = document.getElementById('submitBtn');
-            btn.disabled = true; btn.innerText = "Илгээж байна...";
-            fetch(orderURL, { method: 'POST', mode: 'no-cors', body: JSON.stringify({ email: currentUserEmail, product: cart.map(i => i.title).join(", ") }) })
-            .then(() => {
-                document.getElementById('statusMsg').innerText = "✅ Мэдээлэл илгээгдлээ. Төлбөрөө төлнө үү.";
-                setTimeout(() => { cart = []; updateCartUI(); closeCheckout(); }, 2000);
-            });
+            const status = document.getElementById('statusMsg');
+            
+            btn.disabled = true; 
+            btn.innerText = "Илгээж байна...";
+
+            // Илгээх өгөгдөл
+            const orderData = {
+                email: currentUserEmail,
+                product: cart.map(i => i.title).join(", "),
+                total: cart.reduce((sum, item) => sum + item.price, 0) + "₮",
+                action: "order" // Скрипт талд ялгахын тулд нэмэв
+            };
+
+            try {
+                // Google Sheets рүү илгээх (URL-ыг зөв эсэхийг дахин шалгаарай)
+                await fetch(orderURL, {
+                    method: 'POST',
+                    mode: 'no-cors', // Google Script-д заавал хэрэгтэй
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(orderData)
+                });
+
+                // Илгээгдсэн гэж үзээд хэрэглэгчид мэдэгдэх
+                status.innerText = "✅ Хүсэлт амжилттай илгээгдлээ!";
+                status.classList.remove('text-red-500');
+                status.classList.add('text-green-600');
+                
+                setTimeout(() => {
+                    cart = [];
+                    updateCartUI();
+                    closeCheckout();
+                    status.innerText = "";
+                }, 2500);
+
+            } catch (error) {
+                console.error("Order Error:", error);
+                status.innerText = "❌ Алдаа гарлаа. Дахин оролдоно уу.";
+                status.classList.add('text-red-500');
+            } finally {
+                btn.disabled = false;
+                btn.innerText = "МЭДЭЭЛЭЛ ИЛГЭЭХ";
+            }
         }
 
         // AI ХӨТӨЛБӨР (fullPrompt алдаа засагдсан)
