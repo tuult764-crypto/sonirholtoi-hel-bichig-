@@ -87,7 +87,8 @@
                     <div class="flex items-center gap-4">
                         <label class="font-bold text-sm text-orange-800">ЦАГИЙН ТОО:</label>
                         <select id="unitHours" onchange="generateUnitFields()" class="p-2 border rounded-xl bg-orange-50 font-bold">
-                            <option value="4">4 цаг</option><option value="5">5 цаг</option><option value="6">6 цаг</option><option value="7">7 цаг</option><option value="8">8 цаг</option><option value="9">9 цаг</option><option value="10">10 цаг</option>
+                            <option value="4">4 цаг</option><option value="5">5 цаг</option><option value="6">6 цаг</option>
+                            <option value="7">7 цаг</option><option value="8">8 цаг</option><option value="9">9 цаг</option><option value="10">10 цаг</option>
                         </select>
                     </div>
                     <div id="unitFieldsContainer" class="grid grid-cols-1 md:grid-cols-2 gap-2 bg-stone-50 p-4 rounded-2xl border-2 border-dashed border-orange-200"></div>
@@ -108,7 +109,7 @@
         <div id="librarySection" class="section-content px-4 py-10 container mx-auto text-center">
             <h2 class="font-black text-2xl mb-6 italic">📂 МИНИЙ САН</h2>
             <div id="worksList" class="max-w-md mx-auto space-y-4"></div>
-            <button onclick="loadLibrary()" class="mt-10 text-orange-800 font-bold underline italic">Төлөв шинэчлэх (Баталгаажуулах)</button>
+            <button onclick="loadLibrary()" class="mt-10 text-orange-800 font-bold underline italic">Төлөв шинэчлэх</button>
         </div>
     </div>
 
@@ -118,7 +119,7 @@
             <div class="bg-orange-50 p-6 rounded-3xl border border-orange-100 mb-6">
                 <p class="text-[10px] font-bold text-gray-400">ХАС БАНК / 5006069631</p>
                 <p class="font-black text-orange-900 text-xl">МӨНХДАЛАЙ ТУУЛ</p>
-                <p class="text-xs mt-2 text-gray-500 font-bold">Гүйлгээний утга: <span id="payEmail" class="text-orange-800"></span></p>
+                <p class="text-xs mt-2 text-gray-500 font-bold">Утга: <span id="payEmail" class="text-orange-800"></span></p>
             </div>
             <button onclick="submitOrder()" class="w-full bg-orange-800 text-white py-5 rounded-2xl font-black">МЭДЭЭЛЭЛ ИЛГЭЭХ</button>
             <p id="statusMsg" class="text-sm font-bold text-green-600 mt-4"></p>
@@ -126,9 +127,24 @@
     </div>
 
     <script>
-        const sheetID = '1zvRef1ioA3S_B03YRLqJe9nG1AjSFW_C92vYAPmUXRo'; 
         const orderURL = 'https://script.google.com/macros/s/AKfycbw9ZhMNyyGakT6hcZg1lcqUBYJ8Va082M9mojWzTOxYAOMeUvjnsMM_o7irCjfp_pvMNQ/exec';
         let currentUserEmail = "", userCredits = 0, currentPlanData = null, selectedItemName = "";
+
+        // Login logic
+        async function handleLogin() {
+            const email = document.getElementById('loginEmail').value.trim();
+            if(!email.includes('@')) return alert("Мэйлээ зөв оруулна уу!");
+            try {
+                const res = await fetch(`${orderURL}?action=check&email=${email}`);
+                const data = await res.json();
+                currentUserEmail = email; userCredits = data.credits;
+                document.getElementById('authScreen').classList.add('hidden');
+                document.getElementById('mainSystem').classList.remove('hidden');
+                document.getElementById('displayEmail').innerText = email;
+                document.getElementById('displayCredits').innerText = userCredits;
+                document.getElementById('payEmail').innerText = email;
+            } catch(e) { alert("Системд холбогдоход алдаа гарлаа."); }
+        }
 
         function showSection(name) {
             document.getElementById('dashboardHome').classList.add('hidden');
@@ -164,8 +180,9 @@
             }
         }
 
+        // AI Generation
         async function generateAIPlan() {
-            if(userCredits <= 0 && !currentUserEmail.includes('tuult764')) return alert("Төлөвлөгөө боловсруулах эрх дууссан байна!");
+            if(userCredits <= 0 && !currentUserEmail.includes('tuult764')) return alert("Эрх дууссан байна!");
             
             const btn = document.getElementById('genBtn');
             const type = document.getElementById('planType').value;
@@ -182,7 +199,8 @@
             }
 
             btn.innerText = "AI БОЛОВСРУУЛЖ БАЙНА...";
-            const prompt = `Чи бол Монгол хэл,уран зохиол,үндэсний бичгийн багш. Монголын БСШУЯ-ны стандарт болон medlee.mn сайтад тулгуурлан бүтээлч сэтгэлгээ хөгжүүлэх идэвхтэй сургалтын арга ашиглан  ${grade}-ийн ${subject} хичээлийн дараах төлөвлөгөөг JSON: [{"step": "Алхам", "time": "Хугацаа", "teacher": "Багш", "student": "Сурагч"}] хэлбэрээр өг. Өгөгдөл: ${topicInfo}`;
+            // Prompt-ыг Гэрийн даалгавар баганатай болгож шинэчиллээ
+            const prompt = `Чи бол Монгол хэл, уран зохиол, үндэсний бичгийн мэргэжлийн багш. Монголын БСШУЯ-ны стандарт болон medlee.mn сайтад тулгуурлан бүтээлч сэтгэлгээ хөгжүүлэх идэвхтэй сургалтын арга ашиглан ${grade}-ийн ${subject} хичээлийн төлөвлөгөөг JSON: [{"step": "Алхам", "time": "Хугацаа", "teacher": "Багш", "student": "Сурагч", "homework": "Гэрийн даалгавар"}] хэлбэрээр өг. Өгөгдөл: ${topicInfo}`;
 
             try {
                 const res = await fetch("/.netlify/functions/chat", { method: "POST", body: JSON.stringify({ prompt }) });
@@ -191,7 +209,7 @@
                 
                 let html = `<table class="w-full border-collapse border border-gray-300">
                     <tr class="bg-gray-100 text-[10px] font-black uppercase">
-                        <th class="border p-2 w-16">Алхам</th><th class="border p-2 w-16">Хугацаа</th><th class="border p-2">Багшийн үйл ажиллагаа</th><th class="border p-2">Сурагчийн үйл ажиллагаа</th><th class="border p-2">гэрийн даалгавар</th>
+                        <th class="border p-2 w-16">Алхам</th><th class="border p-2 w-16">Хугацаа</th><th class="border p-2">Багшийн үйл ажиллагаа</th><th class="border p-2">Сурагчийн үйл ажиллагаа</th><th class="border p-2">Гэрийн даалгавар</th>
                     </tr>`;
                 currentPlanData.forEach(r => {
                     html += `<tr class="text-xs font-bold">
@@ -199,17 +217,16 @@
                         <td class="border p-2 text-center">${r.time}</td>
                         <td class="border p-2">${r.teacher}</td>
                         <td class="border p-2">${r.student}</td>
-                        <td class="border p-2">${r.homework}</td>
+                        <td class="border p-2">${r.homework || '-'}</td>
                     </tr>`;
                 });
                 document.getElementById('aiResultArea').innerHTML = html + "</table>";
                 document.getElementById('aiResultArea').classList.remove('hidden');
                 document.getElementById('downloadBtn').style.display = 'block';
                 
-                // Эрх хасах
                 fetch(orderURL, { method: 'POST', mode: 'no-cors', body: JSON.stringify({ action: "use", email: currentUserEmail }) });
                 userCredits--; document.getElementById('displayCredits').innerText = userCredits;
-            } catch(e) { alert("AI-аас мэдээлэл авахад алдаа гарлаа."); } finally { btn.innerText = "✅ ХӨТӨЛБӨР БЭЛЭН"; }
+            } catch(e) { alert("AI алдаа гарлаа."); } finally { btn.innerText = "✅ ХӨТӨЛБӨР БЭЛЭН"; }
         }
 
         function downloadPDF() {
@@ -224,9 +241,9 @@
             doc.setFontSize(14);
             doc.text("ХИЧЭЭЛИЙН ХӨТӨЛБӨР ТӨЛӨВЛӨГӨӨ", 105, 40, { align: "center" });
             
-            const rows = currentPlanData.map(r => [r.step, r.time, r.teacher, r.student]);
+            const rows = currentPlanData.map(r => [r.step, r.time, r.teacher, r.student, r.homework]);
             doc.autoTable({
-                head: [['Алхам', 'Хугацаа', 'Багшийн үйл ажиллагаа', 'Сурагчийн үйл ажиллагаа','Гэрийн даалгавар']],
+                head: [['Алхам', 'Хугацаа', 'Багшийн үйл ажиллагаа', 'Сурагчийн үйл ажиллагаа', 'Гэрийн даалгавар']],
                 body: rows,
                 startY: 50,
                 theme: 'grid',
@@ -235,27 +252,25 @@
             doc.save("tolovlogoo.pdf");
         }
 
+        // Shop logic
         async function loadProducts() {
-            const url = `https://script.google.com/macros/s/AKfycbxLAl4q-mORw3FsycKZummLgLkcyaSErpd7QENTiP8iRwWgWoNpTR8hobP2Ou_-NkUXHg/exec`;
+            const prodURL = `https://script.google.com/macros/s/AKfycbxLAl4q-mORw3FsycKZummLgLkcyaSErpd7QENTiP8iRwWgWoNpTR8hobP2Ou_-NkUXHg/exec`;
             try {
-                const res = await fetch(url);
-                const text = await res.text();
-                const json = JSON.parse(text.substr(47).slice(0, -2));
+                const res = await fetch(prodURL);
+                const data = await res.json();
                 let html = '';
-                json.table.rows.slice(1).forEach(row => {
-                    const title = row.c[0]?.v, desc = row.c[1]?.v, price = row.c[2]?.v;
-                    html += `
-                        <div class="bg-white p-8 rounded-[3rem] shadow-sm border border-gray-100">
-                            <h4 class="font-black text-orange-900 text-lg mb-2">${title}</h4>
-                            <p class="text-[10px] text-gray-400 mb-6 font-bold uppercase">${desc}</p>
-                            <div class="flex justify-between items-center">
-                                <span class="font-black text-orange-800">${price}₮</span>
-                                <button onclick="openCheckout('${title}')" class="bg-orange-800 text-white px-6 py-3 rounded-2xl text-[10px] font-black italic">🛒 АВАХ</button>
-                            </div>
-                        </div>`;
+                data.forEach(item => {
+                    html += `<div class="bg-white p-8 rounded-[3rem] shadow-sm border border-gray-100">
+                        <h4 class="font-black text-orange-900 text-lg mb-2">${item.title}</h4>
+                        <p class="text-[10px] text-gray-400 mb-6 font-bold uppercase">${item.description}</p>
+                        <div class="flex justify-between items-center">
+                            <span class="font-black text-orange-800">${item.price}₮</span>
+                            <button onclick="openCheckout('${item.title}')" class="bg-orange-800 text-white px-6 py-3 rounded-2xl text-[10px] font-black italic">🛒 АВАХ</button>
+                        </div>
+                    </div>`;
                 });
                 document.getElementById('productGrid').innerHTML = html;
-            } catch(e) { console.error("Дэлгүүр ачаалахад алдаа."); }
+            } catch(e) { console.error("Дэлгүүрийн алдаа."); }
         }
 
         function loadLibrary() {
@@ -267,7 +282,7 @@
                             <span class="font-black text-orange-900 italic text-xs uppercase">${f.trim()}</span>
                             <button class="bg-green-600 text-white px-4 py-2 rounded-xl text-[10px] font-black">📥 ТАТАХ</button>
                         </div>`).join('');
-                } else { list.innerHTML = "<p class='text-gray-400 font-bold'>Одоогоор файл байхгүй байна.</p>"; }
+                } else { list.innerHTML = "<p class='text-gray-400 font-bold'>Файл байхгүй байна.</p>"; }
             });
         }
 
@@ -275,7 +290,7 @@
         function closeCheckout() { document.getElementById('checkoutModal').classList.remove('active'); }
         function submitOrder() {
             fetch(orderURL, { method: 'POST', mode: 'no-cors', body: JSON.stringify({ action: "order", email: currentUserEmail, productName: selectedItemName }) })
-            .then(() => { document.getElementById('statusMsg').innerText = "✅ Мэдээлэл илгээгдлээ. Төлбөрөө төлнө үү."; setTimeout(closeCheckout, 3000); });
+            .then(() => { document.getElementById('statusMsg').innerText = "✅ Илгээгдлээ. Төлбөрөө төлнө үү."; setTimeout(closeCheckout, 3000); });
         }
     </script>
 </body>
