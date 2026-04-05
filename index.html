@@ -46,7 +46,7 @@
         <nav class="bg-white border-b p-4 sticky top-0 z-50 shadow-sm">
             <div class="container mx-auto flex justify-between items-center px-2">
                 <div class="flex items-center gap-2 cursor-pointer" onclick="showDashboard()">
-                    <span class="text-lg font-black text-orange-900 italic">ТУУЛ БАГШИЙН САЙТ</span>
+                    <span class="text-lg font-black text-orange-900 italic">ТУУЛ БАГШИЙН ЦАХИМ ХУУДАС</span>
                 </div>
                 <div class="flex items-center gap-4">
                     <div class="text-right">
@@ -72,20 +72,104 @@
             </div>
         </div>
 
-        <div class="container mx-auto px-4 max-w-6xl">
-            <div id="plannerSection" class="section-content bg-white p-8 rounded-[3rem] shadow-xl border border-orange-50">
-                <button onclick="showDashboard()" class="text-sm font-bold text-orange-800 mb-6 italic">← БУЦАХ</button>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6 italic">
-                    <input type="text" id="managerName" placeholder="Менежерийн нэр..." class="p-4 border rounded-2xl bg-stone-50 font-bold outline-none">
-                    <input type="text" id="topic" placeholder="Хичээлийн сэдэв..." class="p-4 border rounded-2xl bg-stone-50 font-bold outline-none">
-                    <select id="gradeSelect" class="p-4 border rounded-2xl bg-stone-50 font-bold outline-none">
-                        <option value="6">6-р анги</option><option value="7">7-р анги</option>
-                        <option value="8">8-р анги</option><option value="9">9-р анги</option>
-                    </select>
-                </div>
-                <button onclick="generateAIPlan()" id="genBtn" class="w-full bg-orange-800 text-white py-5 rounded-2xl font-black hover:bg-black shadow-lg">ХӨТӨЛБӨР БОЛОВСРУУЛАХ (1 ЭРХ)</button>
-                <button id="downloadBtn" style="display:none;" onclick="downloadPDF()" class="w-full mt-4 bg-green-600 text-white py-5 rounded-2xl font-black shadow-md italic">📥 PDF ТАТАХ</button>
-            </div>
+        <div id="plannerSection" class="section-content bg-white p-8 rounded-[3rem] shadow-xl border border-orange-50">
+    <button onclick="showDashboard()" class="text-sm font-bold text-orange-800 mb-6 italic">← БУЦАХ</button>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6 italic">
+        <input type="text" id="managerName" placeholder="Менежерийн нэр..." class="p-4 border rounded-2xl bg-stone-50 font-bold outline-none">
+        <input type="text" id="topic" placeholder="Хичээлийн сэдэв..." class="p-4 border rounded-2xl bg-stone-50 font-bold outline-none">
+        
+        <select id="gradeSelect" class="p-4 border rounded-2xl bg-stone-50 font-bold outline-none">
+            <option value="">Анги сонгох</option>
+            <option value="6">6-р анги</option><option value="7">7-р анги</option>
+            <option value="8">8-р анги</option><option value="9">9-р анги</option>
+            <option value="10">10-р анги</option><option value="11">11-р анги</option>
+            <option value="12">12-р анги</option>
+        </select>
+        
+        <select id="subjectSelect" class="p-4 border rounded-2xl bg-stone-50 font-bold outline-none">
+            <option value="Монгол хэл">Монгол хэл</option>
+            <option value="Уран зохиол">Уран зохиол</option>
+            <option value="Үндэсний бичиг">Үндэсний бичиг</option>
+        </select>
+    </div>
+    
+    <button onclick="generateAIPlan()" id="genBtn" class="w-full bg-orange-800 text-white py-5 rounded-2xl font-black hover:bg-black transition-all shadow-lg">ХӨТӨЛБӨР БОЛОВСРУУЛАХ (1 ЭРХ)</button>
+    <button id="downloadBtn" style="display:none;" onclick="downloadPDF()" class="w-full mt-4 bg-green-600 text-white py-5 rounded-2xl font-black shadow-md italic tracking-widest">📥 PDF ТАТАХ (БАТЛАВ ТОЛГОЙТОЙ)</button>
+</div>
+
+<script>
+async function generateAIPlan() {
+    if(userCredits <= 0) return alert("Эрх дууссан байна!");
+    const topic = document.getElementById('topic').value.trim();
+    const grade = document.getElementById('gradeSelect').value;
+    const subject = document.getElementById('subjectSelect').value;
+    const btn = document.getElementById('genBtn');
+
+    if(!topic || !grade) return alert("Анги болон сэдвээ оруулна уу!");
+
+    btn.innerText = "AI Боловсруулж байна..."; btn.disabled = true;
+
+    // ТАНЫ ЗАГВАРЫН ДАГУУХ AI ЗААВАРЧИЛГАА
+    const fullPrompt = `Чи бол Монгол хэлний багш. ${grade}-р ангийн ${subject} хичээлийн "${topic}" сэдвээр хичээлийн төлөвлөгөө гарга. 
+    Шаардлага:
+    1. Сурагчдын бүтээлч сэтгэлгээг хөгжүүлэх идэвхтэй сургалтын аргыг ашиглах.
+    2. Үйл ажиллагааг Алхам 1, Алхам 2, Алхам 3 гэх мэтээр дарааллуулах.
+    3. Багшийн үйл ажиллагаа болон Сурагчийн үйл ажиллагааг тус бүрчлэн бичих.
+    4. Гэрийн даалгавар хэсгийг заавал оруулах.
+    Хариултыг зөвхөн цэвэр JSON хэлбэрээр өг: [{"step": "Алхам дугаар", "time": "хугацаа", "teacher": "багшийн үйлдэл", "student": "сурагчийн үйлдэл", "homework": "гэрийн даалгавар"}]`;
+
+    try {
+        const response = await fetch("/.netlify/functions/chat", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ prompt: fullPrompt })
+        });
+
+        const aiData = await response.json();
+        const cleanText = aiData.choices[0].message.content.replace(/```json|```/g, "").trim();
+        currentPlan = JSON.parse(cleanText);
+        
+        // Google Sheets-ээс эрх хасах
+        await fetch(orderURL, { 
+            method: 'POST', 
+            mode: 'no-cors',
+            body: JSON.stringify({ email: currentUserEmail, action: "use", topic: topic }) 
+        });
+
+        userCredits--;
+        document.getElementById('displayCredits').innerText = userCredits;
+        document.getElementById('downloadBtn').style.display = 'block';
+        btn.innerText = "✅ ХӨТӨЛБӨР БЭЛЭН";
+    } catch (e) { 
+        alert("Алдаа гарлаа: " + e.message); 
+    } finally { 
+        btn.disabled = false; 
+    }
+}
+
+function downloadPDF() {
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF('l', 'mm', 'a4');
+    const manager = document.getElementById('managerName').value || "..................";
+    const topic = document.getElementById('topic').value;
+    const subject = document.getElementById('subjectSelect').value;
+    const grade = document.getElementById('gradeSelect').value;
+
+    doc.setFontSize(10);
+    doc.text("БАТЛАВ: СУРГАЛТЫН МЕНЕЖЕР .............................. / " + manager + " /", 170, 20);
+    doc.setFontSize(16);
+    doc.text(`${grade}-р анги, ${subject}: ${topic}`, 20, 40);
+
+    doc.autoTable({
+        startY: 50,
+        head: [['Алхам', 'Хугацаа', 'Багшийн үйл ажиллагаа', 'Сурагчийн үйл ажиллагаа', 'Гэрийн даалгавар']],
+        body: currentPlan.map(p => [p.step, p.time+"'", p.teacher, p.student, p.homework || "-"]),
+        styles: { fontSize: 9, cellPadding: 3 },
+        headStyles: { fillColor: [139, 69, 19] }
+    });
+    doc.save(`Plan_${topic}.pdf`);
+}
+</script>
 
             <div id="shopSection" class="section-content">
                 <button onclick="showDashboard()" class="text-sm font-bold text-blue-500 mb-6 italic">← БУЦАХ</button>
