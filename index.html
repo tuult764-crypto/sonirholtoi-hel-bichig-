@@ -372,34 +372,62 @@ function downloadPDF() {
 }
 
         // AI ХӨТӨЛБӨР (fullPrompt алдаа засагдсан)
-        async function generateAIPlan() {
-            if(userCredits <= 0) return alert("Эрх дууссан байна!");
-            const topic = document.getElementById('topic').value.trim();
-            const grade = document.getElementById('gradeSelect').value;
-            const btn = document.getElementById('genBtn');
-            if(!topic || !grade) return alert("Сэдвээ оруулна уу!");
+       async function generateAIPlan() {
+    // 1. Хэрэглэгчийн эрхийг шалгах
+    if(userCredits <= 0) return alert("Эрх дууссан байна!");
 
-            btn.innerText = "AI Боловсруулж байна..."; btn.disabled = true;
-            const fullPrompt = `Чи бол Монгол хэлний багш. ${grade}-р ангийн "${topic}" сэдвээр 7 алхамт бүтээлч төлөвлөгөө гарга. JSON-оор өг: [{"time": "хугацаа", "teacher": "багшийн үйлдэл", "student": "сурагчийн үйлдэл", "homework": "даалгавар"}]`;
+    // 2. Формын өгөгдлийг авах
+    const topic = document.getElementById('topic').value.trim();
+    const grade = document.getElementById('gradeSelect').value;
+    const subject = document.getElementById('subjectSelect').value;
+    const manager = document.getElementById('managerName').value;
+    const btn = document.getElementById('genBtn');
 
-            try {
-                const response = await fetch("/.netlify/functions/chat", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ prompt: fullPrompt })
-                });
-                const aiData = await response.json();
-                const cleanText = aiData.choices[0].message.content.replace(/```json|```/g, "").trim();
-                currentPlan = JSON.parse(cleanText);
-                
-                await fetch(orderURL, { method: 'POST', body: JSON.stringify({ email: currentUserEmail, action: "use", topic: topic }) });
-                userCredits--;
-                document.getElementById('displayCredits').innerText = userCredits;
-                document.getElementById('downloadBtn').style.display = 'block';
-                btn.innerText = "✅ ХӨТӨЛБӨР БЭЛЭН";
-            } catch (e) { alert("Алдаа гарлаа!"); }
-            finally { btn.disabled = false; }
-        }
+    if(!topic || !grade) return alert("Мэдээллээ бүрэн оруулна уу!");
+
+    btn.innerText = "AI Боловсруулж байна...";
+    btn.disabled = true;
+
+    // 3. ЧУХАЛ: fullPrompt-ийг энд тодорхойлж өгнө
+    const fullPrompt = `Чи бол Монгол хэлний багш. ${grade}-р ангийн ${subject} хичээлийн "${topic}" сэдвээр 7 алхамт бүтээлч төлөвлөгөө гарга. 
+    Шаардлага: Бүтээлч сэтгэлгээг хөгжүүлэх идэвхтэй сургалтын аргыг ашиглаж, алхам бүрийг (Алхам 1, 2..) тайлбарла. 
+    Гэрийн даалгавар хэсэг заавал байх. Хариултыг JSON-оор өг: 
+    [{"step": "Алхам 1", "time": "хугацаа", "teacher": "багшийн үйлдэл", "student": "сурагчийн үйлдэл", "homework": "даалгавар"}]`;
+
+    try {
+        // 4. Netlify Function руу хүсэлт илгээх (image_4cd7ad.png дээрх chat.js руу)
+        const response = await fetch("/.netlify/functions/chat", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ prompt: fullPrompt }) // Одоо fullPrompt-ийг таних болно
+        });
+
+        if (!response.ok) throw new Error("AI сервер хариу өгсөнгүй");
+
+        const aiData = await response.json();
+        const cleanText = aiData.choices[0].message.content.replace(/```json|```/g, "").trim();
+        currentPlan = JSON.parse(cleanText);
+
+        // 5. Google Sheets-ээс эрх хасах (orderURL-ийг зөв эсэхийг шалгаарай)
+        await fetch(orderURL, { 
+            method: 'POST', 
+            mode: 'no-cors',
+            body: JSON.stringify({ email: currentUserEmail, action: "use", topic: topic }) 
+        });
+
+        userCredits--;
+        document.getElementById('displayCredits').innerText = userCredits;
+        document.getElementById('downloadBtn').style.display = 'block';
+        btn.innerText = "✅ ХӨТӨЛБӨР БЭЛЭН";
+
+    } catch (e) { 
+        console.error("AI Error:", e);
+        alert("Алдаа гарлаа: " + e.message); 
+        btn.innerText = "АЛДАА ГАРЛАА";
+    } finally { 
+        btn.disabled = false; 
+    }
+}
 
         function downloadPDF() {
             const { jsPDF } = window.jspdf;
