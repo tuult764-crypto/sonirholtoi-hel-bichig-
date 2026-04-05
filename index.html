@@ -372,61 +372,26 @@ function downloadPDF() {
 }
 
         // AI ХӨТӨЛБӨР (fullPrompt алдаа засагдсан)
-       async function generateAIPlan() {
-    // 1. Хэрэглэгчийн эрхийг шалгах
-    if(userCredits <= 0) return alert("Эрх дууссан байна!");
+       function submitOrder() {
+    const btn = document.getElementById('submitBtn');
+    btn.disabled = true; btn.innerText = "Илгээж байна...";
+    
+    // ТАНЫ APPS SCRIPT-Д ЗОРИУЛЖ 'productName' БОЛОН 'action' НЭМЭВ
+    const orderData = { 
+        email: currentUserEmail, 
+        action: "order", 
+        productName: cart.map(i => i.title).join(", ") 
+    };
 
-    // 2. Формын өгөгдлийг авах
-    const topic = document.getElementById('topic').value.trim();
-    const grade = document.getElementById('gradeSelect').value;
-    const subject = document.getElementById('subjectSelect').value;
-    const manager = document.getElementById('managerName').value;
-    const btn = document.getElementById('genBtn');
-
-    if(!topic || !grade) return alert("Мэдээллээ бүрэн оруулна уу!");
-
-    btn.innerText = "AI Боловсруулж байна...";
-    btn.disabled = true;
-
-    // 3. ЧУХАЛ: fullPrompt-ийг энд тодорхойлж өгнө
-    const fullPrompt = `Чи бол Монгол хэлний багш. ${grade}-р ангийн ${subject} хичээлийн "${topic}" сэдвээр багш болон сурагчийн үйл ажиллагааг уялдуулан алхамчилсан бүтээлч сэтгэлгээг хөгжүүлэх хичээлийн төлөвлөгөө гарга.. 
-    Шаардлага: Монголын боловсролын хөтөлбөрт нийцсэн, бүтээлч сэтгэлгээг хөгжүүлэх идэвхтэй сургалтын аргыг ашиглаж, алхам бүрийг (Алхам 1, 2..) тайлбарла. 
-    Гэрийн даалгавар хэсэг заавал байх. Хариултыг JSON-оор өг: 
-    [{"step": "Алхам 1", "time": "хугацаа", "teacher": "багшийн үйл ажиллагаа", "student": "сурагчийн үйл ажиллагаа", "homework": "даалгавар"}]`;
-
-    try {
-        // 4. Netlify Function руу хүсэлт илгээх (image_4cd7ad.png дээрх chat.js руу)
-        const response = await fetch("/.netlify/functions/chat", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ prompt: fullPrompt }) // Одоо fullPrompt-ийг таних болно
-        });
-
-        if (!response.ok) throw new Error("AI сервер хариу өгсөнгүй");
-
-        const aiData = await response.json();
-        const cleanText = aiData.choices[0].message.content.replace(/```json|```/g, "").trim();
-        currentPlan = JSON.parse(cleanText);
-
-        // 5. Google Sheets-ээс эрх хасах (orderURL-ийг зөв эсэхийг шалгаарай)
-        await fetch(orderURL, { 
-            method: 'POST', 
-            mode: 'no-cors',
-            body: JSON.stringify({ email: currentUserEmail, action: "use", topic: topic }) 
-        });
-
-        userCredits--;
-        document.getElementById('displayCredits').innerText = userCredits;
-        document.getElementById('downloadBtn').style.display = 'block';
-        btn.innerText = "✅ ХӨТӨЛБӨР БЭЛЭН";
-
-    } catch (e) { 
-        console.error("AI Error:", e);
-        alert("Алдаа гарлаа: " + e.message); 
-        btn.innerText = "АЛДАА ГАРЛАА";
-    } finally { 
-        btn.disabled = false; 
-    }
+    fetch(orderURL, { 
+        method: 'POST', 
+        mode: 'no-cors', 
+        body: JSON.stringify(orderData) 
+    })
+    .then(() => {
+        document.getElementById('statusMsg').innerText = "✅ Мэдээлэл илгээгдлээ. Төлбөрөө төлнө үү.";
+        setTimeout(() => { cart = []; updateCartUI(); closeCheckout(); }, 2000);
+    });
 }
 
         function downloadPDF() {
