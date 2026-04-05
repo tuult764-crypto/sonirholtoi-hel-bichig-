@@ -164,21 +164,6 @@
             }
         }
 
-        async function handleLogin() {
-            const email = document.getElementById('loginEmail').value.trim();
-            if(!email.includes('@')) return alert("Мэйлээ зөв оруулна уу!");
-            try {
-                const res = await fetch(`${orderURL}?action=check&email=${email}`);
-                const data = await res.json();
-                currentUserEmail = email; userCredits = data.credits;
-                document.getElementById('authScreen').classList.add('hidden');
-                document.getElementById('mainSystem').classList.remove('hidden');
-                document.getElementById('displayEmail').innerText = email;
-                document.getElementById('displayCredits').innerText = userCredits;
-                document.getElementById('payEmail').innerText = email;
-            } catch(e) { alert("Системд холбогдоход алдаа гарлаа!"); }
-        }
-
         async function generateAIPlan() {
             if(userCredits <= 0 && !currentUserEmail.includes('tuult764')) return alert("Төлөвлөгөө боловсруулах эрх дууссан байна!");
             
