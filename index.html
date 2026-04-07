@@ -125,7 +125,7 @@
     </div>
 
     <script>
-        const orderURL = 'https://script.google.com/macros/s/AKfycbxvK6KteKh4ZPDEAR170g3zM_-h3zbZ3xcS9g3Zp-_yHTyT4Qn8TCZU2-ZhFM68ytZTLQ/exec';
+        const orderURL = 'https://script.google.com/macros/library/d/1dBbIhBNjBqbtQLivAnxEit5VS-vGkFPIdpcs4Oy9HnD-gUbhnYXdVyP3/52';
         let currentUserEmail = "", userCredits = 0, currentPlanData = null, selectedItemName = "";
 
         async function handleLogin() {
@@ -183,7 +183,7 @@
         }
 
         try {
-    const res = await fetch("/.netlify/functions/chat", { 
+    const res = await fetch("/api/chat", { 
         method: "POST", 
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ prompt }) 
@@ -233,7 +233,7 @@
     console.error("Parsing Error:", e);
     alert("AI хариултыг боловсруулахад алдаа гарлаа. Дахин оролдоно уу."); 
 }try {
-    const res = await fetch("/.netlify/functions/chat", { 
+    const res = await fetch("/api/chat", { 
         method: "POST", 
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ prompt }) 
