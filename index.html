@@ -57,7 +57,6 @@
         <div id="plannerSection" class="section-content container mx-auto max-w-5xl px-4 py-6">
             <div class="bg-white p-8 rounded-[3rem] shadow-xl border border-orange-50">
                 <button onclick="showDashboard()" class="text-sm font-bold text-orange-800 mb-6 italic">← БУЦАХ</button>
-                
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6 italic">
                     <div class="col-span-2">
                         <label class="block text-xs font-black text-orange-900 mb-2 uppercase italic">Хичээлийн төрөл:</label>
@@ -74,24 +73,18 @@
                         <option value="12-р анги">12-р анги</option>
                     </select>
                 </div>
-
                 <div id="lessonInputs" class="space-y-4 mb-6">
                     <input type="text" id="lessonTopic" placeholder="Хичээлийн сэдэв..." class="w-full p-4 border rounded-2xl bg-stone-50 font-bold italic outline-none">
                     <input type="number" id="duration" placeholder="Хугацаа (минут)..." class="w-full p-4 border rounded-2xl bg-stone-50 font-bold outline-none">
                 </div>
-
                 <div id="unitInputs" class="hidden space-y-4 mb-6 italic">
                     <div class="flex items-center gap-4 bg-orange-50 p-4 rounded-2xl">
                         <label class="font-black text-sm text-orange-900 uppercase">Нэгж хичээлийн цагийн тоо:</label>
                         <input type="number" id="unitHoursInput" oninput="generateUnitFields()" placeholder="Цагаа бичнэ үү..." class="p-2 border rounded-xl font-bold bg-white outline-none w-32 text-center">
                     </div>
-                    <div id="unitFieldsContainer" class="grid grid-cols-1 md:grid-cols-2 gap-2 p-4 bg-stone-50 rounded-2xl border-2 border-dashed border-orange-200">
-                        <p class="text-xs text-gray-400 italic text-center col-span-2">Цагийн тоогоо бичихэд сэдэв оруулах талбарууд гарч ирнэ.</p>
-                    </div>
+                    <div id="unitFieldsContainer" class="grid grid-cols-1 md:grid-cols-2 gap-2 p-4 bg-stone-50 rounded-2xl border-2 border-dashed border-orange-200"></div>
                 </div>
-
                 <button onclick="generateAIPlan()" id="genBtn" class="w-full bg-orange-800 text-white py-5 rounded-2xl font-black uppercase italic shadow-lg">Төлөвлөгөө боловсруулах</button>
-                
                 <div id="aiResultArea" class="hidden mt-8 overflow-x-auto"></div>
                 <button id="downloadBtn" style="display:none;" onclick="downloadPDF()" class="w-full mt-4 bg-green-600 text-white py-5 rounded-2xl font-black italic uppercase shadow-lg">📥 PDF ТАТАХ</button>
             </div>
@@ -129,18 +122,27 @@
         let currentUserEmail = "", userCredits = 0, currentPlanData = null, selectedItemName = "";
 
         async function handleLogin() {
-            const email = document.getElementById('loginEmail').value.trim();
+            const emailInput = document.getElementById('loginEmail');
+            const btn = document.getElementById('loginBtn');
+            const email = emailInput.value.trim();
             if(!email.includes('@')) return alert("Мэйлээ зөв оруулна уу!");
+            
+            btn.innerText = "Уншиж байна...";
             try {
                 const res = await fetch(`${orderURL}?action=check&email=${email}`);
                 const data = await res.json();
-                currentUserEmail = email; userCredits = data.credits;
+                currentUserEmail = email; 
+                userCredits = data.credits;
                 document.getElementById('authScreen').classList.add('hidden');
                 document.getElementById('mainSystem').classList.remove('hidden');
                 document.getElementById('displayEmail').innerText = email;
                 document.getElementById('displayCredits').innerText = userCredits;
                 document.getElementById('payEmail').innerText = email;
-            } catch(e) { alert("Холболтын алдаа!"); }
+            } catch(e) { 
+                alert("Холболтын алдаа! Google Sheet эсвэл Интернетээ шалгана уу."); 
+            } finally {
+                btn.innerText = "Нэвтрэх";
+            }
         }
 
         function showSection(name) {
@@ -148,6 +150,7 @@
             document.querySelectorAll('.section-content').forEach(s => s.classList.remove('active'));
             document.getElementById(name + 'Section').classList.add('active');
             if(name === 'shop') loadProducts();
+            if(name === 'games') generateSudoku();
         }
 
         function showDashboard() {
@@ -157,196 +160,123 @@
 
         function togglePlanType() {
             const type = document.getElementById('planType').value;
-            if(type === 'unit') {
-                document.getElementById('unitInputs').classList.remove('hidden');
-                document.getElementById('lessonInputs').classList.add('hidden');
-            } else {
-                document.getElementById('unitInputs').classList.add('hidden');
-                document.getElementById('lessonInputs').classList.remove('hidden');
-            }
+            document.getElementById('unitInputs').classList.toggle('hidden', type !== 'unit');
+            document.getElementById('lessonInputs').classList.toggle('hidden', type === 'unit');
         }
 
-        // ШИНЭЧЛЭГДСЭН: Цагийн тоогоор талбар үүсгэх
         function generateUnitFields() {
             const hours = document.getElementById('unitHoursInput').value;
             const container = document.getElementById('unitFieldsContainer');
-            if (!hours || hours <= 0) {
-                container.innerHTML = '<p class="text-xs text-gray-400 italic text-center col-span-2">Цагийн тоогоо оруулна уу.</p>';
-                return;
-            }
-            if (hours > 20) { alert("Цагийн тоо хэт их байна!"); return; }
-
             container.innerHTML = "";
-            for(let i=1; i<=hours; i++) {
+            if (!hours || hours <= 0) return;
+            for(let i=1; i<=Math.min(hours, 20); i++) {
                 container.innerHTML += `<input type="text" placeholder="${i}-р цагийн сэдэв..." class="unit-topic-field p-3 border rounded-xl text-xs font-bold italic outline-none">`;
             }
         }
 
-        try {
-    const res = await fetch("/api/chat", { 
-        method: "POST", 
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ prompt }) 
-    });
+        async function generateAIPlan() {
+            if(userCredits <= 0) return alert("Эрх хүрэлцэхгүй байна! Дэлгүүрээс эрх авна уу.");
+            const btn = document.getElementById('genBtn');
+            const grade = document.getElementById('gradeSelect').value;
+            const type = document.getElementById('planType').value;
+            let prompt = "";
 
-    const data = await res.json();
+            if(type === 'lesson') {
+                const topic = document.getElementById('lessonTopic').value;
+                const time = document.getElementById('duration').value;
+                prompt = `${grade}-ийн Монгол хэлний хичээлийн "${topic}" сэдвээр ${time} минутын ээлжит хичээлийн төлөвлөгөөг хүснэгт хэлбэрээр (JSON array: step, time, teacher, student, homework) гаргаж өг.`;
+            } else {
+                const topics = Array.from(document.querySelectorAll('.unit-topic-field')).map(f => f.value).join(", ");
+                prompt = `${grade}-ийн Монгол хэлний хичээлийн дараах сэдвүүдээр нэгж хичээлийн хөтөлбөр гарга: ${topics}. JSON array хэлбэрээр хариул.`;
+            }
 
-    if (!res.ok) {
-        throw new Error(data.error || "AI холболт амжилтгүй");
-    }
-
-    // AI-аас ирсэн хариултыг JSON болгож салгах
-    let content = data.choices[0].message.content;
-    
-    // Хэрэв AI текст нэмж бичсэн бол зөвхөн JSON хэсгийг нь тасдаж авах
-    let jsonStart = content.indexOf('[');
-    let jsonEnd = content.lastIndexOf(']') + 1;
-    let jsonString = content.substring(jsonStart, jsonEnd);
-    
-    currentPlanData = JSON.parse(jsonString);
-    
-    let html = `<table class="w-full border-collapse border-2 border-orange-800 bg-white shadow-xl text-[11px]">
-        <tr class="bg-orange-800 text-white font-black italic uppercase">
-            <th class="border p-3">Алхам</th><th class="border p-3">Хугацаа</th><th class="border p-3">Багшийн үйл ажиллагаа</th><th class="border p-3">Сурагч</th><th class="border p-3">Гэрийн даалгавар</th>
-        </tr>`;
-        
-    currentPlanData.forEach(r => {
-        html += `<tr>
-            <td class="border p-3 font-bold bg-orange-50 text-center italic">${r.step || ''}</td>
-            <td class="border p-3 text-center">${r.time || ''}</td>
-            <td class="border p-3">${r.teacher || ''}</td>
-            <td class="border p-3">${r.student || ''}</td>
-            <td class="border p-3 italic text-orange-900 font-bold">${r.homework || '-'}</td>
-        </tr>`;
-    });
-    
-    document.getElementById('aiResultArea').innerHTML = html + "</table>";
-    document.getElementById('aiResultArea').classList.remove('hidden');
-    document.getElementById('downloadBtn').style.display = 'block';
-    
-    // Эрх хасах хэсэг
-    fetch(orderURL, { method: 'POST', mode: 'no-cors', body: JSON.stringify({ action: "use", email: currentUserEmail }) });
-    userCredits--; 
-    document.getElementById('displayCredits').innerText = userCredits;
-
-} catch(e) { 
-    console.error("Parsing Error:", e);
-    alert("AI хариултыг боловсруулахад алдаа гарлаа. Дахин оролдоно уу."); 
-}try {
-    const res = await fetch("/api/chat", { 
-        method: "POST", 
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ prompt }) 
-    });
-
-    const data = await res.json();
-
-    if (!res.ok) {
-        throw new Error(data.error || "AI холболт амжилтгүй");
-    }
-
-    // AI-аас ирсэн хариултыг JSON болгож салгах
-    let content = data.choices[0].message.content;
-    
-    // Хэрэв AI текст нэмж бичсэн бол зөвхөн JSON хэсгийг нь тасдаж авах
-    let jsonStart = content.indexOf('[');
-    let jsonEnd = content.lastIndexOf(']') + 1;
-    let jsonString = content.substring(jsonStart, jsonEnd);
-    
-    currentPlanData = JSON.parse(jsonString);
-    
-    let html = `<table class="w-full border-collapse border-2 border-orange-800 bg-white shadow-xl text-[11px]">
-        <tr class="bg-orange-800 text-white font-black italic uppercase">
-            <th class="border p-3">Алхам</th><th class="border p-3">Хугацаа</th><th class="border p-3">Багшийн үйл ажиллагаа</th><th class="border p-3">Сурагч</th><th class="border p-3">Гэрийн даалгавар</th>
-        </tr>`;
-        
-    currentPlanData.forEach(r => {
-        html += `<tr>
-            <td class="border p-3 font-bold bg-orange-50 text-center italic">${r.step || ''}</td>
-            <td class="border p-3 text-center">${r.time || ''}</td>
-            <td class="border p-3">${r.teacher || ''}</td>
-            <td class="border p-3">${r.student || ''}</td>
-            <td class="border p-3 italic text-orange-900 font-bold">${r.homework || '-'}</td>
-        </tr>`;
-    });
-    
-    document.getElementById('aiResultArea').innerHTML = html + "</table>";
-    document.getElementById('aiResultArea').classList.remove('hidden');
-    document.getElementById('downloadBtn').style.display = 'block';
-    
-    // Эрх хасах хэсэг
-    fetch(orderURL, { method: 'POST', mode: 'no-cors', body: JSON.stringify({ action: "use", email: currentUserEmail }) });
-    userCredits--; 
-    document.getElementById('displayCredits').innerText = userCredits;
-
-} catch(e) { 
-    console.error("Parsing Error:", e);
-    alert("AI хариултыг боловсруулахад алдаа гарлаа. Дахин оролдоно уу."); 
-}
+            btn.innerText = "AI боловсруулж байна...";
+            try {
+                const res = await fetch("/api/chat", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ prompt })
+                });
                 const data = await res.json();
-                currentPlanData = JSON.parse(data.choices[0].message.content.replace(/```json|```/g, ""));
-                
+                let content = data.choices[0].message.content;
+                let jsonStart = content.indexOf('[');
+                let jsonEnd = content.lastIndexOf(']') + 1;
+                currentPlanData = JSON.parse(content.substring(jsonStart, jsonEnd));
+
                 let html = `<table class="w-full border-collapse border-2 border-orange-800 bg-white shadow-xl text-[11px]">
                     <tr class="bg-orange-800 text-white font-black italic uppercase">
                         <th class="border p-3">Алхам</th><th class="border p-3">Хугацаа</th><th class="border p-3">Багшийн үйл ажиллагаа</th><th class="border p-3">Сурагч</th><th class="border p-3">Гэрийн даалгавар</th>
                     </tr>`;
                 currentPlanData.forEach(r => {
-                    html += `<tr><td class="border p-3 font-bold bg-orange-50 text-center italic">${r.step}</td><td class="border p-3 text-center">${r.time}</td><td class="border p-3">${r.teacher}</td><td class="border p-3">${r.student}</td><td class="border p-3 italic text-orange-900 font-bold">${r.homework || '-'}</td></tr>`;
+                    html += `<tr>
+                        <td class="border p-3 font-bold bg-orange-50 text-center italic">${r.step || ''}</td>
+                        <td class="border p-3 text-center">${r.time || ''}</td>
+                        <td class="border p-3">${r.teacher || ''}</td>
+                        <td class="border p-3">${r.student || ''}</td>
+                        <td class="border p-3 italic text-orange-900 font-bold">${r.homework || '-'}</td>
+                    </tr>`;
                 });
                 document.getElementById('aiResultArea').innerHTML = html + "</table>";
                 document.getElementById('aiResultArea').classList.remove('hidden');
                 document.getElementById('downloadBtn').style.display = 'block';
-                
+
                 fetch(orderURL, { method: 'POST', mode: 'no-cors', body: JSON.stringify({ action: "use", email: currentUserEmail }) });
-                userCredits--; document.getElementById('displayCredits').innerText = userCredits;
-            } catch(e) { alert("AI алдаа!"); } finally { btn.innerText = "Төлөвлөгөө боловсруулах"; }
+                userCredits--;
+                document.getElementById('displayCredits').innerText = userCredits;
+            } catch(e) {
+                alert("AI холболтод алдаа гарлаа.");
+            } finally {
+                btn.innerText = "Төлөвлөгөө боловсруулах";
+            }
         }
 
         function downloadPDF() {
             const { jsPDF } = window.jspdf;
             const doc = new jsPDF();
-            doc.text("ХИЧЭЭЛИЙН ТӨЛӨВЛӨГӨӨ", 105, 20, { align: "center" });
+            doc.text("HICHEELIIN TOLOVLOGOO", 105, 20, { align: "center" });
             const rows = currentPlanData.map(r => [r.step, r.time, r.teacher, r.student, r.homework]);
-            doc.autoTable({ head: [['Алхам', 'Хугацаа', 'Багш', 'Сурагч', 'Даалгавар']], body: rows, startY: 30, styles: { fontSize: 8 } });
+            doc.autoTable({ head: [['Alham', 'Hugatsaa', 'Bagsh', 'Suragch', 'Daalgavar']], body: rows, startY: 30, styles: { fontSize: 8 } });
             doc.save("tolovlogoo.pdf");
         }
 
         function generateSudoku() {
-    const numbers = ["᠑", "᠒", "᠓", "᠔", "᠕", "᠖", "᠗", "᠘", "᠙"];
-    let html = '<div class="grid grid-cols-9 border-4 border-black bg-white shadow-2xl w-fit mx-auto">';
-    
-    for (let i = 0; i < 81; i++) {
-        // 30% магадлалтайгаар зарим нүдийг тоотой, бусдыг нь хоосон (input) үлдээнэ
-        if (Math.random() > 0.7) {
-            const val = numbers[Math.floor(Math.random() * 9)];
-            html += `<div class="w-10 h-10 border border-gray-300 flex items-center justify-center font-bold text-lg bg-gray-100 text-gray-800">${val}</div>`;
-        } else {
-            // Сурагч тоо бичих хэсэг:
-            html += `<input type="text" maxlength="1" 
-                class="w-10 h-10 border border-gray-300 text-center font-bold text-lg text-orange-800 outline-none focus:bg-orange-50" 
-                oninput="this.value = this.value.replace(/[^1-9]/g, ''); if(this.value) this.value = ['','᠑','᠒','᠓','᠔','᠕','᠖','᠗','᠘','᠙'][this.value];">`;
+            const numbers = ["᠑", "᠒", "᠓", "᠔", "᠕", "᠖", "᠗", "᠘", "᠙"];
+            let html = '<div class="grid grid-cols-9 border-4 border-black bg-white shadow-2xl w-fit mx-auto">';
+            for (let i = 0; i < 81; i++) {
+                if (Math.random() > 0.7) {
+                    const val = numbers[Math.floor(Math.random() * 9)];
+                    html += `<div class="w-10 h-10 border border-gray-300 flex items-center justify-center font-bold text-lg bg-gray-100 text-gray-800">${val}</div>`;
+                } else {
+                    html += `<input type="text" maxlength="1" class="w-10 h-10 border border-gray-300 text-center font-bold text-lg text-orange-800 outline-none focus:bg-orange-50">`;
+                }
+            }
+            document.getElementById('sudokuContainer').innerHTML = html + '</div>';
         }
-    }
-    document.getElementById('sudokuContainer').innerHTML = html + '</div>';
-}
 
         async function loadProducts() {
+            const grid = document.getElementById('productGrid');
+            grid.innerHTML = '<p class="text-orange-800 font-bold italic col-span-3">Ачаалж байна...</p>';
             try {
                 const res = await fetch(`${orderURL}?action=getProducts`);
                 const data = await res.json();
                 let html = '';
-                data.forEach(item => {
-                    html += `<div class="bg-white p-8 rounded-[3rem] shadow-sm border border-orange-50 hover:shadow-xl transition-all">
-                        <h4 class="font-black text-orange-900 text-lg mb-2 italic">${item.title}</h4>
-                        <p class="text-[10px] text-gray-400 mb-6 font-bold uppercase italic">${item.description}</p>
-                        <div class="flex justify-between items-center bg-orange-50 p-4 rounded-2xl italic">
-                            <span class="font-black text-orange-800">${item.price}₮</span>
-                            <button onclick="openCheckout('${item.title}')" class="bg-orange-800 text-white px-6 py-2 rounded-xl text-[10px] font-black italic uppercase">Захиалах</button>
+                data.forEach((item, idx) => {
+                    html += `
+                    <div class="bg-white p-6 rounded-[3rem] shadow-sm border border-orange-100 hover:shadow-2xl transition-all flex flex-col justify-between">
+                        <div>
+                            <h4 class="font-black text-orange-900 text-lg mb-2 italic uppercase">${item.title}</h4>
+                            <p class="text-xs text-gray-500 mb-6 font-medium italic line-clamp-3">${item.description}</p>
+                        </div>
+                        <div class="flex justify-between items-center bg-orange-50 p-4 rounded-2xl italic mt-4">
+                            <span class="font-black text-orange-800 text-lg">${item.price}₮</span>
+                            <button onclick="openCheckout('${item.title}')" class="bg-orange-800 text-white px-5 py-2.5 rounded-xl text-[10px] font-black italic uppercase">Захиалах</button>
                         </div>
                     </div>`;
                 });
-                document.getElementById('productGrid').innerHTML = html;
-            } catch(e) { console.log("Shop error"); }
+                grid.innerHTML = html || '<p class="col-span-3 text-gray-400 italic">Бараа байхгүй байна.</p>';
+            } catch(e) {
+                grid.innerHTML = '<p class="text-red-500 font-bold italic col-span-3">Алдаа гарлаа.</p>';
+            }
         }
 
         function openCheckout(name) { selectedItemName = name; document.getElementById('checkoutModal').classList.add('active'); }
@@ -355,62 +285,6 @@
             fetch(orderURL, { method: 'POST', mode: 'no-cors', body: JSON.stringify({ action: "order", email: currentUserEmail, productName: selectedItemName }) })
             .then(() => { alert("Мэдээлэл илгээгдлээ. Төлбөр шалгасны дараа эрх орно."); closeCheckout(); });
         }
-        // 1. Дэлгүүрийн барааг Google Sheet-ээс уншиж харуулах функц
-async function loadProducts() {
-    const grid = document.getElementById('productGrid');
-    grid.innerHTML = '<p class="text-orange-800 font-bold italic col-span-3">Ачаалж байна...</p>';
-    
-    try {
-        const res = await fetch(`${orderURL}?action=getProducts`);
-        const data = await res.json();
-        let html = '';
-        
-        data.forEach((item, idx) => {
-            // Зургуудыг слайд болгох хэсэг
-            let imageHTML = '';
-            if (item.images && item.images.length > 0) {
-                imageHTML = `
-                <div class="relative w-full h-56 overflow-hidden rounded-[2rem] mb-4 group shadow-inner bg-gray-50">
-                    <div id="slider-${idx}" class="flex transition-transform duration-500 ease-in-out w-full h-full">
-                        ${item.images.map(img => `<img src="${img.trim()}" class="w-full h-full object-cover flex-shrink-0">`).join('')}
-                    </div>
-                    ${item.images.length > 1 ? `
-                        <button onclick="event.stopPropagation(); moveSlide(${idx}, -1)" class="absolute left-2 top-1/2 -translate-y-1/2 bg-white/90 w-8 h-8 rounded-full shadow-md text-orange-900 font-bold hover:bg-orange-800 hover:text-white transition-all">❮</button>
-                        <button onclick="event.stopPropagation(); moveSlide(${idx}, 1)" class="absolute right-2 top-1/2 -translate-y-1/2 bg-white/90 w-8 h-8 rounded-full shadow-md text-orange-900 font-bold hover:bg-orange-800 hover:text-white transition-all">❯</button>
-                    ` : ''}
-                </div>`;
-            }
-
-            html += `
-            <div class="bg-white p-6 rounded-[3rem] shadow-sm border border-orange-100 hover:shadow-2xl transition-all flex flex-col justify-between">
-                <div>
-                    ${imageHTML}
-                    <h4 class="font-black text-orange-900 text-lg mb-2 italic uppercase">${item.title}</h4>
-                    <p class="text-xs text-gray-500 mb-6 font-medium italic line-clamp-3">${item.description}</p>
-                </div>
-                <div class="flex justify-between items-center bg-orange-50 p-4 rounded-2xl italic mt-4">
-                    <span class="font-black text-orange-800 text-lg">${item.price}₮</span>
-                    <button onclick="openCheckout('${item.title}')" class="bg-orange-800 text-white px-5 py-2.5 rounded-xl text-[10px] font-black italic uppercase hover:scale-105 active:scale-95 transition-transform">Захиалах</button>
-                </div>
-            </div>`;
-        });
-        grid.innerHTML = html || '<p class="col-span-3 text-gray-400 italic">Одоогоор бараа байхгүй байна.</p>';
-    } catch(e) { 
-        grid.innerHTML = '<p class="text-red-500 font-bold italic col-span-3">Бараа ачаалахад алдаа гарлаа. Sheet-ээ шалгана уу.</p>';
-    }
-}
-
-// 2. Зураг гүйлгэх (Slide) логик
-let currentSlides = {};
-function moveSlide(idx, step) {
-    const slider = document.getElementById(`slider-${idx}`);
-    if (!slider) return;
-    const slides = slider.children.length;
-    if (!currentSlides[idx]) currentSlides[idx] = 0;
-    
-    currentSlides[idx] = (currentSlides[idx] + step + slides) % slides;
-    slider.style.transform = `translateX(-${currentSlides[idx] * 100}%)`;
-}
     </script>
 </body>
 </html>
