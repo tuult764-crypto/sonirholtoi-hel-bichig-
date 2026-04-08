@@ -1,14 +1,15 @@
 {
   "name": "sonirholtoi-hel-bichig",
   "version": "1.0.0",
-  "description": "Монгол хэлний багшийн туслах систем",
+  "description": "",
   "main": "server.js",
-  "dependencies": {
-    "express": "^4.18.2",
-    "node-fetch": "^2.6.7",
-    "cors": "^2.8.5"
-  },
   "scripts": {
     "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "openai": "^4.0.0",
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.3"
   }
 }
