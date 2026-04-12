@@ -124,29 +124,56 @@
 
     <script>
         // --- ТОХИРГОО ---
-        const orderURL = 'https://script.google.com/macros/s/AKfycbyZtbpUD2eoTtpg3nXgJOkvog0iKu_5xRUgTllSfCYLFUMIW2aQvQgU0fvnfsR7-Bz6gw/exec';
+        const orderURL = 'https://script.google.com/macros/s/AKfycbyvF3AeJBkopILQmUXeMscqY7rDRsT5nTa-X5-GvSrGnSJubNPLcNwJQwoavE4-kyRV-g/exec';
         const RENDER_API_URL = 'https://ТАНЫ-RENDER-АПП-ХАЯГ.onrender.com/chat'; // <-- Рендер хаягаа энд тавиарай
         
         let currentUserEmail = "", userCredits = 0, selectedItemName = "";
 
         // LOGIN
         async function handleLogin() {
-            const email = document.getElementById('loginEmail').value.trim();
-            if(!email.includes('@')) return alert("Мэйлээ зөв оруулна уу!");
-            document.getElementById('loginBtn').innerText = "Уншиж байна...";
-            try {
-                const res = await fetch(`${orderURL}?action=check&email=${email}`);
-                const data = await res.json();
-                currentUserEmail = email; userCredits = data.credits;
-                document.getElementById('authScreen').classList.add('hidden');
-                document.getElementById('mainSystem').classList.remove('hidden');
-                document.getElementById('displayEmail').innerText = email;
-                document.getElementById('displayCredits').innerText = userCredits;
-                document.getElementById('payEmail').innerText = email;
-                loadProducts();
-            } catch(e) { alert("Алдаа гарлаа!"); } finally { document.getElementById('loginBtn').innerText = "Нэвтрэх"; }
-        }
+    const emailInput = document.getElementById('loginEmail');
+    const email = emailInput.value.trim();
+    const btn = document.getElementById('loginBtn');
 
+    if (!email || !email.includes('@')) {
+        return alert("Мэйл хаягаа зөв оруулна уу!");
+    }
+
+    btn.innerText = "Шалгаж байна...";
+    btn.disabled = true;
+
+    try {
+        // Шалгах хүсэлт илгээх
+        const response = await fetch(`${orderURL}?action=check&email=${encodeURIComponent(email)}`);
+        
+        if (!response.ok) throw new Error("Сүлжээний алдаа гарлаа");
+
+        const data = await response.json();
+
+        if (data.status === "success" || data.credits !== undefined) {
+            // Амжилттай нэвтэрсэн үед
+            currentUserEmail = email;
+            userCredits = data.credits || 0;
+
+            document.getElementById('authScreen').classList.add('hidden');
+            document.getElementById('mainSystem').classList.remove('hidden');
+            
+            document.getElementById('displayEmail').innerText = email;
+            document.getElementById('displayCredits').innerText = userCredits;
+            document.getElementById('payEmail').innerText = email;
+
+            loadProducts(); // Бараануудыг ачаалах
+        } else {
+            alert("Бүртгэлгүй мэйл хаяг эсвэл алдаа гарлаа!");
+        }
+    } catch (error) {
+        console.error("Login Error:", error);
+        alert("Нэвтрэхэд алдаа гарлаа. Google Script-ээ 'Anyone' эрхтэй Deploy хийсэн эсэхээ шалгаарай.");
+    } finally {
+        btn.innerText = "Нэвтрэх";
+        btn.disabled = false;
+    }
+}
         // LOAD PRODUCTS
         async function loadProducts() {
             try {
