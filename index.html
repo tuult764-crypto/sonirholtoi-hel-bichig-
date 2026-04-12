@@ -12,17 +12,21 @@
         body { font-family: 'Manrope', sans-serif; background-color: #fdfaf7; }
         .section-content { display: none; }
         .section-content.active { display: block; }
+        /* Судокугийн хүснэгтийн загвар */
+#sudokuContainer div:nth-child(3n) { border-right-width: 3px; border-right-color: #854d0e; }
+#sudokuContainer div:nth-child(9n) { border-right-width: 1px; }
+#sudokuContainer > div:nth-of-type(n+19):nth-of-type(-n+27),
+#sudokuContainer > div:nth-of-type(n+46):nth-of-type(-n+54) {
+    border-bottom-width: 3px;
+    border-bottom-color: #854d0e;
+}
         .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 1000; justify-content: center; align-items: center; padding: 20px; }
         .modal.active { display: flex; }
     </style>
     <div class="mt-8">
     <h2 class="text-xl font-bold text-orange-900 mb-4 italic">📚 Сургалтын материалууд</h2>
     
-    <div id="productGrid" 
-         class="flex overflow-x-auto pb-6 gap-4 snap-x snap-mandatory scrollbar-hide" 
-         style="scroll-behavior: smooth; -webkit-overflow-scrolling: touch;">
-        </div>
-</div>
+    <div id="materialGrid" class="flex overflow-x-auto pb-6 gap-4 snap-x snap-mandatory scrollbar-hide" ...>
 
 <style>
     /* Гүйлгэх мөрийг нуух (илүү цэвэрхэн харагдуулна) */
@@ -156,10 +160,10 @@
             </div>
         </div>
 
-        <div id="shopSection" class="section-content px-4 py-10 container mx-auto text-center">
-            <h2 class="font-black text-2xl mb-8 text-orange-900 italic uppercase underline decoration-orange-300">Дэлгүүр & Эрх</h2>
-            <div id="productGrid" class="grid grid-cols-1 md:grid-cols-3 gap-8"></div>
-        </div>
+<div id="shopSection" class="section-content px-4 py-10 container mx-auto text-center">
+    <h2 class="font-black text-2xl mb-8 text-orange-900 italic uppercase underline decoration-orange-300">Дэлгүүр & Эрх</h2>
+    <div id="shopGrid" class="grid grid-cols-1 md:grid-cols-3 gap-8"></div>
+</div>
     </div>
 
     <div id="checkoutModal" class="modal" onclick="if(event.target==this) closeCheckout()">
@@ -340,42 +344,50 @@ prompt = `Энэхүү хичээлийг төлөвлөхдөө ${medleeLinks[g
     window.location.reload(); // Хуудсыг дахин ачаалж хэвийн байдалд оруулна
 }
 
-      // 1. Монгол тооны хөрвүүлэг
+// 1. Монгол тооны хөрвүүлэг
 const mongolNumbers = {
     1: '᠑', 2: '᠒', 3: '᠓', 4: '᠔', 5: '᠕', 6: '᠖', 7: '᠗', 8: '᠘', 9: '᠙'
 };
 
-// 2. Тоо давхцахгүй байх логик
+// 2. Тоо шалгах логик
 function isValid(board, row, col, num) {
     for (let x = 0; x < 9; x++) {
-        if (board[row][x] === num || board[x][col] === num || 
-            board[3 * Math.floor(row / 3) + Math.floor(x / 3)][3 * Math.floor(col / 3) + x % 3] === num) {
-            return false;
+        if (board[row][x] === num || board[x][col] === num) return false;
+    }
+    let startRow = row - row % 3, startCol = col - col % 3;
+    for (let i = 0; i < 3; i++) {
+        for (let j = 0; j < 3; j++) {
+            if (board[i + startRow][j + startCol] === num) return false;
         }
     }
     return true;
 }
 
-// 3. Судокуг шинээр үүсгэх
+// 3. Хүснэгт дүүргэх рекурсив функц
+function fillBoard(board) {
+    for (let row = 0; row < 9; row++) {
+        for (let col = 0; col < 9; col++) {
+            if (board[row][col] === 0) {
+                let nums = [1, 2, 3, 4, 5, 6, 7, 8, 9].sort(() => Math.random() - 0.5);
+                for (let num of nums) {
+                    if (isValid(board, row, col, num)) {
+                        board[row][col] = num;
+                        if (fillBoard(board)) return true;
+                        board[row][col] = 0;
+                    }
+                }
+                return false;
+            }
+        }
+    }
+    return true;
+}
+
+// 4. Судокуг шинээр үүсгэж, зарим нүдийг арилгах
 function generateSudoku() {
     let board = Array.from({ length: 9 }, () => Array(9).fill(0));
-    
-    function fillBoard(board) {
-        for (let row = 0; row < 9; row++) {
-            for (let col = 0; col < 9; col++) {
-                if (board[row][col] === 0) {
-                    let nums = [1, 2, 3, 4, 5, 6, 7, 8, 9].sort(() => Math.random() - 0.5);
-                    for (let num of nums) {
-                        if (isValid(board, row, col, num)) {
-                            board[row][col] = num;
-                            if (fillBoard(board)) return true;
-                            board[row][col] = 0;
-                        }
-                    }
-                    return false;
-                }
-    
     fillBoard(board);
+    
     // 40 нүдийг хоосон болгож хүндрүүлнэ
     for (let k = 0; k < 40; k++) {
         let r = Math.floor(Math.random() * 9);
@@ -385,28 +397,33 @@ function generateSudoku() {
     renderSudoku(board);
 }
 
-// 4. Дэлгэцэнд Монгол тоогоор харуулах
+// 5. Дэлгэцэнд Монгол тоогоор дүрслэх
 function renderSudoku(board) {
     const container = document.getElementById('sudokuContainer');
+    if(!container) return;
+    
     container.innerHTML = '';
-    container.className = "grid grid-cols-9 gap-1 bg-orange-200 p-1 border-2 border-orange-800";
+    container.className = "grid grid-cols-9 bg-white p-1 border-2 border-orange-900 mx-auto w-fit shadow-lg";
     
     board.forEach((row, i) => {
         row.forEach((num, j) => {
             const cell = document.createElement('div');
-            cell.className = "w-10 h-10 flex items-center justify-center bg-white font-bold text-lg";
+            cell.className = "w-10 h-10 flex items-center justify-center border border-orange-100 font-bold text-xl";
             
             if (num !== 0) {
                 cell.innerText = mongolNumbers[num];
-                cell.classList.add("text-orange-900");
+                cell.classList.add("text-orange-900", "bg-orange-50");
             } else {
                 const input = document.createElement('input');
-                input.className = "w-full h-full text-center outline-none focus:bg-orange-50 text-blue-700";
+                input.className = "w-full h-full text-center outline-none focus:bg-orange-200 text-blue-700 font-bold";
                 input.maxLength = 1;
                 input.oninput = (e) => {
                     const val = e.target.value;
-                    if (val >= 1 && val <= 9) e.target.value = mongolNumbers[val];
-                    else e.target.value = "";
+                    if (val >= 1 && val <= 9) {
+                        e.target.value = mongolNumbers[val];
+                    } else {
+                        e.target.value = "";
+                    }
                 };
                 cell.appendChild(input);
             }
@@ -414,7 +431,6 @@ function renderSudoku(board) {
         });
     });
 }
-        }
 
         function openCheckout(name) { selectedItemName = name; document.getElementById('checkoutModal').classList.add('active'); }
         function closeCheckout() { document.getElementById('checkoutModal').classList.remove('active'); }
