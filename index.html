@@ -241,7 +241,7 @@
     
     // ТАНЫ ӨГСӨН ЗАГВАРТ ТОХИРУУЛСАН PROMPT
     let prompt = `Чи бол 6-12-р ангийн Монгол хэл, уран зохиол, үндэсний бичгийн туршлагатай боловсрол шинжлэх ухааны яамны хөтөлбөрийн дагуу хчиээлээ төлөвлөж заадаг багш.Чиний гол зорилго бол сурагчдыг уншиж ойлгох ярих бичих чадварыг идэвхтэй сургалтын аргаар чадавхжуулах 
-    "${grade}"-ийн "${topic}" сэдвээр ${time} минутын ээлжит хичээлийн төлөвлөгөөг дараах ЗАГВАРЫН дагуу боловсруулж өг.
+    "${grade}"-ийн "${topic}" сэдвээр ${time} минутын ээлжит хичээлийн төлөвлөгөөг дараах ЗАГВАРЫН дагуу боловсруулж өг. "Чиний үндсэн эх сурвалж бол Medlee.mn. Хичээлийн зорилго, хүрэх үр дүн, жишээ дасгалуудыг заавал үндэсний хөтөлбөрийн дагуу боловсруул.
 
     Хичээлийн бүтэц (JSON array форматтай байх ёстой):
     - Алхам 1-7 хүртэлх үе шаттай байна.
@@ -329,20 +329,45 @@
     window.location.reload(); // Хуудсыг дахин ачаалж хэвийн байдалд оруулна
 }
 
-        function generateSudoku() {
-            const numbers = ["᠑", "᠒", "᠓", "᠔", "᠕", "᠖", "᠗", "᠘", "᠙"];
-            let html = '<div class="grid grid-cols-9 border-4 border-black bg-white shadow-2xl w-fit mx-auto">';
-            for (let i = 0; i < 81; i++) {
-                if (Math.random() > 0.7) {
-                    const val = numbers[Math.floor(Math.random() * 9)];
-                    html += `<div class="w-10 h-10 border border-gray-300 flex items-center justify-center font-bold text-lg bg-gray-100 text-gray-800">${val}</div>`;
-                } else {
-                    html += `<input type="text" maxlength="1" class="w-10 h-10 border border-gray-300 text-center font-bold text-lg text-orange-800 outline-none focus:bg-orange-50">`;
-                }
-            }
-            document.getElementById('sudokuContainer').innerHTML = html + '</div>';
-        }
+       // Монгол тооны хөрвүүлэг
+const mongolNumbers = {
+    1: '᠑', 2: '᠒', 3: '᠓', 4: '᠔', 5: '᠕', 6: '᠖', 7: '᠗', 8: '᠘', 9: '᠙'
+};
 
+function renderSudoku(board) {
+    const container = document.getElementById('sudokuContainer');
+    container.innerHTML = '';
+    board.forEach((row, i) => {
+        row.forEach((num, j) => {
+            const cell = document.createElement('div');
+            cell.className = "w-10 h-10 border border-orange-300 flex items-center justify-center text-xl font-bold bg-white";
+            // Монгол бичгийн тоогоор харуулах
+            cell.innerText = num !== 0 ? mongolNumbers[num] : '';
+            container.appendChild(cell);
+        });
+    });
+}
+
+// Шууд хэвлэх функц
+function printSudoku() {
+    const printArea = document.getElementById('sudokuContainer').innerHTML;
+    const win = window.open('', '', 'height=500,width=500');
+    win.document.write(`
+        <html>
+            <head><title>Судоку Хэвлэх</title></head>
+            <style>
+                #sudokuContainer { display: grid; grid-template-columns: repeat(9, 30px); gap: 2px; }
+                div { width: 30px; height: 30px; border: 1px solid black; text-align: center; line-height: 30px; font-size: 20px; }
+            </style>
+            <body>
+                <h2 style="font-family: Arial;">Монгол бичгийн тоон Судоку</h2>
+                <div id="sudokuContainer">${printArea}</div>
+            </body>
+        </html>
+    `);
+    win.document.close();
+    win.print();
+} 
         async function loadProducts() {
             const grid = document.getElementById('productGrid');
             grid.innerHTML = '<p class="text-orange-800 font-bold italic col-span-3">Ачаалж байна...</p>';
