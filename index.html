@@ -178,7 +178,7 @@
         // index.html файлын эхний хэсэгт байгаа script хэсэг:
 
 const orderURL = "https://script.google.com/macros/s/AKfycbwncImxdCVm8qiSFJ6hYtAXvjDMbpQ8--Do5vGYxjmvvsyO8bYuhmqQHKowbbVLKTZSZw/exec"; // Дэлгүүр болон захиалга хариуцах URL
-        const orderURL = 'https://script.google.com/macros/s/AKfycbwfQo-T-qJJIMMmbmETmc5gKJF1hBZpm9h-x0KYo7FGZRilgBS1pY_NkFF4VoQvMw2Kow/exec';
+        const orderURL = 'https://script.google.com/macros/s/AKfycbzSbD9yhyfG063eJIfAasA1Ant6gX6nez2BbAUw50--nCGPGNyiiEMqQlMskiFWc1eK3Q/exec';
         let currentUserEmail = "", userCredits = 0, currentPlanData = null, selectedItemName = "";
 
         async function handleLogin() {
@@ -332,69 +332,84 @@ const orderURL = "https://script.google.com/macros/s/AKfycbwncImxdCVm8qiSFJ6hYtA
     window.location.reload(); // Хуудсыг дахин ачаалж хэвийн байдалд оруулна
 }
 
-       // Монгол тооны хөрвүүлэг
+      // 1. Монгол тооны хөрвүүлэг
 const mongolNumbers = {
     1: '᠑', 2: '᠒', 3: '᠓', 4: '᠔', 5: '᠕', 6: '᠖', 7: '᠗', 8: '᠘', 9: '᠙'
 };
 
+// 2. Тоо давхцахгүй байх логик
+function isValid(board, row, col, num) {
+    for (let x = 0; x < 9; x++) {
+        if (board[row][x] === num || board[x][col] === num || 
+            board[3 * Math.floor(row / 3) + Math.floor(x / 3)][3 * Math.floor(col / 3) + x % 3] === num) {
+            return false;
+        }
+    }
+    return true;
+}
+
+// 3. Судокуг шинээр үүсгэх
+function generateSudoku() {
+    let board = Array.from({ length: 9 }, () => Array(9).fill(0));
+    
+    function fillBoard(board) {
+        for (let row = 0; row < 9; row++) {
+            for (let col = 0; col < 9; col++) {
+                if (board[row][col] === 0) {
+                    let nums = [1, 2, 3, 4, 5, 6, 7, 8, 9].sort(() => Math.random() - 0.5);
+                    for (let num of nums) {
+                        if (isValid(board, row, col, num)) {
+                            board[row][col] = num;
+                            if (fillBoard(board)) return true;
+                            board[row][col] = 0;
+                        }
+                    }
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+    
+    fillBoard(board);
+    // 40 нүдийг хоосон болгож хүндрүүлнэ
+    for (let k = 0; k < 40; k++) {
+        let r = Math.floor(Math.random() * 9);
+        let c = Math.floor(Math.random() * 9);
+        board[r][c] = 0;
+    }
+    renderSudoku(board);
+}
+
+// 4. Дэлгэцэнд Монгол тоогоор харуулах
 function renderSudoku(board) {
     const container = document.getElementById('sudokuContainer');
     container.innerHTML = '';
+    container.className = "grid grid-cols-9 gap-1 bg-orange-200 p-1 border-2 border-orange-800";
+    
     board.forEach((row, i) => {
         row.forEach((num, j) => {
             const cell = document.createElement('div');
-            cell.className = "w-10 h-10 border border-orange-300 flex items-center justify-center text-xl font-bold bg-white";
-            // Монгол бичгийн тоогоор харуулах
-            cell.innerText = num !== 0 ? mongolNumbers[num] : '';
+            cell.className = "w-10 h-10 flex items-center justify-center bg-white font-bold text-lg";
+            
+            if (num !== 0) {
+                cell.innerText = mongolNumbers[num];
+                cell.classList.add("text-orange-900");
+            } else {
+                const input = document.createElement('input');
+                input.className = "w-full h-full text-center outline-none focus:bg-orange-50 text-blue-700";
+                input.maxLength = 1;
+                input.oninput = (e) => {
+                    const val = e.target.value;
+                    if (val >= 1 && val <= 9) e.target.value = mongolNumbers[val];
+                    else e.target.value = "";
+                };
+                cell.appendChild(input);
+            }
             container.appendChild(cell);
         });
     });
 }
-
-// Шууд хэвлэх функц
-function printSudoku() {
-    const printArea = document.getElementById('sudokuContainer').innerHTML;
-    const win = window.open('', '', 'height=500,width=500');
-    win.document.write(`
-        <html>
-            <head><title>Судоку Хэвлэх</title></head>
-            <style>
-                #sudokuContainer { display: grid; grid-template-columns: repeat(9, 30px); gap: 2px; }
-                div { width: 30px; height: 30px; border: 1px solid black; text-align: center; line-height: 30px; font-size: 20px; }
-            </style>
-            <body>
-                <h2 style="font-family: Arial;">Монгол бичгийн тоон Судоку</h2>
-                <div id="sudokuContainer">${printArea}</div>
-            </body>
-        </html>
-    `);
-    win.document.close();
-    win.print();
-} 
-        async function loadProducts() {
-            const grid = document.getElementById('productGrid');
-            grid.innerHTML = '<p class="text-orange-800 font-bold italic col-span-3">Ачаалж байна...</p>';
-            try {
-                const res = await fetch(`${orderURL}?action=getProducts`);
-                const data = await res.json();
-                let html = '';
-                data.forEach((item, idx) => {
-                    html += `
-                    <div class="bg-white p-6 rounded-[3rem] shadow-sm border border-orange-100 hover:shadow-2xl transition-all flex flex-col justify-between">
-                        <div>
-                            <h4 class="font-black text-orange-900 text-lg mb-2 italic uppercase">${item.title}</h4>
-                            <p class="text-xs text-gray-500 mb-6 font-medium italic line-clamp-3">${item.description}</p>
-                        </div>
-                        <div class="flex justify-between items-center bg-orange-50 p-4 rounded-2xl italic mt-4">
-                            <span class="font-black text-orange-800 text-lg">${item.price}₮</span>
-                            <button onclick="openCheckout('${item.title}')" class="bg-orange-800 text-white px-5 py-2.5 rounded-xl text-[10px] font-black italic uppercase">Захиалах</button>
-                        </div>
-                    </div>`;
-                });
-                grid.innerHTML = html || '<p class="col-span-3 text-gray-400 italic">Бараа байхгүй байна.</p>';
-            } catch(e) {
-                grid.innerHTML = '<p class="text-red-500 font-bold italic col-span-3">Алдаа гарлаа.</p>';
-            }
         }
 
         function openCheckout(name) { selectedItemName = name; document.getElementById('checkoutModal').classList.add('active'); }
