@@ -196,7 +196,7 @@
             console.error("Бараа ачаалахад алдаа гарлаа.");
         }
     }
-   // 3. AI ТӨЛӨВЛӨГӨӨ БОЛОВСРУУЛАХ
+// 3. AI ТӨЛӨВЛӨГӨӨ БОЛОВСРУУЛАХ
     async function generateAIPlan() {
         if(userCredits <= 0) return alert("Эрх хүрэлцэхгүй байна!");
         const btn = document.getElementById('genBtn');
@@ -207,135 +207,87 @@
         btn.innerText = "AI боловсруулж байна...";
         btn.disabled = true;
 
-    // Medlee.mn линкүүд
-    const medleeLinks = {
-        "6-р анги": "https://medle.mn/public/teachercorner/planning",
-        "7-р анги": "https://medle.mn/public/teachercorner/planning",
-        "8-р анги": "https://medle.mn/public/teachercorner/planning",
-        "9-р анги": "https://medle.mn/public/teachercorner/planning",
-        "10-р анги": "https://medle.mn/public/teachercorner/planning",
-        "11-р анги": "https://medle.mn/public/teachercorner/planning",
-        "12-р анги": "https://medle.mn/public/teachercorner/planning"
-    };
+        // AI-д өгөх заавар (Prompt)
+        const prompt = `Та Монгол хэл, уран зохиолын мэргэжлийн багш. ${grade}-ийн "${topic}" сэдвээр 40 минутын ээлжит хичээлийн төлөвлөгөөг идэвхтэй сургалтын аргыг ашиглан боловсруулна уу. 
+        Хүснэгтийн бүтэц (JSON array):
+        1. step: Алхамын нэр
+        2. time: Хугацаа (минутаар)
+        3. teacher: Багшийн үйл ажиллагаа
+        4. student: Сурагчийн үйл ажиллагаа
+        5. homework: Гэрийн даалгавар`;
 
-    // ТАНЫ ХҮССЭН ДЭЛГЭРЭНГҮЙ PROMPT
-    const prompt = `Та Монгол хэл, уран зохиол, үндэсний бичгийн мэргэжлийн багш. ${grade}-ийн "${topic}" сэдвээр 40 минутын ээлжит хичээлийн төлөвлөгөөг захиалагч багшийн сэдэвт тааруулан алхамчлан идэвхтэй сургалтын аргыг ашиглан 6-12 дугаар ангийн сурагчдын онцлогт нийцүүлэн хөтөлбөр боловсруулна. 
-    Эх сурвалж: ${medleeLinks[grade]} линк дээрх хичээлийн хөтөлбөрийг баримтал.
-    
-    Хүснэгтийн бүтэц (JSON array):
-    1. step: Алхамын нэр (Сэдэлжүүлэлт, Шинэ мэдлэг, Батлах үйл ажиллагаа гэх мэт)
-    2. time: Хугацаа (минутаар)
-    3. teacher: Багшийн үйл ажиллагаа (дэлгэрэнгүй)
-    4. student: Сурагчийн үйл ажиллагаа (дэлгэрэнгүй)
-    5. homework: Гэрийн даалгавар (зөвхөн сүүлийн алхам дээр)`;
+        try {
+            const response = await fetch(RENDER_API_URL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ prompt, grade, topic })
+            });
 
-    try {
-        const response = await fetch(RENDER_API_URL, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ prompt, grade, topic })
-        });
-
-        const data = await response.json();
-        
-        // --- ХҮСНЭГТ БОЛОН МЕНЕЖЕРИЙН ХЭСГИЙГ ХАЙРЦАГЛАХ ---
-        let html = `
-            <div id="printArea" class="p-8 bg-white border border-gray-200 shadow-sm">
-                <div class="flex justify-between items-start mb-8 border-b-2 border-black pb-4">
-                    <div class="text-left">
-                        <p class="font-bold uppercase text-sm">БАТЛАВ: СУРГАЛТЫН МЕНЕЖЕР ........................... / </p>
-                        <p class="text-[10px] mt-1 italic">202... он ... сар ... өдөр</p>
+            const data = await response.json();
+            
+            // Хүснэгтийн загвар үүсгэх
+            let html = `
+                <div id="printArea" class="p-8 bg-white border border-gray-200 shadow-sm">
+                    <div class="flex justify-between items-start mb-8 border-b-2 border-black pb-4">
+                        <div class="text-left">
+                            <p class="font-bold uppercase text-sm">БАТЛАВ: СУРГАЛТЫН МЕНЕЖЕР ........................... / </p>
+                            <p class="text-[10px] mt-1 italic">202... он ... сар ... өдөр</p>
+                        </div>
+                        <div class="text-right">
+                            <h1 class="font-black text-xl uppercase italic underline text-orange-900">Ээлжит хичээлийн төлөвлөлт</h1>
+                            <p class="font-bold mt-1 text-sm">${grade}: ${topic}</p>
+                        </div>
                     </div>
-                    <div class="text-right">
-                        <h1 class="font-black text-xl uppercase italic underline text-orange-900">Ээлжит хичээлийн төлөвлөлт</h1>
-                        <p class="font-bold mt-1 text-sm">${grade}: ${topic}</p>
-                    </div>
-                </div>
+                    <table class="w-full border-collapse border-2 border-black text-[12px]">
+                        <thead>
+                            <tr class="bg-gray-100">
+                                <th class="border-2 border-black p-2 w-16">Алхам</th>
+                                <th class="border-2 border-black p-2 w-16">Хугацаа</th>
+                                <th class="border-2 border-black p-2">Багшийн үйл ажиллагаа</th>
+                                <th class="border-2 border-black p-2">Сурагчийн үйл ажиллагаа</th>
+                            </tr>
+                        </thead>
+                        <tbody>`;
 
-                <table class="w-full border-collapse border-2 border-black text-[12px]">
-                    <thead class="bg-gray-100">
-                        <tr>
-                            <th class="border-2 border-black p-2 w-16">Алхам</th>
-                            <th class="border-2 border-black p-2 w-16">Хугацаа</th>
-                            <th class="border-2 border-black p-2">Багшийн үйл ажиллагаа</th>
-                            <th class="border-2 border-black p-2">Сурагчийн үйл ажиллагаа</th>
-                        </tr>
-                    </thead>
-                    <tbody>`;
-
-        data.plan.forEach(r => {
-            html += `
-                <tr>
-                    <td class="border border-black p-3 font-bold text-center italic bg-gray-50">${r.step}</td>
-                    <td class="border border-black p-3 text-center font-bold">${r.time} мин</td>
-                    <td class="border border-black p-3 text-justify leading-relaxed">${r.teacher}</td>
-                    <td class="border border-black p-3 text-justify leading-relaxed">${r.student}</td>
-                </tr>`;
-        });
-
-        html += `
-                    </tbody>
-                </table>
-
-                <div class="mt-6 border-2 border-black p-4 bg-orange-50 italic">
-                    <p class="font-bold underline mb-1">Гэрийн даалгавар:</p>
-                    <p>${data.plan[data.plan.length - 1].homework || "Сэдэвтэй холбоотой дасгал ажиллах."}</p>
-                </div>
-
-                <div class="mt-10 flex justify-between italic font-bold text-sm px-4">
-                    <p>Боловсруулсан багш: ........................... / ...................... /</p>
-                </div>
-            </div>`;
-
-        document.getElementById('aiResultArea').innerHTML = html;
-        document.getElementById('aiResultArea').classList.remove('hidden');
-        document.getElementById('downloadBtn').classList.remove('hidden');
-
-        // Эрх хасах
-        fetch(orderURL, { method: 'POST', mode: 'no-cors', body: JSON.stringify({ action: "use", email: currentUserEmail }) });
-        userCredits--; 
-        document.getElementById('displayCredits').innerText = userCredits;
-
-    } catch(e) {
-        alert("Render сервертэй холбогдоход алдаа гарлаа.");
-    } finally {
-        btn.innerText = "Төлөвлөгөө боловсруулах";
-    }
-}
-
-            try {
-                // Render дээрх Backend рүүгээ хүсэлт илгээнэ
-                const response = await fetch(RENDER_API_URL, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ grade, topic })
-                });
-
-                const data = await response.json();
-                // Render-ээс ирсэн JSON-оор хүснэгт үүсгэх
-                let html = `<table class="w-full border-2 border-orange-800 bg-white text-[11px] mt-4">
-                    <tr class="bg-orange-800 text-white font-black uppercase italic">
-                        <th class="border p-2">Алхам</th><th class="border p-2">Хугацаа</th><th class="border p-2">Багшийн ажиллагаа</th><th class="border p-2">Сурагчийн ажиллагаа</th><th class="border p-2">Даалгавар</th>
+            data.plan.forEach(r => {
+                html += `
+                    <tr>
+                        <td class="border border-black p-3 font-bold text-center italic bg-gray-50">${r.step}</td>
+                        <td class="border border-black p-3 text-center font-bold">${r.time} мин</td>
+                        <td class="border border-black p-3 text-justify leading-relaxed">${r.teacher}</td>
+                        <td class="border border-black p-3 text-justify leading-relaxed">${r.student}</td>
                     </tr>`;
-                
-                data.plan.forEach(r => {
-                    html += `<tr><td class="border p-2 font-bold bg-orange-50 italic">${r.step}</td><td class="border p-2 text-center">${r.time}</td><td class="border p-2">${r.teacher}</td><td class="border p-2">${r.student}</td><td class="border p-2 italic">${r.homework || '-'}</td></tr>`;
-                });
+            });
 
-                document.getElementById('aiResultArea').innerHTML = html + "</table>";
-                document.getElementById('aiResultArea').classList.remove('hidden');
-                document.getElementById('downloadBtn').classList.remove('hidden');
+            html += `</tbody></table>
+                    <div class="mt-6 border-2 border-black p-4 bg-orange-50 italic">
+                        <p class="font-bold underline mb-1">Гэрийн даалгавар:</p>
+                        <p>${data.plan[data.plan.length - 1].homework || "Сэдэвтэй холбоотой дасгал ажиллах."}</p>
+                    </div>
+                </div>`;
 
-                // Эрх хасах
-                fetch(orderURL, { method: 'POST', mode: 'no-cors', body: JSON.stringify({ action: "use", email: currentUserEmail }) });
-                userCredits--; document.getElementById('displayCredits').innerText = userCredits;
+            document.getElementById('aiResultArea').innerHTML = html;
+            document.getElementById('aiResultArea').classList.remove('hidden');
+            document.getElementById('downloadBtn').classList.remove('hidden');
 
-            } catch(e) {
-                alert("Render сервертэй холбогдоход алдаа гарлаа. Сервер ажиллаж байгаа эсэхийг шалгана уу.");
-            } finally {
-                btn.innerText = "Төлөвлөгөө боловсруулах";
-            }
+            // Эрх хасах (Google Script рүү мэдээлэх)
+            await fetch(orderURL, { 
+                method: 'POST', 
+                mode: 'no-cors', 
+                body: JSON.stringify({ action: "use", email: currentUserEmail }) 
+            });
+
+            userCredits--; 
+            document.getElementById('displayCredits').innerText = userCredits;
+
+        } catch(e) {
+            console.error(e);
+            alert("Алдаа гарлаа. Render сервер ажиллаж байгаа эсэхийг шалгана уу.");
+        } finally {
+            btn.innerText = "Төлөвлөгөө боловсруулах";
+            btn.disabled = false;
         }
+    }
 
         // SUDOKU & OTHERS
         const mongolNumbers = { 1: '᠑', 2: '᠒', 3: '᠓', 4: '᠔', 5: '᠕', 6: '᠖', 7: '᠗', 8: '᠘', 9: '᠙' };
