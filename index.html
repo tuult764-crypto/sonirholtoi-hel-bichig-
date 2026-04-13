@@ -124,7 +124,7 @@
 
    <script>
     // --- ТОХИРГОО ---
-    const orderURL = 'https://script.google.com/macros/s/AKfycbyJZ51DDMOyD7c8t21bVlHfr8l62uuA7twmMHfB6PGj4WYQAAtEcwJTPyt8JccPuFApuA/exec';
+    const orderURL = 'https://script.google.com/macros/s/AKfycbxQJ0LeO4SmS1wE4L_QHmkCUxaKhYLjEHQ00BJxMICl4JdQjDNhyY3w6CF1u7ciZunOgw/exec';
     const RENDER_API_URL = 'https://sonirholtoi-hel-bichig.onrender.com/chat'; // <-- Зассан хаяг
     
     let currentUserEmail = "", userCredits = 0, selectedItemName = "";
@@ -168,34 +168,49 @@
         }
     }
        // 2. БАРАА АЧААЛАХ (Sheet2-оос унших)
-    async function loadProducts() {
-        try {
-            const res = await fetch(`${orderURL}?action=getProducts`);
-            const products = await res.json();
-            
-            const mGrid = document.getElementById('materialGrid');
-            const sGrid = document.getElementById('shopGrid');
-            
-            mGrid.innerHTML = ''; 
-            sGrid.innerHTML = '';
-
-            products.forEach(p => {
-                const cardHTML = `
-                    <div class="product-card bg-white p-4 rounded-2xl shadow-md border border-orange-100 flex-shrink-0 w-64">
-                        <img src="${p.Images}" class="w-full h-40 object-cover rounded-xl mb-3" onerror="this.src='https://via.placeholder.com/150'">
-                        <h3 class="font-bold text-orange-900 text-sm h-10 overflow-hidden">${p.Title}</h3>
-                        <div class="flex justify-between items-center mt-3">
-                            <span class="text-orange-600 font-black text-xs">${p.Price}₮</span>
-                            <button onclick="openCheckout('${p.Title}')" class="bg-orange-700 text-white px-3 py-1 rounded-full text-[10px] font-bold uppercase">Авах</button>
-                        </div>
-                    </div>`;
-                mGrid.innerHTML += cardHTML;
-                sGrid.innerHTML += cardHTML;
-            });
-        } catch (e) {
-            console.error("Бараа ачаалахад алдаа гарлаа.");
-        }
+// Drive линкийг шууд зураг болгож хувиргах функц
+function getDirectImg(url) {
+    if (url.includes('drive.google.com')) {
+        return url.replace('/file/d/', '/uc?export=view&id=').replace('/view?usp=drive_link', '').replace('/view?usp=sharing', '');
     }
+    return url;
+}
+
+async function loadProducts() {
+    const mGrid = document.getElementById('materialGrid');
+    const sGrid = document.getElementById('shopGrid');
+    
+    try {
+        const res = await fetch(`${orderURL}?action=getProducts`);
+        const products = await res.json();
+        
+        mGrid.innerHTML = ''; 
+        sGrid.innerHTML = '';
+
+        products.forEach(p => {
+            const imgUrl = getDirectImg(p.Images);
+            const price = Number(p.Price).toLocaleString();
+            
+            const cardHTML = `
+                <div class="product-card bg-white p-4 rounded-[2rem] shadow-lg border border-orange-50 flex-shrink-0 w-64">
+                    <div class="relative overflow-hidden rounded-2xl mb-4 h-44 bg-gray-100">
+                        <img src="${imgUrl}" class="w-full h-full object-cover" onerror="this.src='https://via.placeholder.com/300x200?text=Зураг+Ачаалж+байна'">
+                    </div>
+                    <h3 class="font-black text-orange-900 text-sm h-10 overflow-hidden leading-tight mb-1">${p.Title}</h3>
+                    <p class="text-[10px] text-gray-500 h-8 overflow-hidden mb-2">${p.Description}</p>
+                    <div class="flex justify-between items-center border-t border-orange-50 pt-3">
+                        <span class="text-orange-600 font-black text-sm">${price}₮</span>
+                        <button onclick="openCheckout('${p.Title}')" class="bg-orange-800 text-white px-4 py-2 rounded-xl text-[10px] font-black uppercase italic">Авах</button>
+                    </div>
+                </div>`;
+            
+            mGrid.innerHTML += cardHTML;
+            sGrid.innerHTML += cardHTML;
+        });
+    } catch (e) {
+        console.log("Алдаа:", e);
+    }
+}
 // 3. AI ТӨЛӨВЛӨГӨӨ БОЛОВСРУУЛАХ
     async function generateAIPlan() {
         if(userCredits <= 0) return alert("Эрх хүрэлцэхгүй байна!");
