@@ -122,88 +122,90 @@
         </div>
     </div>
 
-    <script>
-        // --- ТОХИРГОО ---
-        const orderURL = 'https://script.google.com/macros/s/AKfycbw0cbEoSAEdm_MqP9YLO09-MTnyQpgCEo1b0qbTwSOOH2QUinR5gyGN3UeVs7DwQtO5rw/exec';
-        const RENDER_API_URL = 'https://https://sonirholtoi-hel-bichig.onrender.com//chat'; // <-- Рендер хаягаа энд тавиарай
-        
-        let currentUserEmail = "", userCredits = 0, selectedItemName = "";
-
-        // LOGIN
-async function handleLogin() {
-    const emailInput = document.getElementById('loginEmail');
-    const email = emailInput.value.trim();
-    const btn = document.getElementById('loginBtn');
-
-    if (!email) return alert("Мэйл хаягаа оруулна уу!");
-
-    btn.innerText = "Шалгаж байна...";
+   <script>
+    // --- ТОХИРГОО ---
+    const orderURL = 'https://script.google.com/macros/s/AKfycbw0cbEoSAEdm_MqP9YLO09-MTnyQpgCEo1b0qbTwSOOH2QUinR5gyGN3UeVs7DwQtO5rw/exec';
+    const RENDER_API_URL = 'https://sonirholtoi-hel-bichig.onrender.com/chat'; // <-- Зассан хаяг
     
-    try {
-        // EncodeURIComponent ашиглах нь @ тэмдэгтийг зөв дамжуулахад тусална
-        const response = await fetch(`${orderURL}?action=check&email=${encodeURIComponent(email)}`);
-        const data = await response.json();
+    let currentUserEmail = "", userCredits = 0, selectedItemName = "";
 
-        if (data.status === "success") {
-            currentUserEmail = email;
-            userCredits = data.credits;
+    // 1. НЭВТРЭХ ФУНКЦ
+    async function handleLogin() {
+        const emailInput = document.getElementById('loginEmail');
+        const email = emailInput.value.trim();
+        const btn = document.getElementById('loginBtn');
 
-            // Нэвтрэх цонхыг нууж, үндсэн системийг гаргах
-            document.getElementById('authScreen').style.display = 'none';
-            document.getElementById('mainSystem').classList.remove('hidden');
-            
-            // Хэрэглэгчийн мэдээллийг дэлгэцэнд хэвлэх
-            document.getElementById('displayEmail').innerText = email;
-            document.getElementById('displayCredits').innerText = userCredits;
+        if (!email) return alert("Мэйл хаягаа оруулна уу!");
 
-            loadProducts(); // Амжилттай нэвтэрвэл бараануудыг ачаална
-        } else {
-            alert("Бүртгэлгүй мэйл хаяг байна.");
+        btn.innerText = "Шалгаж байна...";
+        btn.disabled = true;
+        
+        try {
+            const response = await fetch(`${orderURL}?action=check&email=${encodeURIComponent(email)}`);
+            const data = await response.json();
+
+            if (data.status === "success" || data.credits !== undefined) {
+                currentUserEmail = email;
+                userCredits = data.credits;
+
+                document.getElementById('authScreen').style.display = 'none';
+                document.getElementById('mainSystem').classList.remove('hidden');
+                
+                document.getElementById('displayEmail').innerText = email;
+                document.getElementById('displayCredits').innerText = userCredits;
+                document.getElementById('payEmail').innerText = email;
+
+                loadProducts(); 
+            } else {
+                alert("Бүртгэлгүй мэйл хаяг байна. Мэйлээ шалгана уу.");
+            }
+        } catch (error) {
+            console.error(error);
+            alert("Холболтын алдаа гарлаа. Google Script Deploy хийсэн эсэхээ шалгана уу.");
+        } finally {
+            btn.innerText = "НЭВТРЭХ";
+            btn.disabled = false;
         }
-    } catch (error) {
-        alert("Холболтын алдаа гарлаа.");
-    } finally {
-        btn.innerText = "НЭВТРЭХ";
     }
-}
-        // LOAD PRODUCTS
-       async function loadProducts() {
-    try {
-        const res = await fetch(`${orderURL}?action=getProducts`);
-        const products = await res.json();
-        
-        const mGrid = document.getElementById('materialGrid');
-        const sGrid = document.getElementById('shopGrid');
-        
-        mGrid.innerHTML = ''; 
-        sGrid.innerHTML = '';
+       // 2. БАРАА АЧААЛАХ (Sheet2-оос унших)
+    async function loadProducts() {
+        try {
+            const res = await fetch(`${orderURL}?action=getProducts`);
+            const products = await res.json();
+            
+            const mGrid = document.getElementById('materialGrid');
+            const sGrid = document.getElementById('shopGrid');
+            
+            mGrid.innerHTML = ''; 
+            sGrid.innerHTML = '';
 
-        products.forEach(p => {
-            const cardHTML = `
-                <div class="product-card bg-white p-4 rounded-2xl shadow-md border border-orange-100 flex-shrink-0 w-64">
-                    <img src="${p.Images}" class="w-full h-40 object-cover rounded-xl mb-3" onerror="this.src='https://via.placeholder.com/150'">
-                    <h3 class="font-bold text-orange-900 text-sm h-10 overflow-hidden">${p.Title}</h3>
-                    <div class="flex justify-between items-center mt-3">
-                        <span class="text-orange-600 font-black text-xs">${p.Price}₮</span>
-                        <button onclick="openCheckout('${p.Title}')" class="bg-orange-700 text-white px-3 py-1 rounded-full text-[10px] font-bold uppercase">Авах</button>
-                    </div>
-                </div>`;
-            mGrid.innerHTML += cardHTML;
-            sGrid.innerHTML += cardHTML;
-        });
-    } catch (e) {
-        console.error("Бараа ачаалахад алдаа гарлаа:", e);
+            products.forEach(p => {
+                const cardHTML = `
+                    <div class="product-card bg-white p-4 rounded-2xl shadow-md border border-orange-100 flex-shrink-0 w-64">
+                        <img src="${p.Images}" class="w-full h-40 object-cover rounded-xl mb-3" onerror="this.src='https://via.placeholder.com/150'">
+                        <h3 class="font-bold text-orange-900 text-sm h-10 overflow-hidden">${p.Title}</h3>
+                        <div class="flex justify-between items-center mt-3">
+                            <span class="text-orange-600 font-black text-xs">${p.Price}₮</span>
+                            <button onclick="openCheckout('${p.Title}')" class="bg-orange-700 text-white px-3 py-1 rounded-full text-[10px] font-bold uppercase">Авах</button>
+                        </div>
+                    </div>`;
+                mGrid.innerHTML += cardHTML;
+                sGrid.innerHTML += cardHTML;
+            });
+        } catch (e) {
+            console.error("Бараа ачаалахад алдаа гарлаа.");
+        }
     }
-}
-        // AI GENERATOR (Render холболттой)
-       async function generateAIPlan() {
-    if(userCredits <= 0) return alert("Эрх хүрэлцэхгүй байна!");
-    const btn = document.getElementById('genBtn');
-    const grade = document.getElementById('gradeSelect').value;
-    const topic = document.getElementById('lessonTopic').value;
-    if(!topic) return alert("Сэдвээ оруулна уу!");
+   // 3. AI ТӨЛӨВЛӨГӨӨ БОЛОВСРУУЛАХ
+    async function generateAIPlan() {
+        if(userCredits <= 0) return alert("Эрх хүрэлцэхгүй байна!");
+        const btn = document.getElementById('genBtn');
+        const grade = document.getElementById('gradeSelect').value;
+        const topic = document.getElementById('lessonTopic').value;
+        if(!topic) return alert("Сэдвээ оруулна уу!");
 
-    btn.innerText = "AI боловсруулж байна...";
+        btn.innerText = "AI боловсруулж байна...";
+        btn.disabled = true;
 
     // Medlee.mn линкүүд
     const medleeLinks = {
@@ -217,7 +219,7 @@ async function handleLogin() {
     };
 
     // ТАНЫ ХҮССЭН ДЭЛГЭРЭНГҮЙ PROMPT
-    const prompt = `Та Монгол хэл, уран зохиолын мэргэжлийн багш. ${grade}-ийн "${topic}" сэдвээр 45 минутын ээлжит хичээлийн төлөвлөгөө боловсруулна. 
+    const prompt = `Та Монгол хэл, уран зохиол, үндэсний бичгийн мэргэжлийн багш. ${grade}-ийн "${topic}" сэдвээр 40 минутын ээлжит хичээлийн төлөвлөгөөг захиалагч багшийн сэдэвт тааруулан алхамчлан идэвхтэй сургалтын аргыг ашиглан 6-12 дугаар ангийн сурагчдын онцлогт нийцүүлэн хөтөлбөр боловсруулна. 
     Эх сурвалж: ${medleeLinks[grade]} линк дээрх хичээлийн хөтөлбөрийг баримтал.
     
     Хүснэгтийн бүтэц (JSON array):
@@ -282,7 +284,6 @@ async function handleLogin() {
 
                 <div class="mt-10 flex justify-between italic font-bold text-sm px-4">
                     <p>Боловсруулсан багш: ........................... / ...................... /</p>
-                    <p>Хянасан: ...........................</p>
                 </div>
             </div>`;
 
