@@ -124,71 +124,77 @@
 
     <script>
         // --- ТОХИРГОО ---
-        const orderURL = 'https://script.google.com/macros/s/AKfycbyvF3AeJBkopILQmUXeMscqY7rDRsT5nTa-X5-GvSrGnSJubNPLcNwJQwoavE4-kyRV-g/exec';
-        const RENDER_API_URL = 'https://ТАНЫ-RENDER-АПП-ХАЯГ.onrender.com/chat'; // <-- Рендер хаягаа энд тавиарай
+        const orderURL = 'https://script.google.com/macros/s/AKfycbw0cbEoSAEdm_MqP9YLO09-MTnyQpgCEo1b0qbTwSOOH2QUinR5gyGN3UeVs7DwQtO5rw/exec';
+        const RENDER_API_URL = 'https://https://sonirholtoi-hel-bichig.onrender.com//chat'; // <-- Рендер хаягаа энд тавиарай
         
         let currentUserEmail = "", userCredits = 0, selectedItemName = "";
 
         // LOGIN
-        async function handleLogin() {
+async function handleLogin() {
     const emailInput = document.getElementById('loginEmail');
     const email = emailInput.value.trim();
     const btn = document.getElementById('loginBtn');
 
-    if (!email || !email.includes('@')) {
-        return alert("Мэйл хаягаа зөв оруулна уу!");
-    }
+    if (!email) return alert("Мэйл хаягаа оруулна уу!");
 
     btn.innerText = "Шалгаж байна...";
-    btn.disabled = true;
-
+    
     try {
-        // Шалгах хүсэлт илгээх
+        // EncodeURIComponent ашиглах нь @ тэмдэгтийг зөв дамжуулахад тусална
         const response = await fetch(`${orderURL}?action=check&email=${encodeURIComponent(email)}`);
-        
-        if (!response.ok) throw new Error("Сүлжээний алдаа гарлаа");
-
         const data = await response.json();
 
-        if (data.status === "success" || data.credits !== undefined) {
-            // Амжилттай нэвтэрсэн үед
+        if (data.status === "success") {
             currentUserEmail = email;
-            userCredits = data.credits || 0;
+            userCredits = data.credits;
 
-            document.getElementById('authScreen').classList.add('hidden');
+            // Нэвтрэх цонхыг нууж, үндсэн системийг гаргах
+            document.getElementById('authScreen').style.display = 'none';
             document.getElementById('mainSystem').classList.remove('hidden');
             
+            // Хэрэглэгчийн мэдээллийг дэлгэцэнд хэвлэх
             document.getElementById('displayEmail').innerText = email;
             document.getElementById('displayCredits').innerText = userCredits;
-            document.getElementById('payEmail').innerText = email;
 
-            loadProducts(); // Бараануудыг ачаалах
+            loadProducts(); // Амжилттай нэвтэрвэл бараануудыг ачаална
         } else {
-            alert("Бүртгэлгүй мэйл хаяг эсвэл алдаа гарлаа!");
+            alert("Бүртгэлгүй мэйл хаяг байна.");
         }
     } catch (error) {
-        console.error("Login Error:", error);
-        alert("Нэвтрэхэд алдаа гарлаа. Google Script-ээ 'Anyone' эрхтэй Deploy хийсэн эсэхээ шалгаарай.");
+        alert("Холболтын алдаа гарлаа.");
     } finally {
-        btn.innerText = "Нэвтрэх";
-        btn.disabled = false;
+        btn.innerText = "НЭВТРЭХ";
     }
 }
         // LOAD PRODUCTS
-        async function loadProducts() {
-            try {
-                const res = await fetch(orderURL + "?action=getProducts");
-                const products = await res.json();
-                const mGrid = document.getElementById('materialGrid');
-                const sGrid = document.getElementById('shopGrid');
-                mGrid.innerHTML = ''; sGrid.innerHTML = '';
-                products.forEach(p => {
-                    const cardHTML = `<div class="product-card bg-white p-4 rounded-2xl shadow-md border border-orange-100"><img src="${p.Images || 'https://via.placeholder.com/150'}" class="w-full h-40 object-cover rounded-xl mb-3"><h3 class="font-bold text-orange-900 text-sm h-10 overflow-hidden">${p.Title}</h3><div class="flex justify-between items-center mt-3"><span class="text-orange-600 font-black text-xs">${p.Price}₮</span><button onclick="openCheckout('${p.Title}')" class="bg-orange-700 text-white px-3 py-1 rounded-full text-[10px] font-bold uppercase">Авах</button></div></div>`;
-                    mGrid.innerHTML += cardHTML; sGrid.innerHTML += cardHTML;
-                });
-            } catch (e) { console.error(e); }
-        }
+       async function loadProducts() {
+    try {
+        const res = await fetch(`${orderURL}?action=getProducts`);
+        const products = await res.json();
+        
+        const mGrid = document.getElementById('materialGrid');
+        const sGrid = document.getElementById('shopGrid');
+        
+        mGrid.innerHTML = ''; 
+        sGrid.innerHTML = '';
 
+        products.forEach(p => {
+            const cardHTML = `
+                <div class="product-card bg-white p-4 rounded-2xl shadow-md border border-orange-100 flex-shrink-0 w-64">
+                    <img src="${p.Images}" class="w-full h-40 object-cover rounded-xl mb-3" onerror="this.src='https://via.placeholder.com/150'">
+                    <h3 class="font-bold text-orange-900 text-sm h-10 overflow-hidden">${p.Title}</h3>
+                    <div class="flex justify-between items-center mt-3">
+                        <span class="text-orange-600 font-black text-xs">${p.Price}₮</span>
+                        <button onclick="openCheckout('${p.Title}')" class="bg-orange-700 text-white px-3 py-1 rounded-full text-[10px] font-bold uppercase">Авах</button>
+                    </div>
+                </div>`;
+            mGrid.innerHTML += cardHTML;
+            sGrid.innerHTML += cardHTML;
+        });
+    } catch (e) {
+        console.error("Бараа ачаалахад алдаа гарлаа:", e);
+    }
+}
         // AI GENERATOR (Render холболттой)
        async function generateAIPlan() {
     if(userCredits <= 0) return alert("Эрх хүрэлцэхгүй байна!");
