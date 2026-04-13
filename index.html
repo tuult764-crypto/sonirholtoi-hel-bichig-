@@ -124,7 +124,7 @@
 
    <script>
     // --- ТОХИРГОО ---
-    const orderURL = 'https://script.google.com/macros/s/AKfycbxQJ0LeO4SmS1wE4L_QHmkCUxaKhYLjEHQ00BJxMICl4JdQjDNhyY3w6CF1u7ciZunOgw/exec';
+    const orderURL = 'https://script.google.com/macros/s/AKfycbwQvjm2Qi7wD4qUGzG3Ez9BkPkJHoZ1oc1FxqDED6FfoAEEqXemR6G5SbYsycB8fPCLBQ/exec';
     const RENDER_API_URL = 'https://sonirholtoi-hel-bichig.onrender.com/chat'; // <-- Зассан хаяг
     
     let currentUserEmail = "", userCredits = 0, selectedItemName = "";
@@ -167,6 +167,7 @@
             btn.disabled = false;
         }
     }
+       
        // 2. БАРАА АЧААЛАХ (Sheet2-оос унших)
 // Drive линкийг шууд зураг болгож хувиргах функц
 function getDirectImg(url) {
@@ -177,40 +178,52 @@ function getDirectImg(url) {
 }
 
 async function loadProducts() {
-    const mGrid = document.getElementById('materialGrid');
-    const sGrid = document.getElementById('shopGrid');
-    
+    const grid = document.getElementById('materialGrid');
+    if (!grid) return; // Grid байхгүй бол зогсоно
+
     try {
         const res = await fetch(`${orderURL}?action=getProducts`);
         const products = await res.json();
         
-        mGrid.innerHTML = ''; 
-        sGrid.innerHTML = '';
-
+        grid.innerHTML = ''; 
+        
         products.forEach(p => {
-            const imgUrl = getDirectImg(p.Images);
+            // 1. Google Drive-ын линкийг шууд зураг (Direct View) болгож хувиргах
+            let rawUrl = p.Images || "";
+            let imgUrl = "https://via.placeholder.com/300x200?text=Зураг+Байхгүй"; // default зураг
+
+            if (rawUrl.includes('drive.google.com')) {
+                // Линкнээс ID-г нь салгаж аваад direct линк үүсгэх
+                let fileId = rawUrl.split('/d/')[1].split('/')[0];
+                imgUrl = `https://lh3.googleusercontent.com/u/0/d/${fileId}`; 
+                // Эсвэл өөр нэг арга: imgUrl = `https://drive.google.com/uc?export=view&id=${fileId}`;
+            }
+
+            // 2. Хүснэгтээс ирж буй үнийг тоо болгох
             const price = Number(p.Price).toLocaleString();
             
-            const cardHTML = `
+            grid.innerHTML += `
                 <div class="product-card bg-white p-4 rounded-[2rem] shadow-lg border border-orange-50 flex-shrink-0 w-64">
                     <div class="relative overflow-hidden rounded-2xl mb-4 h-44 bg-gray-100">
-                        <img src="${imgUrl}" class="w-full h-full object-cover" onerror="this.src='https://via.placeholder.com/300x200?text=Зураг+Ачаалж+байна'">
+                        <img src="${imgUrl}" 
+                             class="w-full h-full object-cover" 
+                             onerror="this.src='https://via.placeholder.com/300x200?text=Зураг+Алдаа'">
                     </div>
                     <h3 class="font-black text-orange-900 text-sm h-10 overflow-hidden leading-tight mb-1">${p.Title}</h3>
-                    <p class="text-[10px] text-gray-500 h-8 overflow-hidden mb-2">${p.Description}</p>
                     <div class="flex justify-between items-center border-t border-orange-50 pt-3">
                         <span class="text-orange-600 font-black text-sm">${price}₮</span>
-                        <button onclick="openCheckout('${p.Title}')" class="bg-orange-800 text-white px-4 py-2 rounded-xl text-[10px] font-black uppercase italic">Авах</button>
+                        <button onclick="openCheckout('${p.Title}')" 
+                                class="bg-orange-800 text-white px-4 py-2 rounded-xl text-[10px] font-black uppercase italic">
+                            Авах
+                        </button>
                     </div>
                 </div>`;
-            
-            mGrid.innerHTML += cardHTML;
-            sGrid.innerHTML += cardHTML;
         });
     } catch (e) {
-        console.log("Алдаа:", e);
+        console.error("Бараа ачаалахад алдаа гарлаа:", e);
     }
 }
+       
 // 3. AI ТӨЛӨВЛӨГӨӨ БОЛОВСРУУЛАХ
     async function generateAIPlan() {
         if(userCredits <= 0) return alert("Эрх хүрэлцэхгүй байна!");
