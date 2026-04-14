@@ -122,144 +122,6 @@
         </div>
     </div>
 
-   <script>
-    // --- ТОХИРГОО ---
-    const orderURL = 'https://script.google.com/macros/s/AKfycbwQvjm2Qi7wD4qUGzG3Ez9BkPkJHoZ1oc1FxqDED6FfoAEEqXemR6G5SbYsycB8fPCLBQ/exec';
-    const RENDER_API_URL = 'https://sonirholtoi-hel-bichig.onrender.com/chat'; // <-- Зассан хаяг
-    
-    let currentUserEmail = "", userCredits = 0, selectedItemName = "";
-
-    // 1. НЭВТРЭХ ФУНКЦ
-    async function handleLogin() {
-        const emailInput = document.getElementById('loginEmail');
-        const email = emailInput.value.trim();
-        const btn = document.getElementById('loginBtn');
-
-        if (!email) return alert("Мэйл хаягаа оруулна уу!");
-
-        btn.innerText = "Шалгаж байна...";
-        btn.disabled = true;
-        
-        try {
-            const response = await fetch(`${orderURL}?action=check&email=${encodeURIComponent(email)}`);
-            const data = await response.json();
-
-            if (data.status === "success" || data.credits !== undefined) {
-                currentUserEmail = email;
-                userCredits = data.credits;
-
-                document.getElementById('authScreen').style.display = 'none';
-                document.getElementById('mainSystem').classList.remove('hidden');
-                
-                document.getElementById('displayEmail').innerText = email;
-                document.getElementById('displayCredits').innerText = userCredits;
-                document.getElementById('payEmail').innerText = email;
-
-                loadProducts(); 
-            } else {
-                alert("Бүртгэлгүй мэйл хаяг байна. Мэйлээ шалгана уу.");
-            }
-        } catch (error) {
-            console.error(error);
-            alert("Холболтын алдаа гарлаа. Google Script Deploy хийсэн эсэхээ шалгана уу.");
-        } finally {
-            btn.innerText = "НЭВТРЭХ";
-            btn.disabled = false;
-        }
-    }
-       
-       // 2. БАРАА АЧААЛАХ (Sheet2-оос унших)
-// Drive линкийг шууд зураг болгож хувиргах функц
-function getDirectImg(url) {
-    if (url.includes('drive.google.com')) {
-        return url.replace('/file/d/', '/uc?export=view&id=').replace('/view?usp=drive_link', '').replace('/view?usp=sharing', '');
-    }
-    return url;
-}
-
-async function loadProducts() {
-    const grid = document.getElementById('materialGrid');
-    const shopGrid = document.getElementById('shopGrid');
-    if (!grid) return;
-
-    try {
-        const res = await fetch(`${orderURL}?action=getProducts`);
-        const products = await res.json();
-        
-        grid.innerHTML = ''; 
-        if(shopGrid) shopGrid.innerHTML = '';
-        
-        products.forEach(p => {
-            let rawUrl = p.Images || "";
-            let imgUrl = "https://via.placeholder.com/300x200?text=Зураг+Байхгүй"; 
-
-            // Google Drive линкийг Direct Link болгох (Зассан хувилбар)
-            if (rawUrl.includes('drive.google.com')) {
-                let fileId = "";
-                if (rawUrl.includes('/d/')) {
-                    fileId = rawUrl.split('/d/')[1].split('/')[0];
-                } else if (rawUrl.includes('id=')) {
-                    fileId = rawUrl.split('id=')[1].split('&')[0];
-                }
-                if (fileId) {
-                    imgUrl = `https://lh3.googleusercontent.com/d/${fileId}`;
-                }
-            } else {
-                imgUrl = rawUrl;
-            }
-
-            const price = Number(p.Price).toLocaleString();
-            
-            const cardHTML = `
-                <div class="product-card bg-white p-4 rounded-[2rem] shadow-lg border border-orange-50 flex-shrink-0 w-64">
-                    <div class="relative overflow-hidden rounded-2xl mb-4 h-44 bg-gray-200">
-                        <img src="${imgUrl}" 
-                             class="w-full h-full object-cover" 
-                             onerror="this.onerror=null;this.src='https://via.placeholder.com/300x200?text=Зураг+Ачаалж+байна'">
-                    </div>
-                    <h3 class="font-black text-orange-900 text-sm h-10 overflow-hidden leading-tight mb-1">${p.Title}</h3>
-                    <div class="flex justify-between items-center border-t border-orange-50 pt-3">
-                        <span class="text-orange-600 font-black text-sm">${price}₮</span>
-                        <button onclick="openCheckout('${p.Title}')" 
-                                class="bg-orange-800 text-white px-4 py-2 rounded-xl text-[10px] font-black uppercase italic">
-                            Авах
-                        </button>
-                    </div>
-                </div>`;
-            
-            grid.innerHTML += cardHTML;
-            if(shopGrid) shopGrid.innerHTML += cardHTML;
-        });
-    } catch (e) {
-        console.error("Бараа ачаалахад алдаа гарлаа:", e);
-    }
-}
-       
-            // 2. Хүснэгтээс ирж буй үнийг тоо болгох
-            const price = Number(p.Price).toLocaleString();
-            
-            grid.innerHTML += `
-                <div class="product-card bg-white p-4 rounded-[2rem] shadow-lg border border-orange-50 flex-shrink-0 w-64">
-                    <div class="relative overflow-hidden rounded-2xl mb-4 h-44 bg-gray-100">
-                        <img src="${imgUrl}" 
-                             class="w-full h-full object-cover" 
-                             onerror="this.src='https://via.placeholder.com/300x200?text=Зураг+Алдаа'">
-                    </div>
-                    <h3 class="font-black text-orange-900 text-sm h-10 overflow-hidden leading-tight mb-1">${p.Title}</h3>
-                    <div class="flex justify-between items-center border-t border-orange-50 pt-3">
-                        <span class="text-orange-600 font-black text-sm">${price}₮</span>
-                        <button onclick="openCheckout('${p.Title}')" 
-                                class="bg-orange-800 text-white px-4 py-2 rounded-xl text-[10px] font-black uppercase italic">
-                            Авах
-                        </button>
-                    </div>
-                </div>`;
-        });
-    } catch (e) {
-        console.error("Бараа ачаалахад алдаа гарлаа:", e);
-    }
-}
-       
 <script>
     // --- ТОХИРГОО ---
     const orderURL = 'https://script.google.com/macros/s/AKfycbwCCzxtGfH9dCiXO2UHtkb0Vq_4v741L1OlBWyrhDXQ1HbvB-90Y6Ye355W06qxHhAAJA/exec';
@@ -270,8 +132,9 @@ async function loadProducts() {
     // 1. НЭВТРЭХ ФУНКЦ
     async function handleLogin() {
         const emailInput = document.getElementById('loginEmail');
-        const email = emailInput.value.trim();
+        const email = emailInput ? emailInput.value.trim() : "";
         const btn = document.getElementById('loginBtn');
+        
         if (!email) return alert("Мэйл хаягаа оруулна уу!");
 
         btn.innerText = "Шалгаж байна...";
@@ -280,19 +143,23 @@ async function loadProducts() {
         try {
             const response = await fetch(`${orderURL}?action=check&email=${encodeURIComponent(email)}`);
             const data = await response.json();
+            
             if (data.status === "success" || data.credits !== undefined) {
                 currentUserEmail = email;
                 userCredits = data.credits;
+                
                 document.getElementById('authScreen').style.display = 'none';
                 document.getElementById('mainSystem').classList.remove('hidden');
                 document.getElementById('displayEmail').innerText = email;
                 document.getElementById('displayCredits').innerText = userCredits;
                 document.getElementById('payEmail').innerText = email;
+                
                 loadProducts(); 
             } else {
                 alert("Бүртгэлгүй мэйл хаяг байна.");
             }
         } catch (error) {
+            console.error(error);
             alert("Холболтын алдаа гарлаа.");
         } finally {
             btn.innerText = "НЭВТРЭХ";
@@ -300,22 +167,33 @@ async function loadProducts() {
         }
     }
 
-    // 2. БАРАА АЧААЛАХ
+    // 2. БАРАА АЧААЛАХ (Sheet-ээс зураг, үнэ унших)
     async function loadProducts() {
         const grid = document.getElementById('materialGrid');
         const shopGrid = document.getElementById('shopGrid');
         try {
             const res = await fetch(`${orderURL}?action=getProducts`);
             const products = await res.json();
-            grid.innerHTML = ''; if(shopGrid) shopGrid.innerHTML = '';
+            
+            if(grid) grid.innerHTML = ''; 
+            if(shopGrid) shopGrid.innerHTML = '';
             
             products.forEach(p => {
-                const imgUrl = p.Images || "https://via.placeholder.com/300x200?text=Зураг";
+                let imgUrl = p.Images || "https://via.placeholder.com/300x200?text=Зураг";
+                
+                // Google Drive линкийг ил харагдах зураг болгох засавар
+                if (imgUrl.includes('drive.google.com')) {
+                    let fileId = "";
+                    if (imgUrl.includes('/d/')) fileId = imgUrl.split('/d/')[1].split('/')[0];
+                    else if (imgUrl.includes('id=')) fileId = imgUrl.split('id=')[1].split('&')[0];
+                    if (fileId) imgUrl = `https://lh3.googleusercontent.com/u/0/d/${fileId}`;
+                }
+
                 const price = Number(p.Price).toLocaleString();
                 const cardHTML = `
                     <div class="product-card bg-white p-4 rounded-[2rem] shadow-lg border border-orange-50 flex-shrink-0 w-64">
                         <div class="relative overflow-hidden rounded-2xl mb-4 h-44 bg-gray-200">
-                            <img src="${imgUrl}" class="w-full h-full object-cover">
+                            <img src="${imgUrl}" class="w-full h-full object-cover" onerror="this.src='https://via.placeholder.com/300x200?text=Зураг+Ачаалж+байна'">
                         </div>
                         <h3 class="font-black text-orange-900 text-sm h-10 overflow-hidden leading-tight mb-1">${p.Title}</h3>
                         <div class="flex justify-between items-center border-t border-orange-50 pt-3">
@@ -323,121 +201,86 @@ async function loadProducts() {
                             <button onclick="openCheckout('${p.Title}')" class="bg-orange-800 text-white px-4 py-2 rounded-xl text-[10px] font-black uppercase italic">Авах</button>
                         </div>
                     </div>`;
-                grid.innerHTML += cardHTML;
+                if(grid) grid.innerHTML += cardHTML;
                 if(shopGrid) shopGrid.innerHTML += cardHTML;
             });
         } catch (e) { console.error("Бараа ачаалахад алдаа:", e); }
     }
 
+    // 3. AI ТӨЛӨВЛӨГӨӨ ГАРГАХ (Medle загвар)
     async function generateAIPlan() {
-    if(userCredits <= 0) return alert("Эрх хүрэлцэхгүй байна!");
-    const btn = document.getElementById('genBtn');
-    const grade = document.getElementById('gradeSelect').value;
-    const topic = document.getElementById('lessonTopic').value;
-    if(!topic) return alert("Сэдвээ оруулна уу!");
+        if(userCredits <= 0) return alert("Эрх хүрэлцэхгүй байна!");
+        const btn = document.getElementById('genBtn');
+        const grade = document.getElementById('gradeSelect').value;
+        const topic = document.getElementById('lessonTopic').value;
+        if(!topic) return alert("Сэдвээ оруулна уу!");
 
-    btn.innerText = "AI боловсруулж байна...";
-    btn.disabled = true;
+        btn.innerText = "AI боловсруулж байна...";
+        btn.disabled = true;
 
-    // МЭРГЭЖЛИЙН ТҮВШНИЙ PROMPT
-    const professionalPrompt = `Та Монгол хэл, уран зохиол, үндэсний бичгийн мэргэжлийн багш, арга зүйч. 
-    ${grade}-ийн "${topic}" сэдвээр 40 минутын ЭЭЛЖИТ ХИЧЭЭЛИЙН ТӨЛӨВЛӨГӨӨ боловсруул.
-    
-    ШААРДЛАГА:
-    1. Medle.mn-ийн стандарт: Хичээлийн зорилго, зорилт, ашиглах хэрэглэгдэхүүн, арга зүйг тодорхой бичих.
-    2. Алхам бүр (Сэдэлжүүлэлт, Шинэ мэдлэг, Батгах, Дүгнэлт) маш нарийн дэлгэрэнгүй байх.
-    3. Идэвхтэй сургалтын аргууд ашиглан төлөвлөгөөг зохионо.
-    4. Монгол улсын боловсрол шинжлэх ухааны яамнаас гаргасан сурах бичгүүдийг мөн ашиглана.
-    5. Багшийн үйлдэл хэсэгт: "Асуулт асууна, тайлбарлана" биш, яг ямар асуулт асуухыг нь эш татаж бичих.
-    6. Хариултыг JSON-оор: {"goal": "...", "tools": "...", "method": "...", "plan": [{"step": "...", "time": "...", "teacher": "...", "student": "...", "resource": "..."}]} форматаар өг.`;
+        const professionalPrompt = `Та Монгол хэл, уран зохиолын мэргэжлийн багш. ${grade}-ийн "${topic}" сэдвээр 40 минутын ЭЭЛЖИТ ХИЧЭЭЛИЙН ТӨЛӨВЛӨГӨӨГ Medle.mn стандарт (goal, tools, method, plan:[{step, time, teacher, student, resource}]) JSON-оор өг.`;
 
-    try {
-        const response = await fetch(RENDER_API_URL, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ prompt: professionalPrompt })
-        });
-
-        const data = await response.json();
-        // Backend-ээс ирсэн датаг шалгах
-        const res = data.plan ? data : (data.data ? data.data : data); 
-
-        let html = `
-            <div id="printArea" class="p-10 bg-white border-[3px] border-black text-black leading-relaxed">
-                <div class="flex justify-between items-start mb-6 border-b-2 border-black pb-4">
-                    <div class="text-[12px] font-bold">
-                        <p>БАТЛАВ: СУРГАЛТЫН МЕНЕЖЕР ...........................</p>
-                        <p class="mt-1 italic font-normal text-[10px]">202... он ... сар ... өдөр</p>
-                    </div>
-                    <div class="text-right">
-                        <h1 class="font-black text-2xl uppercase underline italic text-orange-900">Ээлжит хичээлийн хөтөлбөр</h1>
-                        <p class="font-bold text-lg mt-1">${grade}: ${topic}</p>
-                    </div>
-                </div>
-
-                <div class="grid grid-cols-2 gap-4 mb-6 text-[13px] border-b border-gray-300 pb-4">
-                    <div><strong>Хичээлийн зорилго:</strong> ${res.goal || "Мэдлэг олгох, чадвар эзэмшүүлэх"}</div>
-                    <div><strong>Арга зүй:</strong> ${res.method || "Идэвхтэй сургалтын аргууд"}</div>
-                    <div class="col-span-2"><strong>Хэрэглэгдэхүүн:</strong> ${res.tools || "Сурах бичиг, үзүүлэн материал"}</div>
-                </div>
-
-                <table class="w-full border-collapse border-[2px] border-black text-[12px]">
-                    <thead>
-                        <tr class="bg-gray-100 uppercase">
-                            <th class="border-[2px] border-black p-2 w-[15%] text-center">Алхам</th>
-                            <th class="border-[2px] border-black p-2 w-[8%] text-center">Хугацаа</th>
-                            <th class="border-[2px] border-black p-2 w-[35%] text-center">Багшийн үйл ажиллагаа</th>
-                            <th class="border-[2px] border-black p-2 w-[30%] text-center">Сурагчийн үйл ажиллагаа</th>
-                            <th class="border-[2px] border-black p-2 w-[12%] text-center">Материал</th>
-                        </tr>
-                    </thead>
-                    <tbody>`;
-
-        if (res.plan && Array.isArray(res.plan)) {
-            res.plan.forEach(item => {
-                html += `
-                    <tr>
-                        <td class="border border-black p-3 font-bold bg-gray-50 italic text-center">${item.step}</td>
-                        <td class="border border-black p-3 text-center font-bold">${item.time} мин</td>
-                        <td class="border border-black p-3 text-justify leading-relaxed">${item.teacher}</td>
-                        <td class="border border-black p-3 text-justify leading-relaxed">${item.student}</td>
-                        <td class="border border-black p-3 text-center italic text-[10px]">${item.resource || "Сурах бичиг"}</td>
-                    </tr>`;
+        try {
+            const response = await fetch(RENDER_API_URL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ prompt: professionalPrompt })
             });
-        }
 
-        html += `
-                    </tbody>
-                </table>
+            const data = await response.json();
+            const res = data.plan ? data : (data.data ? data.data : data); 
 
-                <div class="mt-6 border-[2px] border-black p-4 bg-orange-50 italic">
-                    <p class="font-bold underline mb-2 text-sm">Гэрийн даалгавар /Үнэлгээ/:</p>
-                    <p class="text-[13px]">${res.homework || (res.plan && res.plan.length > 0 ? res.plan[res.plan.length-1].homework : "Сэдвийн хүрээнд дасгал ажиллах")}</p>
-                </div>
-                
-                <div class="mt-8 flex justify-between text-[11px] font-bold">
-                    <p>Боловсруулсан багш: ........................... / ${currentUserEmail} /</p>
-                </div>
-            </div>`;
+            let html = `
+                <div id="printArea" class="p-10 bg-white border-[3px] border-black text-black leading-relaxed text-left">
+                    <div class="flex justify-between items-start mb-6 border-b-2 border-black pb-4">
+                        <div class="text-[12px] font-bold">
+                            <p>БАТЛАВ: СУРГАЛТЫН МЕНЕЖЕР ...........................</p>
+                        </div>
+                        <div class="text-right">
+                            <h1 class="font-black text-xl uppercase underline italic text-orange-900">Ээлжит хичээлийн хөтөлбөр</h1>
+                            <p class="font-bold text-lg mt-1">${grade}: ${topic}</p>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-2 gap-4 mb-6 text-[13px] border-b border-gray-300 pb-4">
+                        <div><strong>Зорилго:</strong> ${res.goal || "Мэдлэг олгох"}</div>
+                        <div><strong>Арга зүй:</strong> ${res.method || "Идэвхтэй"}</div>
+                    </div>
+                    <table class="w-full border-collapse border-[2px] border-black text-[11px]">
+                        <thead>
+                            <tr class="bg-gray-100 uppercase">
+                                <th class="border-[2px] border-black p-2">Алхам</th>
+                                <th class="border-[2px] border-black p-2">Мин</th>
+                                <th class="border-[2px] border-black p-2 w-[40%]">Багшийн үйлдэл</th>
+                                <th class="border-[2px] border-black p-2 w-[30%]">Сурагчийн үйлдэл</th>
+                            </tr>
+                        </thead>
+                        <tbody>`;
 
-        document.getElementById('aiResultArea').innerHTML = html;
-        document.getElementById('aiResultArea').classList.remove('hidden');
-        document.getElementById('downloadBtn').classList.remove('hidden');
+            if (res.plan) {
+                res.plan.forEach(item => {
+                    html += `<tr>
+                        <td class="border border-black p-2 font-bold italic">${item.step}</td>
+                        <td class="border border-black p-2 text-center">${item.time}</td>
+                        <td class="border border-black p-2 text-justify">${item.teacher}</td>
+                        <td class="border border-black p-2 text-justify">${item.student}</td>
+                    </tr>`;
+                });
+            }
 
-        // Эрх хасах (Backend руу мэдээлэх)
-        fetch(orderURL, { method: 'POST', mode: 'no-cors', body: JSON.stringify({ action: "use", email: currentUserEmail }) });
-        userCredits--; 
-        document.getElementById('displayCredits').innerText = userCredits;
+            html += `</tbody></table></div>`;
+            document.getElementById('aiResultArea').innerHTML = html;
+            document.getElementById('aiResultArea').classList.remove('hidden');
+            document.getElementById('downloadBtn').classList.remove('hidden');
 
-    } catch(e) {
-        console.error("Алдаа гарлаа:", e);
-        alert("AI хариулт боловсруулахад алдаа гарлаа. Дата формат буруу байна.");
-    } finally {
-        btn.innerText = "Төлөвлөгөө боловсруулах";
-        btn.disabled = false;
+            fetch(orderURL, { method: 'POST', mode: 'no-cors', body: JSON.stringify({ action: "use", email: currentUserEmail }) });
+            userCredits--; 
+            document.getElementById('displayCredits').innerText = userCredits;
+
+        } catch(e) { alert("Алдаа гарлаа. AI-тай холбогдож чадсангүй."); }
+        finally { btn.innerText = "Төлөвлөгөө боловсруулах"; btn.disabled = false; }
     }
-}
-    // --- ТУСЛАХ ФУНКЦҮҮД ---
+
+    // 4. ТУСЛАХ ФУНКЦҮҮД (Шилжилт, Төлбөр)
     function showSection(name) { 
         document.getElementById('dashboardHome').classList.add('hidden'); 
         document.querySelectorAll('.section-content').forEach(s=>s.classList.remove('active')); 
@@ -450,27 +293,26 @@ async function loadProducts() {
         document.querySelectorAll('.section-content').forEach(s=>s.classList.remove('active')); 
     }
 
-    function openCheckout(name) { 
-        selectedItemName = name; 
-        document.getElementById('checkoutModal').classList.add('active'); 
-    }
+    function openCheckout(name) { selectedItemName = name; document.getElementById('checkoutModal').classList.add('active'); }
+    function closeCheckout() { document.getElementById('checkoutModal').classList.remove('active'); }
+    function submitOrder() { fetch(orderURL, {method:'POST', mode:'no-cors', body:JSON.stringify({action:"order", email:currentUserEmail, productName:selectedItemName})}).then(()=>{alert("Хүсэлт илгээгдлээ!"); closeCheckout();}); }
 
-    function closeCheckout() { 
-        document.getElementById('checkoutModal').classList.remove('active'); 
+    // 5. SUDOKU ЛОГИК (Монгол тоогоор)
+    const mongolNumbers = { 1: '᠑', 2: '᠒', 3: '᠓', 4: '᠔', 5: '᠕', 6: '᠖', 7: '᠗', 8: '᠘', 9: '᠙' };
+    function isValid(board, r, c, n) {
+        for(let x=0; x<9; x++) if(board[r][x]==n || board[x][c]==n) return false;
+        let sr=r-r%3, sc=c-c%3;
+        for(let i=0; i<3; i++) for(let j=0; j<3; j++) if(board[i+sr][j+sc]==n) return false;
+        return true;
     }
-
-    function submitOrder() { 
-        fetch(orderURL, {method:'POST', mode:'no-cors', body:JSON.stringify({action:"order", email:currentUserEmail, productName:selectedItemName})});
-        alert("Хүсэлт илгээгдлээ!"); 
-        closeCheckout();
+    function fillBoard(board) {
+        for(let r=0; r<9; r++) for(let c=0; c<9; c++) if(board[r][c]==0) {
+            let nums=[1,2,3,4,5,6,7,8,9].sort(()=>Math.random()-0.5);
+            for(let n of nums) if(isValid(board,r,c,n)) { board[r][c]=n; if(fillBoard(board)) return true; board[r][c]=0; }
+            return false;
+        } return true;
     }
-
-    function generateSudoku() {
-        const container = document.getElementById('sudokuContainer');
-        container.innerHTML = '<p class="p-10 italic">Судоку ачаалж байна...</p>';
-        // Судоку логик энд үргэлжилнэ...
-    }
-
+    
         // SUDOKU & OTHERS
         const mongolNumbers = { 1: '᠑', 2: '᠒', 3: '᠓', 4: '᠔', 5: '᠕', 6: '᠖', 7: '᠗', 8: '᠘', 9: '᠙' };
         function isValid(board, r, c, n) {
