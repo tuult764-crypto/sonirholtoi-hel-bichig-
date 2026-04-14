@@ -260,7 +260,75 @@ async function loadProducts() {
     }
 }
        
-// 3. AI ТӨЛӨВЛӨГӨӨ БОЛОВСРУУЛАХ
+<script>
+    // --- ТОХИРГОО ---
+    const orderURL = 'https://script.google.com/macros/s/AKfycbwQvjm2Qi7wD4qUGzG3Ez9BkPkJHoZ1oc1FxqDED6FfoAEEqXemR6G5SbYsycB8fPCLBQ/exec';
+    const RENDER_API_URL = 'https://sonirholtoi-hel-bichig.onrender.com/chat';
+    
+    let currentUserEmail = "", userCredits = 0, selectedItemName = "";
+
+    // 1. НЭВТРЭХ ФУНКЦ
+    async function handleLogin() {
+        const emailInput = document.getElementById('loginEmail');
+        const email = emailInput.value.trim();
+        const btn = document.getElementById('loginBtn');
+        if (!email) return alert("Мэйл хаягаа оруулна уу!");
+
+        btn.innerText = "Шалгаж байна...";
+        btn.disabled = true;
+        
+        try {
+            const response = await fetch(`${orderURL}?action=check&email=${encodeURIComponent(email)}`);
+            const data = await response.json();
+            if (data.status === "success" || data.credits !== undefined) {
+                currentUserEmail = email;
+                userCredits = data.credits;
+                document.getElementById('authScreen').style.display = 'none';
+                document.getElementById('mainSystem').classList.remove('hidden');
+                document.getElementById('displayEmail').innerText = email;
+                document.getElementById('displayCredits').innerText = userCredits;
+                document.getElementById('payEmail').innerText = email;
+                loadProducts(); 
+            } else {
+                alert("Бүртгэлгүй мэйл хаяг байна.");
+            }
+        } catch (error) {
+            alert("Холболтын алдаа гарлаа.");
+        } finally {
+            btn.innerText = "НЭВТРЭХ";
+            btn.disabled = false;
+        }
+    }
+
+    // 2. БАРАА АЧААЛАХ
+    async function loadProducts() {
+        const grid = document.getElementById('materialGrid');
+        const shopGrid = document.getElementById('shopGrid');
+        try {
+            const res = await fetch(`${orderURL}?action=getProducts`);
+            const products = await res.json();
+            grid.innerHTML = ''; if(shopGrid) shopGrid.innerHTML = '';
+            
+            products.forEach(p => {
+                const imgUrl = p.Images || "https://via.placeholder.com/300x200?text=Зураг";
+                const price = Number(p.Price).toLocaleString();
+                const cardHTML = `
+                    <div class="product-card bg-white p-4 rounded-[2rem] shadow-lg border border-orange-50 flex-shrink-0 w-64">
+                        <div class="relative overflow-hidden rounded-2xl mb-4 h-44 bg-gray-200">
+                            <img src="${imgUrl}" class="w-full h-full object-cover">
+                        </div>
+                        <h3 class="font-black text-orange-900 text-sm h-10 overflow-hidden leading-tight mb-1">${p.Title}</h3>
+                        <div class="flex justify-between items-center border-t border-orange-50 pt-3">
+                            <span class="text-orange-600 font-black text-sm">${price}₮</span>
+                            <button onclick="openCheckout('${p.Title}')" class="bg-orange-800 text-white px-4 py-2 rounded-xl text-[10px] font-black uppercase italic">Авах</button>
+                        </div>
+                    </div>`;
+                grid.innerHTML += cardHTML;
+                if(shopGrid) shopGrid.innerHTML += cardHTML;
+            });
+        } catch (e) { console.error("Бараа ачаалахад алдаа:", e); }
+    }
+
     async function generateAIPlan() {
     if(userCredits <= 0) return alert("Эрх хүрэлцэхгүй байна!");
     const btn = document.getElementById('genBtn');
@@ -270,59 +338,85 @@ async function loadProducts() {
 
     btn.innerText = "AI боловсруулж байна...";
     btn.disabled = true;
+
+    // МЭРГЭЖЛИЙН ТҮВШНИЙ PROMPT
+    const professionalPrompt = `Та Монгол хэл, уран зохиол, үндэсний бичгийн мэргэжлийн багш, арга зүйч. 
+    ${grade}-ийн "${topic}" сэдвээр 40 минутын ЭЭЛЖИТ ХИЧЭЭЛИЙН ТӨЛӨВЛӨГӨӨ боловсруул.
+    
+    ШААРДЛАГА:
+    1. Medle.mn-ийн стандарт: Хичээлийн зорилго, зорилт, ашиглах хэрэглэгдэхүүн, арга зүйг тодорхой бичих.
+    2. Алхам бүр (Сэдэлжүүлэлт, Шинэ мэдлэг, Батгах, Дүгнэлт) маш нарийн дэлгэрэнгүй байх.
+    3. Идэвхтэй сургалтын аргууд ашиглан төлөвлөгөөг зохионо.
+    4. Монгол улсын боловсрол шинжлэх ухааны яамнаас гаргасан сурах бичгүүдийг мөн ашиглана.
+    5. Багшийн үйлдэл хэсэгт: "Асуулт асууна, тайлбарлана" биш, яг ямар асуулт асуухыг нь эш татаж бичих.
+    6. Хариултыг JSON-оор: {"goal": "...", "tools": "...", "method": "...", "plan": [{"step": "...", "time": "...", "teacher": "...", "student": "...", "resource": "..."}]} форматаар өг.`;
+
     try {
         const response = await fetch(RENDER_API_URL, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ prompt, grade, topic })
+            body: JSON.stringify({ prompt: professionalPrompt })
         });
 
         const data = await response.json();
-        
-        // Хариулт нь data.plan эсвэл шууд data байгаа эсэхийг шалгах
-        const planData = data.plan || data;
-        
-        if (!Array.isArray(planData)) {
-            throw new Error("AI буруу форматтай хариу ирүүллээ.");
-        }
+        // Backend-ээс ирсэн датаг шалгах
+        const res = data.plan ? data : (data.data ? data.data : data); 
 
         let html = `
-            <div id="printArea" class="p-8 bg-white border border-gray-200 shadow-sm">
-                <div class="flex justify-between items-start mb-8 border-b-2 border-black pb-4">
-                    <div class="text-left">
-                        <p class="font-bold uppercase text-sm">БАТЛАВ: СУРГАЛТЫН МЕНЕЖЕР ................. / </p>
-                        <p class="text-[10px] mt-1 italic">202... он ... сар ... өдөр</p>
+            <div id="printArea" class="p-10 bg-white border-[3px] border-black text-black leading-relaxed">
+                <div class="flex justify-between items-start mb-6 border-b-2 border-black pb-4">
+                    <div class="text-[12px] font-bold">
+                        <p>БАТЛАВ: СУРГАЛТЫН МЕНЕЖЕР ...........................</p>
+                        <p class="mt-1 italic font-normal text-[10px]">202... он ... сар ... өдөр</p>
                     </div>
                     <div class="text-right">
-                        <h1 class="font-black text-xl uppercase italic underline text-orange-900">Ээлжит хичээлийн төлөвлөлт</h1>
-                        <p class="font-bold mt-1 text-sm">${grade}: ${topic}</p>
+                        <h1 class="font-black text-2xl uppercase underline italic text-orange-900">Ээлжит хичээлийн хөтөлбөр</h1>
+                        <p class="font-bold text-lg mt-1">${grade}: ${topic}</p>
                     </div>
                 </div>
-                <table class="w-full border-collapse border-2 border-black text-[11px]">
+
+                <div class="grid grid-cols-2 gap-4 mb-6 text-[13px] border-b border-gray-300 pb-4">
+                    <div><strong>Хичээлийн зорилго:</strong> ${res.goal || "Мэдлэг олгох, чадвар эзэмшүүлэх"}</div>
+                    <div><strong>Арга зүй:</strong> ${res.method || "Идэвхтэй сургалтын аргууд"}</div>
+                    <div class="col-span-2"><strong>Хэрэглэгдэхүүн:</strong> ${res.tools || "Сурах бичиг, үзүүлэн материал"}</div>
+                </div>
+
+                <table class="w-full border-collapse border-[2px] border-black text-[12px]">
                     <thead>
-                        <tr class="bg-gray-100">
-                            <th class="border-2 border-black p-2 w-16">Алхам</th>
-                            <th class="border-2 border-black p-2 w-12">Хугацаа</th>
-                            <th class="border-2 border-black p-2">Багшийн үйл ажиллагаа</th>
-                            <th class="border-2 border-black p-2">Сурагчийн үйл ажиллагаа</th>
+                        <tr class="bg-gray-100 uppercase">
+                            <th class="border-[2px] border-black p-2 w-[15%] text-center">Алхам</th>
+                            <th class="border-[2px] border-black p-2 w-[8%] text-center">Хугацаа</th>
+                            <th class="border-[2px] border-black p-2 w-[35%] text-center">Багшийн үйл ажиллагаа</th>
+                            <th class="border-[2px] border-black p-2 w-[30%] text-center">Сурагчийн үйл ажиллагаа</th>
+                            <th class="border-[2px] border-black p-2 w-[12%] text-center">Материал</th>
                         </tr>
                     </thead>
                     <tbody>`;
 
-        planData.forEach(r => {
-            html += `
-                <tr>
-                    <td class="border border-black p-2 font-bold text-center italic bg-gray-50">${r.step || ''}</td>
-                    <td class="border border-black p-2 text-center font-bold">${r.time || ''} мин</td>
-                    <td class="border border-black p-2 text-justify">${r.teacher || ''}</td>
-                    <td class="border border-black p-2 text-justify">${r.student || ''}</td>
-                </tr>`;
-        });
+        if (res.plan && Array.isArray(res.plan)) {
+            res.plan.forEach(item => {
+                html += `
+                    <tr>
+                        <td class="border border-black p-3 font-bold bg-gray-50 italic text-center">${item.step}</td>
+                        <td class="border border-black p-3 text-center font-bold">${item.time} мин</td>
+                        <td class="border border-black p-3 text-justify leading-relaxed">${item.teacher}</td>
+                        <td class="border border-black p-3 text-justify leading-relaxed">${item.student}</td>
+                        <td class="border border-black p-3 text-center italic text-[10px]">${item.resource || "Сурах бичиг"}</td>
+                    </tr>`;
+            });
+        }
 
-        html += `</tbody></table>
-                <div class="mt-4 border-2 border-black p-3 bg-orange-50 italic">
-                    <p class="font-bold underline">Гэрийн даалгавар:</p>
-                    <p>${planData[planData.length - 1].homework || "Сэдэвтэй холбоотой дасгал ажиллах."}</p>
+        html += `
+                    </tbody>
+                </table>
+
+                <div class="mt-6 border-[2px] border-black p-4 bg-orange-50 italic">
+                    <p class="font-bold underline mb-2 text-sm">Гэрийн даалгавар /Үнэлгээ/:</p>
+                    <p class="text-[13px]">${res.homework || (res.plan && res.plan.length > 0 ? res.plan[res.plan.length-1].homework : "Сэдвийн хүрээнд дасгал ажиллах")}</p>
+                </div>
+                
+                <div class="mt-8 flex justify-between text-[11px] font-bold">
+                    <p>Боловсруулсан багш: ........................... / ${currentUserEmail} /</p>
                 </div>
             </div>`;
 
@@ -330,108 +424,51 @@ async function loadProducts() {
         document.getElementById('aiResultArea').classList.remove('hidden');
         document.getElementById('downloadBtn').classList.remove('hidden');
 
-        // Эрх хасах
-        fetch(orderURL, { 
-            method: 'POST', 
-            mode: 'no-cors', 
-            body: JSON.stringify({ action: "use", email: currentUserEmail }) 
-        });
-
+        // Эрх хасах (Backend руу мэдээлэх)
+        fetch(orderURL, { method: 'POST', mode: 'no-cors', body: JSON.stringify({ action: "use", email: currentUserEmail }) });
         userCredits--; 
         document.getElementById('displayCredits').innerText = userCredits;
 
     } catch(e) {
-        console.error(e);
-        alert("Төлөвлөгөө гаргахад алдаа гарлаа. Рендер серверээ шалгана уу.");
+        console.error("Алдаа гарлаа:", e);
+        alert("AI хариулт боловсруулахад алдаа гарлаа. Дата формат буруу байна.");
     } finally {
         btn.innerText = "Төлөвлөгөө боловсруулах";
         btn.disabled = false;
     }
 }
-        // ТАНЫ ХҮССЭН ДЭЛГЭРЭНГҮЙ PROMPT
-        const prompt = `Та Монгол хэл, уран зохиол, үндэсний бичгийн мэргэжлийн багш. 
-        Заавар:
-        1. ${grade}-ийн "${topic}" сэдвээр 40 минутын ээлжит хичээлийн төлөвлөгөө боловсруул.
-        2. Идэвхтэй сургалтын аргуудыг (Асуудалд суурилсан, хамтран суралцах гэх мэт) ашигла.
-        3. Medle.mn-ийн хичээлийн стандартыг чанд баримталж, сурагчдын насны онцлогт тохируул.
-        4. Хариултыг зөвхөн JSON хэлбэрээр, дараах бүтцээр өг:
-           [
-             {"step": "Сэдэлжүүлэлт (5 мин)", "time": "5", "teacher": "Багшийн хийх тодорхой үйлдэл...", "student": "Сурагчийн хийх үйлдэл...", "homework": ""},
-             {"step": "Шинэ мэдлэг (15 мин)", "time": "15", "teacher": "...", "student": "...", "homework": ""},
-             {"step": "Батгах үйл ажиллагаа (15 мин)", "time": "15", "teacher": "...", "student": "...", "homework": ""},
-             {"step": "Дүгнэлт, даалгавар (5 мин)", "time": "5", "teacher": "...", "student": "...", "homework": "Энд гэрийн даалгаврыг тодорхой бич"}
-           ]`;
-        try {
-            const response = await fetch(RENDER_API_URL, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ prompt, grade, topic })
-            });
+    // --- ТУСЛАХ ФУНКЦҮҮД ---
+    function showSection(name) { 
+        document.getElementById('dashboardHome').classList.add('hidden'); 
+        document.querySelectorAll('.section-content').forEach(s=>s.classList.remove('active')); 
+        document.getElementById(name+'Section').classList.add('active'); 
+        if(name==='games') generateSudoku(); 
+    }
 
-            const data = await response.json();
-            
-            // Хүснэгтийн загвар үүсгэх
-            let html = `
-                <div id="printArea" class="p-8 bg-white border border-gray-200 shadow-sm">
-                    <div class="flex justify-between items-start mb-8 border-b-2 border-black pb-4">
-                        <div class="text-left">
-                            <p class="font-bold uppercase text-sm">БАТЛАВ: СУРГАЛТЫН МЕНЕЖЕР ........................... / </p>
-                            <p class="text-[10px] mt-1 italic">202... он ... сар ... өдөр</p>
-                        </div>
-                        <div class="text-right">
-                            <h1 class="font-black text-xl uppercase italic underline text-orange-900">Ээлжит хичээлийн төлөвлөлт</h1>
-                            <p class="font-bold mt-1 text-sm">${grade}: ${topic}</p>
-                        </div>
-                    </div>
-                    <table class="w-full border-collapse border-2 border-black text-[12px]">
-                        <thead>
-                            <tr class="bg-gray-100">
-                                <th class="border-2 border-black p-2 w-16">Алхам</th>
-                                <th class="border-2 border-black p-2 w-16">Хугацаа</th>
-                                <th class="border-2 border-black p-2">Багшийн үйл ажиллагаа</th>
-                                <th class="border-2 border-black p-2">Сурагчийн үйл ажиллагаа</th>
-                            </tr>
-                        </thead>
-                        <tbody>`;
+    function showDashboard() { 
+        document.getElementById('dashboardHome').classList.remove('hidden'); 
+        document.querySelectorAll('.section-content').forEach(s=>s.classList.remove('active')); 
+    }
 
-            data.plan.forEach(r => {
-                html += `
-                    <tr>
-                        <td class="border border-black p-3 font-bold text-center italic bg-gray-50">${r.step}</td>
-                        <td class="border border-black p-3 text-center font-bold">${r.time} мин</td>
-                        <td class="border border-black p-3 text-justify leading-relaxed">${r.teacher}</td>
-                        <td class="border border-black p-3 text-justify leading-relaxed">${r.student}</td>
-                    </tr>`;
-            });
+    function openCheckout(name) { 
+        selectedItemName = name; 
+        document.getElementById('checkoutModal').classList.add('active'); 
+    }
 
-            html += `</tbody></table>
-                    <div class="mt-6 border-2 border-black p-4 bg-orange-50 italic">
-                        <p class="font-bold underline mb-1">Гэрийн даалгавар:</p>
-                        <p>${data.plan[data.plan.length - 1].homework || "Сэдэвтэй холбоотой дасгал ажиллах."}</p>
-                    </div>
-                </div>`;
+    function closeCheckout() { 
+        document.getElementById('checkoutModal').classList.remove('active'); 
+    }
 
-            document.getElementById('aiResultArea').innerHTML = html;
-            document.getElementById('aiResultArea').classList.remove('hidden');
-            document.getElementById('downloadBtn').classList.remove('hidden');
+    function submitOrder() { 
+        fetch(orderURL, {method:'POST', mode:'no-cors', body:JSON.stringify({action:"order", email:currentUserEmail, productName:selectedItemName})});
+        alert("Хүсэлт илгээгдлээ!"); 
+        closeCheckout();
+    }
 
-            // Эрх хасах (Google Script рүү мэдээлэх)
-            await fetch(orderURL, { 
-                method: 'POST', 
-                mode: 'no-cors', 
-                body: JSON.stringify({ action: "use", email: currentUserEmail }) 
-            });
-
-            userCredits--; 
-            document.getElementById('displayCredits').innerText = userCredits;
-
-        } catch(e) {
-            console.error(e);
-            alert("Алдаа гарлаа. Render сервер ажиллаж байгаа эсэхийг шалгана уу.");
-        } finally {
-            btn.innerText = "Төлөвлөгөө боловсруулах";
-            btn.disabled = false;
-        }
+    function generateSudoku() {
+        const container = document.getElementById('sudokuContainer');
+        container.innerHTML = '<p class="p-10 italic">Судоку ачаалж байна...</p>';
+        // Судоку логик энд үргэлжилнэ...
     }
 
         // SUDOKU & OTHERS
