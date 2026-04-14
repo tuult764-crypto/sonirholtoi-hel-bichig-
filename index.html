@@ -123,13 +123,13 @@
     </div>
 
 <script>
-    // --- ТОХИРГОО ---
+    // --- 1. ТОХИРГОО ---
     const orderURL = 'https://script.google.com/macros/s/AKfycbwCCzxtGfH9dCiXO2UHtkb0Vq_4v741L1OlBWyrhDXQ1HbvB-90Y6Ye355W06qxHhAAJA/exec';
     const RENDER_API_URL = 'https://sonirholtoi-hel-bichig.onrender.com/chat';
     
     let currentUserEmail = "", userCredits = 0, selectedItemName = "";
 
-    // 1. НЭВТРЭХ ФУНКЦ
+    // --- 2. НЭВТРЭХ ФУНКЦ ---
     async function handleLogin() {
         const emailInput = document.getElementById('loginEmail');
         const email = emailInput ? emailInput.value.trim() : "";
@@ -159,7 +159,7 @@
                 alert("Бүртгэлгүй мэйл хаяг байна.");
             }
         } catch (error) {
-            console.error(error);
+            console.error("Login error:", error);
             alert("Холболтын алдаа гарлаа.");
         } finally {
             btn.innerText = "НЭВТРЭХ";
@@ -167,7 +167,7 @@
         }
     }
 
-    // 2. БАРАА АЧААЛАХ (Sheet-ээс зураг, үнэ унших)
+    // --- 3. БАРАА АЧААЛАХ ---
     async function loadProducts() {
         const grid = document.getElementById('materialGrid');
         const shopGrid = document.getElementById('shopGrid');
@@ -181,7 +181,6 @@
             products.forEach(p => {
                 let imgUrl = p.Images || "https://via.placeholder.com/300x200?text=Зураг";
                 
-                // Google Drive линкийг ил харагдах зураг болгох засавар
                 if (imgUrl.includes('drive.google.com')) {
                     let fileId = "";
                     if (imgUrl.includes('/d/')) fileId = imgUrl.split('/d/')[1].split('/')[0];
@@ -193,21 +192,21 @@
                 const cardHTML = `
                     <div class="product-card bg-white p-4 rounded-[2rem] shadow-lg border border-orange-50 flex-shrink-0 w-64">
                         <div class="relative overflow-hidden rounded-2xl mb-4 h-44 bg-gray-200">
-                            <img src="${imgUrl}" class="w-full h-full object-cover" onerror="this.src='https://via.placeholder.com/300x200?text=Зураг+Ачаалж+байна'">
+                            <img src="${imgUrl}" class="w-full h-full object-cover" onerror="this.src='https://via.placeholder.com/300x200?text=Зураг+Алдаа'">
                         </div>
-                        <h3 class="font-black text-orange-900 text-sm h-10 overflow-hidden leading-tight mb-1">${p.Title}</h3>
-                        <div class="flex justify-between items-center border-t border-orange-50 pt-3">
+                        <h3 class="font-black text-orange-900 text-sm h-10 overflow-hidden mb-1">${p.Title}</h3>
+                        <div class="flex justify-between items-center border-t pt-3">
                             <span class="text-orange-600 font-black text-sm">${price}₮</span>
-                            <button onclick="openCheckout('${p.Title}')" class="bg-orange-800 text-white px-4 py-2 rounded-xl text-[10px] font-black uppercase italic">Авах</button>
+                            <button onclick="openCheckout('${p.Title}')" class="bg-orange-800 text-white px-4 py-2 rounded-xl text-[10px] font-black uppercase">Авах</button>
                         </div>
                     </div>`;
                 if(grid) grid.innerHTML += cardHTML;
                 if(shopGrid) shopGrid.innerHTML += cardHTML;
             });
-        } catch (e) { console.error("Бараа ачаалахад алдаа:", e); }
+        } catch (e) { console.error("Load products error:", e); }
     }
 
-    // 3. AI ТӨЛӨВЛӨГӨӨ ГАРГАХ (Medle загвар)
+    // --- 4. AI ТӨЛӨВЛӨГӨӨ (Medle Загвар) ---
     async function generateAIPlan() {
         if(userCredits <= 0) return alert("Эрх хүрэлцэхгүй байна!");
         const btn = document.getElementById('genBtn');
@@ -218,7 +217,7 @@
         btn.innerText = "AI боловсруулж байна...";
         btn.disabled = true;
 
-        const professionalPrompt = `Та Монгол хэл, уран зохиолын мэргэжлийн багш. ${grade}-ийн "${topic}" сэдвээр 40 минутын ЭЭЛЖИТ ХИЧЭЭЛИЙН ТӨЛӨВЛӨГӨӨГ Medle.mn стандарт (goal, tools, method, plan:[{step, time, teacher, student, resource}]) JSON-оор өг.`;
+        const professionalPrompt = `Та Монгол хэл, уран зохиолын багш. ${grade}-ийн "${topic}" сэдвээр 40 минутын хичээлийн төлөвлөгөөг JSON форматаар (goal, tools, method, plan:[{step, time, teacher, student}]) гарга.`;
 
         try {
             const response = await fetch(RENDER_API_URL, {
@@ -231,27 +230,25 @@
             const res = data.plan ? data : (data.data ? data.data : data); 
 
             let html = `
-                <div id="printArea" class="p-10 bg-white border-[3px] border-black text-black leading-relaxed text-left">
+                <div id="printArea" class="p-10 bg-white border-[3px] border-black text-black text-left">
                     <div class="flex justify-between items-start mb-6 border-b-2 border-black pb-4">
-                        <div class="text-[12px] font-bold">
-                            <p>БАТЛАВ: СУРГАЛТЫН МЕНЕЖЕР ...........................</p>
-                        </div>
+                        <div class="text-[12px] font-bold">БАТЛАВ: СУРГАЛТЫН МЕНЕЖЕР ...........................</div>
                         <div class="text-right">
                             <h1 class="font-black text-xl uppercase underline italic text-orange-900">Ээлжит хичээлийн хөтөлбөр</h1>
-                            <p class="font-bold text-lg mt-1">${grade}: ${topic}</p>
+                            <p class="font-bold">${grade}: ${topic}</p>
                         </div>
                     </div>
-                    <div class="grid grid-cols-2 gap-4 mb-6 text-[13px] border-b border-gray-300 pb-4">
-                        <div><strong>Зорилго:</strong> ${res.goal || "Мэдлэг олгох"}</div>
-                        <div><strong>Арга зүй:</strong> ${res.method || "Идэвхтэй"}</div>
+                    <div class="grid grid-cols-2 gap-4 mb-4 text-[13px] border-b pb-4">
+                        <p><strong>Зорилго:</strong> ${res.goal || "Мэдлэг олгох"}</p>
+                        <p><strong>Арга зүй:</strong> ${res.method || "Идэвхтэй"}</p>
                     </div>
                     <table class="w-full border-collapse border-[2px] border-black text-[11px]">
                         <thead>
                             <tr class="bg-gray-100 uppercase">
-                                <th class="border-[2px] border-black p-2">Алхам</th>
-                                <th class="border-[2px] border-black p-2">Мин</th>
-                                <th class="border-[2px] border-black p-2 w-[40%]">Багшийн үйлдэл</th>
-                                <th class="border-[2px] border-black p-2 w-[30%]">Сурагчийн үйлдэл</th>
+                                <th class="border border-black p-2">Алхам</th>
+                                <th class="border border-black p-2">Мин</th>
+                                <th class="border border-black p-2">Багшийн үйлдэл</th>
+                                <th class="border border-black p-2">Сурагчийн үйлдэл</th>
                             </tr>
                         </thead>
                         <tbody>`;
@@ -259,10 +256,10 @@
             if (res.plan) {
                 res.plan.forEach(item => {
                     html += `<tr>
-                        <td class="border border-black p-2 font-bold italic">${item.step}</td>
+                        <td class="border border-black p-2 font-bold">${item.step}</td>
                         <td class="border border-black p-2 text-center">${item.time}</td>
-                        <td class="border border-black p-2 text-justify">${item.teacher}</td>
-                        <td class="border border-black p-2 text-justify">${item.student}</td>
+                        <td class="border border-black p-2">${item.teacher}</td>
+                        <td class="border border-black p-2">${item.student}</td>
                     </tr>`;
                 });
             }
@@ -276,11 +273,11 @@
             userCredits--; 
             document.getElementById('displayCredits').innerText = userCredits;
 
-        } catch(e) { alert("Алдаа гарлаа. AI-тай холбогдож чадсангүй."); }
+        } catch(e) { alert("Алдаа гарлаа."); }
         finally { btn.innerText = "Төлөвлөгөө боловсруулах"; btn.disabled = false; }
     }
 
-    // 4. ТУСЛАХ ФУНКЦҮҮД (Шилжилт, Төлбөр)
+    // --- 5. ТУСЛАХ ФУНКЦҮҮД ---
     function showSection(name) { 
         document.getElementById('dashboardHome').classList.add('hidden'); 
         document.querySelectorAll('.section-content').forEach(s=>s.classList.remove('active')); 
@@ -295,58 +292,32 @@
 
     function openCheckout(name) { selectedItemName = name; document.getElementById('checkoutModal').classList.add('active'); }
     function closeCheckout() { document.getElementById('checkoutModal').classList.remove('active'); }
-    function submitOrder() { fetch(orderURL, {method:'POST', mode:'no-cors', body:JSON.stringify({action:"order", email:currentUserEmail, productName:selectedItemName})}).then(()=>{alert("Хүсэлт илгээгдлээ!"); closeCheckout();}); }
+    function submitOrder() { 
+        fetch(orderURL, {method:'POST', mode:'no-cors', body:JSON.stringify({action:"order", email:currentUserEmail, productName:selectedItemName})});
+        alert("Хүсэлт илгээгдлээ!"); 
+        closeCheckout();
+    }
 
-    // 5. SUDOKU ЛОГИК (Монгол тоогоор)
+    // --- 6. SUDOKU ---
     const mongolNumbers = { 1: '᠑', 2: '᠒', 3: '᠓', 4: '᠔', 5: '᠕', 6: '᠖', 7: '᠗', 8: '᠘', 9: '᠙' };
-    function isValid(board, r, c, n) {
-        for(let x=0; x<9; x++) if(board[r][x]==n || board[x][c]==n) return false;
-        let sr=r-r%3, sc=c-c%3;
-        for(let i=0; i<3; i++) for(let j=0; j<3; j++) if(board[i+sr][j+sc]==n) return false;
-        return true;
-    }
-    function fillBoard(board) {
-        for(let r=0; r<9; r++) for(let c=0; c<9; c++) if(board[r][c]==0) {
-            let nums=[1,2,3,4,5,6,7,8,9].sort(()=>Math.random()-0.5);
-            for(let n of nums) if(isValid(board,r,c,n)) { board[r][c]=n; if(fillBoard(board)) return true; board[r][c]=0; }
-            return false;
-        } return true;
-    }
-    
-        // SUDOKU & OTHERS
-        const mongolNumbers = { 1: '᠑', 2: '᠒', 3: '᠓', 4: '᠔', 5: '᠕', 6: '᠖', 7: '᠗', 8: '᠘', 9: '᠙' };
-        function isValid(board, r, c, n) {
-            for(let x=0; x<9; x++) if(board[r][x]==n || board[x][c]==n) return false;
-            let sr=r-r%3, sc=c-c%3;
-            for(let i=0; i<3; i++) for(let j=0; j<3; j++) if(board[i+sr][j+sc]==n) return false;
-            return true;
-        }
-        function fillBoard(board) {
-            for(let r=0; r<9; r++) for(let c=0; c<9; c++) if(board[r][c]==0) {
-                let nums=[1,2,3,4,5,6,7,8,9].sort(()=>Math.random()-0.5);
-                for(let n of nums) if(isValid(board,r,c,n)) { board[r][c]=n; if(fillBoard(board)) return true; board[r][c]=0; }
-                return false;
-            } return true;
-        }
-        function generateSudoku() {
+    function generateSudoku() {
+        const container = document.getElementById('sudokuContainer');
+        container.innerHTML = '<p class="p-10 italic">Судоку үүсэж байна...</p>';
+        setTimeout(() => {
             let board = Array.from({length:9},()=>Array(9).fill(0));
-            fillBoard(board);
-            for(let k=0; k<40; k++) board[Math.floor(Math.random()*9)][Math.floor(Math.random()*9)]=0;
-            const container = document.getElementById('sudokuContainer');
-            container.innerHTML = ''; container.className = "grid grid-cols-9 bg-white border-2 border-orange-900 mx-auto w-fit shadow-lg";
+            // Энгийн дүүргэлт
+            for(let i=0; i<9; i++) board[i][i] = Math.floor(Math.random()*9)+1;
+            
+            container.innerHTML = ''; 
+            container.className = "grid grid-cols-9 bg-white border-2 border-orange-900 mx-auto w-fit shadow-lg";
             board.forEach(row => row.forEach(num => {
                 const cell = document.createElement('div');
                 cell.className = "w-10 h-10 flex items-center justify-center border border-orange-100 font-bold text-xl";
-                if(num!=0) { cell.innerText=mongolNumbers[num]; cell.className+=" bg-orange-50 text-orange-900"; }
-                else { const input = document.createElement('input'); input.className="w-full h-full text-center outline-none focus:bg-orange-200 text-blue-700"; input.maxLength=1; input.oninput=(e)=>{ if(e.target.value>=1 && e.target.value<=9) e.target.value=mongolNumbers[e.target.value]; else e.target.value=""; }; cell.appendChild(input); }
+                cell.innerText = num !== 0 ? mongolNumbers[num] : "";
                 container.appendChild(cell);
             }));
-        }
-        function showSection(name) { document.getElementById('dashboardHome').classList.add('hidden'); document.querySelectorAll('.section-content').forEach(s=>s.classList.remove('active')); document.getElementById(name+'Section').classList.add('active'); if(name==='games') generateSudoku(); }
-        function showDashboard() { document.getElementById('dashboardHome').classList.remove('hidden'); document.querySelectorAll('.section-content').forEach(s=>s.classList.remove('active')); }
-        function openCheckout(name) { selectedItemName=name; document.getElementById('checkoutModal').classList.add('active'); }
-        function closeCheckout() { document.getElementById('checkoutModal').classList.remove('active'); }
-        function submitOrder() { fetch(orderURL, {method:'POST', mode:'no-cors', body:JSON.stringify({action:"order", email:currentUserEmail, productName:selectedItemName})}).then(()=>{alert("Илгээгдлээ!"); closeCheckout();}); }
-    </script>
+        }, 500);
+    }
+</script>
 </body>
 </html>
