@@ -194,10 +194,9 @@
     }
 
     // 2. PRODUCTS (Зураг зассан)
-   function fixImg(url) {
+function fixImg(url) {
     if (!url) return 'https://via.placeholder.com/300';
     
-    // Google Drive-ын хаяг эсэхийг шалгах
     if (url.includes('drive.google.com')) {
         let fileId = "";
         try {
@@ -206,24 +205,21 @@
             } else {
                 fileId = url.split('/d/')[1].split('/')[0];
             }
-            // ШУУД ЗУРАГ УНШИХ ХАЯГ (Google Drive Thumbnail API ашиглав - илүү найдвартай)
-            return `https://lh3.googleusercontent.com/u/0/d/${fileId}=w400-h400-p-k-no-iv1`;
+            // Хамгийн найдвартай Google Drive зураг харуулах хаяг:
+            return `https://drive.google.com/uc?export=view&id=${fileId}`;
         } catch (e) {
             return 'https://via.placeholder.com/300';
         }
     }
     return url;
 }
-
-    async function loadProducts() {
+async function loadProducts() {
     try {
         const res = await fetch(`${orderURL}?action=getProducts`);
         const products = await res.json();
-        
         const html = products.map(p => `
             <div class="product-card">
-                <img src="${fixImg(p.Images)}" class="w-full h-44 object-cover rounded-2xl mb-4 shadow-sm" 
-                     onerror="this.src='https://via.placeholder.com/300'">
+                <img src="${fixImg(p.Images)}" class="w-full h-44 object-cover rounded-2xl mb-4 shadow-sm" onerror="this.src='https://via.placeholder.com/300'">
                 <h3 class="font-black text-orange-900 text-sm h-10 overflow-hidden leading-tight">${p.Title}</h3>
                 <div class="flex justify-between items-center mt-3 pt-3 border-t border-orange-50">
                     <span class="text-orange-600 font-black">${Number(p.Price).toLocaleString()}₮</span>
@@ -231,14 +227,11 @@
                 </div>
             </div>
         `).join('');
-        
         document.getElementById('materialGrid').innerHTML = html;
         document.getElementById('shopGrid').innerHTML = html;
-    } catch (e) {
-        console.error("Бараа уншихад алдаа гарлаа:", e);
-    }
+    } catch (e) { console.log("Алдаа:", e); }
 }
-
+    
     // 3. AI GENERATOR (Найдвартай хувилбар)
     async function callAI(prompt) {
         const res = await fetch(RENDER_API_URL, {
@@ -358,13 +351,20 @@ function generateSudoku() {
         document.getElementById('dashboardHome').classList.remove('hidden');
         document.querySelectorAll('.section-content').forEach(s => s.classList.remove('active'));
     }
-    function openCheckout(name) { 
-        selectedItemName = name; 
-        document.getElementById('checkoutModal').classList.add('active'); 
+function openCheckout(name) {
+    selectedItemName = name;
+    const modal = document.getElementById('checkoutModal');
+    if (modal) {
+        modal.classList.add('active'); // CSS дээрх .modal.active { display: flex; } ажиллана
     }
-    function closeCheckout() { 
-        document.getElementById('checkoutModal').classList.remove('active'); 
+}
+
+function closeCheckout() {
+    const modal = document.getElementById('checkoutModal');
+    if (modal) {
+        modal.classList.remove('active');
     }
+}
     function submitOrder() { 
         fetch(orderURL, {method:'POST', mode:'no-cors', body:JSON.stringify({action:"order", email:currentUserEmail, productName:selectedItemName})});
         alert("Хүсэлт амжилттай илгээгдлээ!"); closeCheckout(); 
