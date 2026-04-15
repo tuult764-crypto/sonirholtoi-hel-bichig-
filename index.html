@@ -12,23 +12,25 @@
         .section-content { display: none; }
         .section-content.active { display: block; }
         .scrollbar-hide::-webkit-scrollbar { display: none; }
-        .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
-        .product-card { flex: 0 0 280px; snap-align: start; }
-        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 1000; justify-content: center; align-items: center; padding: 20px; }
-        .modal.active { display: flex; }
-        /* Судоку загвар */
-        #sudokuContainer div { border: 0.5px solid #e5e7eb; }
-        #sudokuContainer div:nth-child(3n) { border-right: 2px solid #854d0e; }
-        #sudokuContainer div:nth-child(9n) { border-right: 0.5px solid #e5e7eb; }
-        #sudokuContainer div:nth-of-type(n+19):nth-of-type(-n+27),
-        #sudokuContainer div:nth-of-type(n+46):nth-of-type(-n+54) { border-bottom: 2px solid #854d0e; }
+        
+        /* СУДОКУ ТОДРУУЛАХ */
+        .sudoku-grid { display: grid; grid-template-columns: repeat(9, 1fr); border: 3px solid #1a202c; width: fit-content; margin: auto; }
+        .sudoku-cell { width: 40px; height: 40px; border: 1px solid #cbd5e0; text-align: center; font-weight: bold; font-size: 20px; outline: none; background: white; }
+        .sudoku-cell:nth-child(3n) { border-right: 3px solid #1a202c; }
+        .sudoku-cell:nth-child(9n) { border-right: 1px solid #cbd5e0; }
+        .sudoku-grid > div:nth-child(n+19):nth-child(-n+27),
+        .sudoku-grid > div:nth-child(n+46):nth-child(-n+54) { border-bottom: 3px solid #1a202c; }
+
+        /* ДЭЛГҮҮР ГҮЙЛГЭХ */
+        .shop-scroll { display: flex; overflow-x: auto; gap: 20px; scroll-snap-type: x mandatory; padding-bottom: 20px; }
+        .product-card { flex: 0 0 280px; scroll-snap-align: start; }
     </style>
 </head>
 <body class="min-h-screen pb-20">
 
     <div id="authScreen" class="min-h-screen flex items-center justify-center px-4">
         <div class="max-w-md w-full bg-white p-10 rounded-[3rem] shadow-2xl border border-orange-100 text-center">
-            <h1 class="text-2xl font-black text-orange-900 mb-2 uppercase italic">Сонирхолтой хэл бичиг</h1>
+            <h1 class="text-2xl font-black text-orange-900 mb-6 uppercase italic">Сонирхолтой хэл бичиг</h1>
             <input type="email" id="loginEmail" placeholder="Мэйл хаягаа оруулна уу" class="w-full p-4 bg-stone-50 border rounded-2xl outline-none text-center font-bold mb-4 shadow-inner">
             <button onclick="handleLogin()" id="loginBtn" class="w-full bg-orange-800 text-white py-4 rounded-2xl font-black shadow-lg uppercase italic">Нэвтрэх</button>
         </div>
@@ -36,11 +38,11 @@
 
     <div id="mainSystem" class="hidden">
         <nav class="bg-white border-b p-4 sticky top-0 z-50 shadow-sm">
-            <div class="container mx-auto flex justify-between items-center px-4">
+            <div class="container mx-auto flex justify-between items-center px-4 text-right">
                 <div onclick="showDashboard()" class="flex items-center gap-2 cursor-pointer">
-                    <span class="text-lg font-black text-orange-900 italic uppercase underline">Туул багш</span>
+                    <span class="text-lg font-black text-orange-900 italic uppercase">Туул багш</span>
                 </div>
-                <div class="text-right">
+                <div>
                     <p id="displayEmail" class="text-[10px] font-bold text-gray-400 italic"></p>
                     <p class="text-xs font-black text-orange-600 uppercase">ЭРХ: <span id="displayCredits">0</span></p>
                 </div>
@@ -62,28 +64,26 @@
                     <h3 class="font-black text-sm italic uppercase">🛒 Дэлгүүр</h3>
                 </div>
             </div>
-            
-            <div class="mt-12 text-left">
-                <h2 class="text-xl font-bold text-orange-900 mb-4 italic px-2">📚 Сургалтын материалууд</h2>
-                <div id="materialGrid" class="flex overflow-x-auto pb-6 gap-4 snap-x snap-mandatory scrollbar-hide"></div>
-            </div>
+
+            <h2 class="text-left text-xl font-bold text-orange-900 mb-4 italic px-2">📚 Сургалтын материалууд</h2>
+            <div id="materialGrid" class="shop-scroll scrollbar-hide"></div>
         </div>
 
         <div id="plannerSection" class="section-content container mx-auto max-w-4xl px-4 py-6">
-            <div class="bg-white p-8 rounded-[3rem] shadow-xl border border-orange-50">
+            <div class="bg-white p-8 rounded-[3rem] shadow-xl">
                 <button onclick="showDashboard()" class="text-sm font-bold text-orange-800 mb-6 italic">← БУЦАХ</button>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-                    <input type="text" id="lessonTopic" placeholder="Хичээлийн сэдэв..." class="p-4 border rounded-2xl bg-stone-50 font-bold outline-none italic">
-                    <select id="gradeSelect" class="p-4 border rounded-2xl bg-stone-50 font-bold outline-none text-orange-800">
+                    <input type="text" id="lessonTopic" placeholder="Хичээлийн сэдэв..." class="p-4 border rounded-2xl bg-stone-50 outline-none">
+                    <select id="gradeSelect" class="p-4 border rounded-2xl bg-stone-50 outline-none">
                         <option value="6-р анги">6-р анги</option>
                         <option value="7-р анги">7-р анги</option>
                         <option value="8-р анги">8-р анги</option>
                         <option value="9-р анги">9-р анги</option>
                     </select>
                 </div>
-                <button onclick="generateAIPlan()" id="genBtn" class="w-full bg-orange-800 text-white py-5 rounded-2xl font-black uppercase shadow-lg italic">Төлөвлөгөө боловсруулах (1 эрх)</button>
-                <div id="aiResultArea" class="hidden mt-8 overflow-x-auto"></div>
-                <button id="downloadBtn" onclick="downloadPlannerPDF()" class="hidden w-full mt-4 bg-green-600 text-white py-5 rounded-2xl font-black italic uppercase">📥 PDF ТАТАХ</button>
+                <button onclick="generateAIPlan()" id="genBtn" class="w-full bg-orange-800 text-white py-4 rounded-2xl font-black uppercase shadow-lg italic">Төлөвлөгөө боловсруулах (1 эрх)</button>
+                <div id="aiResultArea" class="hidden mt-8 overflow-x-auto text-left"></div>
+                <button id="downloadBtn" onclick="downloadPlannerPDF()" class="hidden w-full mt-4 bg-green-600 text-white py-4 rounded-2xl font-black italic uppercase italic">📥 PDF ТАТАХ</button>
             </div>
         </div>
 
@@ -101,7 +101,7 @@
                     <input type="text" id="examTopic" placeholder="Шалгалтын сэдэв..." class="p-4 border rounded-2xl bg-blue-50 font-bold outline-none">
                 </div>
                 <button onclick="generateExamMaterial()" id="examGenBtn" class="w-full bg-blue-800 text-white py-5 rounded-2xl font-black uppercase shadow-lg italic">Шалгалт боловсруулах (2 эрх)</button>
-                <div id="examResultArea" class="hidden mt-8"></div>
+                <div id="examResultArea" class="hidden mt-8 text-left"></div>
                 <div id="examDownloadButtons" class="hidden mt-4">
                     <button onclick="downloadExamWord()" class="w-full bg-blue-600 text-white py-5 rounded-2xl font-black uppercase">Word татах</button>
                 </div>
@@ -109,15 +109,16 @@
         </div>
 
         <div id="gamesSection" class="section-content container mx-auto max-w-4xl px-4 py-6 text-center">
-             <div class="bg-white p-10 rounded-[3rem] shadow-xl border-4 border-green-100">
+             <div class="bg-white p-10 rounded-[3rem] shadow-xl">
                 <button onclick="showDashboard()" class="text-sm font-bold text-green-800 mb-6 italic">← БУЦАХ</button>
                 <h2 class="text-2xl font-black text-green-900 mb-6 uppercase italic">Үндэсний бичгийн судоку</h2>
-                <div id="sudokuContainer" class="flex justify-center mb-8 italic"></div>
+                <p class="mb-4 text-xs text-gray-500 italic">Нүдэнд дараад тоо бичиж болно (᠑, ᠒, ᠓...)</p>
+                <div id="sudokuContainer" class="sudoku-grid mb-8 italic"></div>
                 <button onclick="generateSudoku()" class="bg-green-700 text-white px-10 py-5 rounded-2xl font-black italic uppercase">Шинэ тоглоом</button>
             </div>
         </div>
 
-        <div id="shopSection" class="section-content px-4 py-10 container mx-auto text-center">
+        <div id="shopSection" class="section-content px-4 py-10 container mx-auto">
             <button onclick="showDashboard()" class="text-sm font-bold text-orange-800 mb-6 italic">← БУЦАХ</button>
             <div id="shopGrid" class="grid grid-cols-1 md:grid-cols-3 gap-8 text-left"></div>
         </div>
@@ -127,8 +128,8 @@
         <div class="bg-white p-10 rounded-[3rem] max-w-md w-full text-center border-8 border-orange-100">
             <h2 class="text-2xl font-black text-orange-900 mb-6 uppercase italic">Төлбөр төлөх</h2>
             <div class="bg-orange-50 p-6 rounded-3xl border mb-6 text-left">
-                <p class="font-black text-gray-400 text-sm italic">ХАС БАНК / 5006069631</p>
-                <p class="font-black text-orange-900 text-xl">МӨНХДАЛАЙ ТУУЛ</p>
+                <p class="font-black text-gray-400 text-sm">ХАС БАНК / 5006069631</p>
+                <p class="font-black text-orange-900 text-xl uppercase">МӨНХДАЛАЙ ТУУЛ</p>
                 <p class="mt-4 text-[10px] text-gray-500 italic uppercase">Гүйлгээний утга: <span id="payEmail" class="text-orange-700 font-bold"></span></p>
             </div>
             <button onclick="submitOrder()" class="w-full bg-orange-800 text-white py-5 rounded-2xl font-black uppercase shadow-lg">Илгээх</button>
@@ -153,7 +154,7 @@
         try {
             const res = await fetch(`${orderURL}?action=check&email=${encodeURIComponent(email)}`);
             const data = await res.json();
-            if (data.status === "success") {
+            if (data.status === "success" || data.credits !== undefined) {
                 currentUserEmail = email;
                 userCredits = data.credits;
                 document.getElementById('authScreen').style.display = 'none';
@@ -167,15 +168,26 @@
         finally { btn.innerText = "Нэвтрэх"; }
     }
 
-    // 2. БАРАА АЧААЛАХ
+    // 2. БАРАА АЧААЛАХ (Зураг зассан)
+    function fixImageUrl(url) {
+        if (!url) return 'https://via.placeholder.com/300x200?text=Зураг+байхгүй';
+        if (url.includes('drive.google.com')) {
+            const fileId = url.split('/d/')[1]?.split('/')[0] || url.split('id=')[1]?.split('&')[0];
+            return `https://lh3.googleusercontent.com/d/${fileId}`;
+        }
+        return url;
+    }
+
     async function loadProducts() {
-        const grid = document.getElementById('materialGrid');
+        const materialGrid = document.getElementById('materialGrid');
+        const shopGrid = document.getElementById('shopGrid');
         try {
             const res = await fetch(`${orderURL}?action=getProducts`);
             const products = await res.json();
-            grid.innerHTML = products.map(p => `
+            
+            const html = products.map(p => `
                 <div class="product-card bg-white p-4 rounded-[2rem] shadow-lg border border-orange-50">
-                    <img src="${p.Images || 'https://via.placeholder.com/300'}" class="w-full h-40 object-cover rounded-2xl mb-4">
+                    <img src="${fixImageUrl(p.Images)}" class="w-full h-40 object-cover rounded-2xl mb-4" onerror="this.src='https://via.placeholder.com/300'">
                     <h3 class="font-black text-orange-900 text-sm h-10 overflow-hidden mb-2">${p.Title}</h3>
                     <div class="flex justify-between items-center">
                         <span class="text-orange-600 font-black">${Number(p.Price).toLocaleString()}₮</span>
@@ -183,10 +195,13 @@
                     </div>
                 </div>
             `).join('');
-        } catch (e) { grid.innerHTML = "Ачаалж чадсангүй."; }
+            
+            materialGrid.innerHTML = html;
+            shopGrid.innerHTML = html;
+        } catch (e) { console.error("Products error:", e); }
     }
 
-    // 3. ХӨТӨЛБӨР БОЛОВСРУУЛАХ
+    // 3. ХӨТӨЛБӨР БОЛОВСРУУЛАХ (Алдаа зассан)
     async function generateAIPlan() {
         if(userCredits < 1) return alert("Эрх хүрэлцэхгүй байна!");
         const topic = document.getElementById('lessonTopic').value;
@@ -197,7 +212,7 @@
         btn.innerText = "AI Боловсруулж байна...";
         btn.disabled = true;
 
-        const prompt = `Монгол хэлний багш. ${grade}-ийн "${topic}" сэдвээр Medle.mn загварын хичээлийн төлөвлөгөөг JSON-оор өг (goal, method, plan:[{step, time, teacher, student}]).`;
+        const prompt = `Монгол хэлний багш. ${grade}-ийн "${topic}" сэдвээр хичээлийн төлөвлөгөө боловсруулж өг. Хүснэгт болон текст оролцуулж болохоор цэгцтэй HTML өг. JSON хэрэггүй.`;
 
         try {
             const response = await fetch(RENDER_API_URL, {
@@ -206,28 +221,12 @@
                 body: JSON.stringify({ prompt: prompt })
             });
             const data = await response.json();
-            
-            let html = `
-                <div id="printArea" class="p-8 bg-white border-2 border-black text-black text-left">
-                    <h1 class="text-center font-bold underline mb-4 uppercase">Хичээлийн хөтөлбөр</h1>
-                    <p><b>Анги:</b> ${grade} | <b>Сэдэв:</b> ${topic}</p>
-                    <p><b>Зорилго:</b> ${data.goal || "..."}</p>
-                    <table class="w-full border-collapse border border-black mt-4 text-[12px]">
-                        <tr class="bg-gray-100">
-                            <th class="border border-black p-1">Алхам</th>
-                            <th class="border border-black p-1">Хугацаа</th>
-                            <th class="border border-black p-1">Багш</th>
-                            <th class="border border-black p-1">Сурагч</th>
-                        </tr>
-                        ${data.plan.map(i => `<tr>
-                            <td class="border border-black p-1 font-bold">${i.step}</td>
-                            <td class="border border-black p-1">${i.time}</td>
-                            <td class="border border-black p-1">${i.teacher}</td>
-                            <td class="border border-black p-1">${i.student}</td>
-                        </tr>`).join('')}
-                    </table>
+            const content = data.content || (data.choices && data.choices[0].message.content) || data;
+
+            document.getElementById('aiResultArea').innerHTML = `
+                <div id="printArea" class="p-8 bg-white border-2 border-black text-black">
+                    ${content.includes('<') ? content : content.replace(/\n/g, '<br>')}
                 </div>`;
-            document.getElementById('aiResultArea').innerHTML = html;
             document.getElementById('aiResultArea').classList.remove('hidden');
             document.getElementById('downloadBtn').classList.remove('hidden');
 
@@ -238,9 +237,9 @@
         finally { btn.innerText = "Төлөвлөгөө боловсруулах"; btn.disabled = false; }
     }
 
-    // 4. ШАЛГАЛТ БОЛОВСРУУЛАХ
+    // 4. ШАЛГАЛТ БОЛОВСРУУЛАХ (Алдаа зассан)
     async function generateExamMaterial() {
-        if(userCredits < 2) return alert("Эрх хүрэлцэхгүй байна! (2 эрх шаардлагатай)");
+        if(userCredits < 2) return alert("Эрх хүрэлцэхгүй байна!");
         const topic = document.getElementById('examTopic').value;
         const grade = document.getElementById('examGrade').value;
         if(!topic) return alert("Сэдвээ оруулна уу!");
@@ -249,7 +248,7 @@
         btn.innerText = "AI Боловсруулж байна...";
         btn.disabled = true;
 
-        const prompt = `Монгол хэлний багш. ${grade}-ийн "${topic}" сэдвээр 5 сонгох, 2 задгай асуулттай шалгалт, хариултын хамт HTML-ээр өг.`;
+        const prompt = `Монгол хэлний багш. ${grade}-ийн "${topic}" сэдвээр шалгалтын материал боловсруул. 5 сонгох, 2 задгай асуулт, хариултыг цэгцтэй HTML-ээр өг.`;
 
         try {
             const res = await fetch(RENDER_API_URL, {
@@ -258,12 +257,11 @@
                 body: JSON.stringify({ prompt: prompt })
             });
             const data = await res.json();
-            const content = data.content || (data.choices ? data.choices[0].message.content : data);
+            const content = data.content || (data.choices && data.choices[0].message.content) || data;
 
             document.getElementById('examResultArea').innerHTML = `
-                <div id="examPrintArea" class="p-8 bg-white border border-gray-200 text-black text-left">
-                    <h2 class="text-center font-bold underline mb-4 uppercase">Шалгалтын материал: ${topic}</h2>
-                    <div class="prose max-w-none text-sm">${content.replace(/\n/g, '<br>')}</div>
+                <div id="examPrintArea" class="p-8 bg-white border border-gray-200">
+                    ${content.includes('<') ? content : content.replace(/\n/g, '<br>')}
                 </div>`;
             document.getElementById('examResultArea').classList.remove('hidden');
             document.getElementById('examDownloadButtons').classList.remove('hidden');
@@ -280,35 +278,33 @@
         const element = document.getElementById('printArea');
         html2pdf().from(element).save('hotolbor.pdf');
     }
-
     function downloadExamWord() {
         const html = document.getElementById('examPrintArea').innerHTML;
         const blob = new Blob(['\ufeff', html], { type: 'application/msword' });
-        const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
-        a.href = url; a.download = 'shalgalt.doc'; a.click();
+        a.href = URL.createObjectURL(blob);
+        a.download = 'shalgalt.doc'; a.click();
     }
 
-    // 6. СУДОКУ (Зөв ажилладаг)
+    // 6. СУДОКУ (Бичдэг + 3x3 хүрээ тод)
     const mongolNums = {1:'᠑', 2:'᠒', 3:'᠓', 4:'᠔', 5:'᠕', 6:'᠖', 7:'᠗', 8:'᠘', 9:'᠙'};
     function generateSudoku() {
         const container = document.getElementById('sudokuContainer');
         container.innerHTML = "";
-        container.className = "grid grid-cols-9 bg-white border-2 border-orange-900 mx-auto w-fit";
         
-        // Жишээ 9x9 судоку загвар
         const board = [
             [5,3,0,0,7,0,0,0,0], [6,0,0,1,9,5,0,0,0], [0,9,8,0,0,0,0,6,0],
             [8,0,0,0,6,0,0,0,3], [4,0,0,8,0,3,0,0,1], [7,0,0,0,2,0,0,0,6],
             [0,6,0,0,0,0,2,8,0], [0,0,0,4,1,9,0,0,5], [0,0,0,0,8,0,0,7,9]
         ];
 
-        board.forEach(row => row.forEach(n => {
-            const cell = document.createElement('div');
-            cell.className = "w-9 h-9 md:w-11 md:h-11 flex items-center justify-center font-bold text-xl";
-            cell.innerText = n ? mongolNums[n] : "";
+        board.flat().forEach(n => {
+            const cell = document.createElement('input');
+            cell.className = "sudoku-cell";
+            cell.maxLength = 1;
+            cell.value = n ? mongolNums[n] : "";
             container.appendChild(cell);
-        }));
+        });
     }
 
     // 7. СИСТЕМИЙН ШИЛЖИЛТ
@@ -324,7 +320,11 @@
     }
     function openCheckout(name) { selectedItemName = name; document.getElementById('checkoutModal').classList.add('active'); }
     function closeCheckout() { document.getElementById('checkoutModal').classList.remove('active'); }
-    function submitOrder() { alert("Хүсэлт илгээгдлээ!"); closeCheckout(); }
+    function submitOrder() { 
+        fetch(orderURL, {method:'POST', mode:'no-cors', body:JSON.stringify({action:"order", email:currentUserEmail, productName:selectedItemName})});
+        alert("Хүсэлт илгээгдлээ!"); 
+        closeCheckout(); 
+    }
 </script>
 </body>
 </html>
