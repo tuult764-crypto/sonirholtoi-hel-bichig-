@@ -194,33 +194,50 @@
     }
 
     // 2. PRODUCTS (Зураг зассан)
-    function fixImg(url) {
-        if(!url) return 'https://via.placeholder.com/300';
-        if(url.includes('drive.google.com')){
-            const id = url.split('/d/')[1]?.split('/')[0] || url.split('id=')[1]?.split('&')[0];
-            return `https://lh3.googleusercontent.com/d/${id}`;
+   function fixImg(url) {
+    if (!url) return 'https://via.placeholder.com/300';
+    
+    // Google Drive-ын хаяг эсэхийг шалгах
+    if (url.includes('drive.google.com')) {
+        let fileId = "";
+        try {
+            if (url.includes('id=')) {
+                fileId = url.split('id=')[1].split('&')[0];
+            } else {
+                fileId = url.split('/d/')[1].split('/')[0];
+            }
+            // ШУУД ЗУРАГ УНШИХ ХАЯГ (Google Drive Thumbnail API ашиглав - илүү найдвартай)
+            return `https://lh3.googleusercontent.com/u/0/d/${fileId}=w400-h400-p-k-no-iv1`;
+        } catch (e) {
+            return 'https://via.placeholder.com/300';
         }
-        return url;
     }
+    return url;
+}
 
     async function loadProducts() {
-        try {
-            const res = await fetch(`${orderURL}?action=getProducts`);
-            const products = await res.json();
-            const html = products.map(p => `
-                <div class="product-card">
-                    <img src="${fixImg(p.Images)}" class="w-full h-44 object-cover rounded-2xl mb-4 shadow-sm">
-                    <h3 class="font-black text-orange-900 text-sm h-10 overflow-hidden leading-tight">${p.Title}</h3>
-                    <div class="flex justify-between items-center mt-3 pt-3 border-t border-orange-50">
-                        <span class="text-orange-600 font-black">${Number(p.Price).toLocaleString()}₮</span>
-                        <button onclick="openCheckout('${p.Title}')" class="bg-orange-800 text-white px-4 py-2 rounded-xl text-[10px] font-bold">АВАХ</button>
-                    </div>
+    try {
+        const res = await fetch(`${orderURL}?action=getProducts`);
+        const products = await res.json();
+        
+        const html = products.map(p => `
+            <div class="product-card">
+                <img src="${fixImg(p.Images)}" class="w-full h-44 object-cover rounded-2xl mb-4 shadow-sm" 
+                     onerror="this.src='https://via.placeholder.com/300'">
+                <h3 class="font-black text-orange-900 text-sm h-10 overflow-hidden leading-tight">${p.Title}</h3>
+                <div class="flex justify-between items-center mt-3 pt-3 border-t border-orange-50">
+                    <span class="text-orange-600 font-black">${Number(p.Price).toLocaleString()}₮</span>
+                    <button onclick="openCheckout('${p.Title}')" class="bg-orange-800 text-white px-4 py-2 rounded-xl text-[10px] font-bold uppercase">Худалдаж авах</button>
                 </div>
-            `).join('');
-            document.getElementById('materialGrid').innerHTML = html;
-            document.getElementById('shopGrid').innerHTML = html;
-        } catch (e) { console.log(e); }
+            </div>
+        `).join('');
+        
+        document.getElementById('materialGrid').innerHTML = html;
+        document.getElementById('shopGrid').innerHTML = html;
+    } catch (e) {
+        console.error("Бараа уншихад алдаа гарлаа:", e);
     }
+}
 
     // 3. AI GENERATOR (Найдвартай хувилбар)
     async function callAI(prompt) {
@@ -331,7 +348,7 @@ function generateSudoku() {
 }
 
     // 6. UI NAVIGATION
-    function showSection(name) {
+  function showSection(name) {
         document.getElementById('dashboardHome').classList.add('hidden');
         document.querySelectorAll('.section-content').forEach(s => s.classList.remove('active'));
         document.getElementById(name + 'Section').classList.add('active');
@@ -341,11 +358,23 @@ function generateSudoku() {
         document.getElementById('dashboardHome').classList.remove('hidden');
         document.querySelectorAll('.section-content').forEach(s => s.classList.remove('active'));
     }
-    function openCheckout(name) { selectedItemName = name; document.getElementById('checkoutModal').classList.add('active'); }
-    function closeCheckout() { document.getElementById('checkoutModal').classList.remove('active'); }
+    function openCheckout(name) { 
+        selectedItemName = name; 
+        document.getElementById('checkoutModal').classList.add('active'); 
+    }
+    function closeCheckout() { 
+        document.getElementById('checkoutModal').classList.remove('active'); 
+    }
     function submitOrder() { 
         fetch(orderURL, {method:'POST', mode:'no-cors', body:JSON.stringify({action:"order", email:currentUserEmail, productName:selectedItemName})});
-        alert("Хүсэлт илгээгдлээ!"); closeCheckout(); 
+        alert("Хүсэлт амжилттай илгээгдлээ!"); closeCheckout(); 
+    }
+    function downloadPlannerPDF() { html2pdf().from(document.getElementById('aiResultArea')).save('hotolbor.pdf'); }
+    function downloadExamWord() {
+        const blob = new Blob(['\ufeff', document.getElementById('examResultArea').innerHTML], { type: 'application/msword' });
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(blob);
+        link.download = 'shalgalt.doc'; link.click();
     }
 </script>
 </body>
