@@ -99,26 +99,37 @@
         let currentUserEmail = "";
         let currentItem = "";
 
-        async function handleLogin() {
-            const email = document.getElementById('loginEmail').value.trim();
-            if(!email) return alert("Мэйл хаягаа оруулна уу!");
-            const btn = document.getElementById('loginBtn');
-            btn.innerText = "Уншиж байна...";
-            try {
-                const res = await fetch(`${orderURL}?action=check&email=${encodeURIComponent(email)}`);
-                const data = await res.json();
-                if (data.status === "success") {
-                    currentUserEmail = email;
-                    document.getElementById('authScreen').classList.add('hidden');
-                    document.getElementById('mainSystem').classList.remove('hidden');
-                    document.getElementById('displayEmail').innerText = email;
-                    document.getElementById('displayCredits').innerText = data.credits;
-                    loadProducts();
-                } else { alert("Бүртгэлгүй байна!"); }
-            } catch (e) { alert("Холболтын алдаа!"); }
-            finally { btn.innerText = "Нэвтрэх"; }
-        }
+async function handleLogin() {
+    const email = document.getElementById('loginEmail').value.trim();
+    if(!email) return alert("Мэйл хаягаа оруулна уу!");
+    
+    const btn = document.getElementById('loginBtn');
+    btn.innerText = "Холбогдож байна...";
+    btn.disabled = true;
 
+    try {
+        // timeout буюу 10 секунд хүлээх тохиргоо
+        const res = await fetch(`${orderURL}?action=check&email=${encodeURIComponent(email)}`);
+        const data = await res.json();
+        
+        if (data.status === "success" || data.credits !== undefined) {
+            currentUserEmail = email;
+            document.getElementById('authScreen').classList.add('hidden');
+            document.getElementById('mainSystem').classList.remove('hidden');
+            document.getElementById('displayEmail').innerText = email;
+            document.getElementById('displayCredits').innerText = data.credits || 0;
+            loadProducts();
+        } else { 
+            alert("Бүртгэлгүй мэйл байна. Sheets-ээ шалгана уу."); 
+        }
+    } catch (e) { 
+        console.error(e);
+        alert("Холболтын алдаа: " + e.message + "\nGoogle Script-ийн 'Anyone' эрхийг шалгана уу."); 
+    } finally { 
+        btn.innerText = "Нэвтрэх"; 
+        btn.disabled = false;
+    }
+}
         function fixImg(url) {
             if (!url) return 'https://via.placeholder.com/300';
             if (!url.startsWith('http')) return `https://raw.githubusercontent.com/tuult764-crypto/sonirholtoi-hel-bichig-/main/${url}`;
