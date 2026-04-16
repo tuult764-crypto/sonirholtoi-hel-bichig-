@@ -224,15 +224,19 @@ function fixImg(url) {
     }
 
     async function callAI(prompt) {
-        const res = await fetch(RENDER_API_URL, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ prompt: prompt })
-        });
-        const data = await res.json();
-        return data.content || data.choices?.[0].message.content || JSON.stringify(data);
-    }
-
+    const res = await fetch(RENDER_API_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ prompt: prompt })
+    });
+    
+    if (!res.ok) throw new Error('Сервер хариу өгсөнгүй');
+    
+    const data = await res.json();
+    // Render-ээс ирж буй өгөгдлийн бүтцийг шалгах
+    return data.reply || data.content || (data.choices && data.choices[0].message.content) || "Хариу олдсонгүй";
+}
+    
     async function generateAIPlan() {
         if(userCredits < 1) return alert("Эрх хүрэлцэхгүй байна!");
         const topic = document.getElementById('lessonTopic').value;
