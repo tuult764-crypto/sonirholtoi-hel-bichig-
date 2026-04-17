@@ -154,55 +154,50 @@
     }
 
     // 2. ДЭЛГҮҮР & САГС
-    async function loadProducts() {
+// Зургийн замыг зөв холбох функц
+function fixImg(fileName) {
+    if (!fileName) return 'https://via.placeholder.com/300?text=No+Image';
+    
+    // Хэрэв Google Sheets дээр зөвхөн "1.1.png" гэж бичсэн бол GitHub-ын түүхий линк рүү хөрвүүлнэ
+    if (!fileName.startsWith('http')) {
+        return `https://raw.githubusercontent.com/tuult764-crypto/sonirholtoi-hel-bichig-/main/${fileName}`;
+    }
+    return fileName;
+}
+
+// Барааг дэлгэцэнд зурах функц (Засварласан)
+async function loadProducts() {
+    try {
         const res = await fetch(`${orderURL}?action=getProducts`);
         productsData = await res.json();
+        
+        if (!productsData || productsData.length === 0) {
+            document.getElementById('materialGrid').innerHTML = "<p class='text-gray-400'>Одоогоор бараа алга байна.</p>";
+            return;
+        }
+
         const render = (p) => `
             <div class="bg-white p-4 rounded-[2rem] shadow-lg flex flex-col border border-orange-50">
-                <img src="${fixImg(p.Images)}" onclick="viewImage('${fixImg(p.Images)}')" class="w-full h-40 object-cover rounded-xl mb-4 cursor-pointer hover:opacity-80 transition" onerror="this.src='https://via.placeholder.com/300'">
-                <h3 class="font-black text-xs text-orange-900 mb-2 h-8 overflow-hidden">${p.Title}</h3>
+                <img src="${fixImg(p.Images)}" 
+                     onclick="viewImage('${fixImg(p.Images)}')" 
+                     class="w-full h-40 object-cover rounded-xl mb-4 cursor-pointer hover:opacity-80 transition" 
+                     onerror="this.src='https://via.placeholder.com/300?text=Image+Not+Found'">
+                <h3 class="font-black text-[12px] text-orange-900 mb-2 h-10 overflow-hidden leading-tight">${p.Title}</h3>
                 <p class="font-bold text-orange-600 mb-4">${Number(p.Price).toLocaleString()}₮</p>
                 <div class="grid grid-cols-1 gap-2 mt-auto">
                     <button onclick="viewImage('${fixImg(p.Images)}')" class="text-[10px] bg-gray-100 py-2 rounded-lg font-bold uppercase">👁 Харах</button>
                     <button onclick="addToCart('${p.Title}')" class="text-[10px] bg-orange-100 text-orange-800 py-2 rounded-lg font-bold uppercase">🛒 Сагслах</button>
-                    <button onclick="openPayment('${p.Title}')" class="text-[10px] bg-orange-800 text-white py-2 rounded-lg font-bold uppercase">💳 Худалдан авах</button>
+                    <button onclick="openPayment('${p.Title}')" class="text-[10px] bg-orange-800 text-white py-2 rounded-lg font-bold uppercase italic">💳 Худалдан авах</button>
                 </div>
             </div>`;
+
         const html = productsData.map(render).join('');
         document.getElementById('materialGrid').innerHTML = html;
         document.getElementById('fullShopGrid').innerHTML = html;
+    } catch (e) {
+        console.error("Бараа уншихад алдаа гарлаа:", e);
     }
-
-    function fixImg(url) {
-        if (!url) return '';
-        if (!url.startsWith('http')) return `https://raw.githubusercontent.com/tuult764-crypto/sonirholtoi-hel-bichig-/main/${url}`;
-        return url;
-    }
-
-    function viewImage(src) {
-        document.getElementById('modalImg').src = src;
-        document.getElementById('imageModal').classList.add('active');
-    }
-
-    function addToCart(title) {
-        const prod = productsData.find(p => p.Title === title);
-        cart.push(prod);
-        updateCartUI();
-        alert("Сагсанд нэмэгдлээ!");
-    }
-
-    function updateCartUI() {
-        document.getElementById('cartCount').innerText = cart.length;
-        const total = cart.reduce((sum, p) => sum + Number(p.Price), 0);
-        document.getElementById('cartItems').innerHTML = cart.map((p, idx) => `
-            <div class="flex justify-between items-center bg-white p-4 rounded-xl shadow-sm border">
-                <span class="text-xs font-bold text-orange-900">${p.Title}</span>
-                <button onclick="cart.splice(${idx},1); updateCartUI();" class="text-red-500">❌</button>
-            </div>`).join('');
-        document.getElementById('cartTotal').innerText = `Нийт: ${total.toLocaleString()}₮`;
-        document.getElementById('cartPayBtn').classList.toggle('hidden', cart.length === 0);
-    }
-
+}
     // 3. ТӨЛБӨР
     function openPayment(title) {
         currentItem = title;
