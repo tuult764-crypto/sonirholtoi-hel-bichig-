@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Туул Багш | Цахим Систем</title>
+    <title> Сонирхолтой хэл бичиг| Цахим Систем</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;700;800&display=swap');
@@ -81,9 +81,13 @@
         </div>
     </div>
 
-    <div id="imageModal" class="modal" onclick="this.classList.remove('active')">
-        <img id="modalImg" src="" class="max-w-full max-h-full rounded-lg shadow-2xl border-2 border-white">
-    </div>
+   <div id="imageModal" class="modal">
+    <button onclick="changeSlide(-1)" class="absolute left-4 text-white text-4xl font-bold bg-black/30 w-12 h-12 rounded-full">‹</button>
+    <img id="modalImg" src="" class="max-w-full max-h-[85vh] rounded-lg shadow-2xl border-2 border-white">
+    <button onclick="changeSlide(1)" class="absolute right-4 text-white text-4xl font-bold bg-black/30 w-12 h-12 rounded-full">›</button>
+    <button onclick="closeGallery()" class="absolute top-4 right-4 text-white text-xl bg-black/50 px-4 py-2 rounded-full">Хаах</button>
+    <div id="imageCounter" class="absolute bottom-8 text-white font-bold bg-black/50 px-4 py-1 rounded-full text-xs"></div>
+</div>
 
     <div id="paymentModal" class="modal" onclick="if(event.target==this) closePayment()">
         <div class="bg-white p-8 rounded-[2.5rem] max-w-sm w-full text-center border-8 border-orange-50">
@@ -106,6 +110,8 @@
     let currentUserEmail = "";
     let cart = [];
     let productsData = [];
+    let currentAlbum = [];
+let currentIndex = 0;
 
     async function handleLogin() {
         const email = document.getElementById('loginEmail').value.trim();
@@ -150,11 +156,35 @@
         document.getElementById('fullShopGrid').innerHTML = html;
     }
 
-    function viewImage(src) {
-        document.getElementById('modalImg').src = src;
-        document.getElementById('imageModal').classList.add('active');
-    }
+    function viewImage(imgString) {
+    // Таслалаар тусгаарлагдсан зургуудыг салгаж авах
+    currentAlbum = imgString.split(',').map(img => img.trim());
+    currentIndex = 0;
+    updateGalleryStatus();
+    document.getElementById('imageModal').classList.add('active');
+}
 
+function updateGalleryStatus() {
+    const fileName = currentAlbum[currentIndex];
+    const imgPath = `https://raw.githubusercontent.com/tuult764-crypto/sonirholtoi-hel-bichig-/main/${fileName}`;
+    document.getElementById('modalImg').src = imgPath;
+    document.getElementById('imageCounter').innerText = `${currentIndex + 1} / ${currentAlbum.length}`;
+}
+
+function changeSlide(direction) {
+    currentIndex += direction;
+    if (currentIndex >= currentAlbum.length) currentIndex = 0;
+    if (currentIndex < 0) currentIndex = currentAlbum.length - 1;
+    updateGalleryStatus();
+}
+
+function closeGallery() {
+    document.getElementById('imageModal').classList.remove('active');
+}
+
+// loadProducts доторх "Харах" товчны дуудлагыг ингэж засна:
+// onclick="viewImage('${p.Images}')"
+    
     function addToCart(title) {
         const prod = productsData.find(p => p.Title === title);
         cart.push(prod);
