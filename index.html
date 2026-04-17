@@ -290,24 +290,47 @@ function showSection(name) {
 
     function closePayment() { document.getElementById('paymentModal').classList.remove('active'); }
 
-   async function confirmOrder() {
+async function confirmOrder() {
     const btn = event.target;
-    btn.innerText = "Илгээж байна..."; btn.disabled = true;
+    btn.innerText = "Илгээж байна..."; 
+    btn.disabled = true;
 
     try {
-        // Хэрэв сагснаас бол cart доторх бүх барааг, нэг бараа бол нэрийг нь авна
-        const title = document.getElementById('paymentNote').innerText; 
-        const res = await fetch(`${orderURL}?action=addOrder&email=${encodeURIComponent(currentUserEmail)}&title=${encodeURIComponent(title)}`);
-        const data = await res.json();
+        // 1. Хэрэв сагсанд бараа байвал бүгдийг нь авна, байхгүй бол ганц барааг авна
+        let itemsToOrder = [];
         
-        if(data.status === "success") {
-            alert("Хүсэлт илгээгдлээ. Туул багш төлбөрийг шалгаад 'Миний сан' хэсэгт файлыг нээж өгөх болно.");
-            closePayment();
+        if (cart.length > 0) {
+            // Сагсан дахь бүх барааны нэрийг жагсаалт болгож авна
+            itemsToOrder = cart.map(item => item.Title);
+        } else {
+            // Сагс хоосон бол одоо нээлттэй байгаа ганц барааг авна
+            itemsToOrder = [currentProductTitle];
         }
+
+        // 2. Бараа бүрээр Sheets рүү тус тусад нь хүсэлт илгээнэ
+        for (const title of itemsToOrder) {
+            const url = `${orderURL}?action=addOrder&email=${encodeURIComponent(currentUserEmail)}&title=${encodeURIComponent(title)}`;
+            const res = await fetch(url);
+            const data = await res.json();
+            
+            if (data.status !== "success") {
+                throw new Error(`${title} материалыг бүртгэхэд алдаа гарлаа.`);
+            }
+        }
+
+        alert("Баярлалаа! Таны 3 материалын хүсэлт амжилттай илгээгдлээ. Төлбөр шалгагдсаны дараа 'Миний сан' хэсэгт нээгдэнэ.");
+        
+        // Сагсыг хоослох
+        cart = [];
+        updateCart();
+        closePayment();
+
     } catch (e) {
-        alert("Алдаа гарлаа, дахин оролдоно уу.");
+        console.error(e);
+        alert("Хүсэлт илгээхэд алдаа гарлаа: " + e.message);
     } finally {
-        btn.innerText = "Төлсөн, хүсэлт илгээх"; btn.disabled = false;
+        btn.innerText = "Төлсөн, хүсэлт илгээх"; 
+        btn.disabled = false;
     }
 }
 
