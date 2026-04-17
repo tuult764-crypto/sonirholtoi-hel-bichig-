@@ -81,12 +81,20 @@
         </div>
     </div>
 
-   <div id="imageModal" class="modal">
-    <button onclick="changeSlide(-1)" class="absolute left-4 text-white text-4xl font-bold bg-black/30 w-12 h-12 rounded-full">‹</button>
-    <img id="modalImg" src="" class="max-w-full max-h-[85vh] rounded-lg shadow-2xl border-2 border-white">
-    <button onclick="changeSlide(1)" class="absolute right-4 text-white text-4xl font-bold bg-black/30 w-12 h-12 rounded-full">›</button>
-    <button onclick="closeGallery()" class="absolute top-4 right-4 text-white text-xl bg-black/50 px-4 py-2 rounded-full">Хаах</button>
-    <div id="imageCounter" class="absolute bottom-8 text-white font-bold bg-black/50 px-4 py-1 rounded-full text-xs"></div>
+   <div id="imageModal" class="modal" style="display:none; background: rgba(0,0,0,0.95); flex-direction: column;">
+    <button onclick="closeGallery()" class="absolute top-5 right-5 text-white bg-red-600 px-6 py-2 rounded-full font-bold z-50">Хаах</button>
+    
+    <div class="relative w-full h-full flex items-center justify-center">
+        <button onclick="changeSlide(-1)" class="absolute left-4 bg-white/20 hover:bg-white/40 text-white w-14 h-14 rounded-full text-3xl flex items-center justify-center z-50">‹</button>
+        
+        <img id="modalImg" src="" class="max-w-[90%] max-h-[80vh] object-contain border-4 border-white/10 rounded-lg shadow-2xl transition-all duration-300">
+        
+        <button onclick="changeSlide(1)" class="absolute right-4 bg-white/20 hover:bg-white/40 text-white w-14 h-14 rounded-full text-3xl flex items-center justify-center z-50">›</button>
+    </div>
+
+    <div id="imageCounter" class="mb-10 text-white font-bold bg-white/10 px-6 py-2 rounded-full text-sm">
+        1 / 1
+    </div>
 </div>
 
     <div id="paymentModal" class="modal" onclick="if(event.target==this) closePayment()">
@@ -156,30 +164,59 @@ let currentIndex = 0;
         document.getElementById('fullShopGrid').innerHTML = html;
     }
 
-    function viewImage(imgString) {
-    // Таслалаар тусгаарлагдсан зургуудыг салгаж авах
-    currentAlbum = imgString.split(',').map(img => img.trim());
+let currentAlbum = [];
+let currentIndex = 0;
+
+function viewImage(imgString) {
+    if (!imgString) return;
+    
+    // Sheets-ээс ирсэн таслалтай текстээс хоосон зайг цэвэрлэж альбом үүсгэх
+    currentAlbum = imgString.split(',').map(img => img.trim()).filter(img => img !== "");
     currentIndex = 0;
-    updateGalleryStatus();
-    document.getElementById('imageModal').classList.add('active');
+    
+    if (currentAlbum.length > 0) {
+        document.getElementById('imageModal').style.display = 'flex';
+        updateGalleryStatus();
+    } else {
+        alert("Зураг олдсонгүй!");
+    }
 }
 
 function updateGalleryStatus() {
     const fileName = currentAlbum[currentIndex];
+    // GitHub-аас зургийг татах хаяг
     const imgPath = `https://raw.githubusercontent.com/tuult764-crypto/sonirholtoi-hel-bichig-/main/${fileName}`;
-    document.getElementById('modalImg').src = imgPath;
-    document.getElementById('imageCounter').innerText = `${currentIndex + 1} / ${currentAlbum.length}`;
+    
+    const modalImg = document.getElementById('modalImg');
+    const counter = document.getElementById('imageCounter');
+    
+    // Зураг ачаалж байх хооронд харагдах эффект
+    modalImg.style.opacity = "0.5";
+    modalImg.src = imgPath;
+    
+    modalImg.onload = function() {
+        modalImg.style.opacity = "1";
+    };
+    
+    modalImg.onerror = function() {
+        modalImg.src = 'https://via.placeholder.com/600x400?text=Зураг+ачаалахад+алдаа+гарлаа';
+    };
+
+    counter.innerText = `${currentIndex + 1} / ${currentAlbum.length}`;
 }
 
 function changeSlide(direction) {
+    if (currentAlbum.length <= 1) return; // Ганцхан зурагтай бол гүйлгэхгүй
+    
     currentIndex += direction;
     if (currentIndex >= currentAlbum.length) currentIndex = 0;
     if (currentIndex < 0) currentIndex = currentAlbum.length - 1;
+    
     updateGalleryStatus();
 }
 
 function closeGallery() {
-    document.getElementById('imageModal').classList.remove('active');
+    document.getElementById('imageModal').style.display = 'none';
 }
 
 // loadProducts доторх "Харах" товчны дуудлагыг ингэж засна:
