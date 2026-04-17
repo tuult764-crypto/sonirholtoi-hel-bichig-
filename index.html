@@ -52,7 +52,14 @@
             <button onclick="showDashboard()" class="text-orange-800 font-bold mb-6 uppercase text-xs">← Буцах</button>
             <div id="fullShopGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6"></div>
         </div>
-
+        
+<div id="librarySection" class="section-content container mx-auto px-4 py-8">
+    <button onclick="showDashboard()" class="text-orange-800 font-bold mb-6 uppercase text-xs">← Буцах</button>
+    <h2 class="text-xl font-black text-orange-900 mb-6 uppercase italic">📂 Миний худалдаж авсан материалууд</h2>
+    <div id="libraryGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        </div>
+</div>
+        
         <div id="gamesSection" class="section-content container mx-auto p-4 text-center">
             <button onclick="showDashboard()" class="block text-left font-bold text-green-800 mb-4 uppercase text-xs">← Буцах</button>
             <div class="bg-white p-6 rounded-[2.5rem] shadow-xl inline-block border-t-8 border-green-700">
@@ -111,7 +118,7 @@
     </div>
 
 <script>
-    const orderURL = 'https://script.google.com/macros/s/AKfycbyHc141qaOEPXks2asJ_soO7pBjO6Z_c_8epTiMTT3H52wntzz4ntSsMA3yDbqh01FQAg/exec';
+    const orderURL = 'https://script.google.com/macros/s/AKfycbwqF-dRDyMKgdLxs0upfqdMUwR4SP2K_pAdSHef35ej71dFVISAnfL7zuP1EKR8FxpfFQ/exec';
     const RENDER_API_URL = 'https://sonirholtoi-hel-bichig.onrender.com/chat';
     const mongolNums = { '1': '᠑', '2': '᠒', '3': '᠓', '4': '᠔', '5': '᠕', '6': '᠖', '7': '᠗', '8': '᠘', '9': '᠙', '0': '' };
     
@@ -186,6 +193,46 @@
         }
     }
 
+    // Миний сан дахь материалуудыг ачаалах
+async function loadLibrary() {
+    const grid = document.getElementById('libraryGrid');
+    grid.innerHTML = "<p class='text-gray-500'>Уншиж байна...</p>";
+
+    try {
+        // Google Script-ээс тухайн хэрэглэгчийн худалдаж авсан материалуудыг шүүж авна
+        const res = await fetch(`${orderURL}?action=getLibrary&email=${encodeURIComponent(currentUserEmail)}`);
+        const purchasedItems = await res.json();
+
+        if (!purchasedItems || purchasedItems.length === 0) {
+            grid.innerHTML = "<p class='text-gray-400'>Танд одоогоор худалдаж авсан материал алга байна.</p>";
+            return;
+        }
+
+        grid.innerHTML = purchasedItems.map(p => `
+            <div class="bg-white p-4 rounded-[2rem] shadow-md border border-green-100 flex flex-col">
+                <img src="https://raw.githubusercontent.com/tuult764-crypto/sonirholtoi-hel-bichig-/main/${p.Images.split(',')[0].trim()}" class="w-full h-32 object-cover rounded-xl mb-3 opacity-80">
+                <h3 class="font-black text-[10px] text-orange-900 mb-2 uppercase italic">${p.Title}</h3>
+                <a href="${p.Link}" target="_blank" class="text-center bg-green-700 text-white py-3 rounded-xl font-black uppercase italic text-[10px] shadow-lg hover:bg-green-800 transition">
+                    📥 Файл үзэх / Татах
+                </a>
+            </div>
+        `).join('');
+    } catch (e) {
+        grid.innerHTML = "<p class='text-red-500'>Алдаа гарлаа. Дараа дахин оролдоно уу.</p>";
+    }
+}
+
+// showSection функцийг шинэчлэх (Library дарахад loadLibrary ажиллана)
+function showSection(name) {
+    document.getElementById('dashboardHome').classList.add('hidden');
+    document.querySelectorAll('.section-content').forEach(s => s.classList.remove('active'));
+    
+    const target = document.getElementById(name + 'Section');
+    if (target) target.classList.add('active');
+
+    if (name === 'library') loadLibrary(); // Library сонгоход файлыг дуудна
+    if (name === 'games') initSudoku();
+}
     // ГАЛЕРЕЙН ФУНКЦҮҮД
     function viewImage(imgString) {
         if (!imgString) return;
@@ -243,10 +290,26 @@
 
     function closePayment() { document.getElementById('paymentModal').classList.remove('active'); }
 
-    function confirmOrder() {
-        alert("Хүсэлт илгээгдлээ. Төлбөр баталгаажсаны дараа файл нээгдэнэ.");
-        closePayment();
+   async function confirmOrder() {
+    const btn = event.target;
+    btn.innerText = "Илгээж байна..."; btn.disabled = true;
+
+    try {
+        // Хэрэв сагснаас бол cart доторх бүх барааг, нэг бараа бол нэрийг нь авна
+        const title = document.getElementById('paymentNote').innerText; 
+        const res = await fetch(`${orderURL}?action=addOrder&email=${encodeURIComponent(currentUserEmail)}&title=${encodeURIComponent(title)}`);
+        const data = await res.json();
+        
+        if(data.status === "success") {
+            alert("Хүсэлт илгээгдлээ. Туул багш төлбөрийг шалгаад 'Миний сан' хэсэгт файлыг нээж өгөх болно.");
+            closePayment();
+        }
+    } catch (e) {
+        alert("Алдаа гарлаа, дахин оролдоно уу.");
+    } finally {
+        btn.innerText = "Төлсөн, хүсэлт илгээх"; btn.disabled = false;
     }
+}
 
     function initSudoku() {
         const container = document.getElementById('sudokuContainer');
