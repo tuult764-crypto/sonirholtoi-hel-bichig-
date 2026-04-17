@@ -119,26 +119,53 @@
     let cart = [];
     let productsData = [];
     let currentAlbum = [];
-let currentIndex = 0;
-
-    async function handleLogin() {
-        const email = document.getElementById('loginEmail').value.trim();
-        if(!email) return alert("Мэйл хаягаа оруулна уу!");
-        const btn = document.getElementById('loginBtn');
-        btn.innerText = "Уншиж байна..."; btn.disabled = true;
-        try {
-            const res = await fetch(`${orderURL}?action=check&email=${encodeURIComponent(email)}`);
-            const data = await res.json();
-            if (data.status === "success") {
-                currentUserEmail = email;
-                document.getElementById('authScreen').classList.add('hidden');
-                document.getElementById('mainSystem').classList.remove('hidden');
-                loadProducts();
-            } else { alert("Бүртгэлгүй мэйл!"); }
-        } catch (e) { alert("Холболтын алдаа!"); }
-        finally { btn.innerText = "Нэвтрэх"; btn.disabled = false; }
+    let currentIndex = 0;
+    
+async function handleLogin() {
+    const emailInput = document.getElementById('loginEmail');
+    const email = emailInput.value.trim();
+    
+    if(!email) {
+        alert("Мэйл хаягаа оруулна уу!");
+        return;
     }
 
+    const btn = document.getElementById('loginBtn');
+    btn.innerText = "Уншиж байна..."; 
+    btn.disabled = true;
+
+    try {
+        // fetch хийхдээ URL зөв эсэхийг дахин нэг нягтлаарай
+        const response = await fetch(`${orderURL}?action=check&email=${encodeURIComponent(email)}`);
+        
+        if (!response.ok) throw new Error("Сервер хариу өгөхгүй байна.");
+
+        const data = await response.json();
+        
+        if (data.status === "success") {
+            currentUserEmail = email;
+            
+            // Дэлгэц солих хэсэг
+            document.getElementById('authScreen').classList.add('hidden');
+            document.getElementById('mainSystem').classList.remove('hidden');
+            
+            // Бүтээгдэхүүн ачаалах функцийг дуудах
+            if (typeof loadProducts === "function") {
+                loadProducts();
+            } else {
+                console.error("loadProducts функц олдсонгүй!");
+            }
+        } else { 
+            alert("Бүртгэлгүй мэйл! Та бүртгүүлсэн мэйлээ ашиглана уу."); 
+        }
+    } catch (error) { 
+        console.error("Login Error:", error);
+        alert("Холболтын алдаа гарлаа! Интернэтээ эсвэл Script URL-аа шалгана уу."); 
+    } finally { 
+        btn.innerText = "Нэвтрэх"; 
+        btn.disabled = false; 
+    }
+}
     async function loadProducts() {
         const res = await fetch(`${orderURL}?action=getProducts`);
         productsData = await res.json();
