@@ -121,134 +121,102 @@
     let currentAlbum = [];
     let currentIndex = 0;
     
-async function handleLogin() {
-    const emailInput = document.getElementById('loginEmail');
-    const email = emailInput.value.trim();
-    
-    if(!email) {
-        alert("Мэйл хаягаа оруулна уу!");
-        return;
-    }
-
-    const btn = document.getElementById('loginBtn');
-    btn.innerText = "Уншиж байна..."; 
-    btn.disabled = true;
-
-    try {
-        // fetch хийхдээ URL зөв эсэхийг дахин нэг нягтлаарай
-        const response = await fetch(`${orderURL}?action=check&email=${encodeURIComponent(email)}`);
+    // НЭВТРЭХ ФУНКЦ
+    async function handleLogin() {
+        const emailInput = document.getElementById('loginEmail');
+        const email = emailInput.value.trim();
         
-        if (!response.ok) throw new Error("Сервер хариу өгөхгүй байна.");
-
-        const data = await response.json();
-        
-        if (data.status === "success") {
-            currentUserEmail = email;
-            
-            // Дэлгэц солих хэсэг
-            document.getElementById('authScreen').classList.add('hidden');
-            document.getElementById('mainSystem').classList.remove('hidden');
-            
-            // Бүтээгдэхүүн ачаалах функцийг дуудах
-            if (typeof loadProducts === "function") {
-                loadProducts();
-            } else {
-                console.error("loadProducts функц олдсонгүй!");
-            }
-        } else { 
-            alert("Бүртгэлгүй мэйл! Та бүртгүүлсэн мэйлээ ашиглана уу."); 
+        if(!email) {
+            alert("Мэйл хаягаа оруулна уу!");
+            return;
         }
-    } catch (error) { 
-        console.error("Login Error:", error);
-        alert("Холболтын алдаа гарлаа! Интернэтээ эсвэл Script URL-аа шалгана уу."); 
-    } finally { 
-        btn.innerText = "Нэвтрэх"; 
-        btn.disabled = false; 
-    }
-}
-    async function loadProducts() {
-        const res = await fetch(`${orderURL}?action=getProducts`);
-        productsData = await res.json();
-        const renderHtml = (p) => {
-            // Зургийн нэрсийн цуглуулгаас эхний зургийг авах
-            const firstImg = p.Images.split(',')[0].trim();
-            const imgPath = `https://raw.githubusercontent.com/tuult764-crypto/sonirholtoi-hel-bichig-/main/${firstImg}`;
+
+        const btn = document.getElementById('loginBtn');
+        btn.innerText = "Уншиж байна..."; btn.disabled = true;
+
+        try {
+            const response = await fetch(`${orderURL}?action=check&email=${encodeURIComponent(email)}`);
+            if (!response.ok) throw new Error("Сервер хариу өгөхгүй байна.");
+            const data = await response.json();
             
-            return `
-            <div class="bg-white p-4 rounded-[2rem] shadow-md border border-orange-50 flex flex-col">
-                <img src="${imgPath}" onclick="viewImage('${imgPath}')" class="w-full h-40 object-cover rounded-xl mb-3 cursor-pointer" onerror="this.src='https://via.placeholder.com/300?text=No+Image'">
-                <h3 class="font-black text-[10px] text-orange-900 mb-1 h-8 overflow-hidden uppercase italic">${p.Title}</h3>
-                <p class="font-bold text-orange-600 text-xs mb-3">${Number(p.Price).toLocaleString()}₮</p>
-                <div class="grid grid-cols-1 gap-2">
-                    <button onclick="viewImage('${imgPath}')" class="text-[9px] bg-gray-100 py-2 rounded-lg font-black uppercase italic">👁 Харах</button>
-                    <button onclick="addToCart('${p.Title}')" class="text-[9px] bg-orange-100 text-orange-800 py-2 rounded-lg font-black uppercase italic">🛒 Сагслах</button>
-                    <button onclick="openPayment('${p.Title}')" class="text-[9px] bg-orange-800 text-white py-2 rounded-lg font-black uppercase italic shadow-sm">💳 Худалдан авах</button>
-                </div>
-            </div>`;
-        };
-        const html = productsData.map(renderHtml).join('');
-        document.getElementById('materialGrid').innerHTML = html;
-        document.getElementById('fullShopGrid').innerHTML = html;
+            if (data.status === "success") {
+                currentUserEmail = email;
+                document.getElementById('authScreen').classList.add('hidden');
+                document.getElementById('mainSystem').classList.remove('hidden');
+                loadProducts();
+            } else { 
+                alert("Бүртгэлгүй мэйл!"); 
+            }
+        } catch (error) { 
+            alert("Холболтын алдаа гарлаа!"); 
+        } finally { 
+            btn.innerText = "Нэвтрэх"; btn.disabled = false; 
+        }
     }
 
-let currentAlbum = [];
-let currentIndex = 0;
+    // БАРАА АЧААЛАХ
+    async function loadProducts() {
+        try {
+            const res = await fetch(`${orderURL}?action=getProducts`);
+            productsData = await res.json();
+            
+            const renderHtml = (p) => {
+                // Үндсэн нүүр зураг (Эхний зураг)
+                const firstImg = p.Images.split(',')[0].trim();
+                const mainImgPath = `https://raw.githubusercontent.com/tuult764-crypto/sonirholtoi-hel-bichig-/main/${firstImg}`;
+                
+                return `
+                <div class="bg-white p-4 rounded-[2rem] shadow-md border border-orange-50 flex flex-col">
+                    <img src="${mainImgPath}" onclick="viewImage('${p.Images}')" class="w-full h-40 object-cover rounded-xl mb-3 cursor-pointer" onerror="this.src='https://via.placeholder.com/300?text=No+Image'">
+                    <h3 class="font-black text-[10px] text-orange-900 mb-1 h-8 overflow-hidden uppercase italic">${p.Title}</h3>
+                    <p class="font-bold text-orange-600 text-xs mb-3">${Number(p.Price).toLocaleString()}₮</p>
+                    <div class="grid grid-cols-1 gap-2">
+                        <button onclick="viewImage('${p.Images}')" class="text-[9px] bg-gray-100 py-2 rounded-lg font-black uppercase italic">👁 Харах</button>
+                        <button onclick="addToCart('${p.Title}')" class="text-[9px] bg-orange-100 text-orange-800 py-2 rounded-lg font-black uppercase italic">🛒 Сагслах</button>
+                        <button onclick="openPayment('${p.Title}')" class="text-[9px] bg-orange-800 text-white py-2 rounded-lg font-black uppercase italic shadow-sm">💳 Худалдан авах</button>
+                    </div>
+                </div>`;
+            };
+            
+            const html = productsData.map(renderHtml).join('');
+            document.getElementById('materialGrid').innerHTML = html;
+            document.getElementById('fullShopGrid').innerHTML = html;
+        } catch (e) {
+            console.error("Дата уншихад алдаа:", e);
+        }
+    }
 
-function viewImage(imgString) {
-    if (!imgString) return;
-    
-    // Sheets-ээс ирсэн таслалтай текстээс хоосон зайг цэвэрлэж альбом үүсгэх
-    currentAlbum = imgString.split(',').map(img => img.trim()).filter(img => img !== "");
-    currentIndex = 0;
-    
-    if (currentAlbum.length > 0) {
-        document.getElementById('imageModal').style.display = 'flex';
+    // ГАЛЕРЕЙН ФУНКЦҮҮД
+    function viewImage(imgString) {
+        if (!imgString) return;
+        currentAlbum = imgString.split(',').map(img => img.trim()).filter(img => img !== "");
+        currentIndex = 0;
+        if (currentAlbum.length > 0) {
+            document.getElementById('imageModal').style.display = 'flex';
+            updateGalleryStatus();
+        }
+    }
+
+    function updateGalleryStatus() {
+        const fileName = currentAlbum[currentIndex];
+        const imgPath = `https://raw.githubusercontent.com/tuult764-crypto/sonirholtoi-hel-bichig-/main/${fileName}`;
+        const modalImg = document.getElementById('modalImg');
+        modalImg.src = imgPath;
+        document.getElementById('imageCounter').innerText = `${currentIndex + 1} / ${currentAlbum.length}`;
+    }
+
+    function changeSlide(direction) {
+        currentIndex += direction;
+        if (currentIndex >= currentAlbum.length) currentIndex = 0;
+        if (currentIndex < 0) currentIndex = currentAlbum.length - 1;
         updateGalleryStatus();
-    } else {
-        alert("Зураг олдсонгүй!");
     }
-}
 
-function updateGalleryStatus() {
-    const fileName = currentAlbum[currentIndex];
-    // GitHub-аас зургийг татах хаяг
-    const imgPath = `https://raw.githubusercontent.com/tuult764-crypto/sonirholtoi-hel-bichig-/main/${fileName}`;
-    
-    const modalImg = document.getElementById('modalImg');
-    const counter = document.getElementById('imageCounter');
-    
-    // Зураг ачаалж байх хооронд харагдах эффект
-    modalImg.style.opacity = "0.5";
-    modalImg.src = imgPath;
-    
-    modalImg.onload = function() {
-        modalImg.style.opacity = "1";
-    };
-    
-    modalImg.onerror = function() {
-        modalImg.src = 'https://via.placeholder.com/600x400?text=Зураг+ачаалахад+алдаа+гарлаа';
-    };
+    function closeGallery() {
+        document.getElementById('imageModal').style.display = 'none';
+    }
 
-    counter.innerText = `${currentIndex + 1} / ${currentAlbum.length}`;
-}
-
-function changeSlide(direction) {
-    if (currentAlbum.length <= 1) return; // Ганцхан зурагтай бол гүйлгэхгүй
-    
-    currentIndex += direction;
-    if (currentIndex >= currentAlbum.length) currentIndex = 0;
-    if (currentIndex < 0) currentIndex = currentAlbum.length - 1;
-    
-    updateGalleryStatus();
-}
-
-function closeGallery() {
-    document.getElementById('imageModal').style.display = 'none';
-}
-
-// loadProducts доторх "Харах" товчны дуудлагыг ингэж засна:
-// onclick="viewImage('${p.Images}')"
-    
+    // БУСАД ТУСЛАХ ФУНКЦҮҮД
     function addToCart(title) {
         const prod = productsData.find(p => p.Title === title);
         cart.push(prod);
@@ -332,6 +300,7 @@ function closeGallery() {
         if(target) target.classList.add('active');
         if(name === 'games') initSudoku();
     }
+    
     function showDashboard() {
         document.getElementById('dashboardHome').classList.remove('hidden');
         document.querySelectorAll('.section-content').forEach(s => s.classList.remove('active'));
