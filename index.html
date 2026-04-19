@@ -58,6 +58,22 @@
     .cell-fixed { background: #f3f4f6 !important; color: #4a2c2a !important; cursor: not-allowed; }
     .cell-user { color: #2563eb; background: white; }
     .cell-user:focus { background: #eff6ff; }
+    <style>
+    /* ... өмнөх бүх кодууд чинь энд байж байна ... */
+
+    /* ХАМГИЙН ДООР НЬ ЭНИЙГ НЭМЖ ХУУЛ */
+    #libraryGrid h3 {
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+    #libraryGrid a {
+        transition: transform 0.2s;
+    }
+    #libraryGrid a:active {
+        transform: scale(0.95);
+    }
 </style>
 </head>
 <body class="min-h-screen pb-20">
@@ -206,40 +222,42 @@
     }
     
 async function loadLibrary() {
-        const grid = document.getElementById('libraryGrid');
-        grid.innerHTML = "<p class='text-gray-500 text-xs'>Уншиж байна...</p>";
-        try {
-            const res = await fetch(`${orderURL}?action=getLibrary&email=${encodeURIComponent(currentUserEmail)}`);
-            const purchasedItems = await res.json();
-            
-            if (!purchasedItems || purchasedItems.length === 0) {
-                grid.innerHTML = "<p class='text-gray-400 text-xs'>Төлбөр баталгаажсан материал алга байна.</p>";
-                return;
-            }
-
-            grid.innerHTML = purchasedItems.map(p => `
-                <div class="bg-white p-5 rounded-[2.5rem] shadow-lg border border-green-100 flex flex-col transition-all hover:shadow-xl">
-                    <img src="https://raw.githubusercontent.com/tuult764-crypto/sonirholtoi-hel-bichig-/main/${p.Images.split(',')[0].trim()}" class="w-full h-32 object-cover rounded-2xl mb-4 opacity-90">
-                    <h3 class="font-black text-[11px] text-green-900 mb-4 uppercase italic leading-tight">${p.Title}</h3>
-                    
-                    <div class="grid grid-cols-1 gap-2">
-                        <a href="${p.Link}" target="_blank" rel="noopener noreferrer" 
-                           class="flex items-center justify-center gap-2 bg-green-700 text-white py-3 rounded-xl font-black uppercase italic text-[10px] shadow-md hover:bg-green-800">
-                           👁 Үзэх / Хэвлэх
-                        </a>
-                        
-                        <a href="${p.Link}" download="${p.Title}" target="_blank"
-                           class="flex items-center justify-center gap-2 bg-white border-2 border-green-700 text-green-700 py-3 rounded-xl font-black uppercase italic text-[10px] hover:bg-green-50">
-                           📥 Шууд татах
-                        </a>
-                    </div>
-                </div>
-            `).join('');
-        } catch (e) { 
-            console.error(e);
-            grid.innerHTML = "<p class='text-red-500 text-xs text-center'>Мэдээлэл уншихад алдаа гарлаа.</p>"; 
+    const grid = document.getElementById('libraryGrid');
+    grid.innerHTML = "<p class='text-gray-500 text-xs text-center py-10'>Уншиж байна...</p>";
+    try {
+        const res = await fetch(`${orderURL}?action=getLibrary&email=${encodeURIComponent(currentUserEmail)}`);
+        const purchasedItems = await res.json();
+        
+        if (!purchasedItems || purchasedItems.length === 0) {
+            grid.innerHTML = "<p class='text-gray-400 text-xs text-center py-10 uppercase font-black italic'>📂 Төлбөр баталгаажсан материал алга байна.</p>";
+            return;
         }
+
+        grid.innerHTML = purchasedItems.map(p => `
+            <div class="bg-white p-5 rounded-[2.5rem] shadow-xl border border-green-100 flex flex-col transition-all hover:-translate-y-1">
+                <img src="https://raw.githubusercontent.com/tuult764-crypto/sonirholtoi-hel-bichig-/main/${p.Images.split(',')[0].trim()}" 
+                     class="w-full h-32 object-cover rounded-2xl mb-4 opacity-90 shadow-inner">
+                
+                <h3 class="font-black text-[11px] text-green-900 mb-4 uppercase italic leading-tight h-8 overflow-hidden">${p.Title}</h3>
+                
+                <div class="flex flex-col gap-2">
+                    <a href="${p.Link}" target="_blank" 
+                       class="w-full bg-green-700 text-white py-3 rounded-xl font-black uppercase italic text-[10px] shadow-lg flex items-center justify-center gap-2 hover:bg-green-800">
+                        👁️ Үзэх / Хэвлэх
+                    </a>
+                    
+                    <a href="${p.Link}" download="${p.Title}.pdf" target="_blank"
+                       class="w-full bg-white border-2 border-green-700 text-green-700 py-3 rounded-xl font-black uppercase italic text-[10px] flex items-center justify-center gap-2 hover:bg-green-50 transition-colors">
+                        📥 Файл татах
+                    </a>
+                </div>
+            </div>
+        `).join('');
+    } catch (e) { 
+        console.error(e);
+        grid.innerHTML = "<p class='text-red-500 text-xs text-center py-10 font-black'>⚠️ Мэдээлэл уншихад алдаа гарлаа.</p>"; 
     }
+}
 
     function openPayment(title) {
         currentProductTitle = title;
