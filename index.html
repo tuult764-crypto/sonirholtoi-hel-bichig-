@@ -44,23 +44,30 @@
 <body class="min-h-screen pb-20">
 
     <div id="authScreen" class="min-h-screen flex items-center justify-center px-4">
-        <div class="max-w-md w-full bg-white p-8 rounded-[2.5rem] shadow-2xl text-center border-t-8 border-orange-800">
-            <h1 class="text-2xl font-black text-orange-900 mb-6 uppercase italic">Нэвтрэх</h1>
-            <input type="email" id="loginEmail" placeholder="Бүртгэлтэй мэйл хаяг" class="w-full p-4 bg-gray-50 border rounded-2xl text-center font-bold mb-4 outline-none focus:ring-2 ring-orange-200">
-            <button onclick="handleLogin()" id="loginBtn" class="w-full bg-orange-800 text-white py-4 rounded-2xl font-black uppercase italic shadow-lg">Нэвтрэх</button>
+        <div class="max-w-md w-full bg-white p-10 rounded-[2.5rem] shadow-2xl text-center border-t-8 border-orange-800">
+    <img src="logo.png" alt="Logo" class="h-20 mx-auto mb-6 object-contain">
+    <h1 class="text-2xl font-black text-orange-900 mb-6 uppercase italic">Нэвтрэх</h1>
+    ...
         </div>
     </div>
 
-    <div id="mainSystem" class="hidden">
-        <nav class="bg-white border-b p-4 sticky top-0 z-50 flex justify-between items-center shadow-sm">
-            <div onclick="showDashboard()" class="cursor-pointer font-black text-orange-900 italic uppercase flex items-center">
-                📚 СОНИРХОЛТОЙ ХЭЛ БИЧИГ
-            </div>
-            <div class="flex gap-3">
-                <button onclick="showSection('cart')" class="bg-orange-100 p-2 rounded-full relative">🛒 <span id="cartCount" class="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] w-4 h-4 rounded-full flex items-center justify-center">0</span></button>
-                <button onclick="showSection('library')" class="bg-orange-50 px-3 py-1 rounded-full text-[10px] font-bold text-orange-700 uppercase italic">📂 Миний сан</button>
-            </div>
-        </nav>
+<nav class="bg-white border-b p-4 sticky top-0 z-50 flex justify-between items-center shadow-sm">
+    <div onclick="showDashboard()" class="cursor-pointer flex items-center gap-3">
+        <img src="logo.png" alt="Logo" class="h-10 w-auto object-contain">
+        <span class="font-black text-orange-900 italic uppercase text-sm hidden sm:inline-block">
+            Сонирхолтой хэл бичиг
+        </span>
+    </div>
+
+    <div class="flex gap-3">
+        <button onclick="showSection('cart')" class="bg-orange-100 p-2 rounded-full relative">
+            🛒 <span id="cartCount" class="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] w-4 h-4 rounded-full flex items-center justify-center">0</span>
+        </button>
+        <button onclick="showSection('library')" class="bg-orange-50 px-3 py-1 rounded-full text-[10px] font-bold text-orange-700 uppercase italic">
+            📂 Миний сан
+        </button>
+    </div>
+</nav>
 
         <div id="dashboardHome" class="container mx-auto px-4 py-8 max-w-6xl">
             <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-8 text-center font-black italic text-[10px] uppercase">
@@ -96,17 +103,28 @@
     </div>
 
     <div id="paymentModal" class="modal" onclick="if(event.target==this) closePayment()">
-        <div class="bg-white p-8 rounded-[2.5rem] max-w-sm w-full text-center border-8 border-orange-50">
-            <h2 class="text-lg font-black text-orange-900 mb-4 uppercase italic">Төлбөр төлөх</h2>
-            <img src="qr.png" class="w-40 h-40 mx-auto rounded-lg mb-4 shadow-sm" onerror="this.src='https://via.placeholder.com/150?text=QR'">
-            <div class="bg-orange-50 p-4 rounded-xl text-left text-[10px] mb-6">
-                <p class="font-bold text-gray-400">ГҮЙЛГЭЭНИЙ УТГА:</p>
-                <p id="paymentNote" class="text-sm font-black text-orange-800"></p>
-                <p class="mt-2 text-gray-400">ХАС БАНК: 5006069631</p>
-            </div>
-            <button onclick="confirmOrder()" id="confirmBtn" class="w-full bg-orange-800 text-white py-4 rounded-xl font-black uppercase italic shadow-lg">Төлсөн, хүсэлт илгээх</button>
+    <div class="bg-white p-8 rounded-[2.5rem] max-w-sm w-full text-center border-8 border-orange-50 relative">
+        <button onclick="closePayment()" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600">✕</button>
+        <h2 class="text-lg font-black text-orange-900 mb-4 uppercase italic">Төлбөр төлөх</h2>
+        
+        <div class="bg-white p-2 border-2 border-orange-100 rounded-2xl mb-4 inline-block shadow-inner">
+            <img src="qr.png" alt="Payment QR" class="w-48 h-48 object-contain">
         </div>
+
+        <div class="bg-orange-50 p-4 rounded-2xl text-left text-[10px] mb-6">
+            <p class="font-bold text-gray-400 uppercase tracking-widest mb-1">Гүйлгээний утга:</p>
+            <p id="paymentNote" class="text-[13px] font-black text-orange-800 break-all bg-white p-2 rounded-lg border border-orange-100"></p>
+            <div class="mt-3 pt-3 border-t border-orange-200">
+                <p class="text-gray-600 font-bold">ХАС БАНК: <span class="text-orange-900">5006069631</span></p>
+                <p class="text-gray-600 font-bold">ХҮЛЭЭН АВАГЧ: <span class="text-orange-900">Т. ТУУЛ</span></p>
+            </div>
+        </div>
+        
+        <button onclick="confirmOrder()" id="confirmBtn" class="w-full bg-orange-800 text-white py-4 rounded-xl font-black uppercase italic shadow-lg hover:bg-orange-900 active:scale-95 transition-all">
+            Төлсөн, хүсэлт илгээх
+        </button>
     </div>
+</div>
 
 <script>
     const orderURL = 'https://script.google.com/macros/s/AKfycbw-4l3RN9-KTzCOJc4ZswFgnQ5DCEO9mY9gobI8W1IGXtUp_LgTL77Zc3oaCp0up7xZVw/exec';
