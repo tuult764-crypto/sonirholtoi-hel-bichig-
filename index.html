@@ -5,18 +5,60 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Сонирхолтой хэл бичиг | Цахим Систем</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;700;800&display=swap');
-        body { font-family: 'Manrope', sans-serif; background-color: #fdfaf7; }
-        .section-content { display: none; }
-        .section-content.active { display: block; }
-        .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.8); align-items: center; justify-content: center; z-index: 1000; padding: 20px; }
-        .modal.active { display: flex; }
-        .sudoku-grid { display: grid; grid-template-columns: repeat(9, 35px); border: 2px solid #4a2c2a; width: fit-content; margin: 10px auto; background-color: #4a2c2a; gap: 1px; }
-        .sudoku-cell { width: 35px; height: 35px; background: white; text-align: center; font-size: 18px; font-weight: bold; outline: none; border: none; }
-        .cell-fixed { background: #eee; color: #333; }
-        .cell-user { color: #2563eb; }
-    </style>
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;700;800&display=swap');
+    
+    /* Ерөнхий стиль */
+    body { font-family: 'Manrope', sans-serif; background-color: #fdfaf7; }
+    .section-content { display: none; }
+    .section-content.active { display: block; }
+    
+    /* Модал (Зураг үзэх, Төлбөр) */
+    .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.8); align-items: center; justify-content: center; z-index: 1000; padding: 20px; }
+    .modal.active { display: flex; }
+    
+    /* Логоны стиль */
+    .nav-logo { height: 30px; width: auto; display: inline-block; margin-right: 8px; vertical-align: middle; }
+
+    /* --- СУДОКУГИЙН ОНЦГОЙ СТИЛЬ (3x3 БЛОКТОЙ) --- */
+    .sudoku-grid { 
+        display: grid; 
+        grid-template-columns: repeat(9, 40px); /* Утсан дээр багтахаар хэмжээ */
+        grid-template-rows: repeat(9, 40px); 
+        border: 3px solid #4a2c2a; 
+        background-color: #4a2c2a; 
+        gap: 1px; 
+        margin: 20px auto;
+        width: fit-content;
+    }
+    .sudoku-cell { 
+        width: 40px; 
+        height: 40px; 
+        background: white; 
+        text-align: center; 
+        font-size: 20px; 
+        font-weight: bold; 
+        outline: none; 
+        border: none;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    /* 3x3 Блокуудыг зааглах зузаан хүрээ (Багана) */
+    .sudoku-cell:nth-child(3n) { border-right: 3px solid #4a2c2a; }
+    .sudoku-cell:nth-child(9n) { border-right: none; } /* Хамгийн баруун талынхыг болиулах */
+    
+    /* 3x3 Блокуудыг зааглах зузаан хүрээ (Мөр) */
+    .sudoku-grid > input:nth-child(n+19):nth-child(-n+27),
+    .sudoku-grid > input:nth-child(n+46):nth-child(-n+54) { 
+        border-bottom: 3px solid #4a2c2a; 
+    }
+    
+    /* Нүдний өнгөний ялгаа */
+    .cell-fixed { background: #f3f4f6 !important; color: #4a2c2a !important; cursor: not-allowed; }
+    .cell-user { color: #2563eb; background: white; }
+    .cell-user:focus { background: #eff6ff; }
+</style>
 </head>
 <body class="min-h-screen pb-20">
 
@@ -30,7 +72,9 @@
 
     <div id="mainSystem" class="hidden">
         <nav class="bg-white border-b p-4 sticky top-0 z-50 flex justify-between items-center shadow-sm">
-            <img src="logo.png">📚 СОНИРХОЛТОЙ ХЭЛ БИЧИГ </div>
+            <div onclick="showDashboard()" class="cursor-pointer font-black text-orange-900 italic uppercase flex items-center">
+                <img src="logo.png" class="nav-logo" onerror="this.style.display='none'"> 📚 СОНИРХОЛТОЙ ХЭЛ БИЧИГ
+            </div>
             <div class="flex gap-3">
                 <button onclick="showSection('cart')" class="bg-orange-100 p-2 rounded-full relative">🛒 <span id="cartCount" class="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] w-4 h-4 rounded-full flex items-center justify-center">0</span></button>
                 <button onclick="showSection('library')" class="bg-orange-50 px-3 py-1 rounded-full text-[10px] font-bold text-orange-700 uppercase italic">📂 Миний сан</button>
@@ -55,7 +99,7 @@
         
         <div id="librarySection" class="section-content container mx-auto px-4 py-8">
             <button onclick="showDashboard()" class="text-orange-800 font-bold mb-6 uppercase text-xs">← Буцах</button>
-            <h2 class="text-xl font-black text-orange-900 mb-6 uppercase italic">📂 Миний худалдаж авсан материалууд</h2>
+            <h2 class="text-xl font-black text-orange-900 mb-6 uppercase italic">📂 Миний материалууд</h2>
             <div id="libraryGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6"></div>
         </div>
 
@@ -87,12 +131,12 @@
         </div>
     </div>
 
-    <div id="imageModal" class="modal" style="display:none; background: rgba(0,0,0,0.95); flex-direction: column;">
+    <div id="imageModal" class="modal">
         <button onclick="closeGallery()" class="absolute top-5 right-5 text-white bg-red-600 px-6 py-2 rounded-full font-bold z-50">Хаах</button>
         <div class="relative w-full h-full flex items-center justify-center">
-            <button onclick="changeSlide(-1)" class="absolute left-4 bg-white/20 hover:bg-white/40 text-white w-14 h-14 rounded-full text-3xl flex items-center justify-center z-50">‹</button>
-            <img id="modalImg" src="" class="max-w-[90%] max-h-[80vh] object-contain border-4 border-white/10 rounded-lg shadow-2xl transition-all duration-300">
-            <button onclick="changeSlide(1)" class="absolute right-4 bg-white/20 hover:bg-white/40 text-white w-14 h-14 rounded-full text-3xl flex items-center justify-center z-50">›</button>
+            <button onclick="changeSlide(-1)" class="absolute left-4 bg-white/20 hover:bg-white/40 text-white w-12 h-12 rounded-full text-2xl z-50">‹</button>
+            <img id="modalImg" src="" class="max-w-[90%] max-h-[80vh] object-contain rounded-lg shadow-2xl">
+            <button onclick="changeSlide(1)" class="absolute right-4 bg-white/20 hover:bg-white/40 text-white w-12 h-12 rounded-full text-2xl z-50">›</button>
         </div>
         <div id="imageCounter" class="mb-10 text-white font-bold bg-white/10 px-6 py-2 rounded-full text-sm">1 / 1</div>
     </div>
@@ -113,16 +157,14 @@
 <script>
     const orderURL = 'https://script.google.com/macros/s/AKfycbxXuVjiuMlURGG4EXbddyG2iwnDiTia2SYpvHfPIX4JyL6EGnZaNbdIr5WI2_Kz_-tNMQ/exec';
     const RENDER_API_URL = 'https://sonirholtoi-hel-bichig.onrender.com/chat';
-    const mongolNums = { '1': '᠑', '2': '᠒', '3': '᠓', '4': '᠔', '5': '᠕', '6': '᠖', '7': '᠗', '8': '᠘', '9': '᠙', '0': '' };
     
     let currentUserEmail = "";
     let cart = [];
     let productsData = [];
     let currentAlbum = [];
     let currentIndex = 0;
-    let currentProductTitle = ""; // Чухал: Нэг бараа авах үед ашиглана
+    let currentProductTitle = "";
 
-    // 1. НЭВТРЭХ
     async function handleLogin() {
         const email = document.getElementById('loginEmail').value.trim();
         if(!email) return alert("Мэйл хаягаа оруулна уу!");
@@ -142,7 +184,6 @@
         finally { btn.innerText = "Нэвтрэх"; btn.disabled = false; }
     }
 
-// 2. БАРАА УНШИХ
     async function loadProducts() {
         try {
             const res = await fetch(`${orderURL}?action=getProducts`);
@@ -163,67 +204,65 @@
             document.getElementById('fullShopGrid').innerHTML = html;
         } catch (e) { console.error(e); }
     }
-
-    // 3. МИНИЙ САН
-    async function loadLibrary() {
+    
+async function loadLibrary() {
         const grid = document.getElementById('libraryGrid');
-        grid.innerHTML = "<p class='text-gray-500'>Уншиж байна...</p>";
+        grid.innerHTML = "<p class='text-gray-500 text-xs'>Уншиж байна...</p>";
         try {
             const res = await fetch(`${orderURL}?action=getLibrary&email=${encodeURIComponent(currentUserEmail)}`);
             const purchasedItems = await res.json();
+            
             if (!purchasedItems || purchasedItems.length === 0) {
                 grid.innerHTML = "<p class='text-gray-400 text-xs'>Төлбөр баталгаажсан материал алга байна.</p>";
                 return;
             }
+
             grid.innerHTML = purchasedItems.map(p => `
-                <div class="bg-white p-4 rounded-[2rem] shadow-md border border-green-100 flex flex-col">
-                    <img src="https://raw.githubusercontent.com/tuult764-crypto/sonirholtoi-hel-bichig-/main/${p.Images.split(',')[0].trim()}" class="w-full h-32 object-cover rounded-xl mb-3 opacity-80">
-                    <h3 class="font-black text-[10px] text-orange-900 mb-2 uppercase italic">${p.Title}</h3>
-                    <a href="${p.Link}" target="_blank" rel="noopener noreferrer" class="text-center bg-green-700 text-white py-3 rounded-xl font-black uppercase italic text-[10px] shadow-lg">
-                        📥 Файл үзэх / Татах
-                    </a>
+                <div class="bg-white p-5 rounded-[2.5rem] shadow-lg border border-green-100 flex flex-col transition-all hover:shadow-xl">
+                    <img src="https://raw.githubusercontent.com/tuult764-crypto/sonirholtoi-hel-bichig-/main/${p.Images.split(',')[0].trim()}" class="w-full h-32 object-cover rounded-2xl mb-4 opacity-90">
+                    <h3 class="font-black text-[11px] text-green-900 mb-4 uppercase italic leading-tight">${p.Title}</h3>
+                    
+                    <div class="grid grid-cols-1 gap-2">
+                        <a href="${p.Link}" target="_blank" rel="noopener noreferrer" 
+                           class="flex items-center justify-center gap-2 bg-green-700 text-white py-3 rounded-xl font-black uppercase italic text-[10px] shadow-md hover:bg-green-800">
+                           👁 Үзэх / Хэвлэх
+                        </a>
+                        
+                        <a href="${p.Link}" download="${p.Title}" target="_blank"
+                           class="flex items-center justify-center gap-2 bg-white border-2 border-green-700 text-green-700 py-3 rounded-xl font-black uppercase italic text-[10px] hover:bg-green-50">
+                           📥 Шууд татах
+                        </a>
+                    </div>
                 </div>
             `).join('');
         } catch (e) { 
             console.error(e);
-            grid.innerHTML = "<p class='text-red-500 text-xs'>Алдаа гарлаа.</p>";
+            grid.innerHTML = "<p class='text-red-500 text-xs text-center'>Мэдээлэл уншихад алдаа гарлаа.</p>"; 
         }
     }
-    
-    // 4. ТӨЛБӨР БА ЗАХИАЛГА
+
     function openPayment(title) {
         currentProductTitle = title;
         document.getElementById('paymentNote').innerText = currentUserEmail;
         document.getElementById('paymentModal').classList.add('active');
     }
 
-    function closePayment() { 
-        document.getElementById('paymentModal').classList.remove('active'); 
-    }
+    function closePayment() { document.getElementById('paymentModal').classList.remove('active'); }
 
     async function confirmOrder() {
         const btn = document.getElementById('confirmBtn');
         btn.innerText = "Илгээж байна..."; btn.disabled = true;
-
         try {
             let items = currentProductTitle === 'Сагс' ? cart.map(i => i.Title) : [currentProductTitle];
-            if (items.length === 0) throw new Error("Захиалга хоосон байна.");
-
             for (const title of items) {
-                const url = `${orderURL}?action=addOrder&email=${encodeURIComponent(currentUserEmail)}&title=${encodeURIComponent(title)}`;
-                await fetch(url);
+                await fetch(`${orderURL}?action=addOrder&email=${encodeURIComponent(currentUserEmail)}&title=${encodeURIComponent(title)}`);
             }
-
-            alert("Хүсэлт илгээгдлээ. Төлбөр шалгагдсаны дараа 'Миний сан' хэсэгт файл нээгдэнэ.");
+            alert("Хүсэлт илгээгдлээ.");
             cart = []; updateCart(); closePayment();
-        } catch (e) { 
-            alert("Алдаа: " + e.message); 
-        } finally { 
-            btn.innerText = "Төлсөн, хүсэлт илгээх"; btn.disabled = false; 
-        }
+        } catch (e) { alert("Алдаа гарлаа."); }
+        finally { btn.innerText = "Төлсөн, хүсэлт илгээх"; btn.disabled = false; }
     }
 
-    // САГСНЫ ФУНКЦҮҮД
     function addToCart(title) {
         const prod = productsData.find(p => p.Title === title);
         cart.push(prod); updateCart(); alert("Сагслагдлаа!");
@@ -233,7 +272,7 @@
         document.getElementById('cartCount').innerText = cart.length;
         const total = cart.reduce((sum, p) => sum + Number(p.Price), 0);
         document.getElementById('cartItems').innerHTML = cart.map((p, idx) => `
-            <div class="flex justify-between items-center bg-white p-4 rounded-xl border shadow-sm">
+            <div class="flex justify-between items-center bg-white p-4 rounded-xl border">
                 <span class="text-[10px] font-black italic uppercase">${p.Title}</span>
                 <button onclick="cart.splice(${idx},1); updateCart();" class="text-red-500">❌</button>
             </div>`).join('');
@@ -241,41 +280,83 @@
         document.getElementById('cartPayBtn').classList.toggle('hidden', cart.length === 0);
     }
 
-    // NAVIGATION
     function showSection(name) {
         document.getElementById('dashboardHome').classList.add('hidden');
         document.querySelectorAll('.section-content').forEach(s => s.classList.remove('active'));
         const target = document.getElementById(name + 'Section');
         if(target) target.classList.add('active');
         if(name === 'library') loadLibrary();
-        if(name === 'games') typeof initSudoku === 'function' && initSudoku();
     }
-    
+
     function showDashboard() {
         document.getElementById('dashboardHome').classList.remove('hidden');
         document.querySelectorAll('.section-content').forEach(s => s.classList.remove('active'));
-        document.getElementById('authScreen').classList.add('hidden');
-        document.getElementById('mainSystem').classList.remove('hidden');
     }
-    // GALLERY & OTHERS
+
     function viewImage(imgString) {
         currentAlbum = imgString.split(',').map(i => i.trim());
         currentIndex = 0;
         document.getElementById('imageModal').style.display = 'flex';
         updateGalleryStatus();
     }
+
     function updateGalleryStatus() {
         document.getElementById('modalImg').src = `https://raw.githubusercontent.com/tuult764-crypto/sonirholtoi-hel-bichig-/main/${currentAlbum[currentIndex]}`;
         document.getElementById('imageCounter').innerText = `${currentIndex + 1} / ${currentAlbum.length}`;
     }
+
     function changeSlide(n) {
         currentIndex = (currentIndex + n + currentAlbum.length) % currentAlbum.length;
         updateGalleryStatus();
     }
-    function closeGallery() { document.getElementById('imageModal').style.display = 'none'; }
 
-    function initSudoku() { /* Sudoku logic remains same */ }
-    async function generateAI(type) { /* AI logic remains same */ }
+    function closeGallery() { document.getElementById('imageModal').style.display = 'none'; }
+    // Үндэсний бичгийн тооны хөрвүүлэлт
+const mongolNums = { '1': '᠑', '2': '᠒', '3': '᠓', '4': '᠔', '5': '᠕', '6': '᠖', '7': '᠗', '8': '᠘', '9': '᠙' };
+
+function initSudoku() {
+    const container = document.getElementById('sudokuContainer');
+    if(!container) return;
+    container.innerHTML = '';
+    
+    // Жишээ судокугийн тоо (0 бол хоосон)
+    const board = [
+        5,3,0,0,7,0,0,0,0,
+        6,0,0,1,9,5,0,0,0,
+        0,9,8,0,0,0,0,6,0,
+        8,0,0,0,6,0,0,0,3,
+        4,0,0,8,0,3,0,0,1,
+        7,0,0,0,2,0,0,0,6,
+        0,6,0,0,0,0,2,8,0,
+        0,0,0,4,1,9,0,0,5,
+        0,0,0,0,8,0,0,7,9
+    ];
+
+    board.forEach((val, idx) => {
+        const cell = document.createElement('input');
+        cell.type = 'text';
+        cell.maxLength = 1;
+        cell.className = 'sudoku-cell';
+        
+        if (val !== 0) {
+            cell.value = mongolNums[val]; // Үндэсний тоогоор харуулна
+            cell.readOnly = true;
+            cell.classList.add('cell-fixed');
+        } else {
+            cell.classList.add('cell-user');
+            cell.oninput = function() {
+                // Гараас 1-9 тоо бичихэд автоматаар Монгол тоо болгоно
+                if (mongolNums[this.value]) {
+                    this.value = mongolNums[this.value];
+                } else if (!Object.values(mongolNums).includes(this.value)) {
+                    this.value = '';
+                }
+            };
+        }
+        container.appendChild(cell);
+    });
+}
+    function generateAI() {}
 </script>
 </body>
 </html>
