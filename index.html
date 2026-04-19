@@ -283,49 +283,60 @@ function showSection(name) {
         document.getElementById('cartPayBtn').classList.toggle('hidden', cart.length === 0);
     }
 
-    function openPayment(title) {
-        document.getElementById('paymentNote').innerText = currentUserEmail;
-        document.getElementById('paymentModal').classList.add('active');
-    }
+   let currentProductTitle = ""; // Сагс биш, шууд авах үед ашиглах нэр
 
-    function closePayment() { document.getElementById('paymentModal').classList.remove('active'); }
+// Төлбөрийн цонх нээх
+function openPayment(title) {
+    // Хэрэв сагснаас биш бол title-г хадгалж авна
+    currentProductTitle = title; 
+    document.getElementById('paymentNote').innerText = currentUserEmail;
+    document.getElementById('paymentModal').classList.add('active');
+}
 
+// Төлбөр баталгаажуулах (Хамгийн чухал засалт)
 async function confirmOrder() {
     const btn = event.target;
     btn.innerText = "Илгээж байна..."; 
     btn.disabled = true;
 
     try {
-        // 1. Сагсанд бараа байгаа эсэхийг шалгах
-        if (cart.length === 0) {
-            alert("Сагс хоосон байна!");
-            return;
+        let itemsToOrder = [];
+
+        // 1. Сагсанд бараа байгаа эсэхийг шалгах (Сагсны худалдан авалт)
+        if (currentProductTitle === 'Сагс') {
+            if (cart.length === 0) {
+                alert("Сагс хоосон байна!");
+                closePayment();
+                return;
+            }
+            itemsToOrder = cart.map(item => item.Title);
+        } else {
+            // 2. Шууд ганц бараа худалдан авах
+            itemsToOrder = [currentProductTitle];
         }
 
-        // 2. Сагсан дахь БАРАА БҮРЭЭР давталт хийж хүсэлт илгээнэ
-        for (const item of cart) {
-            // item.Title нь Sheets-ийн Product Name (C багана) руу орно
-            // currentUserEmail нь Sheets-ийн Email (B багана) руу орно
-            const url = `${orderURL}?action=addOrder&email=${encodeURIComponent(currentUserEmail)}&title=${encodeURIComponent(item.Title)}`;
-            
+        // 3. Бараа тус бүрээр Sheets рүү хүсэлт илгээх
+        for (const title of itemsToOrder) {
+            const url = `${orderURL}?action=addOrder&email=${encodeURIComponent(currentUserEmail)}&title=${encodeURIComponent(title)}`;
             const res = await fetch(url);
             const data = await res.json();
             
             if (data.status !== "success") {
-                throw new Error(`${item.Title} бүртгэхэд алдаа гарлаа.`);
+                throw new Error(`${title} материалыг бүртгэхэд алдаа гарлаа.`);
             }
         }
 
-        alert("Баярлалаа! Таны хүсэлт илгээгдлээ. Төлбөр шалгагдсаны дараа 'Миний сан' хэсэгт нээгдэнэ.");
+        alert("Баярлалаа! Таны хүсэлт амжилттай илгээгдлээ. Туул багш төлбөр шалгаад 'Миний сан' хэсэгт файлыг нээж өгөх болно.");
         
-        // Сагсыг хоослох болон модалыг хаах
+        // Сагсыг хоослох болон цонх хаах
         cart = [];
         updateCart();
         closePayment();
+        currentProductTitle = ""; // Цэвэрлэх
 
     } catch (e) {
         console.error("Order Error:", e);
-        alert("Алдаа гарлаа: " + e.message);
+        alert("Холболтын алдаа гарлаа: " + e.message);
     } finally {
         btn.innerText = "Төлсөн, хүсэлт илгээх"; 
         btn.disabled = false;
