@@ -5,74 +5,48 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Сонирхолтой хэл бичиг | Цахим Систем</title>
     <script src="https://cdn.tailwindcss.com"></script>
-<style>
-    @import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;700;800&display=swap');
-    
-    /* Ерөнхий стиль */
-    body { font-family: 'Manrope', sans-serif; background-color: #fdfaf7; }
-    .section-content { display: none; }
-    .section-content.active { display: block; }
-    
-    /* Модал (Зураг үзэх, Төлбөр) */
-    .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.8); align-items: center; justify-content: center; z-index: 1000; padding: 20px; }
-    .modal.active { display: flex; }
-    
-    /* Логоны стиль */
-    .nav-logo { height: 30px; width: auto; display: inline-block; margin-right: 8px; vertical-align: middle; }
-
-   /* --- СУДОКУГИЙН САЙЖРУУЛСАН СТИЛЬ --- */
-#sudokuContainer {
-    display: grid;
-    grid-template-columns: repeat(9, 1fr);
-    max-width: 360px;
-    margin: 20px auto;
-    background-color: #000; /* Зузаан хүрээний өнгө */
-    border: 4px solid #000;
-    gap: 1px; /* Нарийн зураас */
-}
-
-.sudoku-cell {
-    width: 100%;
-    aspect-ratio: 1 / 1;
-    text-align: center;
-    font-size: 1.5rem; /* Монгол тоо том харагдах ёстой */
-    border: 1px solid #ccc;
-    outline: none;
-    padding: 0;
-}
-
-/* 3x3 Блокыг ялгахын тулд 3 дахь нүд бүрийн баруун талыг зузаална */
-.sudoku-cell:nth-child(3n) {
-    border-right: 3px solid #000;
-}
-.sudoku-cell:nth-child(9n) {
-    border-right: none;
-}
-
-/* 3x3 Блокыг ялгахын тулд 3 дахь мөр бүрийн доод талыг зузаална */
-.sudoku-cell:nth-child(n+19):nth-child(-n+27),
-.sudoku-cell:nth-child(n+46):nth-child(-n+54) {
-    border-bottom: 3px solid #000;
-}
-
-.cell-fixed {
-    background-color: #e2e8f0; /* Өгөгдсөн тооны арын өнгө */
-    color: #1a202c;
-    font-weight: bold;
-}
-
-.cell-user {
-    background-color: #fff;
-    color: #059669; /* Хэрэглэгчийн бичих тоо ногооноор гарна */
-}
-</style>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;700;800&display=swap');
+        body { font-family: 'Manrope', sans-serif; background-color: #fdfaf7; }
+        .section-content { display: none; }
+        .section-content.active { display: block; }
+        .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.8); align-items: center; justify-content: center; z-index: 1000; padding: 20px; }
+        .modal.active { display: flex; }
+        
+        /* СУДОКУ СТИЛЬ */
+        #sudokuContainer {
+            display: grid;
+            grid-template-columns: repeat(9, 1fr);
+            max-width: 360px;
+            margin: 20px auto;
+            background-color: #000;
+            border: 4px solid #000;
+            gap: 1px;
+        }
+        .sudoku-cell {
+            width: 100%;
+            aspect-ratio: 1 / 1;
+            text-align: center;
+            font-size: 1.5rem;
+            border: 1px solid #ccc;
+            outline: none;
+            padding: 0;
+            background-color: #fff;
+        }
+        .sudoku-cell:nth-child(3n) { border-right: 3px solid #000; }
+        .sudoku-cell:nth-child(9n) { border-right: none; }
+        .sudoku-cell:nth-child(n+19):nth-child(-n+27),
+        .sudoku-cell:nth-child(n+46):nth-child(-n+54) { border-bottom: 3px solid #000; }
+        .cell-fixed { background-color: #e2e8f0; color: #1a202c; font-weight: bold; }
+        .cell-user { color: #059669; }
+    </style>
 </head>
 <body class="min-h-screen pb-20">
 
     <div id="authScreen" class="min-h-screen flex items-center justify-center px-4">
         <div class="max-w-md w-full bg-white p-8 rounded-[2.5rem] shadow-2xl text-center border-t-8 border-orange-800">
             <h1 class="text-2xl font-black text-orange-900 mb-6 uppercase italic">Нэвтрэх</h1>
-            <input type="email" id="loginEmail" placeholder="Бүртгэлтэй мэйл хаяг" class="w-full p-4 bg-gray-50 border rounded-2xl text-center font-bold mb-4 outline-none">
+            <input type="email" id="loginEmail" placeholder="Бүртгэлтэй мэйл хаяг" class="w-full p-4 bg-gray-50 border rounded-2xl text-center font-bold mb-4 outline-none focus:ring-2 ring-orange-200">
             <button onclick="handleLogin()" id="loginBtn" class="w-full bg-orange-800 text-white py-4 rounded-2xl font-black uppercase italic shadow-lg">Нэвтрэх</button>
         </div>
     </div>
@@ -80,7 +54,7 @@
     <div id="mainSystem" class="hidden">
         <nav class="bg-white border-b p-4 sticky top-0 z-50 flex justify-between items-center shadow-sm">
             <div onclick="showDashboard()" class="cursor-pointer font-black text-orange-900 italic uppercase flex items-center">
-                <img src="logo.png" class="nav-logo" onerror="this.style.display='none'"> 📚 СОНИРХОЛТОЙ ХЭЛ БИЧИГ
+                📚 СОНИРХОЛТОЙ ХЭЛ БИЧИГ
             </div>
             <div class="flex gap-3">
                 <button onclick="showSection('cart')" class="bg-orange-100 p-2 rounded-full relative">🛒 <span id="cartCount" class="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] w-4 h-4 rounded-full flex items-center justify-center">0</span></button>
@@ -96,69 +70,29 @@
                 <div onclick="showSection('shop')" class="bg-yellow-500 p-6 rounded-3xl text-white cursor-pointer shadow-md">Дэлгүүр</div>
             </div>
             <h2 class="text-lg font-black text-orange-900 mb-6 italic uppercase">✨ Шинэ материалууд</h2>
-            <div id="materialGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6"></div>
+            <div id="materialGrid" class="grid grid-cols-2 lg:grid-cols-4 gap-6"></div>
         </div>
 
         <div id="shopSection" class="section-content container mx-auto px-4 py-8">
             <button onclick="showDashboard()" class="text-orange-800 font-bold mb-6 uppercase text-xs">← Буцах</button>
-            <div id="fullShopGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6"></div>
+            <div id="fullShopGrid" class="grid grid-cols-2 lg:grid-cols-4 gap-6"></div>
         </div>
-        
+
+        <div id="gamesSection" class="section-content container mx-auto px-4 py-8">
+            <button onclick="showDashboard()" class="text-orange-800 font-bold mb-6 uppercase text-xs">← Буцах</button>
+            <h2 class="text-center text-2xl font-black text-green-900 mb-6 italic uppercase">🇲🇳 Монгол бичиг судоку</h2>
+            <div id="sudokuContainer"></div>
+            <div class="text-center mt-6 flex justify-center gap-4">
+                <button onclick="initSudoku()" class="bg-gray-500 text-white px-6 py-3 rounded-full font-black uppercase italic text-xs shadow-lg">🔄 Шинэ</button>
+                <button onclick="checkSudoku()" class="bg-green-700 text-white px-10 py-3 rounded-full font-black uppercase italic text-xs shadow-lg hover:bg-green-800">✅ Шалгах</button>
+            </div>
+        </div>
+
         <div id="librarySection" class="section-content container mx-auto px-4 py-8">
             <button onclick="showDashboard()" class="text-orange-800 font-bold mb-6 uppercase text-xs">← Буцах</button>
             <h2 class="text-xl font-black text-orange-900 mb-6 uppercase italic">📂 Миний материалууд</h2>
-            <div id="libraryGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6"></div>
+            <div id="libraryGrid" class="grid grid-cols-1 md:grid-cols-3 gap-6"></div>
         </div>
-
-        <div id="cartSection" class="section-content container mx-auto max-w-xl px-4 py-8">
-            <button onclick="showDashboard()" class="text-orange-800 font-bold mb-6 text-xs uppercase">← Буцах</button>
-            <h2 class="text-xl font-black text-orange-900 mb-6 uppercase">🛒 Миний сагс</h2>
-            <div id="cartItems" class="space-y-3"></div>
-            <div id="cartTotal" class="mt-6 text-right font-black text-lg text-orange-900 border-t pt-4"></div>
-            <button onclick="openPayment('Сагс')" id="cartPayBtn" class="hidden w-full bg-orange-800 text-white py-4 rounded-2xl font-black mt-6 shadow-xl uppercase italic">Худалдан авах</button>
-        </div>
-
-<div id="gamesSection" class="section-content container mx-auto px-4 py-8">
-    <button onclick="showDashboard()" class="text-orange-800 font-bold mb-6 uppercase text-xs">← Буцах</button>
-    
-    <h2 class="text-center text-2xl font-black text-green-900 mb-6 italic uppercase">
-        🇲🇳 Монгол бичиг судоку
-    </h2>
-
-    <div id="sudokuContainer"></div>
-
-    <div class="text-center mt-6">
-        <button onclick="initSudoku()" 
-                class="bg-green-700 text-white px-8 py-3 rounded-full font-black uppercase italic shadow-lg hover:bg-green-800 active:scale-95 transition-all">
-            🔄 Шинэ судоку үүсгэх
-        </button>
-    </div>
-</div>
-
-<div id="examSection" class="section-content container mx-auto px-4 py-8">
-    <button onclick="showDashboard()" class="text-orange-800 font-bold mb-6 uppercase text-xs">← Буцах</button>
-    <h2 class="text-xl font-black text-blue-900 mb-6 uppercase italic text-center">Шалгалт</h2>
-    </div>
-
-        <div id="plannerSection" class="section-content container mx-auto max-w-2xl p-4">
-            <button onclick="showDashboard()" class="text-orange-800 font-bold mb-4 text-xs uppercase">← Буцах</button>
-            <div class="bg-white p-6 rounded-3xl shadow-lg text-center">
-                <h2 class="font-black mb-4 uppercase italic">Хичээлийн төлөвлөгөө</h2>
-                <input type="text" id="lessonTopic" placeholder="Сэдвээ бичнэ үү..." class="w-full p-4 border rounded-xl mb-4 bg-gray-50 outline-none">
-                <button onclick="generateAI('planner')" id="planBtn" class="w-full bg-orange-800 text-white py-4 rounded-xl font-black uppercase italic">Боловсруулах</button>
-                <div id="planResult" class="mt-6 p-4 border rounded-xl bg-gray-50 text-left text-sm hidden whitespace-pre-wrap"></div>
-            </div>
-        </div>
-    </div>
-
-    <div id="imageModal" class="modal">
-        <button onclick="closeGallery()" class="absolute top-5 right-5 text-white bg-red-600 px-6 py-2 rounded-full font-bold z-50">Хаах</button>
-        <div class="relative w-full h-full flex items-center justify-center">
-            <button onclick="changeSlide(-1)" class="absolute left-4 bg-white/20 hover:bg-white/40 text-white w-12 h-12 rounded-full text-2xl z-50">‹</button>
-            <img id="modalImg" src="" class="max-w-[90%] max-h-[80vh] object-contain rounded-lg shadow-2xl">
-            <button onclick="changeSlide(1)" class="absolute right-4 bg-white/20 hover:bg-white/40 text-white w-12 h-12 rounded-full text-2xl z-50">›</button>
-        </div>
-        <div id="imageCounter" class="mb-10 text-white font-bold bg-white/10 px-6 py-2 rounded-full text-sm">1 / 1</div>
     </div>
 
     <div id="paymentModal" class="modal" onclick="if(event.target==this) closePayment()">
@@ -176,21 +110,16 @@
 
 <script>
     const orderURL = 'https://script.google.com/macros/s/AKfycbw-4l3RN9-KTzCOJc4ZswFgnQ5DCEO9mY9gobI8W1IGXtUp_LgTL77Zc3oaCp0up7xZVw/exec';
-    const RENDER_API_URL = 'https://sonirholtoi-hel-bichig.onrender.com/chat';
-    
     let currentUserEmail = "";
-    let cart = [];
     let productsData = [];
-    let currentAlbum = [];
-    let currentIndex = 0;
-    let currentProductTitle = "";
+    let cart = [];
+    const mongolNums = { '1': '᠑', '2': '᠒', '3': '᠓', '4': '᠔', '5': '᠕', '6': '᠖', '7': '᠗', '8': '᠘', '9': '᠙' };
 
     async function handleLogin() {
         const email = document.getElementById('loginEmail').value.trim();
         if(!email) return alert("Мэйл хаягаа оруулна уу!");
         const btn = document.getElementById('loginBtn');
         btn.innerText = "Уншиж байна..."; btn.disabled = true;
-
         try {
             const res = await fetch(`${orderURL}?action=check&email=${encodeURIComponent(email)}`);
             const data = await res.json();
@@ -208,245 +137,101 @@
         try {
             const res = await fetch(`${orderURL}?action=getProducts`);
             productsData = await res.json();
-            const renderHtml = (p) => `
+            const html = productsData.map(p => `
                 <div class="bg-white p-4 rounded-[2rem] shadow-md border border-orange-50 flex flex-col">
-                    <img src="https://raw.githubusercontent.com/tuult764-crypto/sonirholtoi-hel-bichig-/main/${p.Images.split(',')[0].trim()}" onclick="viewImage('${p.Images}')" class="w-full h-40 object-cover rounded-xl mb-3 cursor-pointer">
-                    <h3 class="font-black text-[10px] text-orange-900 mb-1 h-8 overflow-hidden uppercase italic">${p.Title}</h3>
+                    <img src="https://raw.githubusercontent.com/tuult764-crypto/sonirholtoi-hel-bichig-/main/${p.Images.split(',')[0].trim()}" class="w-full h-32 object-cover rounded-xl mb-3">
+                    <h3 class="font-black text-[10px] text-orange-900 mb-1 uppercase italic">${p.Title}</h3>
                     <p class="font-bold text-orange-600 text-xs mb-3">${Number(p.Price).toLocaleString()}₮</p>
-                    <div class="grid grid-cols-1 gap-2">
-                        <button onclick="viewImage('${p.Images}')" class="text-[9px] bg-gray-100 py-2 rounded-lg font-black uppercase italic">👁 Харах</button>
-                        <button onclick="addToCart('${p.Title}')" class="text-[9px] bg-orange-100 text-orange-800 py-2 rounded-lg font-black uppercase italic">🛒 Сагслах</button>
-                        <button onclick="openPayment('${p.Title}')" class="text-[9px] bg-orange-800 text-white py-2 rounded-lg font-black uppercase italic shadow-sm">💳 Худалдан авах</button>
-                    </div>
-                </div>`;
-            const html = productsData.map(renderHtml).join('');
+                    <button onclick="openPayment('${p.Title}')" class="bg-orange-800 text-white py-2 rounded-lg font-black uppercase italic text-[9px]">💳 Худалдан авах</button>
+                </div>
+            `).join('');
             document.getElementById('materialGrid').innerHTML = html;
             document.getElementById('fullShopGrid').innerHTML = html;
         } catch (e) { console.error(e); }
     }
-    
-async function loadLibrary() {
-    const grid = document.getElementById('libraryGrid');
-    grid.innerHTML = "<p class='text-gray-500 text-xs text-center py-10'>Уншиж байна...</p>";
-    try {
-        const res = await fetch(`${orderURL}?action=getLibrary&email=${encodeURIComponent(currentUserEmail)}`);
-        const purchasedItems = await res.json();
+
+    function showSection(name) {
+        document.getElementById('dashboardHome').classList.add('hidden');
+        document.querySelectorAll('.section-content').forEach(s => s.classList.remove('active'));
+        const target = document.getElementById(name + 'Section');
+        if(target) target.classList.add('active');
         
-        if (!purchasedItems || purchasedItems.length === 0) {
-            grid.innerHTML = "<p class='text-gray-400 text-xs text-center py-10 uppercase font-black italic'>📂 Төлбөр баталгаажсан материал алга байна.</p>";
-            return;
-        }
-
-        grid.innerHTML = purchasedItems.map(p => `
-            <div class="bg-white p-5 rounded-[2.5rem] shadow-xl border border-green-100 flex flex-col transition-all hover:-translate-y-1">
-                <img src="https://raw.githubusercontent.com/tuult764-crypto/sonirholtoi-hel-bichig-/main/${p.Images.split(',')[0].trim()}" 
-                     class="w-full h-32 object-cover rounded-2xl mb-4 opacity-90 shadow-inner">
-                
-                <h3 class="font-black text-[11px] text-green-900 mb-4 uppercase italic leading-tight h-8 overflow-hidden">${p.Title}</h3>
-                
-                <div class="flex flex-col gap-2">
-                    <a href="${p.Link}" target="_blank" 
-                       class="w-full bg-green-700 text-white py-3 rounded-xl font-black uppercase italic text-[10px] shadow-lg flex items-center justify-center gap-2 hover:bg-green-800">
-                        👁️ Үзэх / Хэвлэх
-                    </a>
-                    
-                    <a href="${p.Link}" download="${p.Title}.pdf" target="_blank"
-                       class="w-full bg-white border-2 border-green-700 text-green-700 py-3 rounded-xl font-black uppercase italic text-[10px] flex items-center justify-center gap-2 hover:bg-green-50 transition-colors">
-                        📥 Файл татах
-                    </a>
-                </div>
-            </div>
-        `).join('');
-    } catch (e) { 
-        console.error(e);
-        grid.innerHTML = "<p class='text-red-500 text-xs text-center py-10 font-black'>⚠️ Мэдээлэл уншихад алдаа гарлаа.</p>"; 
-    }
-}
-
-    function openPayment(title) {
-        currentProductTitle = title;
-        document.getElementById('paymentNote').innerText = currentUserEmail;
-        document.getElementById('paymentModal').classList.add('active');
+        if(name === 'games') initSudoku();
+        if(name === 'library') loadLibrary();
+        if(name === 'shop') loadProducts();
     }
 
-    function closePayment() { document.getElementById('paymentModal').classList.remove('active'); }
-
-    async function confirmOrder() {
-        const btn = document.getElementById('confirmBtn');
-        btn.innerText = "Илгээж байна..."; btn.disabled = true;
-        try {
-            let items = currentProductTitle === 'Сагс' ? cart.map(i => i.Title) : [currentProductTitle];
-            for (const title of items) {
-                await fetch(`${orderURL}?action=addOrder&email=${encodeURIComponent(currentUserEmail)}&title=${encodeURIComponent(title)}`);
-            }
-            alert("Хүсэлт илгээгдлээ.");
-            cart = []; updateCart(); closePayment();
-        } catch (e) { alert("Алдаа гарлаа."); }
-        finally { btn.innerText = "Төлсөн, хүсэлт илгээх"; btn.disabled = false; }
-    }
-
-    function addToCart(title) {
-        const prod = productsData.find(p => p.Title === title);
-        cart.push(prod); updateCart(); alert("Сагслагдлаа!");
-    }
-
-    function updateCart() {
-        document.getElementById('cartCount').innerText = cart.length;
-        const total = cart.reduce((sum, p) => sum + Number(p.Price), 0);
-        document.getElementById('cartItems').innerHTML = cart.map((p, idx) => `
-            <div class="flex justify-between items-center bg-white p-4 rounded-xl border">
-                <span class="text-[10px] font-black italic uppercase">${p.Title}</span>
-                <button onclick="cart.splice(${idx},1); updateCart();" class="text-red-500">❌</button>
-            </div>`).join('');
-        document.getElementById('cartTotal').innerText = `Нийт: ${total.toLocaleString()}₮`;
-        document.getElementById('cartPayBtn').classList.toggle('hidden', cart.length === 0);
-    }
-
-function showSection(name) {
-    // 1. Үндсэн нүүрийг нуух
-    document.getElementById('dashboardHome').classList.add('hidden');
-    
-    // 2. Бүх хэсгийг (.section-content) нуух
-    document.querySelectorAll('.section-content').forEach(s => {
-        s.classList.remove('active');
-    });
-
-    // 3. Зөвхөн сонгосон хэсгийг харуулах
-    const target = document.getElementById(name + 'Section');
-    if(target) {
-        target.classList.add('active');
-    }
-    
-    // 4. Хэрэв Судоку бол тоглоомыг ажиллуулна
-    if(name === 'games') {
-        initSudoku();
-    }
-}
-    // 3. Зөвхөн сонгосон хэсгийг гаргаж ирэх
-    const target = document.getElementById(name + 'Section');
-    if(target) {
-        target.classList.add('active');
-    }
-    
-    // 4. Нэмэлт функцүүдийг ажиллуулах
-    if(name === 'library') loadLibrary();
-    if(name === 'games') initSudoku(); // Судоку руу орох үед тоглоомыг эхлүүлнэ
-}
-
-// Мөн хуудас ачаалагдахад (DOMContentLoaded) Судокуг шууд ажиллуулах шаардлагагүй болсон тул 
-// доорх мөрийг JavaScript-ийнхөө хамгийн доороос устгаж болно:
-// document.addEventListener('DOMContentLoaded', initSudoku);
     function showDashboard() {
         document.getElementById('dashboardHome').classList.remove('hidden');
         document.querySelectorAll('.section-content').forEach(s => s.classList.remove('active'));
     }
 
-    function viewImage(imgString) {
-        currentAlbum = imgString.split(',').map(i => i.trim());
-        currentIndex = 0;
-        document.getElementById('imageModal').style.display = 'flex';
-        updateGalleryStatus();
-    }
-
-    function updateGalleryStatus() {
-        document.getElementById('modalImg').src = `https://raw.githubusercontent.com/tuult764-crypto/sonirholtoi-hel-bichig-/main/${currentAlbum[currentIndex]}`;
-        document.getElementById('imageCounter').innerText = `${currentIndex + 1} / ${currentAlbum.length}`;
-    }
-
-    function changeSlide(n) {
-        currentIndex = (currentIndex + n + currentAlbum.length) % currentAlbum.length;
-        updateGalleryStatus();
-    }
-
-const mongolNums = { 
-    '1': '᠑', '2': '᠒', '3': '᠓', '4': '᠔', '5': '᠕', 
-    '6': '᠖', '7': '᠗', '8': '᠘', '9': '᠙' 
-};
-
-function initSudoku() {
-    const container = document.getElementById('sudokuContainer');
-    if(!container) return;
-    container.innerHTML = ''; // Хуучин хүснэгтийг цэвэрлэх
-    
-    // 1. СТАНДАРТ ЗӨВ СУДОКУГИЙН СУУРЬ (Энэ загвар хэзээ ч давхардахгүй)
-    let board = [
-        [1, 2, 3, 4, 5, 6, 7, 8, 9],
-        [4, 5, 6, 7, 8, 9, 1, 2, 3],
-        [7, 8, 9, 1, 2, 3, 4, 5, 6],
-        [2, 3, 1, 5, 6, 4, 8, 9, 7],
-        [5, 6, 4, 8, 9, 7, 2, 3, 1],
-        [8, 9, 7, 2, 3, 1, 5, 6, 4],
-        [3, 1, 2, 6, 4, 5, 9, 7, 8],
-        [6, 4, 5, 9, 7, 8, 3, 1, 2],
-        [9, 7, 8, 3, 1, 2, 6, 4, 5]
-    ];
-
-    // 2. ДҮРМИЙН ДАГУУ ХОЛИХ (SHUFFLE)
-    // Зөвхөн 3x3 блок доторх мөрүүдийг хооронд нь солих нь дүрмийг эвддэггүй
-    for (let i = 0; i < 15; i++) {
-        let block = Math.floor(Math.random() * 3) * 3; // 0, 3, эсвэл 6-р мөрийг сонгоно
-        let r1 = block + Math.floor(Math.random() * 3);
-        let r2 = block + Math.floor(Math.random() * 3);
-        // Мөрүүдийг солих
-        [board[r1], board[r2]] = [board[r2], board[r1]];
-    }
-
-    // 3. ХҮСНЭГТИЙГ ДЭЛГЭЦЭНД ЗУРАХ
-    board.flat().forEach((val) => {
-        // initSudoku функц дотор cell үүсгэж байгаа хэсэгт:
-const cell = document.createElement('input');
-cell.type = 'text';
-cell.inputMode = 'numeric'; // Тоон гар гаргана
-        cell.maxLength = 1;
-        cell.className = 'sudoku-cell';
-        
-        // Санамсаргүйгээр зарим нүдийг харуулна (Монгол тоогоор)
-        // 0.65-ыг ихэсгэвэл тоглоом хялбар болно (олон тоо гарч ирнэ)
-        if (Math.random() > 0.65) { 
-            cell.value = mongolNums[val];
-            cell.readOnly = true;
-            cell.classList.add('cell-fixed');
-        } else {
-            cell.classList.add('cell-user');
-            cell.oninput = function() {
-                // Хэрэглэгч латин тоо бичихэд шууд Монгол тоо болгох
-                if (mongolNums[this.value]) {
-                    this.value = mongolNums[this.value];
-                } else if (!Object.values(mongolNums).includes(this.value)) {
-                    this.value = ''; // Буруу тэмдэгт бичвэл устгах
-                }
-            };
+    // СУДОКУ ЛОГИК
+    function initSudoku() {
+        const container = document.getElementById('sudokuContainer');
+        container.innerHTML = '';
+        let board = [
+            [1,2,3,4,5,6,7,8,9],[4,5,6,7,8,9,1,2,3],[7,8,9,1,2,3,4,5,6],
+            [2,3,1,5,6,4,8,9,7],[5,6,4,8,9,7,2,3,1],[8,9,7,2,3,1,5,6,4],
+            [3,1,2,6,4,5,9,7,8],[6,4,5,9,7,8,3,1,2],[9,7,8,3,1,2,6,4,5]
+        ];
+        // Холих
+        for (let i = 0; i < 10; i++) {
+            let b = Math.floor(Math.random()*3)*3;
+            let r1 = b + Math.floor(Math.random()*3), r2 = b + Math.floor(Math.random()*3);
+            [board[r1], board[r2]] = [board[r2], board[r1]];
         }
-        container.appendChild(cell);
-    });
-}
-
-// Зөв бөглөсөн эсэхийг шалгах функц
-function checkSudoku() {
-    const inputs = document.querySelectorAll('#sudokuBoard input');
-    let isCorrect = true;
-
-    inputs.forEach(input => {
-        const r = input.dataset.row;
-        const c = input.dataset.col;
-        if (parseInt(input.value) !== currentSolution[r][c]) {
-            isCorrect = false;
-            if (!input.readOnly) input.classList.add('border-red-500', 'bg-red-50');
-        } else {
-            if (!input.readOnly) {
-                input.classList.remove('border-red-500', 'bg-red-50');
-                input.classList.add('border-green-500', 'bg-green-50');
+        board.flat().forEach(val => {
+            const cell = document.createElement('input');
+            cell.type = 'text'; cell.maxLength = 1; cell.className = 'sudoku-cell';
+            cell.dataset.answer = mongolNums[val];
+            if (Math.random() > 0.6) {
+                cell.value = mongolNums[val]; cell.readOnly = true; cell.classList.add('cell-fixed');
+            } else {
+                cell.classList.add('cell-user');
+                cell.oninput = function() {
+                    if (mongolNums[this.value]) this.value = mongolNums[this.value];
+                    else if (!Object.values(mongolNums).includes(this.value)) this.value = '';
+                };
             }
-        }
-    });
-
-    if (isCorrect) {
-        alert("Баяр хүргэе! Та зөв бөглөлөө. 🎉");
-    } else {
-        alert("Зарим нүд буруу байна, дахин оролдоод үзээрэй. 💪");
+            container.appendChild(cell);
+        });
     }
-}
-    function generateAI() {}
+
+    function checkSudoku() {
+        const cells = document.querySelectorAll('.sudoku-cell');
+        let correct = true;
+        cells.forEach(c => {
+            if (c.value !== c.dataset.answer) {
+                correct = false;
+                if(!c.readOnly) c.style.backgroundColor = "#fee2e2";
+            } else {
+                if(!c.readOnly) c.style.backgroundColor = "#dcfce7";
+            }
+        });
+        alert(correct ? "Баяр хүргэе! 🎉" : "Зарим нүд буруу байна. 💪");
+    }
+
+    async function loadLibrary() {
+        const grid = document.getElementById('libraryGrid');
+        grid.innerHTML = "Уншиж байна...";
+        try {
+            const res = await fetch(`${orderURL}?action=getLibrary&email=${encodeURIComponent(currentUserEmail)}`);
+            const data = await res.json();
+            grid.innerHTML = data.length ? data.map(p => `
+                <div class="bg-white p-4 rounded-3xl border shadow-sm">
+                    <h3 class="font-black text-[10px] mb-3">${p.Title}</h3>
+                    <a href="${p.Link}" target="_blank" class="block bg-green-700 text-white py-2 rounded-xl text-center text-[10px] font-black italic">📂 ҮЗЭХ</a>
+                </div>
+            `).join('') : "Хоосон байна.";
+        } catch (e) { grid.innerHTML = "Алдаа гарлаа."; }
+    }
+
+    function openPayment(title) {
+        document.getElementById('paymentNote').innerText = currentUserEmail + " | " + title;
+        document.getElementById('paymentModal').classList.add('active');
+    }
+    function closePayment() { document.getElementById('paymentModal').classList.remove('active'); }
 </script>
 </body>
 </html>
