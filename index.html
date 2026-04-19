@@ -165,25 +165,17 @@
     }
 
     // 3. МИНИЙ САН
-    async function loadLibrary() {
-        const grid = document.getElementById('libraryGrid');
-        grid.innerHTML = "<p class='text-gray-500'>Уншиж байна...</p>";
-        try {
-            const res = await fetch(`${orderURL}?action=getLibrary&email=${encodeURIComponent(currentUserEmail)}`);
-            const purchasedItems = await res.json();
-            if (!purchasedItems || purchasedItems.length === 0) {
-                grid.innerHTML = "<p class='text-gray-400'>Төлбөр баталгаажсан материал алга.</p>";
-                return;
-            }
-            grid.innerHTML = purchasedItems.map(p => `
-                <div class="bg-white p-4 rounded-[2rem] shadow-md border border-green-100 flex flex-col">
-                    <img src="https://raw.githubusercontent.com/tuult764-crypto/sonirholtoi-hel-bichig-/main/${p.Images.split(',')[0].trim()}" class="w-full h-32 object-cover rounded-xl mb-3 opacity-80">
-                    <h3 class="font-black text-[10px] text-orange-900 mb-2 uppercase italic">${p.Title}</h3>
-                    <a href="${p.Link}" target="_blank" class="text-center bg-green-700 text-white py-3 rounded-xl font-black uppercase italic text-[10px] shadow-lg">📥 Татах / Үзэх</a>
-                </div>`).join('');
-        } catch (e) { grid.innerHTML = "Алдаа гарлаа."; }
-    }
-
+// loadLibrary функц доторх HTML буцаах хэсэг
+grid.innerHTML = purchasedItems.map(p => `
+    <div class="bg-white p-4 rounded-[2rem] shadow-md border border-green-100 flex flex-col">
+        <img src="https://raw.githubusercontent.com/tuult764-crypto/sonirholtoi-hel-bichig-/main/${p.Images.split(',')[0].trim()}" class="w-full h-32 object-cover rounded-xl mb-3 opacity-80">
+        <h3 class="font-black text-[10px] text-orange-900 mb-2 uppercase italic">${p.Title}</h3>
+        <a href="${p.Link}" target="_blank" rel="noopener noreferrer" class="text-center bg-green-700 text-white py-3 rounded-xl font-black uppercase italic text-[10px] shadow-lg">
+            📥 Файл үзэх / Татах
+        </a>
+    </div>
+`).join('');
+    
     // 4. ТӨЛБӨР БА ЗАХИАЛГА
     function openPayment(title) {
         currentProductTitle = title;
@@ -240,9 +232,14 @@
         if(name === 'games') initSudoku();
     }
     
-    function showDashboard() {
-        document.getElementById('dashboardHome').classList.remove('hidden');
-        document.querySelectorAll('.section-content').forEach(s => s.classList.remove('active'));
+  function showDashboard() {
+    // Бүх section-ийг нуугаад зөвхөн dashboard-ыг ил гаргана
+    document.getElementById('dashboardHome').classList.remove('hidden');
+    document.querySelectorAll('.section-content').forEach(s => s.classList.remove('active'));
+    // Нэвтрэх хэсгийг хаалттай хэвээр үлдээнэ
+    document.getElementById('authScreen').classList.add('hidden');
+    document.getElementById('mainSystem').classList.remove('hidden');
+}
     }
 
     // GALLERY & OTHERS
