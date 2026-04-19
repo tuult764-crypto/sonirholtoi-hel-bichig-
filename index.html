@@ -118,13 +118,14 @@
             <button onclick="openPayment('Сагс')" id="cartPayBtn" class="hidden w-full bg-orange-800 text-white py-4 rounded-2xl font-black mt-6 shadow-xl uppercase italic">Худалдан авах</button>
         </div>
 
-     <div id="sudokuSection" class="py-10">
+<div id="gamesSection" class="section-content container mx-auto px-4 py-8">
+    <button onclick="showDashboard()" class="text-orange-800 font-bold mb-6 uppercase text-xs">← Буцах</button>
+    
     <h2 class="text-center text-2xl font-black text-green-900 mb-6 italic uppercase">
         🇲🇳 Монгол бичиг судоку
     </h2>
 
-    <div id="sudokuContainer">
-        </div>
+    <div id="sudokuContainer"></div>
 
     <div class="text-center mt-6">
         <button onclick="initSudoku()" 
@@ -133,6 +134,11 @@
         </button>
     </div>
 </div>
+
+<div id="examSection" class="section-content container mx-auto px-4 py-8">
+    <button onclick="showDashboard()" class="text-orange-800 font-bold mb-6 uppercase text-xs">← Буцах</button>
+    <h2 class="text-xl font-black text-blue-900 mb-6 uppercase italic text-center">Шалгалт</h2>
+    </div>
 
         <div id="plannerSection" class="section-content container mx-auto max-w-2xl p-4">
             <button onclick="showDashboard()" class="text-orange-800 font-bold mb-4 text-xs uppercase">← Буцах</button>
@@ -296,14 +302,29 @@ async function loadLibrary() {
         document.getElementById('cartPayBtn').classList.toggle('hidden', cart.length === 0);
     }
 
-    function showSection(name) {
-        document.getElementById('dashboardHome').classList.add('hidden');
-        document.querySelectorAll('.section-content').forEach(s => s.classList.remove('active'));
-        const target = document.getElementById(name + 'Section');
-        if(target) target.classList.add('active');
-        if(name === 'library') loadLibrary();
-    }
+function showSection(name) {
+    // 1. Үндсэн нүүрийг нуух
+    document.getElementById('dashboardHome').classList.add('hidden');
+    
+    // 2. Бүх хэсгийг (section-content) нуух
+    document.querySelectorAll('.section-content').forEach(s => {
+        s.classList.remove('active');
+    });
 
+    // 3. Зөвхөн сонгосон хэсгийг гаргаж ирэх
+    const target = document.getElementById(name + 'Section');
+    if(target) {
+        target.classList.add('active');
+    }
+    
+    // 4. Нэмэлт функцүүдийг ажиллуулах
+    if(name === 'library') loadLibrary();
+    if(name === 'games') initSudoku(); // Судоку руу орох үед тоглоомыг эхлүүлнэ
+}
+
+// Мөн хуудас ачаалагдахад (DOMContentLoaded) Судокуг шууд ажиллуулах шаардлагагүй болсон тул 
+// доорх мөрийг JavaScript-ийнхөө хамгийн доороос устгаж болно:
+// document.addEventListener('DOMContentLoaded', initSudoku);
     function showDashboard() {
         document.getElementById('dashboardHome').classList.remove('hidden');
         document.querySelectorAll('.section-content').forEach(s => s.classList.remove('active'));
@@ -363,6 +384,10 @@ function initSudoku() {
     board.flat().forEach((val) => {
         const cell = document.createElement('input');
         cell.type = 'text';
+        // initSudoku функц дотор cell үүсгэж байгаа хэсэгт:
+const cell = document.createElement('input');
+cell.type = 'text';
+cell.inputMode = 'numeric'; // Тоон гар гаргана
         cell.maxLength = 1;
         cell.className = 'sudoku-cell';
         
