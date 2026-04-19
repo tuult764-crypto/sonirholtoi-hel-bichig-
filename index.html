@@ -142,7 +142,7 @@
         finally { btn.innerText = "Нэвтрэх"; btn.disabled = false; }
     }
 
-    // 2. БАРАА УНШИХ
+// 2. БАРАА УНШИХ
     async function loadProducts() {
         try {
             const res = await fetch(`${orderURL}?action=getProducts`);
@@ -165,16 +165,30 @@
     }
 
     // 3. МИНИЙ САН
-// loadLibrary функц доторх HTML буцаах хэсэг
-grid.innerHTML = purchasedItems.map(p => `
-    <div class="bg-white p-4 rounded-[2rem] shadow-md border border-green-100 flex flex-col">
-        <img src="https://raw.githubusercontent.com/tuult764-crypto/sonirholtoi-hel-bichig-/main/${p.Images.split(',')[0].trim()}" class="w-full h-32 object-cover rounded-xl mb-3 opacity-80">
-        <h3 class="font-black text-[10px] text-orange-900 mb-2 uppercase italic">${p.Title}</h3>
-        <a href="${p.Link}" target="_blank" rel="noopener noreferrer" class="text-center bg-green-700 text-white py-3 rounded-xl font-black uppercase italic text-[10px] shadow-lg">
-            📥 Файл үзэх / Татах
-        </a>
-    </div>
-`).join('');
+    async function loadLibrary() {
+        const grid = document.getElementById('libraryGrid');
+        grid.innerHTML = "<p class='text-gray-500'>Уншиж байна...</p>";
+        try {
+            const res = await fetch(`${orderURL}?action=getLibrary&email=${encodeURIComponent(currentUserEmail)}`);
+            const purchasedItems = await res.json();
+            if (!purchasedItems || purchasedItems.length === 0) {
+                grid.innerHTML = "<p class='text-gray-400 text-xs'>Төлбөр баталгаажсан материал алга байна.</p>";
+                return;
+            }
+            grid.innerHTML = purchasedItems.map(p => `
+                <div class="bg-white p-4 rounded-[2rem] shadow-md border border-green-100 flex flex-col">
+                    <img src="https://raw.githubusercontent.com/tuult764-crypto/sonirholtoi-hel-bichig-/main/${p.Images.split(',')[0].trim()}" class="w-full h-32 object-cover rounded-xl mb-3 opacity-80">
+                    <h3 class="font-black text-[10px] text-orange-900 mb-2 uppercase italic">${p.Title}</h3>
+                    <a href="${p.Link}" target="_blank" rel="noopener noreferrer" class="text-center bg-green-700 text-white py-3 rounded-xl font-black uppercase italic text-[10px] shadow-lg">
+                        📥 Файл үзэх / Татах
+                    </a>
+                </div>
+            `).join('');
+        } catch (e) { 
+            console.error(e);
+            grid.innerHTML = "<p class='text-red-500 text-xs'>Алдаа гарлаа.</p>";
+        }
+    }
     
     // 4. ТӨЛБӨР БА ЗАХИАЛГА
     function openPayment(title) {
@@ -183,7 +197,9 @@ grid.innerHTML = purchasedItems.map(p => `
         document.getElementById('paymentModal').classList.add('active');
     }
 
-    function closePayment() { document.getElementById('paymentModal').classList.remove('active'); }
+    function closePayment() { 
+        document.getElementById('paymentModal').classList.remove('active'); 
+    }
 
     async function confirmOrder() {
         const btn = document.getElementById('confirmBtn');
@@ -200,8 +216,11 @@ grid.innerHTML = purchasedItems.map(p => `
 
             alert("Хүсэлт илгээгдлээ. Төлбөр шалгагдсаны дараа 'Миний сан' хэсэгт файл нээгдэнэ.");
             cart = []; updateCart(); closePayment();
-        } catch (e) { alert("Алдаа: " + e.message); }
-        finally { btn.innerText = "Төлсөн, хүсэлт илгээх"; btn.disabled = false; }
+        } catch (e) { 
+            alert("Алдаа: " + e.message); 
+        } finally { 
+            btn.innerText = "Төлсөн, хүсэлт илгээх"; btn.disabled = false; 
+        }
     }
 
     // САГСНЫ ФУНКЦҮҮД
@@ -229,19 +248,15 @@ grid.innerHTML = purchasedItems.map(p => `
         const target = document.getElementById(name + 'Section');
         if(target) target.classList.add('active');
         if(name === 'library') loadLibrary();
-        if(name === 'games') initSudoku();
+        if(name === 'games') typeof initSudoku === 'function' && initSudoku();
     }
     
-  function showDashboard() {
-    // Бүх section-ийг нуугаад зөвхөн dashboard-ыг ил гаргана
-    document.getElementById('dashboardHome').classList.remove('hidden');
-    document.querySelectorAll('.section-content').forEach(s => s.classList.remove('active'));
-    // Нэвтрэх хэсгийг хаалттай хэвээр үлдээнэ
-    document.getElementById('authScreen').classList.add('hidden');
-    document.getElementById('mainSystem').classList.remove('hidden');
-}
+    function showDashboard() {
+        document.getElementById('dashboardHome').classList.remove('hidden');
+        document.querySelectorAll('.section-content').forEach(s => s.classList.remove('active'));
+        document.getElementById('authScreen').classList.add('hidden');
+        document.getElementById('mainSystem').classList.remove('hidden');
     }
-
     // GALLERY & OTHERS
     function viewImage(imgString) {
         currentAlbum = imgString.split(',').map(i => i.trim());
