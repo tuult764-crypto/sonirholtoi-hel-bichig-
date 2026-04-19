@@ -296,17 +296,41 @@ async function confirmOrder() {
     btn.disabled = true;
 
     try {
-        // 1. Хэрэв сагсанд бараа байвал бүгдийг нь авна, байхгүй бол ганц барааг авна
-        let itemsToOrder = [];
-        
-        if (cart.length > 0) {
-            // Сагсан дахь бүх барааны нэрийг жагсаалт болгож авна
-            itemsToOrder = cart.map(item => item.Title);
-        } else {
-            // Сагс хоосон бол одоо нээлттэй байгаа ганц барааг авна
-            itemsToOrder = [currentProductTitle];
+        // 1. Сагсанд бараа байгаа эсэхийг шалгах
+        if (cart.length === 0) {
+            alert("Сагс хоосон байна!");
+            return;
         }
 
+        // 2. Сагсан дахь БАРАА БҮРЭЭР давталт хийж хүсэлт илгээнэ
+        for (const item of cart) {
+            // item.Title нь Sheets-ийн Product Name (C багана) руу орно
+            // currentUserEmail нь Sheets-ийн Email (B багана) руу орно
+            const url = `${orderURL}?action=addOrder&email=${encodeURIComponent(currentUserEmail)}&title=${encodeURIComponent(item.Title)}`;
+            
+            const res = await fetch(url);
+            const data = await res.json();
+            
+            if (data.status !== "success") {
+                throw new Error(`${item.Title} бүртгэхэд алдаа гарлаа.`);
+            }
+        }
+
+        alert("Баярлалаа! Таны хүсэлт илгээгдлээ. Төлбөр шалгагдсаны дараа 'Миний сан' хэсэгт нээгдэнэ.");
+        
+        // Сагсыг хоослох болон модалыг хаах
+        cart = [];
+        updateCart();
+        closePayment();
+
+    } catch (e) {
+        console.error("Order Error:", e);
+        alert("Алдаа гарлаа: " + e.message);
+    } finally {
+        btn.innerText = "Төлсөн, хүсэлт илгээх"; 
+        btn.disabled = false;
+    }
+}
         // 2. Бараа бүрээр Sheets рүү тус тусад нь хүсэлт илгээнэ
         for (const title of itemsToOrder) {
             const url = `${orderURL}?action=addOrder&email=${encodeURIComponent(currentUserEmail)}&title=${encodeURIComponent(title)}`;
