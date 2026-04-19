@@ -24,52 +24,46 @@
 #sudokuContainer {
     display: grid;
     grid-template-columns: repeat(9, 1fr);
-    gap: 1px; /* Зааг зураас */
     max-width: 360px;
     margin: 20px auto;
-    background-color: #333; /* Хүрээний өнгө */
-    border: 3px solid #333;
-    padding: 2px;
+    background-color: #000; /* Зузаан хүрээний өнгө */
+    border: 4px solid #000;
+    gap: 1px; /* Нарийн зураас */
 }
 
 .sudoku-cell {
     width: 100%;
     aspect-ratio: 1 / 1;
     text-align: center;
-    font-size: 1.2rem;
-    border: 1px solid #ddd;
+    font-size: 1.5rem; /* Монгол тоо том харагдах ёстой */
+    border: 1px solid #ccc;
     outline: none;
     padding: 0;
 }
 
-/* 3x3 Блокыг зааглах зузаан зурааснууд */
+/* 3x3 Блокыг ялгахын тулд 3 дахь нүд бүрийн баруун талыг зузаална */
 .sudoku-cell:nth-child(3n) {
-    border-right: 3px solid #333; /* Багана тусгаарлах */
+    border-right: 3px solid #000;
 }
 .sudoku-cell:nth-child(9n) {
-    border-right: none; /* Хамгийн сүүлийн баганыг зузаан болгохгүй */
+    border-right: none;
 }
 
-/* Мөр тусгаарлах зузаан зураас (19-27, 46-54 нүдний дараа) */
+/* 3x3 Блокыг ялгахын тулд 3 дахь мөр бүрийн доод талыг зузаална */
 .sudoku-cell:nth-child(n+19):nth-child(-n+27),
 .sudoku-cell:nth-child(n+46):nth-child(-n+54) {
-    border-bottom: 3px solid #333;
+    border-bottom: 3px solid #000;
 }
 
 .cell-fixed {
-    background-color: #f8f9fa;
-    color: #1a1a1a;
-    font-weight: 800;
-}
-
-.cell-user {
-    background-color: #ffffff;
-    color: #2563eb;
+    background-color: #e2e8f0; /* Өгөгдсөн тооны арын өнгө */
+    color: #1a202c;
     font-weight: bold;
 }
 
-.cell-user:focus {
-    background-color: #fff7ed; /* Нүдэн дээр дарахад өнгө солигдох */
+.cell-user {
+    background-color: #fff;
+    color: #059669; /* Хэрэглэгчийн бичих тоо ногооноор гарна */
 }
 </style>
 </head>
@@ -124,21 +118,18 @@
             <button onclick="openPayment('Сагс')" id="cartPayBtn" class="hidden w-full bg-orange-800 text-white py-4 rounded-2xl font-black mt-6 shadow-xl uppercase italic">Худалдан авах</button>
         </div>
 
-       <div id="sudokuSection" class="text-center py-10 bg-white rounded-[3rem] shadow-2xl border-b-8 border-blue-200 my-10 px-4">
-    <h2 class="text-2xl font-black text-blue-600 mb-2 italic uppercase">🔢 ТООН СУДОКУ</h2>
-    <p class="text-[11px] font-bold text-gray-400 mb-6 uppercase italic">1-ээс 4 хүртэлх тоог давхардуулахгүй бичээрэй</p>
+     <div id="sudokuSection" class="py-10">
+    <h2 class="text-center text-2xl font-black text-green-900 mb-6 italic uppercase">
+        🇲🇳 Монгол бичиг судоку
+    </h2>
 
-    <div id="sudokuBoard" class="mb-8"></div>
+    <div id="sudokuContainer">
+        </div>
 
-    <div class="flex flex-col gap-3 max-w-[280px] mx-auto">
-        <button onclick="checkSudoku()" 
-                class="bg-green-500 text-white py-4 rounded-2xl font-black uppercase italic shadow-lg hover:bg-green-600 active:scale-95 transition-all">
-            ✅ Шалгах
-        </button>
-        
-        <button onclick="generateNumberSudoku()" 
-                class="bg-blue-600 text-white py-4 rounded-2xl font-black uppercase italic shadow-lg hover:bg-blue-700 active:scale-95 transition-all">
-            🔄 Шинэ тоглоом
+    <div class="text-center mt-6">
+        <button onclick="initSudoku()" 
+                class="bg-green-700 text-white px-8 py-3 rounded-full font-black uppercase italic shadow-lg hover:bg-green-800 active:scale-95 transition-all">
+            🔄 Шинэ судоку үүсгэх
         </button>
     </div>
 </div>
@@ -335,49 +326,54 @@ async function loadLibrary() {
         updateGalleryStatus();
     }
 
-function generateNumberSudoku() {
-    const container = document.getElementById('sudokuBoard');
-    container.innerHTML = '';
-    // 4x4 хүснэгтийн загвар
-    container.className = "grid grid-cols-4 gap-2 max-w-[280px] mx-auto bg-blue-50 p-3 rounded-2xl shadow-lg border-4 border-blue-200";
+const mongolNums = { '1': '᠑', '2': '᠒', '3': '᠓', '4': '᠔', '5': '᠕', '6': '᠖', '7': '᠗', '8': '᠘', '9': '᠙' };
 
-    // Үндсэн 4x4 судокугийн суурь (Зөв бөглөгдсөн хувилбар)
-    let board = [
-        [1, 2, 3, 4],
-        [3, 4, 1, 2],
-        [2, 3, 4, 1],
-        [4, 1, 2, 3]
+function initSudoku() {
+    const container = document.getElementById('sudokuContainer');
+    if(!container) return;
+    container.innerHTML = '';
+    
+    // Суурь судоку (санамсаргүй холих боломжтой)
+    const baseBoard = [
+        [5,3,4,6,7,8,9,1,2],
+        [6,7,2,1,9,5,3,4,8],
+        [1,9,8,3,4,2,5,6,7],
+        [8,5,9,7,6,1,4,2,3],
+        [4,2,6,8,5,3,7,9,1],
+        [7,1,3,9,2,4,8,5,6],
+        [9,6,1,5,3,7,2,8,4],
+        [2,8,7,4,1,9,6,3,5],
+        [3,4,5,2,8,6,1,7,9]
     ];
 
-    // Мөр болон баганыг санамсаргүйгээр холих
-    for (let i = 0; i < 10; i++) {
-        if (Math.random() > 0.5) [board[0], board[1]] = [board[1], board[0]];
-        if (Math.random() > 0.5) [board[2], board[3]] = [board[3], board[2]];
-    }
-    currentSolution = board.map(row => [...row]);
+    // Холих (мөрүүдийг санамсаргүй солих)
+    baseBoard.sort(() => Math.random() - 0.5);
 
-    // Дэлгэцэнд зурах
-    for (let r = 0; r < 4; r++) {
-        for (let c = 0; c < 4; c++) {
-            const input = document.createElement('input');
-            input.type = 'number';
-            input.dataset.row = r;
-            input.dataset.col = c;
-            
-            // Санамсаргүйгээр зарим тоог харуулах (40% магадлалтай)
-            if (Math.random() > 0.5) {
-                input.value = board[r][c];
-                input.readOnly = true;
-                input.className = "w-14 h-14 text-center font-black text-xl bg-blue-500 text-white rounded-xl shadow-inner cursor-not-allowed";
-            } else {
-                input.className = "w-14 h-14 text-center font-black text-xl bg-white text-blue-900 rounded-xl border-2 border-blue-200 outline-none focus:border-orange-400 transition-all";
-                input.oninput = function() { if(this.value > 4) this.value = ''; }; // 4-өөс их тоо бичүүлэхгүй
-            }
-            container.appendChild(input);
+    baseBoard.flat().forEach((val, idx) => {
+        const cell = document.createElement('input');
+        cell.type = 'text';
+        cell.maxLength = 1;
+        cell.className = 'sudoku-cell';
+        
+        // Санамсаргүйгээр зарим нүдийг харуулна (Монгол тоогоор)
+        if (Math.random() > 0.6) { 
+            cell.value = mongolNums[val];
+            cell.readOnly = true;
+            cell.classList.add('cell-fixed');
+        } else {
+            cell.classList.add('cell-user');
+            cell.oninput = function() {
+                // Хэрэглэгч 1-9 тоо бичихэд шууд Монгол тоо болгоно
+                if (mongolNums[this.value]) {
+                    this.value = mongolNums[this.value];
+                } else if (!Object.values(mongolNums).includes(this.value)) {
+                    this.value = '';
+                }
+            };
         }
-    }
+        container.appendChild(cell);
+    });
 }
-
 // Зөв бөглөсөн эсэхийг шалгах функц
 function checkSudoku() {
     const inputs = document.querySelectorAll('#sudokuBoard input');
