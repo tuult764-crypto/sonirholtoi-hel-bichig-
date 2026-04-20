@@ -13,46 +13,84 @@
         .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.8); align-items: center; justify-content: center; z-index: 1000; padding: 20px; }
         .modal.active { display: flex; }
 
-        /* СУДОКУ */
-        #sudokuContainer {
+        /* ===== СУДОКУ ===== */
+        .sudoku-grid {
             display: grid;
             grid-template-columns: repeat(9, 1fr);
+            border: 3px solid #1a1a1a;
+            width: 100%;
             max-width: 360px;
-            margin: 20px auto;
-            background-color: #000;
-            border: 4px solid #000;
-            gap: 1px;
+            margin: 0 auto;
         }
         .sudoku-cell {
-            width: 100%; aspect-ratio: 1/1; text-align: center;
-            font-size: 1.1rem; border: 1px solid #ccc;
-            outline: none; padding: 0; background-color: #fff;
+            width: 100%;
+            aspect-ratio: 1/1;
+            text-align: center;
+            font-size: 1rem;
+            font-weight: 700;
+            border: 1px solid #bbb;
+            outline: none;
+            padding: 0;
+            background-color: #fff;
+            cursor: text;
+            -webkit-user-select: text;
+            user-select: text;
         }
-        .sudoku-cell:nth-child(3n) { border-right: 3px solid #000; }
-        .sudoku-cell:nth-child(9n) { border-right: none; }
-        .sudoku-cell:nth-child(n+19):nth-child(-n+27),
-        .sudoku-cell:nth-child(n+46):nth-child(-n+54) { border-bottom: 3px solid #000; }
-        .cell-fixed { background-color: #e2e8f0; color: #1a202c; font-weight: bold; }
-        .cell-user { color: #059669; }
+        .sudoku-cell:focus { background-color: #fef9c3; border-color: #f59e0b; z-index: 1; }
+        .sudoku-cell.cell-fixed { background-color: #e2e8f0; color: #1a202c; cursor: default; }
+        .sudoku-cell.cell-user { color: #0ea5e9; }
+        .sudoku-cell.cell-correct { background-color: #dcfce7 !important; color: #15803d !important; }
+        .sudoku-cell.cell-wrong { background-color: #fee2e2 !important; color: #b91c1c !important; }
 
-        /* ШАЛГАЛТ */
+        /* Бокс хилийн зураас - баруун */
+        .sudoku-cell:nth-child(3n) { border-right: 3px solid #1a1a1a; }
+        .sudoku-cell:nth-child(9n) { border-right: none; }
+        /* Бокс хилийн зураас - доод */
+        .sudoku-cell:nth-child(n+19):nth-child(-n+27),
+        .sudoku-cell:nth-child(n+46):nth-child(-n+54) { border-bottom: 3px solid #1a1a1a; }
+
+        /* ===== ШАЛГАЛТ ===== */
         .option-btn { transition: all 0.2s; }
         .option-btn:hover:not(:disabled) { transform: translateX(4px); }
         .option-btn.correct { background-color: #dcfce7 !important; border-color: #16a34a !important; color: #15803d !important; }
         .option-btn.wrong { background-color: #fee2e2 !important; border-color: #dc2626 !important; color: #b91c1c !important; }
-        .option-btn.selected { background-color: #fff7ed; border-color: #ea580c; }
-
-        /* ХӨТӨЛБӨР */
-        .task-item { transition: all 0.2s; }
-        .task-item.done .task-title { text-decoration: line-through; color: #9ca3af; }
         .progress-bar { transition: width 0.5s ease; }
-
-        /* TIMER */
-        @keyframes pulse-red {
-            0%, 100% { color: #dc2626; }
-            50% { color: #fca5a5; }
-        }
+        @keyframes pulse-red { 0%,100%{color:#dc2626}50%{color:#fca5a5} }
         .timer-warning { animation: pulse-red 1s infinite; }
+
+        /* ===== ХЭВЛЭХ ===== */
+        @media print {
+            @page { size: A4; margin: 12mm; }
+            body * { visibility: hidden; }
+            #printArea, #printArea * { visibility: visible; }
+            #printArea {
+                position: fixed; top: 0; left: 0;
+                width: 100%; height: 100%;
+                background: white;
+            }
+        }
+        .print-grid {
+            display: grid;
+            grid-template-columns: repeat(9, 1fr);
+            border: 3px solid #000;
+            width: 100%;
+        }
+        .print-cell {
+            width: 100%;
+            aspect-ratio: 1/1;
+            border: 1px solid #999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+            font-weight: 700;
+        }
+        .print-cell.pfixed { background: #e2e8f0; color: #1a1a1a; }
+        .print-cell.pempty { color: transparent; }
+        .print-cell:nth-child(3n) { border-right: 3px solid #000; }
+        .print-cell:nth-child(9n) { border-right: none; }
+        .print-cell:nth-child(n+19):nth-child(-n+27),
+        .print-cell:nth-child(n+46):nth-child(-n+54) { border-bottom: 3px solid #000; }
     </style>
 </head>
 <body class="min-h-screen pb-20">
@@ -84,8 +122,18 @@
         </div>
         <div class="flex gap-2 items-center">
             <span class="text-[10px] text-gray-400 hidden sm:block" id="navEmail"></span>
-            <button onclick="showSection('library')" class="bg-orange-50 px-3 py-2 rounded-full text-[10px] font-bold text-orange-700 uppercase italic">
+            <button onclick="showSection('library')"
+                    class="bg-orange-50 px-3 py-2 rounded-full text-[10px] font-bold text-orange-700 uppercase italic">
                 Миний сан
+            </button>
+            <!-- Сагс -->
+            <button onclick="openCart()" class="relative bg-orange-100 p-2 rounded-full hover:bg-orange-200 transition-all">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-orange-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                          d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/>
+                </svg>
+                <span id="cartCount"
+                      class="absolute -top-1 -right-1 bg-red-500 text-white text-[8px] font-bold px-1.5 py-0.5 rounded-full hidden">0</span>
             </button>
         </div>
     </nav>
@@ -118,11 +166,9 @@
         <div id="materialGrid" class="grid grid-cols-2 lg:grid-cols-4 gap-6"></div>
     </div>
 
-    <!-- ===== ХӨТӨЛБӨР ХЭСЭГ ===== -->
+    <!-- ===== ХӨТӨЛБӨР ===== -->
     <div id="plannerSection" class="section-content container mx-auto px-4 py-8 max-w-4xl">
         <button onclick="showDashboard()" class="text-orange-800 font-bold mb-6 uppercase text-xs">Back Буцах</button>
-
-        <!-- Товч мэдээлэл -->
         <div class="grid grid-cols-3 gap-3 mb-8">
             <div class="bg-orange-600 text-white p-4 rounded-2xl text-center shadow-md">
                 <div id="plannerTotalTasks" class="text-2xl font-black">0</div>
@@ -137,86 +183,62 @@
                 <div class="text-[10px] uppercase font-bold mt-1">Явц</div>
             </div>
         </div>
-
-        <!-- Явцын мөр -->
         <div class="bg-white rounded-2xl p-4 shadow-sm border mb-8">
             <div class="flex justify-between text-[10px] font-bold text-gray-500 uppercase mb-2">
-                <span>Нийт явц</span>
-                <span id="progressLabel">0 / 0</span>
+                <span>Нийт явц</span><span id="progressLabel">0 / 0</span>
             </div>
             <div class="w-full bg-gray-100 rounded-full h-3">
                 <div id="progressBar" class="progress-bar bg-gradient-to-r from-orange-500 to-orange-300 h-3 rounded-full" style="width:0%"></div>
             </div>
         </div>
-
-        <!-- Хоёр багана -->
         <div class="grid md:grid-cols-2 gap-6">
-
-            <!-- Хичээлийн хөтөлбөр (Sheet-ээс) -->
             <div class="bg-white rounded-3xl p-6 shadow-md border border-orange-50">
                 <div class="flex justify-between items-center mb-4">
                     <h3 class="font-black text-orange-900 uppercase italic text-sm">Хичээлийн хөтөлбөр</h3>
-                    <button onclick="loadPlannerSchedule()" class="bg-orange-100 text-orange-800 px-3 py-1 rounded-full text-[10px] font-bold uppercase">
-                        Шинэчлэх
-                    </button>
+                    <button onclick="loadPlannerSchedule()"
+                            class="bg-orange-100 text-orange-800 px-3 py-1 rounded-full text-[10px] font-bold uppercase">Шинэчлэх</button>
                 </div>
                 <div id="scheduleList" class="space-y-2 max-h-80 overflow-y-auto pr-1">
-                    <div class="text-center text-gray-400 text-xs py-8">
-                        <div class="text-2xl mb-2">...</div>
-                        <div>Уншиж байна...</div>
-                    </div>
+                    <div class="text-center text-gray-400 text-xs py-8">Уншиж байна...</div>
                 </div>
             </div>
-
-            <!-- Хувийн даалгавар -->
             <div class="bg-white rounded-3xl p-6 shadow-md border border-orange-50">
                 <h3 class="font-black text-orange-900 uppercase italic text-sm mb-4">Хувийн даалгавар</h3>
-
-                <!-- Нэмэх форм -->
                 <div class="bg-orange-50 rounded-2xl p-3 mb-4">
                     <input type="text" id="newTaskInput" placeholder="Даалгавар бичих..."
                            class="w-full bg-white border border-orange-100 rounded-xl px-3 py-2 text-xs font-bold outline-none focus:ring-2 ring-orange-200 mb-2"
                            onkeydown="if(event.key==='Enter') addPersonalTask()">
-                    <select id="newTaskPriority" class="w-full bg-white border border-orange-100 rounded-xl px-3 py-2 text-xs font-bold outline-none mb-2">
+                    <select id="newTaskPriority"
+                            class="w-full bg-white border border-orange-100 rounded-xl px-3 py-2 text-xs font-bold outline-none mb-2">
                         <option value="high">Яаралтай</option>
                         <option value="mid" selected>Дунд</option>
                         <option value="low">Энгийн</option>
                     </select>
                     <button onclick="addPersonalTask()"
-                            class="w-full bg-orange-800 text-white py-2 rounded-xl font-black uppercase italic text-[10px]">
-                        + Нэмэх
-                    </button>
+                            class="w-full bg-orange-800 text-white py-2 rounded-xl font-black uppercase italic text-[10px]">+ Нэмэх</button>
                 </div>
-
                 <div id="personalTaskList" class="space-y-2 max-h-64 overflow-y-auto pr-1"></div>
             </div>
         </div>
     </div>
 
-    <!-- ===== ШАЛГАЛТ ХЭСЭГ ===== -->
+    <!-- ===== ШАЛГАЛТ ===== -->
     <div id="examSection" class="section-content container mx-auto px-4 py-8 max-w-2xl">
         <button onclick="showDashboard()" class="text-orange-800 font-bold mb-6 uppercase text-xs">Back Буцах</button>
-
-        <!-- Шалгалт сонгох хэсэг -->
         <div id="examLobby">
             <div class="text-center mb-8">
                 <h2 class="text-2xl font-black text-blue-900 uppercase italic mb-2">Шалгалт</h2>
                 <p class="text-gray-500 text-xs">Шалгалтын сэдвийг сонгоод эхлүүлнэ үү</p>
             </div>
-
             <div id="examTopicList" class="space-y-3 mb-6">
                 <div class="text-center text-gray-400 py-8 text-xs">Уншиж байна...</div>
             </div>
-
             <div id="examHistory" class="mt-8">
                 <h3 class="font-black text-gray-700 uppercase text-[10px] mb-3">Өмнөх үр дүн</h3>
                 <div id="examHistoryList" class="space-y-2"></div>
             </div>
         </div>
-
-        <!-- Шалгалт өгөх хэсэг -->
         <div id="examActive" class="hidden">
-            <!-- Толгой -->
             <div class="bg-white rounded-2xl p-4 shadow-sm border mb-6 flex justify-between items-center">
                 <div>
                     <div class="text-[10px] text-gray-400 font-bold uppercase">Асуулт</div>
@@ -231,40 +253,30 @@
                     <div class="font-black text-green-700 text-sm" id="examScore">0</div>
                 </div>
             </div>
-
-            <!-- Явцын мөр -->
             <div class="w-full bg-gray-100 rounded-full h-2 mb-6">
                 <div id="examProgress" class="bg-blue-500 h-2 rounded-full transition-all duration-500" style="width:0%"></div>
             </div>
-
-            <!-- Асуулт -->
             <div class="bg-white rounded-3xl p-6 shadow-md border mb-4">
-                <div id="examQuestionBadge" class="inline-block bg-blue-100 text-blue-700 text-[10px] font-black uppercase px-3 py-1 rounded-full mb-3"></div>
+                <div id="examQuestionBadge"
+                     class="inline-block bg-blue-100 text-blue-700 text-[10px] font-black uppercase px-3 py-1 rounded-full mb-3"></div>
                 <p class="font-black text-gray-800 text-base leading-relaxed" id="examQuestion"></p>
             </div>
-
-            <!-- Хариулт -->
             <div id="examOptions" class="space-y-3 mb-6"></div>
-
-            <!-- Тайлбар -->
             <div id="examExplanation" class="hidden bg-blue-50 border border-blue-200 rounded-2xl p-4 mb-4">
                 <div class="text-[10px] font-black text-blue-700 uppercase mb-1">Тайлбар</div>
                 <p class="text-xs text-gray-700" id="examExplanationText"></p>
             </div>
-
-            <button onclick="nextQuestion()" id="examNextBtn" class="hidden w-full bg-blue-700 text-white py-4 rounded-2xl font-black uppercase italic text-sm shadow-lg hover:bg-blue-800 transition-all">
+            <button onclick="nextQuestion()" id="examNextBtn"
+                    class="hidden w-full bg-blue-700 text-white py-4 rounded-2xl font-black uppercase italic text-sm shadow-lg hover:bg-blue-800 transition-all">
                 Дараагийн асуулт
             </button>
         </div>
-
-        <!-- Үр дүн -->
         <div id="examResult" class="hidden">
             <div class="bg-white rounded-[2.5rem] p-8 shadow-xl border text-center">
-                <div id="resultEmoji" class="text-5xl mb-4 font-black">+</div>
+                <div id="resultEmoji" class="text-3xl mb-4 font-black text-blue-700">---</div>
                 <h2 class="text-2xl font-black text-blue-900 uppercase italic mb-2">Шалгалт дууслаа</h2>
                 <div class="text-5xl font-black text-blue-600 mb-2" id="resultScore"></div>
                 <div class="text-gray-400 text-xs font-bold mb-6" id="resultDetail"></div>
-
                 <div class="grid grid-cols-3 gap-3 mb-6">
                     <div class="bg-green-50 rounded-2xl p-3">
                         <div class="font-black text-green-700 text-xl" id="resultCorrect">0</div>
@@ -279,9 +291,7 @@
                         <div class="text-[10px] text-gray-500 uppercase font-bold">Цаг (с)</div>
                     </div>
                 </div>
-
                 <div id="resultReview" class="text-left mb-6 space-y-2 max-h-64 overflow-y-auto"></div>
-
                 <div class="flex gap-3">
                     <button onclick="retryExam()"
                             class="flex-1 bg-blue-600 text-white py-3 rounded-2xl font-black uppercase italic text-xs hover:bg-blue-700 transition-all">
@@ -297,13 +307,71 @@
     </div>
 
     <!-- ===== СУДОКУ ===== -->
-    <div id="gamesSection" class="section-content container mx-auto px-4 py-8">
-        <button onclick="showDashboard()" class="text-orange-800 font-bold mb-6 uppercase text-xs">Back Буцах</button>
-        <h2 class="text-center text-2xl font-black text-green-900 mb-6 italic uppercase">Монгол бичиг судоку</h2>
-        <div id="sudokuContainer"></div>
-        <div class="text-center mt-6 flex justify-center gap-4">
-            <button onclick="initSudoku()" class="bg-gray-500 text-white px-6 py-3 rounded-full font-black uppercase italic text-xs shadow-lg hover:bg-gray-600 transition-all">Шинэ</button>
-            <button onclick="checkSudoku()" class="bg-green-700 text-white px-10 py-3 rounded-full font-black uppercase italic text-xs shadow-lg hover:bg-green-800 transition-all">Шалгах</button>
+    <div id="gamesSection" class="section-content container mx-auto px-4 py-8 max-w-xl">
+        <button onclick="showDashboard()" class="text-orange-800 font-bold mb-4 uppercase text-xs">Back Буцах</button>
+
+        <!-- Хэвлэх тоолуур -->
+        <div class="bg-green-50 border border-green-200 rounded-2xl p-4 mb-4 flex items-center justify-between">
+            <div>
+                <div class="font-black text-green-800 text-sm uppercase italic">Хэвлэх хуудас</div>
+                <div class="text-[10px] text-green-600 font-bold mt-0.5">
+                    1-р хуудас <span class="text-green-700 font-black">ҮНЭГҮЙ</span>
+                    &nbsp;|&nbsp; 2+ хуудас <span class="text-orange-700 font-black">400</span>
+                </div>
+            </div>
+            <div class="flex items-center gap-2">
+                <span class="text-[10px] font-black text-gray-500 uppercase">Хуудас:</span>
+                <div id="printPageCount"
+                     class="w-10 text-center font-black text-green-800 bg-white border border-green-300 rounded-xl py-1 text-sm">1</div>
+            </div>
+        </div>
+
+        <h2 class="text-center text-xl font-black text-green-900 mb-4 italic uppercase">Монгол бичиг судоку</h2>
+
+        <!-- Судоку хүснэгт -->
+        <div id="sudokuContainer" class="sudoku-grid"></div>
+
+        <!-- Монгол тоо гарын авлага -->
+        <div class="mt-4 bg-white rounded-2xl p-3 border border-green-100 shadow-sm">
+            <div class="text-[10px] font-black text-gray-400 uppercase mb-2 text-center">
+                Тоо оруулах: 1-9 дарна уу — автоматаар хөрвөнө
+            </div>
+            <div class="grid grid-cols-9 gap-1">
+                <div class="text-center text-[10px] font-bold text-gray-400">1</div>
+                <div class="text-center text-[10px] font-bold text-gray-400">2</div>
+                <div class="text-center text-[10px] font-bold text-gray-400">3</div>
+                <div class="text-center text-[10px] font-bold text-gray-400">4</div>
+                <div class="text-center text-[10px] font-bold text-gray-400">5</div>
+                <div class="text-center text-[10px] font-bold text-gray-400">6</div>
+                <div class="text-center text-[10px] font-bold text-gray-400">7</div>
+                <div class="text-center text-[10px] font-bold text-gray-400">8</div>
+                <div class="text-center text-[10px] font-bold text-gray-400">9</div>
+                <div class="text-center font-bold text-green-700">&#x1811;</div>
+                <div class="text-center font-bold text-green-700">&#x1812;</div>
+                <div class="text-center font-bold text-green-700">&#x1813;</div>
+                <div class="text-center font-bold text-green-700">&#x1814;</div>
+                <div class="text-center font-bold text-green-700">&#x1815;</div>
+                <div class="text-center font-bold text-green-700">&#x1816;</div>
+                <div class="text-center font-bold text-green-700">&#x1817;</div>
+                <div class="text-center font-bold text-green-700">&#x1818;</div>
+                <div class="text-center font-bold text-green-700">&#x1819;</div>
+            </div>
+        </div>
+
+        <!-- Товчлуур -->
+        <div class="mt-4 flex justify-center gap-3 flex-wrap">
+            <button onclick="initSudoku()"
+                    class="bg-gray-500 text-white px-5 py-3 rounded-full font-black uppercase italic text-xs shadow-md hover:bg-gray-600 transition-all">
+                Шинэ
+            </button>
+            <button onclick="checkSudoku()"
+                    class="bg-green-700 text-white px-7 py-3 rounded-full font-black uppercase italic text-xs shadow-md hover:bg-green-800 transition-all">
+                Шалгах
+            </button>
+            <button onclick="showPrintModal()"
+                    class="bg-orange-700 text-white px-5 py-3 rounded-full font-black uppercase italic text-xs shadow-md hover:bg-orange-800 transition-all">
+                Хэвлэх
+            </button>
         </div>
     </div>
 
@@ -322,33 +390,80 @@
 
 </div><!-- /mainSystem -->
 
+<!-- ===== ХЭВЛЭХ MODAL ===== -->
+<div id="printModal" class="modal" onclick="if(event.target===this) closePrintModal()">
+    <div class="bg-white rounded-[2rem] max-w-sm w-full p-6 shadow-2xl border-4 border-green-100">
+        <h2 class="text-lg font-black text-green-900 uppercase italic mb-4 text-center">Судоку хэвлэх</h2>
+
+        <div class="bg-green-50 rounded-2xl p-4 mb-4 text-center border border-green-200">
+            <div class="text-3xl font-black text-green-800" id="modalPageCount">1</div>
+            <div class="text-[10px] font-bold text-green-600 uppercase mt-1">хуудас (4 судоку / хуудас)</div>
+        </div>
+
+        <div class="flex items-center justify-center gap-4 mb-4">
+            <button onclick="adjustPrintPages(-1)"
+                    class="w-10 h-10 bg-gray-100 rounded-full font-black text-gray-700 hover:bg-gray-200 transition-all text-lg">-</button>
+            <span class="font-black text-gray-700 text-sm" id="modalPageLabel">1 хуудас</span>
+            <button onclick="adjustPrintPages(1)"
+                    class="w-10 h-10 bg-green-100 rounded-full font-black text-green-700 hover:bg-green-200 transition-all text-lg">+</button>
+        </div>
+
+        <!-- Үнэ тооцоо -->
+        <div class="bg-orange-50 rounded-2xl p-4 mb-6 border border-orange-100">
+            <div class="flex justify-between text-xs font-bold text-gray-600 mb-1">
+                <span>1-р хуудас:</span><span class="text-green-700 font-black">Үнэгүй</span>
+            </div>
+            <div class="flex justify-between text-xs font-bold text-gray-600 mb-2" id="extraPagesRow">
+                <span>Нэмэлт хуудас:</span><span id="extraPagesPrice">0</span>
+            </div>
+            <div class="border-t border-orange-200 pt-2 flex justify-between font-black text-orange-900">
+                <span class="text-sm uppercase italic">Нийт:</span>
+                <span class="text-lg" id="totalPrintPrice">0</span>
+            </div>
+        </div>
+
+        <!-- Төлбөр шаардлагатай бол -->
+        <div id="printPaymentNote" class="hidden bg-blue-50 border border-blue-200 rounded-2xl p-3 mb-4 text-xs text-blue-700 font-bold text-center">
+            Хэвлэхийн өмнө төлбөрийг үйлдвэрлэгчид QR-ээр төлнө үү
+        </div>
+
+        <div class="flex gap-3">
+            <button onclick="closePrintModal()"
+                    class="flex-1 bg-gray-100 text-gray-600 py-3 rounded-2xl font-black uppercase italic text-xs hover:bg-gray-200 transition-all">
+                Цуцлах
+            </button>
+            <button onclick="executePrint()" id="doPrintBtn"
+                    class="flex-1 bg-green-700 text-white py-3 rounded-2xl font-black uppercase italic text-xs hover:bg-green-800 transition-all">
+                Хэвлэх
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- ===== ХЭВЛЭХ ТАЛБАР (нуугдсан) ===== -->
+<div id="printArea" class="hidden"></div>
+
 <!-- ===== ТӨЛБӨРИЙН MODAL ===== -->
-    <div id="cartModal" class="modal" onclick="if(event.target==this) closeCart()">
+<div id="cartModal" class="modal" onclick="if(event.target===this) closeCart()">
     <div class="bg-white p-6 rounded-[2rem] max-w-sm w-full border-8 border-orange-50 shadow-2xl">
         <div class="flex justify-between items-center mb-4">
             <h2 class="text-lg font-black text-orange-900 uppercase italic">Миний сагс</h2>
-            <button onclick="closeCart()" class="text-gray-400 font-bold">✕</button>
+            <button onclick="closeCart()" class="text-gray-400 font-bold text-lg">X</button>
         </div>
-        <div id="cartItems" class="space-y-3 mb-6 max-h-60 overflow-y-auto">
-            </div>
+        <div id="cartItems" class="space-y-3 mb-6 max-h-60 overflow-y-auto"></div>
         <div class="border-t pt-4 mb-6">
             <div class="flex justify-between font-black text-orange-900 uppercase italic text-sm">
-                <span>Нийт:</span>
-                <span id="cartTotal">0₮</span>
+                <span>Нийт:</span><span id="cartTotal">0</span>
             </div>
         </div>
-        <button id="checkoutBtn" onclick="proceedToPayment()" 
+        <button id="checkoutBtn" onclick="proceedToPayment()"
                 class="w-full bg-orange-800 text-white py-4 rounded-xl font-black uppercase italic shadow-lg hover:bg-orange-900 transition-all">
             Төлбөр төлөх рүү шилжих
         </button>
     </div>
 </div>
 
-<button onclick="openCart()" class="relative bg-orange-100 p-2 rounded-full">
-    <span class="text-lg">🛒</span>
-    <span id="cartCount" class="absolute -top-1 -right-1 bg-red-500 text-white text-[8px] font-bold px-1.5 py-0.5 rounded-full hidden">0</span>
-</button>
-<div id="paymentModal" class="modal" onclick="if(event.target==this) closePayment()">
+<div id="paymentModal" class="modal" onclick="if(event.target===this) closePayment()">
     <div class="bg-white p-8 rounded-[2.5rem] max-w-sm w-full text-center border-8 border-orange-50 relative">
         <button onclick="closePayment()" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600 font-bold">X</button>
         <h2 class="text-lg font-black text-orange-900 mb-4 uppercase italic">Төлбөр төлөх</h2>
@@ -370,83 +485,58 @@
     </div>
 </div>
 
-<!-- ===== МЭДЭГДЭЛ ===== -->
+<!-- МЭДЭГДЭЛ -->
 <div id="toastBox" class="fixed bottom-6 left-1/2 -translate-x-1/2 z-[9999] flex flex-col gap-2 items-center pointer-events-none"></div>
 
+<!-- =========================================================
+     JAVASCRIPT
+     ========================================================= -->
 <script>
-/* =============================================
-   ТОХИРГОО БА ХУВЬСАГЧИД
-   ============================================= */
+/* ── ТОХИРГОО ─────────────────────────────── */
 const ORDER_URL = 'https://script.google.com/macros/s/AKfycbw-4l3RN9-KTzCOJc4ZswFgnQ5DCEO9mY9gobI8W1IGXtUp_LgTL77Zc3oaCp0up7xZVw/exec';
 let currentUserEmail = "";
-let productsData = [];
+let productsData     = [];
+
+/* ── САГС ─────────────────────────────────── */
+let cartItems    = [];
 let pendingProduct = "";
-let pendingTotal = 0; // Зарлаж өгөв
-let cartItems = [];
+let pendingTotal   = 0;
 
-/* =============================================
-   ДЭЛГҮҮРИЙН ЛОГИК (ЗАСВАР)
-   ============================================= */
-function buyNow(title, price) {
-    if(!currentUserEmail) return showToast("Нэвтэрнэ үү!", "error");
-    pendingProduct = title;
-    pendingTotal = price;
-    document.getElementById('paymentNote').innerText = `${currentUserEmail} | ${title} | ${Number(price).toLocaleString()}₮`;
-    document.getElementById('paymentModal').classList.add('active');
+/* ── СУДОКУ ГЛОБАЛ ─────────────────────────── */
+let sudokuBoard  = [];   // 9×9 зөв хариулт (тоогоор)
+let printPageCount = 1;
+
+/* ════════════════════════════════════════════
+   МОНГОЛ ТОО — зөв Unicode код оноо
+   1→᠑(U+1811) … 9→᠙(U+1819)
+   ════════════════════════════════════════════ */
+const MONG_NUMS = {
+    '1': '\u1811',
+    '2': '\u1812',
+    '3': '\u1813',
+    '4': '\u1814',
+    '5': '\u1815',
+    '6': '\u1816',
+    '7': '\u1817',
+    '8': '\u1818',
+    '9': '\u1819'
+};
+// Урвуу хөрвүүлэлт: монгол тоо → ASCII тоо
+const MONG_TO_ASCII = {};
+for (const [ascii, mong] of Object.entries(MONG_NUMS)) {
+    MONG_TO_ASCII[mong] = ascii;
 }
 
-async function confirmOrder() {
-    const btn = document.getElementById('confirmBtn');
-    const oldText = btn.innerText;
-    btn.innerText = "Илгээж байна..."; 
-    btn.disabled = true;
-
-    try {
-        const body = new URLSearchParams({
-            action: 'order',
-            email: currentUserEmail,
-            product: pendingProduct,
-            total: pendingTotal,
-            note: document.getElementById('paymentNote').innerText
-        });
-
-        // Google Script CORS асуудлаас болж 'no-cors' ашиглах нь найдвартай
-        await fetch(ORDER_URL, { 
-            method: 'POST', 
-            mode: 'no-cors', 
-            body: body 
-        });
-
-        closePayment();
-        if (cartItems.length > 0) clearCart();
-        showToast("Хүсэлт илгээгдлээ! Төлбөр шалгасны дараа идэвхжнэ.", "success");
-    } catch (e) {
-        showToast("Алдаа гарлаа. Дахин оролдоно уу.", "error");
-    } finally {
-        btn.innerText = oldText;
-        btn.disabled = false;
-    }
-}
-
-// Сагсны мэдээллийг шинэчлэх функц
-function updateCartDisplay() {
-    const count = cartItems.reduce((sum, item) => sum + item.quantity, 0);
-    const countEl = document.getElementById('cartCount');
-    if (countEl) {
-        countEl.textContent = count;
-        count > 0 ? countEl.classList.remove('hidden') : countEl.classList.add('hidden');
-    }
-}
-/* =============================================
+/* ════════════════════════════════════════════
    НЭВТРЭХ
-   ============================================= */
+   ════════════════════════════════════════════ */
 async function handleLogin() {
     const email = document.getElementById('loginEmail').value.trim();
     if (!email) return showToast("Мэйл хаягаа оруулна уу!", "error");
     const btn = document.getElementById('loginBtn');
     btn.innerText = "Уншиж байна..."; btn.disabled = true;
     try {
-        const res = await fetch(`${ORDER_URL}?action=check&email=${encodeURIComponent(email)}`);
+        const res  = await fetch(`${ORDER_URL}?action=check&email=${encodeURIComponent(email)}`);
         const data = await res.json();
         if (data.status === "success") {
             currentUserEmail = email;
@@ -465,9 +555,9 @@ async function handleLogin() {
     }
 }
 
-/* =============================================
+/* ════════════════════════════════════════════
    НАВИГАЦИ
-   ============================================= */
+   ════════════════════════════════════════════ */
 function showSection(name) {
     document.getElementById('dashboardHome').classList.add('hidden');
     document.querySelectorAll('.section-content').forEach(s => s.classList.remove('active'));
@@ -479,214 +569,35 @@ function showSection(name) {
     if (name === 'planner') initPlanner();
     if (name === 'exam')    initExamLobby();
 }
-
 function showDashboard() {
     document.getElementById('dashboardHome').classList.remove('hidden');
     document.querySelectorAll('.section-content').forEach(s => s.classList.remove('active'));
     stopExamTimer();
 }
 
-/* =============================================
-   БАРАА АЧААЛЛАХ
-   ============================================= */
+/* ════════════════════════════════════════════
+   БАРАА / ДЭЛГҮҮР
+   ════════════════════════════════════════════ */
 async function loadProducts() {
     try {
         const res = await fetch(`${ORDER_URL}?action=getProducts`);
         productsData = await res.json();
         const html = productsData.map(p => buildProductCard(p)).join('');
-        document.getElementById('materialGrid').innerHTML = html;
+        document.getElementById('materialGrid').innerHTML  = html;
         document.getElementById('fullShopGrid').innerHTML = html;
-    } catch (e) {
-        console.error(e);
-    }
+        loadCart();
+    } catch (e) { console.error(e); }
 }
 
 function buildProductCard(p) {
     const safeTitle = p.Title.replace(/'/g, "\\'");
-    const imgSrc = `https://raw.githubusercontent.com/tuult764-crypto/sonirholtoi-hel-bichig-/main/${p.Images.split(',')[0].trim()}`;
+    const price     = Number(p.Price);
+    const imgSrc    = `https://raw.githubusercontent.com/tuult764-crypto/sonirholtoi-hel-bichig-/main/${p.Images.split(',')[0].trim()}`;
     return `
         <div class="bg-white p-4 rounded-[2rem] shadow-md border border-orange-50 flex flex-col">
             <img src="${imgSrc}" class="w-full h-32 object-cover rounded-xl mb-3" onerror="this.style.display='none'">
             <h3 class="font-black text-[10px] text-orange-900 mb-1 uppercase italic">${p.Title}</h3>
-            <p class="font-bold text-orange-600 text-xs mb-3">${Number(p.Price).toLocaleString()}T</p>
-            <button onclick="openPayment('${safeTitle}')"
-                    class="mt-auto bg-orange-800 text-white py-2 rounded-lg font-black uppercase italic text-[9px] hover:bg-orange-900 transition-all">
-                Худалдан авах
-            </button>
-        </div>`;
-}
-/* =============================================
-   САГС УДИРДЛАГА
-   ============================================= */
-let cartItems = [];
-
-function loadCart() {
-    const saved = localStorage.getItem('cart_' + currentUserEmail);
-    cartItems = saved ? JSON.parse(saved) : [];
-    updateCartDisplay();
-}
-
-function saveCart() {
-    localStorage.setItem('cart_' + currentUserEmail, JSON.stringify(cartItems));
-    updateCartDisplay();
-}
-
-function addToCart(title, price) {
-    const existing = cartItems.find(item => item.title === title);
-    if (existing) {
-        existing.quantity += 1;
-    } else {
-        cartItems.push({ title, price: Number(price), quantity: 1 });
-    }
-    saveCart();
-    showToast("Сагсанд нэмэгдлээ! 🛒", "success");
-}
-
-function removeFromCart(title) {
-    cartItems = cartItems.filter(item => item.title !== title);
-    saveCart();
-    renderCartItems();
-}
-
-function updateQuantity(title, change) {
-    const item = cartItems.find(item => item.title === title);
-    if (item) {
-        item.quantity += change;
-        if (item.quantity <= 0) {
-            removeFromCart(title);
-        } else {
-            saveCart();
-            renderCartItems();
-        }
-    }
-}
-
-function clearCart() {
-    cartItems = [];
-    saveCart();
-    renderCartItems();
-    showToast("Сагс цэвэрлэгдлээ", "info");
-}
-
-function updateCartDisplay() {
-    const count = cartItems.reduce((sum, item) => sum + item.quantity, 0);
-    const countEl = document.getElementById('cartCount');
-    
-    if (count > 0) {
-        countEl.textContent = count;
-        countEl.classList.remove('hidden');
-    } else {
-        countEl.classList.add('hidden');
-    }
-}
-
-function openCart() {
-    renderCartItems();
-    document.getElementById('cartModal').classList.add('active');
-}
-
-function closeCart() {
-    document.getElementById('cartModal').classList.remove('active');
-}
-
-function renderCartItems() {
-    const container = document.getElementById('cartItems');
-    const totalEl = document.getElementById('cartTotal');
-    const checkoutBtn = document.getElementById('checkoutBtn');
-    
-    if (cartItems.length === 0) {
-        container.innerHTML = `
-            <div class="text-center text-gray-400 py-8">
-                <div class="text-4xl mb-2">🛒</div>
-                <div class="text-sm">Сагс хоосон байна</div>
-            </div>`;
-        totalEl.textContent = '0₮';
-        checkoutBtn.disabled = true;
-        checkoutBtn.classList.add('opacity-50');
-        return;
-    }
-    
-    checkoutBtn.disabled = false;
-    checkoutBtn.classList.remove('opacity-50');
-    
-    container.innerHTML = cartItems.map(item => `
-        <div class="bg-gray-50 rounded-xl p-3 flex items-center justify-between">
-            <div class="flex-1">
-                <div class="font-bold text-xs text-gray-800 mb-1">${item.title}</div>
-                <div class="text-orange-600 font-black text-sm">${item.price.toLocaleString()}₮</div>
-            </div>
-            
-            <div class="flex items-center gap-2">
-                <button onclick="updateQuantity('${item.title.replace(/'/g, "\\'")}', -1)"
-                        class="w-6 h-6 bg-gray-200 rounded-full text-gray-600 font-black text-xs hover:bg-gray-300 transition-all">
-                    −
-                </button>
-                <span class="font-black text-sm w-6 text-center">${item.quantity}</span>
-                <button onclick="updateQuantity('${item.title.replace(/'/g, "\\'")}', 1)"
-                        class="w-6 h-6 bg-orange-200 rounded-full text-orange-700 font-black text-xs hover:bg-orange-300 transition-all">
-                    +
-                </button>
-            </div>
-            
-            <button onclick="removeFromCart('${item.title.replace(/'/g, "\\'")}')"
-                    class="ml-3 text-red-400 hover:text-red-600 font-bold text-sm">
-                ✕
-            </button>
-        </div>
-    `).join('');
-    
-    const total = cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-    totalEl.textContent = total.toLocaleString() + '₮';
-}
-
-function proceedToPayment() {
-    if (cartItems.length === 0) {
-        showToast("Сагс хоосон байна!", "error");
-        return;
-    }
-    
-    const cartSummary = cartItems.map(item => 
-        `${item.title} x${item.quantity}`
-    ).join(', ');
-    
-    const total = cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-    
-    pendingProduct = cartSummary;
-    pendingTotal = total;
-    
-    closeCart();
-    document.getElementById('paymentNote').innerText = 
-        currentUserEmail + " | " + cartSummary + " | " + total.toLocaleString() + "₮";
-    document.getElementById('paymentModal').classList.add('active');
-}
-
-/* =============================================
-   БАРАА АЧААЛЛАХ (ШИНЭЧЛЭГДСЭН)
-   ============================================= */
-async function loadProducts() {
-    try {
-        const res = await fetch(`${ORDER_URL}?action=getProducts`);
-        productsData = await res.json();
-        const html = productsData.map(p => buildProductCard(p)).join('');
-        document.getElementById('materialGrid').innerHTML = html;
-        document.getElementById('fullShopGrid').innerHTML = html;
-        loadCart(); // Сагсыг ачаална
-    } catch (e) {
-        console.error(e);
-    }
-}
-
-function buildProductCard(p) {
-    const safeTitle = p.Title.replace(/'/g, "\\'");
-    const price = Number(p.Price);
-    const imgSrc = `https://raw.githubusercontent.com/tuult764-crypto/sonirholtoi-hel-bichig-/main/${p.Images.split(',')[0].trim()}`;
-    
-    return `
-        <div class="bg-white p-4 rounded-[2rem] shadow-md border border-orange-50 flex flex-col">
-            <img src="${imgSrc}" class="w-full h-32 object-cover rounded-xl mb-3" onerror="this.style.display='none'">
-            <h3 class="font-black text-[10px] text-orange-900 mb-1 uppercase italic">${p.Title}</h3>
-            <p class="font-bold text-orange-600 text-xs mb-3">${price.toLocaleString()}₮</p>
-            
+            <p class="font-bold text-orange-600 text-xs mb-3">${price.toLocaleString()}</p>
             <div class="mt-auto flex gap-2">
                 <button onclick="addToCart('${safeTitle}', ${price})"
                         class="flex-1 bg-orange-100 text-orange-800 py-2 rounded-lg font-black uppercase italic text-[9px] hover:bg-orange-200 transition-all">
@@ -694,202 +605,544 @@ function buildProductCard(p) {
                 </button>
                 <button onclick="buyNow('${safeTitle}', ${price})"
                         class="flex-1 bg-orange-800 text-white py-2 rounded-lg font-black uppercase italic text-[9px] hover:bg-orange-900 transition-all">
-                    Худалдан авах
+                    Авах
                 </button>
             </div>
         </div>`;
 }
 
-function buyNow(title, price) {
-    pendingProduct = title;
-    pendingTotal = price;
-    document.getElementById('paymentNote').innerText = 
-        currentUserEmail + " | " + title + " | " + Number(price).toLocaleString() + "₮";
+/* ════════════════════════════════════════════
+   САГС
+   ════════════════════════════════════════════ */
+function loadCart() {
+    const saved = localStorage.getItem('cart_' + currentUserEmail);
+    cartItems = saved ? JSON.parse(saved) : [];
+    updateCartDisplay();
+}
+function saveCart() {
+    localStorage.setItem('cart_' + currentUserEmail, JSON.stringify(cartItems));
+    updateCartDisplay();
+}
+function addToCart(title, price) {
+    const existing = cartItems.find(i => i.title === title);
+    if (existing) { existing.quantity += 1; }
+    else { cartItems.push({ title, price: Number(price), quantity: 1 }); }
+    saveCart();
+    showToast("Сагсанд нэмэгдлээ!", "success");
+}
+function removeFromCart(title) {
+    cartItems = cartItems.filter(i => i.title !== title);
+    saveCart(); renderCartItems();
+}
+function updateQuantity(title, change) {
+    const item = cartItems.find(i => i.title === title);
+    if (!item) return;
+    item.quantity += change;
+    if (item.quantity <= 0) removeFromCart(title);
+    else { saveCart(); renderCartItems(); }
+}
+function clearCart() {
+    cartItems = []; saveCart(); renderCartItems();
+}
+function updateCartDisplay() {
+    const count = cartItems.reduce((s, i) => s + i.quantity, 0);
+    const el    = document.getElementById('cartCount');
+    if (!el) return;
+    el.textContent = count;
+    count > 0 ? el.classList.remove('hidden') : el.classList.add('hidden');
+}
+function openCart()  { renderCartItems(); document.getElementById('cartModal').classList.add('active'); }
+function closeCart() { document.getElementById('cartModal').classList.remove('active'); }
+
+function renderCartItems() {
+    const container  = document.getElementById('cartItems');
+    const totalEl    = document.getElementById('cartTotal');
+    const checkoutBtn = document.getElementById('checkoutBtn');
+    if (cartItems.length === 0) {
+        container.innerHTML = `<div class="text-center text-gray-400 py-8"><div class="text-sm">Сагс хоосон байна</div></div>`;
+        totalEl.textContent = '0';
+        checkoutBtn.disabled = true;
+        checkoutBtn.classList.add('opacity-50');
+        return;
+    }
+    checkoutBtn.disabled = false;
+    checkoutBtn.classList.remove('opacity-50');
+    container.innerHTML = cartItems.map(item => `
+        <div class="bg-gray-50 rounded-xl p-3 flex items-center justify-between">
+            <div class="flex-1">
+                <div class="font-bold text-xs text-gray-800 mb-1">${item.title}</div>
+                <div class="text-orange-600 font-black text-sm">${item.price.toLocaleString()}</div>
+            </div>
+            <div class="flex items-center gap-2">
+                <button onclick="updateQuantity('${item.title.replace(/'/g,"\\'")}', -1)"
+                        class="w-6 h-6 bg-gray-200 rounded-full text-gray-600 font-black text-xs hover:bg-gray-300 transition-all">-</button>
+                <span class="font-black text-sm w-6 text-center">${item.quantity}</span>
+                <button onclick="updateQuantity('${item.title.replace(/'/g,"\\'")}', 1)"
+                        class="w-6 h-6 bg-orange-200 rounded-full text-orange-700 font-black text-xs hover:bg-orange-300 transition-all">+</button>
+            </div>
+            <button onclick="removeFromCart('${item.title.replace(/'/g,"\\'")}'))"
+                    class="ml-3 text-red-400 hover:text-red-600 font-bold text-sm">X</button>
+        </div>`).join('');
+    const total = cartItems.reduce((s, i) => s + i.price * i.quantity, 0);
+    totalEl.textContent = total.toLocaleString() + ' T';
+}
+
+function proceedToPayment() {
+    if (!cartItems.length) return showToast("Сагс хоосон байна!", "error");
+    const summary = cartItems.map(i => `${i.title} x${i.quantity}`).join(', ');
+    const total   = cartItems.reduce((s, i) => s + i.price * i.quantity, 0);
+    pendingProduct = summary;
+    pendingTotal   = total;
+    closeCart();
+    document.getElementById('paymentNote').innerText =
+        currentUserEmail + " | " + summary + " | " + total.toLocaleString() + "T";
     document.getElementById('paymentModal').classList.add('active');
 }
-
-/* =============================================
-   ТӨЛБӨР (ШИНЭЧЛЭГДСЭН)
-   ============================================= */
-let pendingProduct = "";
-let pendingTotal = 0;
-
-// openPayment функцийг устгаж, дээрх buyNow болон proceedToPayment ашиглана
-
-function closePayment() {
-    document.getElementById('paymentModal').classList.remove('active');
+function buyNow(title, price) {
+    pendingProduct = title;
+    pendingTotal   = price;
+    document.getElementById('paymentNote').innerText =
+        currentUserEmail + " | " + title + " | " + Number(price).toLocaleString() + "T";
+    document.getElementById('paymentModal').classList.add('active');
 }
+function closePayment() { document.getElementById('paymentModal').classList.remove('active'); }
 
 async function confirmOrder() {
     const btn = document.getElementById('confirmBtn');
     btn.innerText = "Илгээж байна..."; btn.disabled = true;
-    
     try {
         const body = new URLSearchParams({
-            action: 'order',
-            email: currentUserEmail,
-            product: pendingProduct,
-            total: pendingTotal
+            action: 'order', email: currentUserEmail,
+            product: pendingProduct, total: pendingTotal,
+            note: document.getElementById('paymentNote').innerText
         });
-        
-        await fetch(ORDER_URL, { method: 'POST', body });
+        await fetch(ORDER_URL, { method: 'POST', mode: 'no-cors', body });
         closePayment();
-        
-        // Сагсаас захиалсан бол сагсыг цэвэрлэнэ
-        if (cartItems.length > 0) {
-            clearCart();
-        }
-        
-        showToast("Хүсэлт амжилттай илгээгдлээ! 🎉", "success");
+        if (cartItems.length > 0) clearCart();
+        showToast("Хүсэлт илгээгдлээ! Шалгасны дараа идэвхжнэ.", "success");
     } catch (e) {
-        showToast("Алдаа гарлаа, дахин оролдоно уу.", "error");
+        showToast("Алдаа гарлаа. Дахин оролдоно уу.", "error");
     } finally {
-        btn.innerText = "Төлсөн, хүсэлт илгээх"; 
-        btn.disabled = false;
+        btn.innerText = "Төлсөн, хүсэлт илгээх"; btn.disabled = false;
     }
 }
 
-/* =============================================
-   СУДОКУ
-   ============================================= */
-const mongolNums = {'1':'᠑','2':'᠒','3':'᠓','4':'᠔','5':'᠕','6':'᠖','7':'᠗','8':'᠘','9':'᠙'};
+/* ════════════════════════════════════════════
+   МИНИЙ САН
+   ════════════════════════════════════════════ */
+async function loadLibrary() {
+    const grid = document.getElementById('libraryGrid');
+    grid.innerHTML = `<div class="text-center text-gray-400 text-xs py-8 col-span-3">Уншиж байна...</div>`;
+    try {
+        const res  = await fetch(`${ORDER_URL}?action=getLibrary&email=${encodeURIComponent(currentUserEmail)}`);
+        const data = await res.json();
+        if (!Array.isArray(data) || !data.length) {
+            grid.innerHTML = `<div class="text-center text-gray-400 text-xs py-8 col-span-3">Материал байхгүй байна.</div>`;
+            return;
+        }
+        grid.innerHTML = data.map(item => `
+            <div class="bg-white rounded-2xl p-4 shadow border border-orange-50">
+                <h3 class="font-black text-sm text-orange-900 mb-2">${item.Title || item.title || ''}</h3>
+                <p class="text-xs text-gray-500">${item.Description || item.description || ''}</p>
+                ${item.Link ? `<a href="${item.Link}" target="_blank"
+                    class="mt-3 inline-block bg-orange-800 text-white px-4 py-2 rounded-xl text-[10px] font-black uppercase italic hover:bg-orange-900 transition-all">
+                    Нээх</a>` : ''}
+            </div>`).join('');
+    } catch (e) {
+        grid.innerHTML = `<div class="text-center text-gray-400 text-xs py-8 col-span-3">Холболтын алдаа.</div>`;
+    }
+}
+
+/* ════════════════════════════════════════════
+   СУДОКУ — ЗАСАГДСАН (БҮРЭН)
+   ════════════════════════════════════════════ */
+
+/**
+ * generateSudokuBoard() — 9×9 хүснэгт үүсгэж shuffle хийнэ.
+ * Буцаах утга: 9×9 array (тоогоор, 1–9)
+ */
+function generateSudokuBoard() {
+    // Суурь хөтөч (алинч байсан зөв судоку)
+    const base = [
+        [1,2,3,4,5,6,7,8,9],
+        [4,5,6,7,8,9,1,2,3],
+        [7,8,9,1,2,3,4,5,6],
+        [2,3,1,5,6,4,8,9,7],
+        [5,6,4,8,9,7,2,3,1],
+        [8,9,7,2,3,1,5,6,4],
+        [3,1,2,6,4,5,9,7,8],
+        [6,4,5,9,7,8,3,1,2],
+        [9,7,8,3,1,2,6,4,5]
+    ];
+    // Мөрүүдийг блок дотор холино (3 блок × 3 мөр)
+    for (let block = 0; block < 3; block++) {
+        for (let swap = 0; swap < 3; swap++) {
+            const r1 = block * 3 + Math.floor(Math.random() * 3);
+            const r2 = block * 3 + Math.floor(Math.random() * 3);
+            [base[r1], base[r2]] = [base[r2], base[r1]];
+        }
+    }
+    // Баганын блок холино
+    const colOrder = shuffle([0,1,2]);
+    const newBase  = base.map(row => {
+        const newRow = [];
+        colOrder.forEach(blockIdx => {
+            for (let c = 0; c < 3; c++) newRow.push(row[blockIdx * 3 + c]);
+        });
+        return newRow;
+    });
+    return newBase;
+}
 
 function initSudoku() {
+    sudokuBoard = generateSudokuBoard();
     const container = document.getElementById('sudokuContainer');
     container.innerHTML = '';
-    let board = [
-        [1,2,3,4,5,6,7,8,9],[4,5,6,7,8,9,1,2,3],[7,8,9,1,2,3,4,5,6],
-        [2,3,1,5,6,4,8,9,7],[5,6,4,8,9,7,2,3,1],[8,9,7,2,3,1,5,6,4],
-        [3,1,2,6,4,5,9,7,8],[6,4,5,9,7,8,3,1,2],[9,7,8,3,1,2,6,4,5]
-    ];
-    for (let i = 0; i < 10; i++) {
-        let b = Math.floor(Math.random()*3)*3;
-        let r1 = b + Math.floor(Math.random()*3);
-        let r2 = b + Math.floor(Math.random()*3);
-        [board[r1], board[r2]] = [board[r2], board[r1]];
-    }
-    board.flat().forEach(val => {
-        const cell = document.createElement('input');
-        cell.type = 'text'; cell.maxLength = 1; cell.className = 'sudoku-cell';
-        cell.dataset.answer = mongolNums[val];
-        if (Math.random() > 0.6) {
-            cell.value = mongolNums[val]; cell.readOnly = true; cell.classList.add('cell-fixed');
-        } else {
-            cell.classList.add('cell-user');
-            cell.oninput = function() {
-                const rev = Object.entries(mongolNums).find(([k,v]) => v === this.value);
-                if (!rev && !Object.values(mongolNums).includes(this.value)) this.value = '';
-                this.style.backgroundColor = '';
-            };
+
+    for (let r = 0; r < 9; r++) {
+        for (let c = 0; c < 9; c++) {
+            const val  = sudokuBoard[r][c];
+            const cell = document.createElement('input');
+            cell.type      = 'text';
+            cell.maxLength = 2;  // монгол тоо 2 byte байж болно
+            cell.className = 'sudoku-cell';
+            cell.dataset.answer = String(val); // зөв хариулт тоогоор хадгална
+
+            // ~60% нүдийг нээлттэй (хэрэглэгч бөглөнө), ~40% хаана
+            if (Math.random() < 0.45) {
+                /* ── ХААГДСАН НҮД (тогтмол) ── */
+                cell.value    = MONG_NUMS[String(val)];
+                cell.readOnly = true;
+                cell.classList.add('cell-fixed');
+            } else {
+                /* ── НЭЭЛТТЭЙ НҮД (хэрэглэгч бөглөнө) ── */
+                cell.classList.add('cell-user');
+                cell.addEventListener('keydown',  onSudokuKeyDown);
+                cell.addEventListener('input',    onSudokuInput);
+                cell.addEventListener('focus',    () => { cell.style.backgroundColor = '#fef9c3'; });
+                cell.addEventListener('blur',     () => { cell.style.backgroundColor = ''; });
+            }
+            container.appendChild(cell);
         }
-        container.appendChild(cell);
+    }
+}
+
+/**
+ * keydown — зөвхөн 1–9 болон backspace/delete зөвшөөрнө
+ */
+function onSudokuKeyDown(e) {
+    const allowed = ['Backspace','Delete','Tab','ArrowLeft','ArrowRight','ArrowUp','ArrowDown'];
+    if (allowed.includes(e.key)) return;
+    // 1–9 тоо зөвшөөрнө
+    if (e.key >= '1' && e.key <= '9') return;
+    // Монгол тоо шууд оруулахыг зөвшөөрнө
+    if (Object.values(MONG_NUMS).includes(e.key)) return;
+    // Өөр бүх зүйлийг хориглоно
+    e.preventDefault();
+}
+
+/**
+ * input — ASCII тоог монгол тоо руу хөрвүүлнэ
+ * Алдааны шалтгаан: input event дотор .value-г шууд өөрчлөхөд
+ * cursor алддаг тул requestAnimationFrame ашиглана.
+ */
+function onSudokuInput(e) {
+    const cell = e.target;
+    const raw  = cell.value;
+
+    if (!raw) return; // хоосон бол юу ч хийхгүй
+
+    // Сүүлийн тэмдэгтийг авна
+    let last = raw[raw.length - 1];
+
+    // Хэрэв ASCII тоо бол монгол руу хөрвүүлнэ
+    if (last >= '1' && last <= '9') {
+        last = MONG_NUMS[last];
+    }
+
+    // Монгол тоо эсэхийг шалгана
+    if (!Object.values(MONG_NUMS).includes(last)) {
+        // Хүчингүй тэмдэгт → устгана
+        requestAnimationFrame(() => { cell.value = ''; });
+        return;
+    }
+
+    // Зөвхөн нэг тэмдэгт байхаар тогтооно
+    requestAnimationFrame(() => {
+        cell.value = last;
+        cell.style.backgroundColor = '#fef9c3';
+        // Урьдчилсан шалгалт: зөв эсэх
+        const ascii = MONG_TO_ASCII[last];
+        if (ascii && ascii === cell.dataset.answer) {
+            cell.classList.add('cell-correct');
+            cell.classList.remove('cell-wrong');
+        } else {
+            cell.classList.remove('cell-correct');
+            cell.classList.remove('cell-wrong');
+        }
     });
 }
 
 function checkSudoku() {
-    const cells = document.querySelectorAll('.sudoku-cell');
-    let correct = 0, total = 0, empty = false;
-    cells.forEach(c => {
-        if (!c.readOnly) {
-            total++;
-            if (!c.value) { empty = true; return; }
-            if (c.value === c.dataset.answer) {
-                c.style.backgroundColor = '#dcfce7'; correct++;
-            } else {
-                c.style.backgroundColor = '#fee2e2';
-            }
+    const cells = document.querySelectorAll('#sudokuContainer .sudoku-cell');
+    let correct = 0, wrong = 0, empty = 0;
+
+    cells.forEach(cell => {
+        if (cell.readOnly) return; // тогтмол нүдийг алгасна
+        const val   = cell.value.trim();
+        const ascii = MONG_TO_ASCII[val] || val;
+
+        if (!val) {
+            empty++;
+            cell.style.backgroundColor = '#fffbeb';
+            return;
+        }
+        if (ascii === cell.dataset.answer) {
+            cell.classList.add('cell-correct');
+            cell.classList.remove('cell-wrong');
+            correct++;
+        } else {
+            cell.classList.add('cell-wrong');
+            cell.classList.remove('cell-correct');
+            wrong++;
         }
     });
-    if (empty) return showToast("Бүх нүдийг бөглөнө үү!", "error");
-    if (correct === total) showToast("Баяр хүргэе! Бүгд зөв!", "success");
-    else showToast(`${total - correct} нүд буруу байна. Дахин оролдоорой!`, "error");
+
+    if (empty > 0)       showToast(`${empty} хоосон нүд байна!`, "error");
+    else if (wrong > 0)  showToast(`${wrong} нүд буруу байна!`, "error");
+    else                 showToast("Баяр хүргэе! Бүгд зөв!", "success");
 }
 
-/* =============================================
+/* ════════════════════════════════════════════
+   СУДОКУ ХЭВЛЭХ
+   ════════════════════════════════════════════ */
+function adjustPrintPages(delta) {
+    printPageCount = Math.max(1, printPageCount + delta);
+    updatePrintModalUI();
+}
+
+function updatePrintModalUI() {
+    const extra = Math.max(0, printPageCount - 1);
+    const price = extra * 400;
+
+    document.getElementById('modalPageCount').innerText  = printPageCount;
+    document.getElementById('modalPageLabel').innerText  = `${printPageCount} хуудас`;
+    document.getElementById('printPageCount').innerText  = printPageCount;
+    document.getElementById('extraPagesPrice').innerText = extra > 0 ? `${extra} x 400 = ${price.toLocaleString()} T` : 'Байхгүй';
+    document.getElementById('totalPrintPrice').innerText = price > 0 ? `${price.toLocaleString()} T` : 'Үнэгүй';
+
+    const noteEl = document.getElementById('printPaymentNote');
+    if (price > 0) noteEl.classList.remove('hidden');
+    else           noteEl.classList.add('hidden');
+}
+
+function showPrintModal() {
+    printPageCount = 1;
+    updatePrintModalUI();
+    document.getElementById('printModal').classList.add('active');
+}
+function closePrintModal() {
+    document.getElementById('printModal').classList.remove('active');
+}
+
+/**
+ * buildPrintGrid(board, showAnswers)
+ * board: 9×9 тооны array
+ * showAnswers: false = хоосон нүд, true = хариулт харагдана
+ */
+function buildPrintGrid(board, showAnswers) {
+    let html = '<div class="print-grid">';
+    for (let r = 0; r < 9; r++) {
+        for (let c = 0; c < 9; c++) {
+            const val     = board[r][c];
+            const mong    = MONG_NUMS[String(val)];
+            const isFixed = (Math.random() < 0.45); // хэвлэх үед давтан тооцохгүй, доор тусдаа логик байна
+            html += `<div class="print-cell pfixed">${mong}</div>`;
+        }
+    }
+    html += '</div>';
+    return html;
+}
+
+/**
+ * Хэвлэхийн тулд тусдаа grid үүсгэнэ
+ * ratio ~45% нүд харагдах, 55% хоосон
+ */
+function buildPrintPuzzle(board) {
+    // Хэвлэх тул mask тогтоогдсон байх ёстой (санамсаргүй биш)
+    // Хэрэглэгч бүр нэг л удаа харна — seed ашиглахгүй, харин нэг оролдлогоор хийнэ
+    let html = '<div class="print-grid">';
+    for (let r = 0; r < 9; r++) {
+        for (let c = 0; c < 9; c++) {
+            const val  = board[r][c];
+            const mong = MONG_NUMS[String(val)];
+            // Нүд харагдах эсэх: r+c-ийн тогтмол хуваарь
+            const show = ((r * 9 + c) % 5 !== 0) && ((r * 3 + c) % 7 !== 2);
+            if (show) {
+                html += `<div class="print-cell pfixed">${mong}</div>`;
+            } else {
+                html += `<div class="print-cell pempty">&nbsp;</div>`;
+            }
+        }
+    }
+    html += '</div>';
+    return html;
+}
+
+function executePrint() {
+    const printArea = document.getElementById('printArea');
+    const totalSudokus = printPageCount * 4;
+
+    // Хэвлэх хуудасны контент үүсгэнэ
+    let pagesHtml = '';
+
+    for (let page = 0; page < printPageCount; page++) {
+        pagesHtml += `
+        <div style="page-break-after:${page < printPageCount - 1 ? 'always' : 'auto'};
+                    padding:8mm; background:white; width:210mm; min-height:297mm; box-sizing:border-box;">
+            <div style="text-align:center; margin-bottom:6mm; font-family:'Manrope',sans-serif;">
+                <div style="font-size:14pt; font-weight:900; text-transform:uppercase; color:#7c2d12; letter-spacing:2px;">
+                    Сонирхолтой Хэл Бичиг
+                </div>
+                <div style="font-size:9pt; color:#555; margin-top:1mm;">
+                    Монгол бичиг судоку — ${page + 1}-р хуудас
+                    ${page === 0 ? '(Үнэгүй)' : '(400T)'}
+                </div>
+            </div>
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:8mm;">`;
+
+        for (let q = 0; q < 4; q++) {
+            const newBoard = generateSudokuBoard();
+            pagesHtml += `
+                <div style="border:1px solid #ddd; border-radius:4mm; padding:4mm; background:#fff;">
+                    <div style="font-size:7pt; font-weight:700; color:#7c2d12; text-transform:uppercase;
+                                margin-bottom:2mm; text-align:center;">
+                        ${page * 4 + q + 1}-р судоку
+                    </div>
+                    ${buildPrintPuzzle(newBoard)}
+                    <div style="margin-top:2mm; text-align:right; font-size:6pt; color:#aaa;">
+                        Зай: _______
+                    </div>
+                </div>`;
+        }
+
+        pagesHtml += `</div></div>`;
+    }
+
+    // Хэвлэх CSS нэмнэ
+    pagesHtml = `
+        <style>
+            @import url('https://fonts.googleapis.com/css2?family=Manrope:wght@700;900&display=swap');
+            * { box-sizing: border-box; margin: 0; padding: 0; }
+            .print-grid {
+                display: grid;
+                grid-template-columns: repeat(9, 1fr);
+                border: 2.5px solid #000;
+                width: 100%;
+            }
+            .print-cell {
+                aspect-ratio: 1/1;
+                border: 1px solid #bbb;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 8pt;
+                font-weight: 700;
+                font-family: 'Manrope', sans-serif;
+            }
+            .pfixed { background: #f1f5f9; color: #1a1a1a; }
+            .pempty { background: #fff; color: transparent; }
+            .print-cell:nth-child(3n)               { border-right: 2.5px solid #000; }
+            .print-cell:nth-child(9n)               { border-right: none; }
+            .print-cell:nth-child(n+19):nth-child(-n+27),
+            .print-cell:nth-child(n+46):nth-child(-n+54) { border-bottom: 2.5px solid #000; }
+        </style>
+        ${pagesHtml}`;
+
+    printArea.innerHTML  = pagesHtml;
+    printArea.classList.remove('hidden');
+
+    // Хэвлэгч дуусмагц нуух
+    const afterPrint = () => {
+        printArea.classList.add('hidden');
+        printArea.innerHTML = '';
+        window.removeEventListener('afterprint', afterPrint);
+    };
+    window.addEventListener('afterprint', afterPrint);
+
+    closePrintModal();
+    setTimeout(() => window.print(), 100);
+}
+
+/* ════════════════════════════════════════════
    ХӨТӨЛБӨР
-   ============================================= */
+   ════════════════════════════════════════════ */
 let personalTasks = [];
 
-function initPlanner() {
-    loadPlannerSchedule();
-    renderPersonalTasks();
-    updatePlannerStats();
-}
+function initPlanner() { loadPlannerSchedule(); renderPersonalTasks(); updatePlannerStats(); }
 
 async function loadPlannerSchedule() {
     const list = document.getElementById('scheduleList');
     list.innerHTML = `<div class="text-center text-gray-400 text-xs py-6">Уншиж байна...</div>`;
     try {
-        const res = await fetch(`${ORDER_URL}?action=getSchedule`);
+        const res  = await fetch(`${ORDER_URL}?action=getSchedule`);
         const data = await res.json();
-        if (!Array.isArray(data) || data.length === 0) {
-            list.innerHTML = `<div class="text-center text-gray-400 text-xs py-6">Хөтөлбөр байхгүй байна.</div>`;
+        if (!Array.isArray(data) || !data.length) {
+            list.innerHTML = `<div class="text-center text-gray-400 text-xs py-6">Хөтөлбөр байхгүй.</div>`;
             return;
         }
-        list.innerHTML = data.map((item, i) => {
-            const week = item.Week || item.week || '';
-            const title = item.Title || item.title || item.Lesson || 'Хичээл';
-            const desc  = item.Description || item.description || '';
-            const done  = isPlannerItemDone('schedule_' + i);
-            return `
-                <div class="flex items-start gap-3 p-3 rounded-2xl border ${done ? 'bg-green-50 border-green-100' : 'bg-gray-50 border-gray-100'} cursor-pointer task-item ${done ? 'done' : ''}"
-                     onclick="toggleScheduleItem(${i}, this)">
-                    <div class="mt-0.5 w-5 h-5 rounded-full border-2 flex-shrink-0 flex items-center justify-center
-                         ${done ? 'bg-green-500 border-green-500' : 'border-gray-300'}">
-                        ${done ? '<svg class="w-3 h-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/></svg>' : ''}
-                    </div>
-                    <div class="flex-1 min-w-0">
-                        <div class="text-[10px] font-black text-orange-600 uppercase">${week}</div>
-                        <div class="font-bold text-xs text-gray-800 task-title">${title}</div>
-                        ${desc ? `<div class="text-[10px] text-gray-400 mt-0.5">${desc}</div>` : ''}
-                    </div>
-                </div>`;
-        }).join('');
-        updatePlannerStats();
+        renderScheduleList(data);
     } catch (e) {
-        // Sheet байхгүй бол жишээ өгөгдөл харуулна
         const demo = [
-            { Week: '1-р долоо хоног', Title: 'Монгол бичгийн үсгийн танилцуулга', Description: 'Үндсэн 35 үсэг' },
-            { Week: '2-р долоо хоног', Title: 'Эгшиг үсгийн дүрэм', Description: 'Богино болон урт эгшиг' },
-            { Week: '3-р долоо хоног', Title: 'Хийгүүлэгч үсгүүд', Description: 'Нийлмэл авиа' },
-            { Week: '4-р долоо хоног', Title: 'Үг бичих дүрэм', Description: 'Зөв бичих ёс' },
+            { Week:'1-р долоо хоног', Title:'Монгол бичгийн үсгийн танилцуулга', Description:'Үндсэн 35 үсэг' },
+            { Week:'2-р долоо хоног', Title:'Эгшиг үсгийн дүрэм', Description:'Богино болон урт эгшиг' },
+            { Week:'3-р долоо хоног', Title:'Хийгүүлэгч үсгүүд', Description:'Нийлмэл авиа' },
+            { Week:'4-р долоо хоног', Title:'Үг бичих дүрэм', Description:'Зөв бичих ёс' }
         ];
-        list.innerHTML = demo.map((item, i) => {
-            const done = isPlannerItemDone('schedule_' + i);
-            return `
-                <div class="flex items-start gap-3 p-3 rounded-2xl border ${done ? 'bg-green-50 border-green-100' : 'bg-gray-50 border-gray-100'} cursor-pointer task-item ${done ? 'done' : ''}"
-                     onclick="toggleScheduleItem(${i}, this)">
-                    <div class="mt-0.5 w-5 h-5 rounded-full border-2 flex-shrink-0 flex items-center justify-center
-                         ${done ? 'bg-green-500 border-green-500' : 'border-gray-300'}">
-                        ${done ? '<svg class="w-3 h-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/></svg>' : ''}
-                    </div>
-                    <div class="flex-1 min-w-0">
-                        <div class="text-[10px] font-black text-orange-600 uppercase">${item.Week}</div>
-                        <div class="font-bold text-xs text-gray-800 task-title">${item.Title}</div>
-                        <div class="text-[10px] text-gray-400 mt-0.5">${item.Description}</div>
-                    </div>
-                </div>`;
-        }).join('');
-        updatePlannerStats();
+        renderScheduleList(demo);
     }
 }
 
+function renderScheduleList(data) {
+    const list = document.getElementById('scheduleList');
+    list.innerHTML = data.map((item, i) => {
+        const week  = item.Week || item.week || '';
+        const title = item.Title || item.title || item.Lesson || 'Хичээл';
+        const desc  = item.Description || item.description || '';
+        const done  = isPlannerItemDone('schedule_' + i);
+        return `
+            <div class="flex items-start gap-3 p-3 rounded-2xl border ${done ? 'bg-green-50 border-green-100' : 'bg-gray-50 border-gray-100'} cursor-pointer task-item ${done ? 'done' : ''}"
+                 onclick="toggleScheduleItem(${i}, this)">
+                <div class="mt-0.5 w-5 h-5 rounded-full border-2 flex-shrink-0 flex items-center justify-center
+                     ${done ? 'bg-green-500 border-green-500' : 'border-gray-300'}">
+                    ${done ? '<svg class="w-3 h-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/></svg>' : ''}
+                </div>
+                <div class="flex-1 min-w-0">
+                    <div class="text-[10px] font-black text-orange-600 uppercase">${week}</div>
+                    <div class="font-bold text-xs text-gray-800 task-title">${title}</div>
+                    ${desc ? `<div class="text-[10px] text-gray-400 mt-0.5">${desc}</div>` : ''}
+                </div>
+            </div>`;
+    }).join('');
+    updatePlannerStats();
+}
+
 function toggleScheduleItem(i, el) {
-    const key = 'schedule_' + i;
+    const key  = 'schedule_' + i;
     const done = !isPlannerItemDone(key);
     setItemDone(key, done);
-    el.classList.toggle('done', done);
-    el.classList.toggle('bg-green-50', done);
+    el.classList.toggle('done',             done);
+    el.classList.toggle('bg-green-50',      done);
     el.classList.toggle('border-green-100', done);
-    el.classList.toggle('bg-gray-50', !done);
+    el.classList.toggle('bg-gray-50',      !done);
     el.classList.toggle('border-gray-100', !done);
-    const circle = el.querySelector('div.rounded-full');
+    const circle = el.querySelector('.rounded-full');
     if (done) {
-        circle.classList.add('bg-green-500', 'border-green-500');
+        circle.classList.add('bg-green-500','border-green-500');
         circle.classList.remove('border-gray-300');
         circle.innerHTML = '<svg class="w-3 h-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/></svg>';
     } else {
-        circle.classList.remove('bg-green-500', 'border-green-500');
+        circle.classList.remove('bg-green-500','border-green-500');
         circle.classList.add('border-gray-300');
         circle.innerHTML = '';
     }
@@ -905,65 +1158,52 @@ function setItemDone(key, val) {
     data[key] = val;
     localStorage.setItem('plannerDone_' + currentUserEmail, JSON.stringify(data));
 }
-
 function updatePlannerStats() {
-    const allItems = document.querySelectorAll('#scheduleList .task-item, #personalTaskList .task-item');
-    const doneItems = document.querySelectorAll('#scheduleList .task-item.done, #personalTaskList .task-item.done');
-
-    // Хувийн даалгаврыг тооцно
+    const allItems  = document.querySelectorAll('#scheduleList .task-item');
+    const doneItems = document.querySelectorAll('#scheduleList .task-item.done');
     const totalPersonal = personalTasks.length;
     const donePersonal  = personalTasks.filter(t => t.done).length;
-
     const total = allItems.length + totalPersonal;
     const done  = doneItems.length + donePersonal;
     const pct   = total > 0 ? Math.round((done / total) * 100) : 0;
-
     document.getElementById('plannerTotalTasks').innerText = total;
     document.getElementById('plannerDoneTasks').innerText  = done;
     document.getElementById('plannerPercent').innerText    = pct + '%';
     document.getElementById('progressLabel').innerText     = `${done} / ${total}`;
     document.getElementById('progressBar').style.width     = pct + '%';
 }
-
 function loadPersonalTasks() {
     personalTasks = JSON.parse(localStorage.getItem('personalTasks_' + currentUserEmail) || '[]');
 }
 function savePersonalTasks() {
     localStorage.setItem('personalTasks_' + currentUserEmail, JSON.stringify(personalTasks));
 }
-
 function addPersonalTask() {
     const input = document.getElementById('newTaskInput');
     const title = input.value.trim();
     if (!title) return showToast("Даалгавар бичнэ үү!", "error");
     const priority = document.getElementById('newTaskPriority').value;
     personalTasks.push({ id: Date.now(), title, priority, done: false });
-    savePersonalTasks();
-    input.value = '';
-    renderPersonalTasks();
-    updatePlannerStats();
+    savePersonalTasks(); input.value = '';
+    renderPersonalTasks(); updatePlannerStats();
     showToast("Даалгавар нэмэгдлээ!", "success");
 }
-
 function togglePersonalTask(id) {
     const t = personalTasks.find(t => t.id === id);
     if (t) { t.done = !t.done; savePersonalTasks(); renderPersonalTasks(); updatePlannerStats(); }
 }
 function deletePersonalTask(id) {
     personalTasks = personalTasks.filter(t => t.id !== id);
-    savePersonalTasks();
-    renderPersonalTasks();
-    updatePlannerStats();
+    savePersonalTasks(); renderPersonalTasks(); updatePlannerStats();
 }
-
 function renderPersonalTasks() {
     const list = document.getElementById('personalTaskList');
     if (!personalTasks.length) {
         list.innerHTML = `<div class="text-center text-gray-300 text-xs py-4">Даалгавар байхгүй</div>`;
         return;
     }
-    const priorityColor = { high: 'bg-red-100 text-red-700', mid: 'bg-yellow-100 text-yellow-700', low: 'bg-gray-100 text-gray-600' };
-    const priorityLabel = { high: 'Яаралтай', mid: 'Дунд', low: 'Энгийн' };
+    const priorityColor = { high:'bg-red-100 text-red-700', mid:'bg-yellow-100 text-yellow-700', low:'bg-gray-100 text-gray-600' };
+    const priorityLabel = { high:'Яаралтай', mid:'Дунд', low:'Энгийн' };
     list.innerHTML = [...personalTasks].reverse().map(t => `
         <div class="flex items-center gap-2 p-2 rounded-xl border ${t.done ? 'bg-green-50 border-green-100' : 'bg-white border-gray-100'} task-item ${t.done ? 'done' : ''}">
             <button onclick="togglePersonalTask(${t.id})"
@@ -979,78 +1219,65 @@ function renderPersonalTasks() {
         </div>`).join('');
 }
 
-/* =============================================
+/* ════════════════════════════════════════════
    ШАЛГАЛТ
-   ============================================= */
-let examQuestions  = [];
-let currentExamQs  = [];
-let currentQIndex  = 0;
-let examScoreCount = 0;
+   ════════════════════════════════════════════ */
+let examQuestions    = [];
+let currentExamQs   = [];
+let currentQIndex   = 0;
+let examScoreCount  = 0;
 let examCorrectCount = 0;
-let examWrongCount   = 0;
+let examWrongCount  = 0;
 let examTimerInterval = null;
-let examTimeLeft   = 0;
-let examStartTime  = null;
-let currentTopic   = "";
-let selectedAnswer = null;
-let examAnswered   = false;
+let examTimeLeft    = 0;
+let examStartTime   = null;
+let currentTopic    = "";
+let examAnswered    = false;
 
 async function initExamLobby() {
-    showEl('examLobby');
-    hideEl('examActive');
-    hideEl('examResult');
+    showEl('examLobby'); hideEl('examActive'); hideEl('examResult');
     stopExamTimer();
-
     const topicList = document.getElementById('examTopicList');
     topicList.innerHTML = `<div class="text-center text-gray-400 py-6 text-xs">Уншиж байна...</div>`;
-
     try {
         const res = await fetch(`${ORDER_URL}?action=getQuestions`);
         examQuestions = await res.json();
-        renderTopics();
     } catch (e) {
-        // Demo асуултууд
         examQuestions = buildDemoQuestions();
-        renderTopics();
     }
-
+    renderTopics();
     renderExamHistory();
 }
 
 function buildDemoQuestions() {
     return [
-        { Topic: 'Дүрэм', Question: 'Монгол бичгийг хэд дээр бичдэг вэ?', A: 'Хэвтээ', B: 'Босоо', C: 'Диагональ', D: 'Дугуй', Answer: 'B', Explanation: 'Монгол бичгийг уламжлалт байдлаар дээрээс доош чиглэлтэй босоо бичдэг.' },
-        { Topic: 'Дүрэм', Question: 'Монгол бичгийн үсгийн тоо хэд вэ?', A: '25', B: '30', C: '35', D: '40', Answer: 'C', Explanation: 'Уламжлалт монгол бичгийн цагаан толгой 35 үсэгтэй.' },
-        { Topic: 'Дүрэм', Question: 'Монгол бичгийн эгшиг үсэг хэд байдаг вэ?', A: '5', B: '7', C: '9', D: '12', Answer: 'B', Explanation: 'Монгол бичигт 7 эгшиг үсэг байдаг.' },
-        { Topic: 'Үг', Question: '"Нохой" гэдэг үгийн эхний үсэг аль нь вэ?', A: 'Н', B: 'М', C: 'Х', D: 'Г', Answer: 'A', Explanation: '"Нохой" үг Н үсгээр эхэлдэг.' },
-        { Topic: 'Үг', Question: '"Морь" гэдэг монгол үг юуг илэрхийлдэг вэ?', A: 'Тэмээ', B: 'Үнэг', C: 'Адуу', D: 'Хонь', Answer: 'C', Explanation: '"Морь" гэдэг нь адуу буюу horse гэсэн утгатай.' },
-        { Topic: 'Дуудлага', Question: 'Урт эгшгийн тэмдгийг яаж бичдэг вэ?', A: 'Нэмэлт цэгтэй', B: 'Давхар үсэгтэй', C: 'Зураасаар', D: 'Онцгой тэмдэгтэй', Answer: 'D', Explanation: 'Монгол бичигт урт эгшгийг онцгой тэмдэгтэй бичдэг.' },
+        { Topic:'Дүрэм', Question:'Монгол бичгийг хэд дээр бичдэг вэ?', A:'Хэвтээ', B:'Босоо', C:'Диагональ', D:'Дугуй', Answer:'B', Explanation:'Монгол бичгийг дээрээс доош чиглэлтэй босоо бичдэг.' },
+        { Topic:'Дүрэм', Question:'Монгол бичгийн үсгийн тоо хэд вэ?', A:'25', B:'30', C:'35', D:'40', Answer:'C', Explanation:'Уламжлалт монгол бичгийн цагаан толгой 35 үсэгтэй.' },
+        { Topic:'Дүрэм', Question:'Монгол бичгийн эгшиг үсэг хэд байдаг вэ?', A:'5', B:'7', C:'9', D:'12', Answer:'B', Explanation:'Монгол бичигт 7 эгшиг үсэг байдаг.' },
+        { Topic:'Үг', Question:'"Нохой" гэдэг үгийн эхний үсэг аль нь вэ?', A:'Н', B:'М', C:'Х', D:'Г', Answer:'A', Explanation:'"Нохой" үг Н үсгээр эхэлдэг.' },
+        { Topic:'Үг', Question:'"Морь" гэдэг монгол үг юуг илэрхийлдэг вэ?', A:'Тэмээ', B:'Үнэг', C:'Адуу', D:'Хонь', Answer:'C', Explanation:'"Морь" гэдэг нь адуу гэсэн утгатай.' },
+        { Topic:'Дуудлага', Question:'Урт эгшгийн тэмдгийг яаж бичдэг вэ?', A:'Нэмэлт цэгтэй', B:'Давхар үсэгтэй', C:'Зураасаар', D:'Онцгой тэмдэгтэй', Answer:'D', Explanation:'Монгол бичигт урт эгшгийг онцгой тэмдэгтэй бичдэг.' }
     ];
 }
 
 function getTopics() {
     return [...new Set(examQuestions.map(q => q.Topic || q.topic || 'Ерөнхий'))];
 }
-
 function renderTopics() {
     const topics = getTopics();
-    const topicList = document.getElementById('examTopicList');
-    if (!topics.length) {
-        topicList.innerHTML = `<div class="text-center text-gray-400 py-6 text-xs">Асуулт олдсонгүй.</div>`;
-        return;
-    }
-    topicList.innerHTML = topics.map(topic => {
+    const el     = document.getElementById('examTopicList');
+    if (!topics.length) { el.innerHTML = `<div class="text-center text-gray-400 py-6 text-xs">Асуулт олдсонгүй.</div>`; return; }
+    el.innerHTML = topics.map(topic => {
         const count = examQuestions.filter(q => (q.Topic || q.topic || 'Ерөнхий') === topic).length;
         return `
-            <button onclick="startExam('${topic.replace(/'/g, "\\'")}')"
+            <button onclick="startExam('${topic.replace(/'/g,"\\'")}')"
                     class="w-full bg-white border-2 border-blue-100 hover:border-blue-400 hover:bg-blue-50
                            rounded-2xl p-4 text-left flex justify-between items-center transition-all group">
                 <div>
                     <div class="font-black text-blue-900 text-sm">${topic}</div>
                     <div class="text-[10px] text-gray-400 font-bold mt-0.5">${count} асуулт</div>
                 </div>
-                <div class="bg-blue-600 text-white text-[10px] font-black uppercase px-4 py-2 rounded-xl
-                             group-hover:bg-blue-700 transition-all">
+                <div class="bg-blue-600 text-white text-[10px] font-black uppercase px-4 py-2 rounded-xl group-hover:bg-blue-700 transition-all">
                     Эхлэх
                 </div>
             </button>`;
@@ -1058,46 +1285,31 @@ function renderTopics() {
 }
 
 function startExam(topic) {
-    currentTopic = topic;
-    const qs = examQuestions.filter(q => (q.Topic || q.topic || 'Ерөнхий') === topic);
-    // Хамгийн ихдээ 10 асуулт, санамсаргүй дарааллаар
-    currentExamQs = shuffle(qs).slice(0, 10);
-    currentQIndex = 0;
-    examScoreCount = 0;
+    currentTopic     = topic;
+    const qs         = examQuestions.filter(q => (q.Topic || q.topic || 'Ерөнхий') === topic);
+    currentExamQs   = shuffle(qs).slice(0, 10);
+    currentQIndex   = 0;
+    examScoreCount  = 0;
     examCorrectCount = 0;
-    examWrongCount = 0;
-
-    hideEl('examLobby');
-    hideEl('examResult');
-    showEl('examActive');
-
-    // Цаг: асуулт тутамд 30 секунд
+    examWrongCount  = 0;
+    hideEl('examLobby'); hideEl('examResult'); showEl('examActive');
     examTimeLeft = currentExamQs.length * 30;
     startExamTimer();
     examStartTime = Date.now();
-
     renderExamQuestion();
 }
 
 function renderExamQuestion() {
-    if (currentQIndex >= currentExamQs.length) {
-        finishExam();
-        return;
-    }
-
+    if (currentQIndex >= currentExamQs.length) { finishExam(); return; }
     examAnswered = false;
-    selectedAnswer = null;
     const q = currentExamQs[currentQIndex];
-    const topic = q.Topic || q.topic || 'Ерөнхий';
-
     document.getElementById('examQuestionCount').innerText = `${currentQIndex + 1} / ${currentExamQs.length}`;
     document.getElementById('examScore').innerText         = examScoreCount;
     document.getElementById('examProgress').style.width   = `${(currentQIndex / currentExamQs.length) * 100}%`;
-    document.getElementById('examQuestionBadge').innerText = topic;
+    document.getElementById('examQuestionBadge').innerText = q.Topic || q.topic || 'Ерөнхий';
     document.getElementById('examQuestion').innerText      = q.Question || q.question || '';
-
-    const options = ['A','B','C','D'];
-    document.getElementById('examOptions').innerHTML = options.map(opt => {
+    const opts = ['A','B','C','D'];
+    document.getElementById('examOptions').innerHTML = opts.map(opt => {
         const text = q[opt];
         if (!text) return '';
         return `
@@ -1108,7 +1320,6 @@ function renderExamQuestion() {
                               text-center leading-6 mr-3">${opt}</span>${text}
             </button>`;
     }).join('');
-
     document.getElementById('examExplanation').classList.add('hidden');
     document.getElementById('examNextBtn').classList.add('hidden');
 }
@@ -1116,109 +1327,66 @@ function renderExamQuestion() {
 function selectAnswer(opt) {
     if (examAnswered) return;
     examAnswered = true;
-    selectedAnswer = opt;
-
-    const q = currentExamQs[currentQIndex];
+    const q       = currentExamQs[currentQIndex];
     const correct = q.Answer || q.answer || 'A';
-    const isCorrect = opt === correct;
-
-    // Хариулт сонгосон товчийг тодруулна
-    const selBtn = document.getElementById('opt_' + opt);
-    if (selBtn) selBtn.classList.add(isCorrect ? 'correct' : 'wrong');
-
-    // Зөв хариултыг заавал харуулна
-    if (!isCorrect) {
+    const isOK    = opt === correct;
+    const selBtn  = document.getElementById('opt_' + opt);
+    if (selBtn) selBtn.classList.add(isOK ? 'correct' : 'wrong');
+    if (!isOK) {
         const corrBtn = document.getElementById('opt_' + correct);
         if (corrBtn) corrBtn.classList.add('correct');
     }
-
-    // Бүх товчийг disable хийнэ
     document.querySelectorAll('#examOptions .option-btn').forEach(b => b.disabled = true);
-
-    if (isCorrect) {
-        examScoreCount  += 10;
-        examCorrectCount++;
-        showToast("Зөв! +10 оноо", "success");
-    } else {
-        examWrongCount++;
-        showToast("Буруу!", "error");
-    }
-
-    // Тайлбар харуулна
+    if (isOK) { examScoreCount += 10; examCorrectCount++; showToast("Зөв! +10 оноо", "success"); }
+    else       { examWrongCount++; showToast("Буруу!", "error"); }
     const explanation = q.Explanation || q.explanation || '';
     if (explanation) {
         document.getElementById('examExplanationText').innerText = explanation;
         document.getElementById('examExplanation').classList.remove('hidden');
     }
-
     document.getElementById('examScore').innerText = examScoreCount;
     document.getElementById('examNextBtn').classList.remove('hidden');
-    document.getElementById('examNextBtn').innerText =
-        currentQIndex + 1 < currentExamQs.length ? 'Дараагийн асуулт' : 'Үр дүн харах';
+    document.getElementById('examNextBtn').innerText = currentQIndex + 1 < currentExamQs.length ? 'Дараагийн асуулт' : 'Үр дүн харах';
 }
 
 function nextQuestion() {
     currentQIndex++;
-    if (currentQIndex >= currentExamQs.length) {
-        finishExam();
-    } else {
-        renderExamQuestion();
-    }
+    if (currentQIndex >= currentExamQs.length) finishExam();
+    else renderExamQuestion();
 }
 
 function finishExam() {
     stopExamTimer();
     const elapsed = Math.round((Date.now() - examStartTime) / 1000);
-    const pct = currentExamQs.length > 0
-        ? Math.round((examCorrectCount / currentExamQs.length) * 100) : 0;
-
-    hideEl('examActive');
-    showEl('examResult');
-
-    document.getElementById('resultScore').innerText  = examScoreCount + ' оноо';
-    document.getElementById('resultDetail').innerText = `${pct}% зөв — ${currentTopic}`;
+    const pct     = currentExamQs.length > 0 ? Math.round((examCorrectCount / currentExamQs.length) * 100) : 0;
+    hideEl('examActive'); showEl('examResult');
+    document.getElementById('resultScore').innerText   = examScoreCount + ' оноо';
+    document.getElementById('resultDetail').innerText  = `${pct}% зөв — ${currentTopic}`;
     document.getElementById('resultCorrect').innerText = examCorrectCount;
     document.getElementById('resultWrong').innerText   = examWrongCount;
-    document.getElementById('resultTime').innerText    = elapsed + 'с';
-    document.getElementById('resultEmoji').innerText   = pct >= 80 ? 'GREAT' : pct >= 50 ? 'OK' : 'TRY';
-
-    // Хариултын дэлгэрэнгүй
-    document.getElementById('resultReview').innerHTML = currentExamQs.map((q, i) => {
+    document.getElementById('resultTime').innerText    = elapsed + 's';
+    document.getElementById('resultEmoji').innerText   = pct >= 80 ? 'GREAT!' : pct >= 50 ? 'GOOD' : 'TRY AGAIN';
+    document.getElementById('resultReview').innerHTML  = currentExamQs.map((q, i) => {
         const correct = q.Answer || q.answer || 'A';
         return `
-            <div class="p-3 rounded-xl text-xs font-bold ${correct === 'SKIP' ? 'bg-gray-50' : 'bg-white border'}">
+            <div class="p-3 rounded-xl text-xs font-bold bg-white border">
                 <div class="text-gray-500 mb-1">${i+1}. ${q.Question || ''}</div>
                 <div class="text-green-700">Зөв: ${q[correct] || correct}</div>
             </div>`;
     }).join('');
-
-    // Түүхэнд хадгалах
     saveExamResult({ topic: currentTopic, score: examScoreCount, pct, date: new Date().toLocaleDateString('mn-MN'), elapsed });
 }
 
-function retryExam() {
-    startExam(currentTopic);
-}
+function retryExam()  { startExam(currentTopic); }
 function backToLobby() {
-    stopExamTimer();
-    hideEl('examResult');
-    hideEl('examActive');
-    showEl('examLobby');
+    stopExamTimer(); hideEl('examResult'); hideEl('examActive'); showEl('examLobby');
     renderExamHistory();
 }
-
-/* --- Цагийн тоолуур --- */
 function startExamTimer() {
-    stopExamTimer();
-    updateTimerDisplay();
+    stopExamTimer(); updateTimerDisplay();
     examTimerInterval = setInterval(() => {
-        examTimeLeft--;
-        updateTimerDisplay();
-        if (examTimeLeft <= 0) {
-            clearInterval(examTimerInterval);
-            showToast("Цаг дууслаа!", "error");
-            finishExam();
-        }
+        examTimeLeft--; updateTimerDisplay();
+        if (examTimeLeft <= 0) { clearInterval(examTimerInterval); showToast("Цаг дууслаа!", "error"); finishExam(); }
     }, 1000);
 }
 function stopExamTimer() {
@@ -1232,22 +1400,17 @@ function updateTimerDisplay() {
     el.innerText = `${m}:${s}`;
     el.classList.toggle('timer-warning', examTimeLeft <= 30);
 }
-
-/* --- Шалгалтын түүх --- */
 function saveExamResult(result) {
-    const key = 'examHistory_' + currentUserEmail;
+    const key     = 'examHistory_' + currentUserEmail;
     const history = JSON.parse(localStorage.getItem(key) || '[]');
     history.unshift(result);
     localStorage.setItem(key, JSON.stringify(history.slice(0, 10)));
 }
 function renderExamHistory() {
-    const key = 'examHistory_' + currentUserEmail;
+    const key     = 'examHistory_' + currentUserEmail;
     const history = JSON.parse(localStorage.getItem(key) || '[]');
-    const el = document.getElementById('examHistoryList');
-    if (!history.length) {
-        el.innerHTML = `<div class="text-xs text-gray-300 text-center py-2">Одоохондоо байхгүй</div>`;
-        return;
-    }
+    const el      = document.getElementById('examHistoryList');
+    if (!history.length) { el.innerHTML = `<div class="text-xs text-gray-300 text-center py-2">Одоохондоо байхгүй</div>`; return; }
     el.innerHTML = history.map(h => `
         <div class="flex justify-between items-center bg-white border rounded-xl px-4 py-2 text-xs">
             <div>
@@ -1260,9 +1423,9 @@ function renderExamHistory() {
         </div>`).join('');
 }
 
-/* =============================================
+/* ════════════════════════════════════════════
    ТУСЛАХ ФУНКЦҮҮД
-   ============================================= */
+   ════════════════════════════════════════════ */
 function shuffle(arr) {
     const a = [...arr];
     for (let i = a.length - 1; i > 0; i--) {
@@ -1271,14 +1434,13 @@ function shuffle(arr) {
     }
     return a;
 }
-function showEl(id) { document.getElementById(id).classList.remove('hidden'); }
-function hideEl(id) { document.getElementById(id).classList.add('hidden'); }
-
+function showEl(id) { const el = document.getElementById(id); if (el) el.classList.remove('hidden'); }
+function hideEl(id) { const el = document.getElementById(id); if (el) el.classList.add('hidden'); }
 function showToast(msg, type = 'info') {
-    const box = document.getElementById('toastBox');
-    const toast = document.createElement('div');
-    const colors = { success: 'bg-green-700', error: 'bg-red-600', info: 'bg-blue-600' };
-    toast.className = `${colors[type] || colors.info} text-white px-6 py-3 rounded-2xl text-xs font-black shadow-xl pointer-events-auto transition-all opacity-0`;
+    const box    = document.getElementById('toastBox');
+    const toast  = document.createElement('div');
+    const colors = { success:'bg-green-700', error:'bg-red-600', info:'bg-blue-600' };
+    toast.className = `${colors[type]||colors.info} text-white px-6 py-3 rounded-2xl text-xs font-black shadow-xl pointer-events-auto transition-all opacity-0`;
     toast.innerText = msg;
     box.appendChild(toast);
     setTimeout(() => toast.style.opacity = '1', 10);
