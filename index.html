@@ -435,58 +435,237 @@ function buildProductCard(p) {
             </button>
         </div>`;
 }
-
 /* =============================================
-   ТӨЛБӨР
+   САГС УДИРДЛАГА
    ============================================= */
-function openPayment(title) {
-    pendingProduct = title;
-    document.getElementById('paymentNote').innerText = currentUserEmail + " | " + title;
+let cartItems = [];
+
+function loadCart() {
+    const saved = localStorage.getItem('cart_' + currentUserEmail);
+    cartItems = saved ? JSON.parse(saved) : [];
+    updateCartDisplay();
+}
+
+function saveCart() {
+    localStorage.setItem('cart_' + currentUserEmail, JSON.stringify(cartItems));
+    updateCartDisplay();
+}
+
+function addToCart(title, price) {
+    const existing = cartItems.find(item => item.title === title);
+    if (existing) {
+        existing.quantity += 1;
+    } else {
+        cartItems.push({ title, price: Number(price), quantity: 1 });
+    }
+    saveCart();
+    showToast("Сагсанд нэмэгдлээ! 🛒", "success");
+}
+
+function removeFromCart(title) {
+    cartItems = cartItems.filter(item => item.title !== title);
+    saveCart();
+    renderCartItems();
+}
+
+function updateQuantity(title, change) {
+    const item = cartItems.find(item => item.title === title);
+    if (item) {
+        item.quantity += change;
+        if (item.quantity <= 0) {
+            removeFromCart(title);
+        } else {
+            saveCart();
+            renderCartItems();
+        }
+    }
+}
+
+function clearCart() {
+    cartItems = [];
+    saveCart();
+    renderCartItems();
+    showToast("Сагс цэвэрлэгдлээ", "info");
+}
+
+function updateCartDisplay() {
+    const count = cartItems.reduce((sum, item) => sum + item.quantity, 0);
+    const countEl = document.getElementById('cartCount');
+    
+    if (count > 0) {
+        countEl.textContent = count;
+        countEl.classList.remove('hidden');
+    } else {
+        countEl.classList.add('hidden');
+    }
+}
+
+function openCart() {
+    renderCartItems();
+    document.getElementById('cartModal').classList.add('active');
+}
+
+function closeCart() {
+    document.getElementById('cartModal').classList.remove('active');
+}
+
+function renderCartItems() {
+    const container = document.getElementById('cartItems');
+    const totalEl = document.getElementById('cartTotal');
+    const checkoutBtn = document.getElementById('checkoutBtn');
+    
+    if (cartItems.length === 0) {
+        container.innerHTML = `
+            <div class="text-center text-gray-400 py-8">
+                <div class="text-4xl mb-2">🛒</div>
+                <div class="text-sm">Сагс хоосон байна</div>
+            </div>`;
+        totalEl.textContent = '0₮';
+        checkoutBtn.disabled = true;
+        checkoutBtn.classList.add('opacity-50');
+        return;
+    }
+    
+    checkoutBtn.disabled = false;
+    checkoutBtn.classList.remove('opacity-50');
+    
+    container.innerHTML = cartItems.map(item => `
+        <div class="bg-gray-50 rounded-xl p-3 flex items-center justify-between">
+            <div class="flex-1">
+                <div class="font-bold text-xs text-gray-800 mb-1">${item.title}</div>
+                <div class="text-orange-600 font-black text-sm">${item.price.toLocaleString()}₮</div>
+            </div>
+            
+            <div class="flex items-center gap-2">
+                <button onclick="updateQuantity('${item.title.replace(/'/g, "\\'")}', -1)"
+                        class="w-6 h-6 bg-gray-200 rounded-full text-gray-600 font-black text-xs hover:bg-gray-300 transition-all">
+                    −
+                </button>
+                <span class="font-black text-sm w-6 text-center">${item.quantity}</span>
+                <button onclick="updateQuantity('${item.title.replace(/'/g, "\\'")}', 1)"
+                        class="w-6 h-6 bg-orange-200 rounded-full text-orange-700 font-black text-xs hover:bg-orange-300 transition-all">
+                    +
+                </button>
+            </div>
+            
+            <button onclick="removeFromCart('${item.title.replace(/'/g, "\\'")}')"
+                    class="ml-3 text-red-400 hover:text-red-600 font-bold text-sm">
+                ✕
+            </button>
+        </div>
+    `).join('');
+    
+    const total = cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+    totalEl.textContent = total.toLocaleString() + '₮';
+}
+
+function proceedToPayment() {
+    if (cartItems.length === 0) {
+        showToast("Сагс хоосон байна!", "error");
+        return;
+    }
+    
+    const cartSummary = cartItems.map(item => 
+        `${item.title} x${item.quantity}`
+    ).join(', ');
+    
+    const total = cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+    
+    pendingProduct = cartSummary;
+    pendingTotal = total;
+    
+    closeCart();
+    document.getElementById('paymentNote').innerText = 
+        currentUserEmail + " | " + cartSummary + " | " + total.toLocaleString() + "₮";
     document.getElementById('paymentModal').classList.add('active');
 }
+
+/* =============================================
+   БАРАА АЧААЛЛАХ (ШИНЭЧЛЭГДСЭН)
+   ============================================= */
+async function loadProducts() {
+    try {
+        const res = await fetch(`${ORDER_URL}?action=getProducts`);
+        productsData = await res.json();
+        const html = productsData.map(p => buildProductCard(p)).join('');
+        document.getElementById('materialGrid').innerHTML = html;
+        document.getElementById('fullShopGrid').innerHTML = html;
+        loadCart(); // Сагсыг ачаална
+    } catch (e) {
+        console.error(e);
+    }
+}
+
+function buildProductCard(p) {
+    const safeTitle = p.Title.replace(/'/g, "\\'");
+    const price = Number(p.Price);
+    const imgSrc = `https://raw.githubusercontent.com/tuult764-crypto/sonirholtoi-hel-bichig-/main/${p.Images.split(',')[0].trim()}`;
+    
+    return `
+        <div class="bg-white p-4 rounded-[2rem] shadow-md border border-orange-50 flex flex-col">
+            <img src="${imgSrc}" class="w-full h-32 object-cover rounded-xl mb-3" onerror="this.style.display='none'">
+            <h3 class="font-black text-[10px] text-orange-900 mb-1 uppercase italic">${p.Title}</h3>
+            <p class="font-bold text-orange-600 text-xs mb-3">${price.toLocaleString()}₮</p>
+            
+            <div class="mt-auto flex gap-2">
+                <button onclick="addToCart('${safeTitle}', ${price})"
+                        class="flex-1 bg-orange-100 text-orange-800 py-2 rounded-lg font-black uppercase italic text-[9px] hover:bg-orange-200 transition-all">
+                    + Сагс
+                </button>
+                <button onclick="buyNow('${safeTitle}', ${price})"
+                        class="flex-1 bg-orange-800 text-white py-2 rounded-lg font-black uppercase italic text-[9px] hover:bg-orange-900 transition-all">
+                    Худалдан авах
+                </button>
+            </div>
+        </div>`;
+}
+
+function buyNow(title, price) {
+    pendingProduct = title;
+    pendingTotal = price;
+    document.getElementById('paymentNote').innerText = 
+        currentUserEmail + " | " + title + " | " + Number(price).toLocaleString() + "₮";
+    document.getElementById('paymentModal').classList.add('active');
+}
+
+/* =============================================
+   ТӨЛБӨР (ШИНЭЧЛЭГДСЭН)
+   ============================================= */
+let pendingProduct = "";
+let pendingTotal = 0;
+
+// openPayment функцийг устгаж, дээрх buyNow болон proceedToPayment ашиглана
+
 function closePayment() {
     document.getElementById('paymentModal').classList.remove('active');
 }
+
 async function confirmOrder() {
     const btn = document.getElementById('confirmBtn');
     btn.innerText = "Илгээж байна..."; btn.disabled = true;
+    
     try {
         const body = new URLSearchParams({
             action: 'order',
             email: currentUserEmail,
-            product: pendingProduct
+            product: pendingProduct,
+            total: pendingTotal
         });
+        
         await fetch(ORDER_URL, { method: 'POST', body });
         closePayment();
-        showToast("Хүсэлт амжилттай илгээгдлээ!", "success");
+        
+        // Сагсаас захиалсан бол сагсыг цэвэрлэнэ
+        if (cartItems.length > 0) {
+            clearCart();
+        }
+        
+        showToast("Хүсэлт амжилттай илгээгдлээ! 🎉", "success");
     } catch (e) {
         showToast("Алдаа гарлаа, дахин оролдоно уу.", "error");
     } finally {
-        btn.innerText = "Төлсөн, хүсэлт илгээх"; btn.disabled = false;
-    }
-}
-
-/* =============================================
-   МИНИЙ САН
-   ============================================= */
-async function loadLibrary() {
-    const grid = document.getElementById('libraryGrid');
-    grid.innerHTML = `<div class="col-span-full text-center text-gray-400 py-8 text-xs">Уншиж байна...</div>`;
-    try {
-        const res = await fetch(`${ORDER_URL}?action=getLibrary&email=${encodeURIComponent(currentUserEmail)}`);
-        const data = await res.json();
-        grid.innerHTML = data.length
-            ? data.map(p => `
-                <div class="bg-white p-5 rounded-3xl border shadow-sm hover:shadow-md transition-all">
-                    <h3 class="font-black text-sm mb-3 text-orange-900">${p.Title}</h3>
-                    <a href="${p.Link}" target="_blank"
-                       class="block bg-green-700 text-white py-2 rounded-xl text-center text-[10px] font-black italic hover:bg-green-800 transition-all">
-                        Нээх
-                    </a>
-                </div>`).join('')
-            : `<div class="col-span-full text-center text-gray-400 py-12 text-xs">Одоохондоо хоосон байна.</div>`;
-    } catch (e) {
-        grid.innerHTML = `<div class="col-span-full text-center text-red-400 py-8 text-xs">Алдаа гарлаа.</div>`;
+        btn.innerText = "Төлсөн, хүсэлт илгээх"; 
+        btn.disabled = false;
     }
 }
 
