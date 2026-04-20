@@ -323,6 +323,31 @@
 </div><!-- /mainSystem -->
 
 <!-- ===== ТӨЛБӨРИЙН MODAL ===== -->
+    <div id="cartModal" class="modal" onclick="if(event.target==this) closeCart()">
+    <div class="bg-white p-6 rounded-[2rem] max-w-sm w-full border-8 border-orange-50 shadow-2xl">
+        <div class="flex justify-between items-center mb-4">
+            <h2 class="text-lg font-black text-orange-900 uppercase italic">Миний сагс</h2>
+            <button onclick="closeCart()" class="text-gray-400 font-bold">✕</button>
+        </div>
+        <div id="cartItems" class="space-y-3 mb-6 max-h-60 overflow-y-auto">
+            </div>
+        <div class="border-t pt-4 mb-6">
+            <div class="flex justify-between font-black text-orange-900 uppercase italic text-sm">
+                <span>Нийт:</span>
+                <span id="cartTotal">0₮</span>
+            </div>
+        </div>
+        <button id="checkoutBtn" onclick="proceedToPayment()" 
+                class="w-full bg-orange-800 text-white py-4 rounded-xl font-black uppercase italic shadow-lg hover:bg-orange-900 transition-all">
+            Төлбөр төлөх рүү шилжих
+        </button>
+    </div>
+</div>
+
+<button onclick="openCart()" class="relative bg-orange-100 p-2 rounded-full">
+    <span class="text-lg">🛒</span>
+    <span id="cartCount" class="absolute -top-1 -right-1 bg-red-500 text-white text-[8px] font-bold px-1.5 py-0.5 rounded-full hidden">0</span>
+</button>
 <div id="paymentModal" class="modal" onclick="if(event.target==this) closePayment()">
     <div class="bg-white p-8 rounded-[2.5rem] max-w-sm w-full text-center border-8 border-orange-50 relative">
         <button onclick="closePayment()" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600 font-bold">X</button>
@@ -350,13 +375,68 @@
 
 <script>
 /* =============================================
-   ТОХИРГОО
+   ТОХИРГОО БА ХУВЬСАГЧИД
    ============================================= */
 const ORDER_URL = 'https://script.google.com/macros/s/AKfycbw-4l3RN9-KTzCOJc4ZswFgnQ5DCEO9mY9gobI8W1IGXtUp_LgTL77Zc3oaCp0up7xZVw/exec';
 let currentUserEmail = "";
 let productsData = [];
 let pendingProduct = "";
+let pendingTotal = 0; // Зарлаж өгөв
+let cartItems = [];
 
+/* =============================================
+   ДЭЛГҮҮРИЙН ЛОГИК (ЗАСВАР)
+   ============================================= */
+function buyNow(title, price) {
+    if(!currentUserEmail) return showToast("Нэвтэрнэ үү!", "error");
+    pendingProduct = title;
+    pendingTotal = price;
+    document.getElementById('paymentNote').innerText = `${currentUserEmail} | ${title} | ${Number(price).toLocaleString()}₮`;
+    document.getElementById('paymentModal').classList.add('active');
+}
+
+async function confirmOrder() {
+    const btn = document.getElementById('confirmBtn');
+    const oldText = btn.innerText;
+    btn.innerText = "Илгээж байна..."; 
+    btn.disabled = true;
+
+    try {
+        const body = new URLSearchParams({
+            action: 'order',
+            email: currentUserEmail,
+            product: pendingProduct,
+            total: pendingTotal,
+            note: document.getElementById('paymentNote').innerText
+        });
+
+        // Google Script CORS асуудлаас болж 'no-cors' ашиглах нь найдвартай
+        await fetch(ORDER_URL, { 
+            method: 'POST', 
+            mode: 'no-cors', 
+            body: body 
+        });
+
+        closePayment();
+        if (cartItems.length > 0) clearCart();
+        showToast("Хүсэлт илгээгдлээ! Төлбөр шалгасны дараа идэвхжнэ.", "success");
+    } catch (e) {
+        showToast("Алдаа гарлаа. Дахин оролдоно уу.", "error");
+    } finally {
+        btn.innerText = oldText;
+        btn.disabled = false;
+    }
+}
+
+// Сагсны мэдээллийг шинэчлэх функц
+function updateCartDisplay() {
+    const count = cartItems.reduce((sum, item) => sum + item.quantity, 0);
+    const countEl = document.getElementById('cartCount');
+    if (countEl) {
+        countEl.textContent = count;
+        count > 0 ? countEl.classList.remove('hidden') : countEl.classList.add('hidden');
+    }
+}
 /* =============================================
    НЭВТРЭХ
    ============================================= */
