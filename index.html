@@ -532,7 +532,7 @@
      ========================================================= -->
 <script>
 /* ── ТОХИРГОО ─────────────────────────────── */
-const ORDER_URL = 'https://script.google.com/macros/s/AKfycbxEm3hljjvTCXnvVL0E_k0bMO848QjVMgg80UGUTGD6eXrSWlu2h0mY3vUINj6ZRReGQw/exec';
+const ORDER_URL = 'https://script.google.com/macros/s/AKfycbz-JwAQ8-A9U8W_yq2IuXlI6fQGlAVgJxf4RTAlzhsVA6cHjjj9kvOtUFVoSHBxu2fOrQ/exec';
 const GITHUB_BASE = 'https://raw.githubusercontent.com/tuult764-crypto/sonirholtoi-hel-bichig-/main/';
 
 let currentUserEmail = "";
@@ -943,26 +943,34 @@ async function confirmOrder() {
 /* ════════════════════════════════════════════
    МИНИЙ САН
    ════════════════════════════════════════════ */
-async function loadLibrary() {
-    const grid = document.getElementById('libraryGrid');
-    grid.innerHTML = `<div class="text-center text-gray-400 text-xs py-8 col-span-3">Уншиж байна...</div>`;
+async function loadMyLibrary() {
+    const libGrid = document.getElementById('libraryGrid'); // Таны сангийн grid ID
+    if (!libGrid) return;
+
     try {
-        const res  = await fetch(`${ORDER_URL}?action=getLibrary&email=${encodeURIComponent(currentUserEmail)}`);
-        const data = await res.json();
-        if (!Array.isArray(data) || !data.length) {
-            grid.innerHTML = `<div class="text-center text-gray-400 text-xs py-8 col-span-3">Материал байхгүй байна.</div>`;
-            return;
+        const res = await fetch(`${ORDER_URL}?action=getMyLibrary&email=${encodeURIComponent(currentUserEmail)}`, {
+            method: 'GET',
+            redirect: 'follow'
+        });
+        const files = await res.json();
+
+        if (files.length === 0) {
+            libGrid.innerHTML = "<p class='col-span-full text-center py-10 opacity-50'>Төлбөр баталгаажсан файл байхгүй байна.</p>";
+        } else {
+            // Файлуудыг жагсааж харуулах
+            libGrid.innerHTML = files.map(f => `
+                <div class="bg-white p-4 rounded-2xl shadow-sm border border-orange-100">
+                    <h4 class="font-bold text-orange-900 text-xs">${f.productName}</h4>
+                    <p class="text-[9px] text-gray-400 mb-2">${new Date(f.date).toLocaleDateString()}</p>
+                    <button onclick="window.open('${f.note}')" class="w-full bg-orange-100 text-orange-700 py-2 rounded-lg text-[10px] font-black uppercase">
+                        Татах / Үзэх
+                    </button>
+                </div>
+            `).join('');
         }
-        grid.innerHTML = data.map(item => `
-            <div class="bg-white rounded-2xl p-4 shadow border border-orange-50">
-                <h3 class="font-black text-sm text-orange-900 mb-2">${item.Title || item.title || ''}</h3>
-                <p class="text-xs text-gray-500">${item.Description || item.description || ''}</p>
-                ${item.Link ? `<a href="${item.Link}" target="_blank"
-                    class="mt-3 inline-block bg-orange-800 text-white px-4 py-2 rounded-xl text-[10px] font-black uppercase italic hover:bg-orange-900 transition-all">
-                    Нээх</a>` : ''}
-            </div>`).join('');
     } catch (e) {
-        grid.innerHTML = `<div class="text-center text-gray-400 text-xs py-8 col-span-3">Холболтын алдаа.</div>`;
+        console.error("Library load error:", e);
+        libGrid.innerHTML = "<p class='text-red-500'>Холболтын алдаа гарлаа.</p>";
     }
 }
 
