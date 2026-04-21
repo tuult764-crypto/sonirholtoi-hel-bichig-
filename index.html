@@ -904,33 +904,41 @@ function closePayment() { document.getElementById('paymentModal').classList.remo
 
 async function confirmOrder() {
     const btn = document.getElementById('confirmBtn');
-    btn.innerText = "Илгээж байна..."; btn.disabled = true;
+    const note = document.getElementById('paymentNote').innerText;
+    
+    // Товчийг идэвхгүй болгож, хэрэглэгчид хүлээхийг сануулна
+    btn.disabled = true;
+    btn.innerText = "Илгээж байна...";
+
     try {
-        const params = new URLSearchParams({
-            action: 'order',
-            email: currentUserEmail,
-            product: pendingProduct,
-            total: pendingTotal,
-            note: document.getElementById('paymentNote').innerText
-        });
-
-        // POST хүсэлтийг JSON-оор биш URLSearchParams-аар явуулах нь Google Script-д хялбар
-        await fetch(ORDER_URL, { 
-            method: 'POST', 
-            body: params.toString(),
+        // Google Script рүү мэдээлэл илгээх
+        await fetch(ORDER_URL, {
+            method: 'POST',
+            mode: 'no-cors', // Энэ нь CORS алдаанаас сэргийлнэ
+            cache: 'no-cache',
             headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-            redirect: 'follow' 
+            body: new URLSearchParams({
+                action: 'order',
+                email: currentUserEmail, // Нэвтэрсэн мэйл
+                product: pendingProduct,  // Захиалсан бараанууд
+                note: note                // Гүйлгээний утга
+            })
         });
 
-        closePayment();
-        showToast("Хүсэлт амжилттай илгээгдлээ!", "success");
-        if (cartItems.length > 0) clearCart();
-    } catch (e) {
-        showToast("Алдаа гарлаа: " + e.message, "error");
+        // 'no-cors' үед хариуг уншиж болдоггүй ч мэдээлэл Sheet-д орно
+        showToast("Захиалга амжилттай илгээгдлээ!", "success");
+        closePayment(); // Төлбөрийн цонхыг хаах
+        clearCart();    // Сагсыг цэвэрлэх
+        
+    } catch (error) {
+        console.error("Fetch error:", error);
+        showToast("Холболтын алдаа гарлаа!", "error");
     } finally {
-        btn.innerText = "Төлсөн, хүсэлт илгээх"; btn.disabled = false;
+        btn.disabled = false;
+        btn.innerText = "Төлсөн, хүсэлт илгээх";
     }
 }
+    
 /* ════════════════════════════════════════════
    МИНИЙ САН
    ════════════════════════════════════════════ */
