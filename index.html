@@ -572,29 +572,27 @@ async function handleLogin() {
     const email = document.getElementById('loginEmail').value.trim();
     if (!email) return showToast("Мэйл хаягаа оруулна уу!", "error");
     
-    const btn = document.getElementById('loginBtn');
-    btn.innerText = "Уншиж байна..."; btn.disabled = true;
-    
     try {
-        // Redirect: follow нэмсэн
+        // Энд redirect: 'follow' байгаа эсэхийг заавал шалга
         const res = await fetch(`${ORDER_URL}?action=check&email=${encodeURIComponent(email)}`, {
-            redirect: 'follow'
+            method: 'GET',
+            redirect: 'follow' 
         });
+        
         const data = await res.json();
         
-        if (data.status === "exists") { // Таны Script "exists" гэж буцааж байгаа бол
+        if (data.status === "success") {
             currentUserEmail = email;
             document.getElementById('authScreen').classList.add('hidden');
             document.getElementById('mainSystem').classList.remove('hidden');
             document.getElementById('navEmail').innerText = email;
-            loadProducts();
+            loadProducts(); // Нэвтэрсний дараа дэлгүүрийг ачаална
         } else {
             showToast("Бүртгэлгүй мэйл!", "error");
         }
     } catch (e) {
-        showToast("Холболтын алдаа: " + e.message, "error");
-    } finally {
-        btn.innerText = "Нэвтрэх"; btn.disabled = false;
+        console.error("Login error:", e);
+        showToast("Холболтын алдаа гарлаа", "error");
     }
 }
     
