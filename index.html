@@ -532,7 +532,7 @@
      ========================================================= -->
 <script>
 /* ── ТОХИРГОО ─────────────────────────────── */
-const ORDER_URL = 'https://script.google.com/macros/s/AKfycbz-JwAQ8-A9U8W_yq2IuXlI6fQGlAVgJxf4RTAlzhsVA6cHjjj9kvOtUFVoSHBxu2fOrQ/exec';
+const ORDER_URL = 'https://script.google.com/macros/s/AKfycbw0C_oiinoGYzhQvFCoutGlP7GS5LF4e9AQMX67QsLvh9OqcXpbEE2i88SX8qjxBT5Xjg/exec';
 const GITHUB_BASE = 'https://raw.githubusercontent.com/tuult764-crypto/sonirholtoi-hel-bichig-/main/';
 
 let currentUserEmail = "";
@@ -944,33 +944,42 @@ async function confirmOrder() {
    МИНИЙ САН
    ════════════════════════════════════════════ */
 async function loadMyLibrary() {
-    const libGrid = document.getElementById('libraryGrid'); // Таны сангийн grid ID
+    const libGrid = document.getElementById('fullLibraryGrid') || document.getElementById('libraryGrid');
     if (!libGrid) return;
 
+    // "Уншиж байна..." гэж харуулна
+    libGrid.innerHTML = "<p class='col-span-full text-center py-10 opacity-50 text-xs'>Ачаалж байна...</p>";
+
     try {
-        const res = await fetch(`${ORDER_URL}?action=getMyLibrary&email=${encodeURIComponent(currentUserEmail)}`, {
-            method: 'GET',
-            redirect: 'follow'
-        });
+        // currentUserEmail-ийг заавал дамжуулна
+        const url = `${ORDER_URL}?action=getMyLibrary&email=${encodeURIComponent(currentUserEmail)}`;
+        const res = await fetch(url, { redirect: 'follow' });
         const files = await res.json();
 
-        if (files.length === 0) {
-            libGrid.innerHTML = "<p class='col-span-full text-center py-10 opacity-50'>Төлбөр баталгаажсан файл байхгүй байна.</p>";
+        if (!files || files.length === 0) {
+            libGrid.innerHTML = `
+                <div class="col-span-full text-center py-20">
+                    <p class="text-gray-400 text-xs uppercase font-black italic">Одоогоор файл байхгүй байна</p>
+                    <p class="text-[10px] text-orange-300 mt-2">Төлбөр баталгаажсаны дараа энд харагдана</p>
+                </div>`;
         } else {
-            // Файлуудыг жагсааж харуулах
             libGrid.innerHTML = files.map(f => `
-                <div class="bg-white p-4 rounded-2xl shadow-sm border border-orange-100">
-                    <h4 class="font-bold text-orange-900 text-xs">${f.productName}</h4>
-                    <p class="text-[9px] text-gray-400 mb-2">${new Date(f.date).toLocaleDateString()}</p>
-                    <button onclick="window.open('${f.note}')" class="w-full bg-orange-100 text-orange-700 py-2 rounded-lg text-[10px] font-black uppercase">
-                        Татах / Үзэх
-                    </button>
+                <div class="bg-white p-4 rounded-[2rem] shadow-md border border-orange-50 flex flex-col items-center text-center">
+                    <div class="w-12 h-12 bg-orange-100 rounded-full flex items-center justify-center mb-3">
+                        <span class="text-orange-600 text-xl">📂</span>
+                    </div>
+                    <h4 class="font-black text-[10px] text-orange-900 mb-1 uppercase italic">${f.productName}</h4>
+                    <p class="text-[9px] text-gray-400 mb-4">${new Date(f.date).toLocaleDateString()}</p>
+                    <a href="${f.note}" target="_blank" 
+                       class="w-full bg-orange-800 text-white py-2 rounded-xl font-black uppercase italic text-[9px] hover:bg-orange-900 transition-all text-center">
+                        Үзэх / Татах
+                    </a>
                 </div>
             `).join('');
         }
     } catch (e) {
         console.error("Library load error:", e);
-        libGrid.innerHTML = "<p class='text-red-500'>Холболтын алдаа гарлаа.</p>";
+        libGrid.innerHTML = "<p class='text-red-400 text-center text-[10px]'>Холболтын алдаа гарлаа</p>";
     }
 }
 
@@ -1138,7 +1147,7 @@ function buildPrintPuzzle(board) {
 }
 function executePrint() {
     const extra = Math.max(0, printPageCount - 1);
-    const price = extra * 400;
+    const price = extra * 800;
     if (price > 0) {
         closePrintModal();
         pendingProduct = 'Судоку хэвлэх ' + printPageCount + ' хуудас';
@@ -1164,7 +1173,7 @@ function doPrint() {
                     Сонирхолтой Хэл Бичиг
                 </div>
                 <div style="font-size:9pt; color:#555; margin-top:1mm;">
-                    Монгол бичиг судоку — ${page + 1}-р хуудас ${page === 0 ? '(Үнэгүй)' : '(400T)'}
+                    Монгол бичиг судоку — ${page + 1}-р хуудас ${page === 0 ? '(Үнэгүй)' : '(800T)'}
                 </div>
             </div>
             <div style="display:grid; grid-template-columns:1fr 1fr; grid-template-rows: 1fr 1fr; gap:5mm; flex: 1;">`;
