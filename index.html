@@ -619,19 +619,32 @@ function showDashboard() {
 }
 
 /* ════════════════════════════════════════════
-   БАРАА / ДЭЛГҮҮР
+   БАРАА / ДЭЛГҮҮР (Зассан хувилбар)
    ════════════════════════════════════════════ */
 async function loadProducts() {
-    try {
-        const res = await fetch(`${ORDER_URL}?action=getProducts`);
-        productsData = await res.json();
-        const html = productsData.map(p => buildProductCard(p)).join('');
-        document.getElementById('materialGrid').innerHTML  = html;
-        document.getElementById('fullShopGrid').innerHTML = html;
-        loadCart();
-    } catch (e) { console.error(e); }
-}
+    const grid = document.getElementById('materialGrid');
+    const shopGrid = document.getElementById('fullShopGrid');
 
+    try {
+        // redirect: 'follow' заавал байх ёстой
+        const res = await fetch(`${ORDER_URL}?action=getProducts`, {
+            redirect: 'follow'
+        });
+        
+        productsData = await res.json();
+        
+        if (productsData && Array.isArray(productsData)) {
+            const html = productsData.map(p => buildProductCard(p)).join('');
+            if (grid) grid.innerHTML = html;
+            if (shopGrid) shopGrid.innerHTML = html;
+            loadCart();
+        } else {
+            console.error("Бараа олдсонгүй эсвэл өгөгдөл буруу байна.");
+        }
+    } catch (e) { 
+        console.error("Алдаа гарлаа:", e); 
+    }
+}
 /* ── БАРАА КАРТ (слайдер + lightbox) ──────── */
 function buildProductCard(p) {
     const safeTitle = p.Title.replace(/'/g, "\\'");
