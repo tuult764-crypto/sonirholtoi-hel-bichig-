@@ -575,7 +575,11 @@ async function handleLogin() {
     btn.innerText = "Уншиж байна..."; btn.disabled = true;
     try {
         const res  = await fetch(`${ORDER_URL}?action=check&email=${encodeURIComponent(email)}`);
-        const data = await res.json();
+        const text = await res.text();           // ← res.json() биш, text() ашиглана
+        let data;
+        try { data = JSON.parse(text); }
+        catch(e) { throw new Error("JSON parse алдаа: " + text.substring(0, 100)); }
+        
         if (data.status === "success") {
             currentUserEmail = email;
             document.getElementById('authScreen').classList.add('hidden');
@@ -587,12 +591,13 @@ async function handleLogin() {
             showToast("Бүртгэлгүй мэйл!", "error");
         }
     } catch (e) {
-        showToast("Холболтын алдаа!", "error");
+        console.error("Login алдаа:", e);        // ← console-д алдааг харна
+        showToast("Холболтын алдаа: " + e.message, "error");
     } finally {
         btn.innerText = "Нэвтрэх"; btn.disabled = false;
     }
 }
-
+    
 /* ════════════════════════════════════════════
    НАВИГАЦИ
    ════════════════════════════════════════════ */
@@ -859,7 +864,7 @@ function renderCartItems() {
                 <button onclick="updateQuantity('${item.title.replace(/'/g,"\\'")}', 1)"
                         class="w-6 h-6 bg-orange-200 rounded-full text-orange-700 font-black text-xs hover:bg-orange-300 transition-all">+</button>
             </div>
-            <button onclick="removeFromCart('${item.title.replace(/'/g,"\\'")}'))"
+            <button onclick="removeFromCart('${item.title.replace(/'/g,"\\'")}')"
                     class="ml-3 text-red-400 hover:text-red-600 font-bold text-sm">X</button>
         </div>`).join('');
     const total = cartItems.reduce((s, i) => s + i.price * i.quantity, 0);
@@ -1353,12 +1358,12 @@ async function initExamLobby() {
 
 function buildDemoQuestions() {
     return [
-        { Topic:'Дүрэм', Question:'Монгол бичгийг хэд дээр бичдэг вэ?', A:'Хэвтээ', B:'Босоо', C:'Диагональ', D:'Дугуй', Answer:'B', Explanation:'Монгол бичгийг дээрээс доош чиглэлтэй босоо бичдэг.' },
-        { Topic:'Дүрэм', Question:'Монгол бичгийн үсгийн тоо хэд вэ?', A:'25', B:'30', C:'35', D:'40', Answer:'C', Explanation:'Уламжлалт монгол бичгийн цагаан толгой 35 үсэгтэй.' },
+        { Topic:'Дүрэм', Question:'Монгол бичгийг ямар шугамаар бичдэг вэ?', A:'Хэвтээ', B:'Босоо', C:'Диагональ', D:'Дугуй', Answer:'B', Explanation:'Монгол бичгийг дээрээс доош чиглэлтэй босоо бичдэг.' },
+        { Topic:'Дүрэм', Question:'Монгол бичгийн бичмэл хэлбэрт эгшиг үсэг бүгд ямар зурлагаар эхэлдэг вэ?', A:'шилбэ', B:'шүд', C:'гэдэс', D:'титэм', Answer:'D', Explanation:'Уламжлалт монгол бичгийн бичмэл хэлбэрт бүх эгшиг үсэг титэм зурлагаар эхэлдэг' },
         { Topic:'Дүрэм', Question:'Монгол бичгийн эгшиг үсэг хэд байдаг вэ?', A:'5', B:'7', C:'9', D:'12', Answer:'B', Explanation:'Монгол бичигт 7 эгшиг үсэг байдаг.' },
-        { Topic:'Үг', Question:'"Нохой" гэдэг үгийн эхний үсэг аль нь вэ?', A:'Н', B:'М', C:'Х', D:'Г', Answer:'A', Explanation:'"Нохой" үг Н үсгээр эхэлдэг.' },
-        { Topic:'Үг', Question:'"Морь" гэдэг монгол үг юуг илэрхийлдэг вэ?', A:'Тэмээ', B:'Үнэг', C:'Адуу', D:'Хонь', Answer:'C', Explanation:'"Морь" гэдэг нь адуу гэсэн утгатай.' },
-        { Topic:'Дуудлага', Question:'Урт эгшгийн тэмдгийг яаж бичдэг вэ?', A:'Нэмэлт цэгтэй', B:'Давхар үсэгтэй', C:'Зураасаар', D:'Онцгой тэмдэгтэй', Answer:'D', Explanation:'Монгол бичигт урт эгшгийг онцгой тэмдэгтэй бичдэг.' }
+        { Topic:'Үг', Question:'"Титэм + шүд" нийлээд ямар үсэг вэ' , A:'А', B:'Э', C:'И', D:'О', Answer:'A', Explanation:'"Үгийн эхэнд ордог А" үсэг юм.' },
+        { Topic:'Үг', Question:'"Шилбэ" ямар үсгийг илэрхийлдэг вэ?', A:'А', B:'Э', C:'И', D:'Ү', Answer:'C', Explanation:'"Үгийн дунд ордог И" үсэг юм.' },
+        { Topic:'Дуудлага', Question:'Титэм+гэдэс+шилбэ" ямар үсэг болох вэ?', A:'О', B:'У', C:'Ө', D:'И', Answer:'C', Explanation:'"Үгийн эхэнд ордог Ө" үсэг бөгөөд монгол бичигт ө/ү үсэг адил бичигдд.' }
     ];
 }
 
