@@ -532,7 +532,7 @@
      ========================================================= -->
 <script>
 /* ── ТОХИРГОО ─────────────────────────────── */
-const ORDER_URL = 'https://script.google.com/macros/s/AKfycby18-LwPIy4Es4F4Ug0cP58DdMrKMFov5yRcMju8Wh1PjuSikZtTliqyzecJ6f3wTBzsw/exec';
+const ORDER_URL = 'https://script.google.com/macros/s/AKfycbwDz_ERg5_KkkTD4vYsIRZkOcBnDA75zvC4Q8IXFzJ8U2kkvVT9bASCXH-bEedu-6zWoQ/exec';
 const GITHUB_BASE = 'https://raw.githubusercontent.com/tuult764-crypto/sonirholtoi-hel-bichig-/main/';
 
 let currentUserEmail = "";
@@ -571,27 +571,27 @@ for (const [ascii, mong] of Object.entries(MONG_NUMS)) {
 async function handleLogin() {
     const email = document.getElementById('loginEmail').value.trim();
     if (!email) return showToast("Мэйл хаягаа оруулна уу!", "error");
+    
     const btn = document.getElementById('loginBtn');
     btn.innerText = "Уншиж байна..."; btn.disabled = true;
+    
     try {
-        const res  = await fetch(`${ORDER_URL}?action=check&email=${encodeURIComponent(email)}`);
-        const text = await res.text();           // ← res.json() биш, text() ашиглана
-        let data;
-        try { data = JSON.parse(text); }
-        catch(e) { throw new Error("JSON parse алдаа: " + text.substring(0, 100)); }
+        // Redirect: follow нэмсэн
+        const res = await fetch(`${ORDER_URL}?action=check&email=${encodeURIComponent(email)}`, {
+            redirect: 'follow'
+        });
+        const data = await res.json();
         
-        if (data.status === "success") {
+        if (data.status === "exists") { // Таны Script "exists" гэж буцааж байгаа бол
             currentUserEmail = email;
             document.getElementById('authScreen').classList.add('hidden');
             document.getElementById('mainSystem').classList.remove('hidden');
             document.getElementById('navEmail').innerText = email;
             loadProducts();
-            loadPersonalTasks();
         } else {
             showToast("Бүртгэлгүй мэйл!", "error");
         }
     } catch (e) {
-        console.error("Login алдаа:", e);        // ← console-д алдааг харна
         showToast("Холболтын алдаа: " + e.message, "error");
     } finally {
         btn.innerText = "Нэвтрэх"; btn.disabled = false;
@@ -895,24 +895,31 @@ async function confirmOrder() {
     const btn = document.getElementById('confirmBtn');
     btn.innerText = "Илгээж байна..."; btn.disabled = true;
     try {
-        const body = new URLSearchParams({
-            action: 'order', email: currentUserEmail,
-            product: pendingProduct, total: pendingTotal,
+        const params = new URLSearchParams({
+            action: 'order',
+            email: currentUserEmail,
+            product: pendingProduct,
+            total: pendingTotal,
             note: document.getElementById('paymentNote').innerText
         });
-        await fetch(ORDER_URL, { method: 'POST', mode: 'no-cors', body });
+
+        // POST хүсэлтийг JSON-оор биш URLSearchParams-аар явуулах нь Google Script-д хялбар
+        await fetch(ORDER_URL, { 
+            method: 'POST', 
+            body: params.toString(),
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            redirect: 'follow' 
+        });
+
         closePayment();
-        const wasPrintOrder = pendingProduct && pendingProduct.includes('Судоку хэвлэх');
-        if (cartItems.length > 0 && !wasPrintOrder) clearCart();
-        showToast("Хүсэлт илгээгдлээ! Хэвлэж байна...", "success");
-        if (wasPrintOrder) setTimeout(() => doPrint(), 500);
+        showToast("Хүсэлт амжилттай илгээгдлээ!", "success");
+        if (cartItems.length > 0) clearCart();
     } catch (e) {
-        showToast("Алдаа гарлаа. Дахин оролдоно уу.", "error");
+        showToast("Алдаа гарлаа: " + e.message, "error");
     } finally {
         btn.innerText = "Төлсөн, хүсэлт илгээх"; btn.disabled = false;
     }
 }
-
 /* ════════════════════════════════════════════
    МИНИЙ САН
    ════════════════════════════════════════════ */
