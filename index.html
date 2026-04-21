@@ -532,7 +532,7 @@
      ========================================================= -->
 <script>
 /* ── ТОХИРГОО ─────────────────────────────── */
-const ORDER_URL = 'https://script.google.com/macros/s/AKfycbxKZuI0Wpkp4Z8X9nncnjC_FxVP-xkvJcwHwcrJ8dJFSnJx7yRcrRe-gjsFFhponXcV2Q/exec';
+const ORDER_URL = 'https://script.google.com/macros/s/AKfycbxK_P1rXAzE0CQcA34umqB_innEDg7EkMFQg6k3ANzPZeh_q-yHzyX05SqpZfkOEjDV8A/exec';
 const GITHUB_BASE = 'https://raw.githubusercontent.com/tuult764-crypto/sonirholtoi-hel-bichig-/main/';
 
 let currentUserEmail = "";
@@ -890,16 +890,18 @@ function proceedToPayment() {
     pendingTotal   = total;
     closeCart();
     document.getElementById('paymentNote').innerText =
-        currentUserEmail + " | " + summary + " | " + total.toLocaleString() + "T";
+        currentUserEmail + " | " + summary + " | " + total.toLocaleString() + "₮";
     document.getElementById('paymentModal').classList.add('active');
 }
+
 function buyNow(title, price) {
     pendingProduct = title;
     pendingTotal   = price;
     document.getElementById('paymentNote').innerText =
-        currentUserEmail + " | " + title + " | " + Number(price).toLocaleString() + "T";
+        currentUserEmail + " | " + title + " | " + Number(price).toLocaleString() + "₮";
     document.getElementById('paymentModal').classList.add('active');
 }
+
 function closePayment() { document.getElementById('paymentModal').classList.remove('active'); }
 
 async function confirmOrder() {
@@ -909,7 +911,6 @@ async function confirmOrder() {
     btn.disabled = true;
     btn.innerText = "Илгээж байна...";
 
-    // Өгөгдлийг URLSearchParams ашиглан бэлдэх (Google Script-д хамгийн тохиромжтой)
     const urlParams = new URLSearchParams();
     urlParams.append('action', 'order');
     urlParams.append('email', currentUserEmail);
@@ -919,16 +920,15 @@ async function confirmOrder() {
     try {
         await fetch(ORDER_URL, {
             method: 'POST',
-            mode: 'no-cors', // Энэ нь аюулгүй байдлын алдаанаас сэргийлнэ
+            mode: 'no-cors',
             headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
             body: urlParams.toString()
         });
 
-        // no-cors үед fetch амжилттай болсон гэж үзээд дараах үйлдлүүдийг хийнэ
-        showToast("Захиалга амжилттай илгээгдлээ!", "success");
-        closePayment();
+        // МЭДЭГДЛИЙН ТЕКСТИЙГ ӨӨРЧИЛСӨН ХЭСЭГ:
+        showToast("Туул багш төлбөр шалгаад материалыг миний санд байршуулна. Манайхыг сонгосон танд баярлалаа. Өдрийн сайхан өнгөрүүлээрэй!", "success");
         
-        // Сагсыг цэвэрлэх функц байгаа бол дуудна
+        closePayment();
         if (typeof clearCart === "function") clearCart(); 
         
     } catch (error) {
@@ -939,19 +939,17 @@ async function confirmOrder() {
         btn.innerText = "Төлсөн, хүсэлт илгээх";
     }
 }
-    
+
 /* ════════════════════════════════════════════
-   МИНИЙ САН
+   МИНИЙ САН (ШИНЭЧЛЭГДСЭН)
    ════════════════════════════════════════════ */
 async function loadMyLibrary() {
     const libGrid = document.getElementById('fullLibraryGrid') || document.getElementById('libraryGrid');
     if (!libGrid) return;
 
-    // "Уншиж байна..." гэж харуулна
     libGrid.innerHTML = "<p class='col-span-full text-center py-10 opacity-50 text-xs'>Ачаалж байна...</p>";
 
     try {
-        // currentUserEmail-ийг заавал дамжуулна
         const url = `${ORDER_URL}?action=getMyLibrary&email=${encodeURIComponent(currentUserEmail)}`;
         const res = await fetch(url, { redirect: 'follow' });
         const files = await res.json();
@@ -965,12 +963,10 @@ async function loadMyLibrary() {
         } else {
             libGrid.innerHTML = files.map(f => `
                 <div class="bg-white p-4 rounded-[2rem] shadow-md border border-orange-50 flex flex-col items-center text-center">
-                    <div class="w-12 h-12 bg-orange-100 rounded-full flex items-center justify-center mb-3">
-                        <span class="text-orange-600 text-xl">📂</span>
-                    </div>
+                    <div class="w-12 h-12 bg-orange-100 rounded-full flex items-center justify-center mb-3 text-xl">📂</div>
                     <h4 class="font-black text-[10px] text-orange-900 mb-1 uppercase italic">${f.productName}</h4>
                     <p class="text-[9px] text-gray-400 mb-4">${new Date(f.date).toLocaleDateString()}</p>
-                    <a href="${f.note}" target="_blank" 
+                    <a href="${f.downloadUrl}" target="_blank" 
                        class="w-full bg-orange-800 text-white py-2 rounded-xl font-black uppercase italic text-[9px] hover:bg-orange-900 transition-all text-center">
                         Үзэх / Татах
                     </a>
@@ -979,10 +975,9 @@ async function loadMyLibrary() {
         }
     } catch (e) {
         console.error("Library load error:", e);
-        libGrid.innerHTML = "<p class='text-red-400 text-center text-[10px]'>Холболтын алдаа гарлаа</p>";
+        libGrid.innerHTML = "<p class='text-red-400 text-center text-[10px] font-bold'>Холболтын алдаа гарлаа</p>";
     }
 }
-
 /* ════════════════════════════════════════════
    СУДОКУ
    ════════════════════════════════════════════ */
