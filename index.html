@@ -532,7 +532,7 @@
      ========================================================= -->
 <script>
 /* ── ТОХИРГОО ─────────────────────────────── */
-const ORDER_URL = 'https://script.google.com/macros/s/AKfycbwYYuh16D7SIOv9eg69NQNUoL3wVky9XG8P5jEmQoZyQevnZN8lg1sMgpo2bqIcsiPUFw/exec';
+const ORDER_URL = 'https://script.google.com/macros/s/AKfycbxEm3hljjvTCXnvVL0E_k0bMO848QjVMgg80UGUTGD6eXrSWlu2h0mY3vUINj6ZRReGQw/exec';
 const GITHUB_BASE = 'https://raw.githubusercontent.com/tuult764-crypto/sonirholtoi-hel-bichig-/main/';
 
 let currentUserEmail = "";
@@ -906,32 +906,33 @@ async function confirmOrder() {
     const btn = document.getElementById('confirmBtn');
     const note = document.getElementById('paymentNote').innerText;
     
-    // Товчийг идэвхгүй болгож, хэрэглэгчид хүлээхийг сануулна
     btn.disabled = true;
     btn.innerText = "Илгээж байна...";
 
+    // Өгөгдлийг URLSearchParams ашиглан бэлдэх (Google Script-д хамгийн тохиромжтой)
+    const urlParams = new URLSearchParams();
+    urlParams.append('action', 'order');
+    urlParams.append('email', currentUserEmail);
+    urlParams.append('product', pendingProduct);
+    urlParams.append('note', note);
+
     try {
-        // Google Script рүү мэдээлэл илгээх
         await fetch(ORDER_URL, {
             method: 'POST',
-            mode: 'no-cors', // Энэ нь CORS алдаанаас сэргийлнэ
-            cache: 'no-cache',
+            mode: 'no-cors', // Энэ нь аюулгүй байдлын алдаанаас сэргийлнэ
             headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-            body: new URLSearchParams({
-                action: 'order',
-                email: currentUserEmail, // Нэвтэрсэн мэйл
-                product: pendingProduct,  // Захиалсан бараанууд
-                note: note                // Гүйлгээний утга
-            })
+            body: urlParams.toString()
         });
 
-        // 'no-cors' үед хариуг уншиж болдоггүй ч мэдээлэл Sheet-д орно
+        // no-cors үед fetch амжилттай болсон гэж үзээд дараах үйлдлүүдийг хийнэ
         showToast("Захиалга амжилттай илгээгдлээ!", "success");
-        closePayment(); // Төлбөрийн цонхыг хаах
-        clearCart();    // Сагсыг цэвэрлэх
+        closePayment();
+        
+        // Сагсыг цэвэрлэх функц байгаа бол дуудна
+        if (typeof clearCart === "function") clearCart(); 
         
     } catch (error) {
-        console.error("Fetch error:", error);
+        console.error("Алдаа:", error);
         showToast("Холболтын алдаа гарлаа!", "error");
     } finally {
         btn.disabled = false;
