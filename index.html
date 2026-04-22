@@ -81,6 +81,25 @@
         }
         .lb-nav-btn:hover { background: rgba(255,255,255,0.3); }
 
+        /* ===== PASS CARD ===== */
+        .pass-card {
+            cursor: pointer;
+            transition: all 0.2s;
+            position: relative;
+        }
+        .pass-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 24px rgba(0,0,0,0.12);
+        }
+        .pass-card.popular {
+            background: linear-gradient(135deg, #16a34a, #15803d);
+            color: white;
+        }
+        .pass-card.deal {
+            background: linear-gradient(135deg, #ea580c, #c2410c);
+            color: white;
+        }
+
         /* ===== ХЭВЛЭХ ===== */
         @media print {
             @page { size: A4 portrait; margin: 8mm; }
@@ -296,24 +315,17 @@
     <!-- ===== СУДОКУ ===== -->
     <div id="gamesSection" class="section-content container mx-auto px-4 py-8 max-w-xl">
         <button onclick="showDashboard()" class="text-orange-800 font-bold mb-4 uppercase text-xs">← Буцах</button>
-        <div class="bg-green-50 border border-green-200 rounded-2xl p-4 mb-4 flex items-center justify-between">
-            <div>
-                <div class="font-black text-green-800 text-sm uppercase italic">Хэвлэх хуудас</div>
-                <div class="text-[10px] text-green-600 font-bold mt-0.5">
-                    1-р хуудас <span class="text-green-700 font-black">ҮНЭГҮЙ</span>
-                    &nbsp;|&nbsp; 2+ хуудас нэг бүр <span class="text-orange-700 font-black">800₮</span>
-                </div>
-            </div>
-            <div class="flex items-center gap-2">
-                <span class="text-[10px] font-black text-gray-500 uppercase">Хуудас:</span>
-                <div id="printPageCount" class="w-10 text-center font-black text-green-800 bg-white border border-green-300 rounded-xl py-1 text-sm">1</div>
-            </div>
-        </div>
-        <h2 class="text-center text-xl font-black text-green-900 mb-4 italic uppercase">Монгол бичиг судоку</h2>
-        <div id="sudokuContainer" class="sudoku-grid"></div>
-        <div class="mt-4 bg-white rounded-2xl p-3 border border-green-100 shadow-sm">
+
+        <!-- СУДОКУ ТОГЛООМ (үргэлж харагдана, тоглох үнэгүй) -->
+        <h2 class="text-center text-xl font-black text-green-900 mb-1 italic uppercase">Монгол бичиг судоку</h2>
+        <p class="text-center text-[10px] text-gray-400 font-bold mb-4">Тоглох үнэгүй · Хэвлэхэд эрх шаардлагатай</p>
+
+        <div id="sudokuContainer" class="sudoku-grid mb-4"></div>
+
+        <!-- Тооны хөрвүүлэлт хүснэгт -->
+        <div class="bg-white rounded-2xl p-3 border border-green-100 shadow-sm mb-4">
             <div class="text-[10px] font-black text-gray-400 uppercase mb-2 text-center">
-                Тоо оруулах: 1-9 дарна уу — автоматаар хөрвөнө
+                1-9 дарахад автоматаар монгол тоо болно
             </div>
             <div class="grid grid-cols-9 gap-1">
                 <div class="text-center text-[10px] font-bold text-gray-400">1</div>
@@ -336,11 +348,109 @@
                 <div class="text-center font-bold text-green-700">&#x1819;</div>
             </div>
         </div>
-        <div class="mt-4 flex justify-center gap-3 flex-wrap">
+
+        <!-- Товчнууд -->
+        <div class="flex justify-center gap-3 flex-wrap mb-6">
             <button onclick="initSudoku()" class="bg-gray-500 text-white px-5 py-3 rounded-full font-black uppercase italic text-xs shadow-md hover:bg-gray-600 transition-all">Шинэ</button>
             <button onclick="checkSudoku()" class="bg-green-700 text-white px-7 py-3 rounded-full font-black uppercase italic text-xs shadow-md hover:bg-green-800 transition-all">Шалгах</button>
-            <button onclick="showPrintModal()" class="bg-orange-700 text-white px-5 py-3 rounded-full font-black uppercase italic text-xs shadow-md hover:bg-orange-800 transition-all">Хэвлэх</button>
+            <button onclick="openPrintPassSection()" class="bg-orange-700 text-white px-5 py-3 rounded-full font-black uppercase italic text-xs shadow-md hover:bg-orange-800 transition-all">🖨 Хэвлэх</button>
         </div>
+
+        <!-- ХЭВЛЭХ ЭРХ ХЭСЭГ -->
+        <div id="printPassSection">
+
+            <!-- Эрх байгаа үед харуулах мэдэгдэл -->
+            <div id="passActiveInfo" class="hidden bg-green-50 border-2 border-green-300 rounded-2xl p-4 mb-4">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <div class="text-[10px] font-black text-green-600 uppercase mb-1">✓ Хэвлэх эрх идэвхтэй</div>
+                        <div class="font-black text-green-900 text-sm">
+                            Үлдсэн: <span id="passRemainingDisplay" class="text-green-600 text-lg">0</span> хуудас
+                        </div>
+                        <div class="text-[9px] text-gray-400 mt-0.5">Нэг хуудаст 4 судоку байна</div>
+                    </div>
+                    <button onclick="showPrintModal()"
+                        class="bg-green-700 text-white px-5 py-3 rounded-xl font-black uppercase italic text-[10px] hover:bg-green-800 transition-all shadow-md">
+                        Хэвлэх →
+                    </button>
+                </div>
+            </div>
+
+            <!-- Сервер шалгаж байгаа байдал -->
+            <div id="passCheckingInfo" class="hidden bg-blue-50 border border-blue-200 rounded-2xl p-4 mb-4 text-center">
+                <div class="text-[10px] font-bold text-blue-500 animate-pulse">Эрх шалгаж байна...</div>
+            </div>
+
+            <!-- Багц худалдаа -->
+            <div id="passShopArea">
+                <div class="flex items-center justify-between mb-3">
+                    <h3 class="font-black text-gray-700 uppercase text-xs italic">Хэвлэх эрх авах</h3>
+                    <button onclick="checkPrintPassFromServer(true)" class="text-[10px] text-blue-500 font-bold underline">Эрхийг шинэчлэх</button>
+                </div>
+                <div class="grid grid-cols-3 gap-2 mb-3">
+                    <!-- 5 хуудас -->
+                    <div onclick="buyPrintPass(5,3000)"
+                         class="pass-card bg-white border-2 border-green-200 hover:border-green-500 rounded-2xl p-3 text-center">
+                        <div class="text-xl font-black text-green-700">5</div>
+                        <div class="text-[9px] font-black text-gray-500 uppercase">хуудас</div>
+                        <div class="text-[10px] font-black text-orange-700 mt-1">3,000₮</div>
+                        <div class="text-[8px] text-gray-400">20 судоку</div>
+                    </div>
+                    <!-- 10 хуудас — алдартай -->
+                    <div onclick="buyPrintPass(10,5000)"
+                         class="pass-card popular rounded-2xl p-3 text-center">
+                        <div class="absolute -top-2.5 left-1/2 -translate-x-1/2 bg-yellow-400 text-yellow-900 text-[7px] font-black px-2 py-0.5 rounded-full uppercase whitespace-nowrap">Алдартай</div>
+                        <div class="text-xl font-black text-white">10</div>
+                        <div class="text-[9px] font-black text-green-100 uppercase">хуудас</div>
+                        <div class="text-[10px] font-black text-yellow-300 mt-1">5,000₮</div>
+                        <div class="text-[8px] text-green-200">40 судоку</div>
+                    </div>
+                    <!-- 15 хуудас -->
+                    <div onclick="buyPrintPass(15,7000)"
+                         class="pass-card bg-white border-2 border-green-200 hover:border-green-500 rounded-2xl p-3 text-center">
+                        <div class="text-xl font-black text-green-700">15</div>
+                        <div class="text-[9px] font-black text-gray-500 uppercase">хуудас</div>
+                        <div class="text-[10px] font-black text-orange-700 mt-1">7,000₮</div>
+                        <div class="text-[8px] text-gray-400">60 судоку</div>
+                    </div>
+                    <!-- 20 хуудас -->
+                    <div onclick="buyPrintPass(20,9000)"
+                         class="pass-card bg-white border-2 border-green-200 hover:border-green-500 rounded-2xl p-3 text-center">
+                        <div class="text-xl font-black text-green-700">20</div>
+                        <div class="text-[9px] font-black text-gray-500 uppercase">хуудас</div>
+                        <div class="text-[10px] font-black text-orange-700 mt-1">9,000₮</div>
+                        <div class="text-[8px] text-gray-400">80 судоку</div>
+                    </div>
+                    <!-- 25 хуудас -->
+                    <div onclick="buyPrintPass(25,11000)"
+                         class="pass-card bg-white border-2 border-green-200 hover:border-green-500 rounded-2xl p-3 text-center">
+                        <div class="text-xl font-black text-green-700">25</div>
+                        <div class="text-[9px] font-black text-gray-500 uppercase">хуудас</div>
+                        <div class="text-[10px] font-black text-orange-700 mt-1">11,000₮</div>
+                        <div class="text-[8px] text-gray-400">100 судоку</div>
+                    </div>
+                    <!-- 30 хуудас — хямдрал -->
+                    <div onclick="buyPrintPass(30,12000)"
+                         class="pass-card deal rounded-2xl p-3 text-center">
+                        <div class="absolute -top-2.5 left-1/2 -translate-x-1/2 bg-white text-orange-700 text-[7px] font-black px-2 py-0.5 rounded-full uppercase whitespace-nowrap border border-orange-200">Хямдрал!</div>
+                        <div class="text-xl font-black text-white">30</div>
+                        <div class="text-[9px] font-black text-orange-100 uppercase">хуудас</div>
+                        <div class="text-[10px] font-black text-yellow-300 mt-1">12,000₮</div>
+                        <div class="text-[8px] text-orange-100">120 судоку</div>
+                    </div>
+                </div>
+                <!-- 1-р хуудас үнэгүй мэдэгдэл -->
+                <div id="freePrintInfo" class="bg-amber-50 border border-amber-200 rounded-xl p-3 text-center">
+                    <div class="text-[10px] font-black text-amber-700 uppercase">🎁 1-р хуудас үнэгүй!</div>
+                    <div class="text-[9px] text-amber-600 mt-0.5">Эрх авахгүйгээр нэг хуудас (4 судоку) хэвлэх боломжтой</div>
+                    <button onclick="useFreeOnePage()"
+                        class="mt-2 bg-amber-500 text-white px-4 py-1.5 rounded-full font-black uppercase italic text-[9px] hover:bg-amber-600 transition-all">
+                        Үнэгүй хэвлэх
+                    </button>
+                </div>
+            </div>
+
+        </div><!-- /printPassSection -->
     </div>
 
     <!-- ===== ДЭЛГҮҮР ===== -->
@@ -377,33 +487,35 @@
 <div id="printModal" class="modal" onclick="if(event.target===this) closePrintModal()">
     <div class="bg-white rounded-[2rem] max-w-sm w-full p-6 shadow-2xl border-4 border-green-100">
         <h2 class="text-lg font-black text-green-900 uppercase italic mb-4 text-center">Судоку хэвлэх</h2>
-        <div class="bg-green-50 rounded-2xl p-4 mb-4 text-center border border-green-200">
-            <div class="text-3xl font-black text-green-800" id="modalPageCount">1</div>
-            <div class="text-[10px] font-bold text-green-600 uppercase mt-1">хуудас (4 судоку / хуудас)</div>
+
+        <!-- Үлдсэн эрх -->
+        <div class="bg-green-50 rounded-2xl p-3 mb-4 text-center border border-green-200">
+            <div class="text-[10px] font-bold text-green-600 uppercase mb-1">Таны үлдсэн эрх</div>
+            <div class="text-3xl font-black text-green-800"><span id="modalRemainingPages">0</span> хуудас</div>
         </div>
+
+        <!-- Хэдэн хуудас хэвлэх сонгох -->
         <div class="flex items-center justify-center gap-4 mb-4">
-            <button onclick="adjustPrintPages(-1)" class="w-10 h-10 bg-gray-100 rounded-full font-black text-gray-700 hover:bg-gray-200 transition-all text-lg">-</button>
-            <span class="font-black text-gray-700 text-sm" id="modalPageLabel">1 хуудас</span>
-            <button onclick="adjustPrintPages(1)" class="w-10 h-10 bg-green-100 rounded-full font-black text-green-700 hover:bg-green-200 transition-all text-lg">+</button>
-        </div>
-        <div class="bg-orange-50 rounded-2xl p-4 mb-6 border border-orange-100">
-            <div class="flex justify-between text-xs font-bold text-gray-600 mb-1">
-                <span>1-р хуудас:</span><span class="text-green-700 font-black">Үнэгүй</span>
+            <button onclick="adjustPrintPages(-1)"
+                class="w-10 h-10 bg-gray-100 rounded-full font-black text-gray-700 hover:bg-gray-200 transition-all text-lg">−</button>
+            <div class="text-center">
+                <div class="font-black text-gray-800 text-xl" id="printPageCountDisplay">1</div>
+                <div class="text-[9px] text-gray-400 font-bold uppercase">хэвлэх хуудас</div>
             </div>
-            <div class="flex justify-between text-xs font-bold text-gray-600 mb-2">
-                <span>Нэмэлт хуудас:</span><span id="extraPagesPrice" class="text-orange-700 font-black">—</span>
-            </div>
-            <div class="border-t border-orange-200 pt-2 flex justify-between font-black text-orange-900">
-                <span class="text-sm uppercase italic">Нийт:</span>
-                <span class="text-lg" id="totalPrintPrice">Үнэгүй</span>
-            </div>
+            <button onclick="adjustPrintPages(1)"
+                class="w-10 h-10 bg-green-100 rounded-full font-black text-green-700 hover:bg-green-200 transition-all text-lg">+</button>
         </div>
-        <div id="printPaymentNote" class="hidden bg-blue-50 border border-blue-200 rounded-2xl p-3 mb-4 text-xs text-blue-700 font-bold text-center">
-            Хэвлэхийн өмнө төлбөрийг QR-ээр төлж, "Төлсөн, хэвлэх" дарна уу
+
+        <div class="bg-gray-50 rounded-xl p-3 mb-5 text-center">
+            <div class="text-[10px] text-gray-500 font-bold">Нийт <span id="printSudokuCount">4</span> судоку хэвлэгдэнэ</div>
+            <div id="printNotEnough" class="hidden text-[10px] text-red-500 font-black mt-1">⚠ Эрх хүрэхгүй байна!</div>
         </div>
+
         <div class="flex gap-3">
-            <button onclick="closePrintModal()" class="flex-1 bg-gray-100 text-gray-600 py-3 rounded-2xl font-black uppercase italic text-xs hover:bg-gray-200 transition-all">Цуцлах</button>
-            <button onclick="executePrint()" id="doPrintBtn" class="flex-1 bg-green-700 text-white py-3 rounded-2xl font-black uppercase italic text-xs hover:bg-green-800 transition-all">Хэвлэх</button>
+            <button onclick="closePrintModal()"
+                class="flex-1 bg-gray-100 text-gray-600 py-3 rounded-2xl font-black uppercase italic text-xs hover:bg-gray-200 transition-all">Цуцлах</button>
+            <button onclick="executePrint()" id="doPrintBtn"
+                class="flex-1 bg-green-700 text-white py-3 rounded-2xl font-black uppercase italic text-xs hover:bg-green-800 transition-all">Хэвлэх</button>
         </div>
     </div>
 </div>
@@ -458,31 +570,32 @@
 <div id="toastBox" class="fixed bottom-6 left-1/2 -translate-x-1/2 z-[9999] flex flex-col gap-2 items-center pointer-events-none"></div>
 
 <script>
-/* ── ТОХИРГОО ─────────────────────────────── */
+/* ══════════════════════════════════════════════
+   ТОХИРГОО
+══════════════════════════════════════════════ */
 const ORDER_URL   = 'https://script.google.com/macros/s/AKfycbxK_P1rXAzE0CQcA34umqB_innEDg7EkMFQg6k3ANzPZeh_q-yHzyX05SqpZfkOEjDV8A/exec';
 const GITHUB_BASE = 'https://raw.githubusercontent.com/tuult764-crypto/sonirholtoi-hel-bichig-/main/';
 
 let currentUserEmail = "";
 let productsData     = [];
 
-/* ── САГС ─────────────────────────────────── */
+/* ── САГС ──────────────────────────────────── */
 let cartItems      = [];
 let pendingProduct = "";
 let pendingTotal   = 0;
+// print pass худалдааны үед хэдэн хуудас авахыг хадгалах
+let pendingPassPages = 0;
 
-/* ── СУДОКУ / ХЭВЛЭХ ──────────────────────── */
+/* ── СУДОКУ ────────────────────────────────── */
 let sudokuBoard    = [];
 let printPageCount = 1;
-let pendingPrint   = false;   // ← төлбөр баталгаажсаны дараа хэвлэх flag
 
 /* ── LIGHTBOX ──────────────────────────────── */
 let lbImages      = [];
 let lbIndex       = 0;
 let lbTouchStartX = 0;
 
-/* ════════════════════════════════════════════
-   МОНГОЛ ТОО
-   ════════════════════════════════════════════ */
+/* ── МОНГОЛ ТОО ────────────────────────────── */
 const MONG_NUMS = {
     '1':'\u1811','2':'\u1812','3':'\u1813',
     '4':'\u1814','5':'\u1815','6':'\u1816',
@@ -491,9 +604,9 @@ const MONG_NUMS = {
 const MONG_TO_ASCII = {};
 for (const [a,m] of Object.entries(MONG_NUMS)) MONG_TO_ASCII[m] = a;
 
-/* ════════════════════════════════════════════
+/* ══════════════════════════════════════════════
    НЭВТРЭХ
-   ════════════════════════════════════════════ */
+══════════════════════════════════════════════ */
 async function handleLogin() {
     const email = document.getElementById('loginEmail').value.trim();
     if (!email) return showToast("Мэйл хаягаа оруулна уу!", "error");
@@ -515,15 +628,15 @@ async function handleLogin() {
     }
 }
 
-/* ════════════════════════════════════════════
+/* ══════════════════════════════════════════════
    НАВИГАЦИ
-   ════════════════════════════════════════════ */
+══════════════════════════════════════════════ */
 function showSection(name) {
     document.getElementById('dashboardHome').classList.add('hidden');
     document.querySelectorAll('.section-content').forEach(s => s.classList.remove('active'));
     const t = document.getElementById(name + 'Section');
     if (t) t.classList.add('active');
-    if (name === 'games')   initSudoku();
+    if (name === 'games')   initGamesSection();
     if (name === 'library') loadMyLibrary();
     if (name === 'shop')    loadProducts();
     if (name === 'planner') initPlanner();
@@ -535,9 +648,9 @@ function showDashboard() {
     stopExamTimer();
 }
 
-/* ════════════════════════════════════════════
+/* ══════════════════════════════════════════════
    БАРАА / ДЭЛГҮҮР
-   ════════════════════════════════════════════ */
+══════════════════════════════════════════════ */
 async function loadProducts() {
     const grid = document.getElementById('materialGrid');
     const shop = document.getElementById('fullShopGrid');
@@ -588,9 +701,9 @@ function slideTo(cardId, index) {
 }
 function slideDir(cardId, dir) { const w=document.getElementById(cardId); if(w) slideTo(cardId,parseInt(w.dataset.cur||'0')+dir); }
 
-/* ════════════════════════════════════════════
+/* ══════════════════════════════════════════════
    LIGHTBOX
-   ════════════════════════════════════════════ */
+══════════════════════════════════════════════ */
 function openLightbox(images, startIndex) { lbImages=images; lbIndex=startIndex; renderLightbox(); document.getElementById('lightboxModal').classList.add('active'); document.body.style.overflow='hidden'; }
 function closeLightbox() { document.getElementById('lightboxModal').classList.remove('active'); document.body.style.overflow=''; }
 function renderLightbox() {
@@ -612,9 +725,9 @@ document.addEventListener('keydown', e=>{
     if(e.key==='ArrowLeft') lbPrev(); if(e.key==='ArrowRight') lbNext(); if(e.key==='Escape') closeLightbox();
 });
 
-/* ════════════════════════════════════════════
+/* ══════════════════════════════════════════════
    САГС
-   ════════════════════════════════════════════ */
+══════════════════════════════════════════════ */
 function loadCart(){ const s=localStorage.getItem('cart_'+currentUserEmail); cartItems=s?JSON.parse(s):[]; updateCartDisplay(); }
 function saveCart(){ localStorage.setItem('cart_'+currentUserEmail,JSON.stringify(cartItems)); updateCartDisplay(); }
 function addToCart(title,price){ const e=cartItems.find(i=>i.title===title); if(e){e.quantity+=1;}else{cartItems.push({title,price:Number(price),quantity:1});} saveCart(); showToast("Сагсанд нэмэгдлээ!","success"); }
@@ -635,13 +748,13 @@ function proceedToPayment(){
     if(!cartItems.length) return showToast("Сагс хоосон байна!","error");
     const summary=cartItems.map(i=>`${i.title} x${i.quantity}`).join(', ');
     const total=cartItems.reduce((s,i)=>s+i.price*i.quantity,0);
-    pendingProduct=summary; pendingTotal=total; pendingPrint=false;
+    pendingProduct=summary; pendingTotal=total; pendingPassPages=0;
     closeCart();
     document.getElementById('paymentNote').innerText=currentUserEmail+" | "+summary+" | "+total.toLocaleString()+"₮";
     document.getElementById('paymentModal').classList.add('active');
 }
 function buyNow(title,price){
-    pendingProduct=title; pendingTotal=price; pendingPrint=false;
+    pendingProduct=title; pendingTotal=price; pendingPassPages=0;
     document.getElementById('paymentNote').innerText=currentUserEmail+" | "+title+" | "+Number(price).toLocaleString()+"₮";
     document.getElementById('paymentModal').classList.add('active');
 }
@@ -652,18 +765,21 @@ async function confirmOrder(){
     const note=document.getElementById('paymentNote').innerText;
     btn.disabled=true; btn.innerText="Илгээж байна...";
     const p=new URLSearchParams();
-    p.append('action','order'); p.append('email',currentUserEmail);
-    p.append('product',pendingProduct); p.append('note',note);
+    p.append('action','order');
+    p.append('email',currentUserEmail);
+    p.append('product',pendingProduct);
+    p.append('note',note);
+    // Print pass бол тусгайлан тэмдэглэнэ
+    if (pendingPassPages > 0) {
+        p.append('printPages', pendingPassPages);
+        p.append('type', 'printPass');
+    }
     try {
         await fetch(ORDER_URL,{ method:'POST', mode:'no-cors', headers:{'Content-Type':'application/x-www-form-urlencoded'}, body:p.toString() });
-        showToast("Туул багш төлбөр шалгаад материалыг миний санд байршуулна. Баярлалаа!", "success");
+        showToast("Хүсэлт илгээгдлээ! Туул багш шалгаад эрхийг идэвхжүүлнэ.", "success");
         closePayment();
         clearCart();
-        /* ── Судоку хэвлэх pending байвал хэвлэнэ ── */
-        if (pendingPrint) {
-            pendingPrint = false;
-            setTimeout(() => doPrint(), 600);
-        }
+        pendingPassPages = 0;
     } catch(e){
         console.error(e); showToast("Холболтын алдаа гарлаа!","error");
     } finally {
@@ -671,9 +787,9 @@ async function confirmOrder(){
     }
 }
 
-/* ════════════════════════════════════════════
+/* ══════════════════════════════════════════════
    МИНИЙ САН
-   ════════════════════════════════════════════ */
+══════════════════════════════════════════════ */
 async function loadMyLibrary(){
     const libGrid=document.getElementById('libraryGrid'); if(!libGrid) return;
     libGrid.innerHTML="<p class='col-span-full text-center py-10 opacity-50 text-xs'>Ачаалж байна...</p>";
@@ -688,16 +804,188 @@ async function loadMyLibrary(){
     } catch(e){ console.error(e); libGrid.innerHTML="<p class='text-red-400 text-center text-[10px] font-bold'>Холболтын алдаа гарлаа</p>"; }
 }
 
-/* ════════════════════════════════════════════
+/* ══════════════════════════════════════════════
+   СУДОКУ PRINT PASS СИСТЕМ
+   ──────────────────────────────────────────────
+   Логик:
+   1. LocalStorage-д үлдсэн хуудасны тоог хадгална
+   2. Сервер (Orders sheet) дотор баталгаажсан
+      printPass бүртгэлийг шалгаж LocalStorage-г шинэчилнэ
+   3. 1 хуудас үнэгүй — "freeUsed_email" key-ээр хянана
+══════════════════════════════════════════════ */
+
+/* LocalStorage helper */
+function getLocalPass() {
+    return parseInt(localStorage.getItem('printPassPages_' + currentUserEmail) || '0');
+}
+function setLocalPass(pages) {
+    localStorage.setItem('printPassPages_' + currentUserEmail, String(Math.max(0, pages)));
+}
+function getFreeUsed() {
+    return localStorage.getItem('freePrintUsed_' + currentUserEmail) === 'true';
+}
+function setFreeUsed() {
+    localStorage.setItem('freePrintUsed_' + currentUserEmail, 'true');
+}
+
+/* Сервераас баталгаажсан print pass хуудасны тоог авах
+   Google Apps Script-д action=getPrintPass&email=... нэмэх хэрэгтэй
+   → Orders sheet-д type="printPass", status="approved" мөрүүдийн
+     printPages баганыг нийлбэрлэж буцаана
+   → Хэрэглэсэн хуудасны тоог usedPages баганаас хасна */
+async function checkPrintPassFromServer(showMsg = false) {
+    const checkEl = document.getElementById('passCheckingInfo');
+    if (checkEl) checkEl.classList.remove('hidden');
+    try {
+        const res  = await fetch(
+            `${ORDER_URL}?action=getPrintPass&email=${encodeURIComponent(currentUserEmail)}`,
+            { redirect: 'follow' }
+        );
+        const data = await res.json();
+        // data = { approvedPages: 30, usedPages: 5 }  → үлдсэн = 25
+        if (data && typeof data.remaining === 'number') {
+            setLocalPass(data.remaining);
+            if (showMsg) showToast(`Эрх шинэчлэгдлээ: ${data.remaining} хуудас үлдсэн`, "success");
+        }
+    } catch(e) {
+        // сервер алдаа гарвал LocalStorage-н утгыг хэрэглэнэ
+        if (showMsg) showToast("Серверт холбогдож чадсангүй, локал эрхийг хэрэглэнэ", "info");
+    } finally {
+        if (checkEl) checkEl.classList.add('hidden');
+        renderPassSection();
+    }
+}
+
+/* Судоку хэсэг нээгдэхэд ажиллана */
+function initGamesSection() {
+    initSudoku();
+    renderPassSection();
+    // Сервераас тайван шалгана (UI блоклохгүй)
+    checkPrintPassFromServer(false);
+}
+
+/* Pass хэсгийн UI шинэчлэх */
+function renderPassSection() {
+    const remaining = getLocalPass();
+    const freeUsed  = getFreeUsed();
+
+    const activeEl = document.getElementById('passActiveInfo');
+    const freeEl   = document.getElementById('freePrintInfo');
+    const dispEl   = document.getElementById('passRemainingDisplay');
+
+    if (remaining > 0) {
+        // Эрх байгаа
+        activeEl.classList.remove('hidden');
+        if (dispEl) dispEl.innerText = remaining;
+        // Үнэгүй товчийг нуух
+        if (freeEl) freeEl.classList.add('hidden');
+    } else {
+        activeEl.classList.add('hidden');
+        // 1 хуудас үнэгүй тэмдэглэгдсэн эсэх
+        if (freeEl) {
+            freeEl.classList.toggle('hidden', freeUsed);
+        }
+    }
+}
+
+/* Судоку хэсгийн "Хэвлэх" товч дарахад */
+function openPrintPassSection() {
+    const remaining = getLocalPass();
+    const freeUsed  = getFreeUsed();
+
+    if (remaining > 0) {
+        // Эрх байгаа → хэвлэх modal
+        showPrintModal();
+    } else if (!freeUsed) {
+        // Үнэгүй 1 хуудас боломжтой
+        showToast("1 хуудас үнэгүй хэвлэх боломжтой!", "info");
+        document.getElementById('printPassSection').scrollIntoView({ behavior: 'smooth', block: 'center' });
+    } else {
+        // Эрх байхгүй, үнэгүй ч ашигласан
+        showToast("Хэвлэх эрх байхгүй. Эрх авна уу!", "error");
+        document.getElementById('printPassSection').scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+}
+
+/* Үнэгүй 1 хуудас хэвлэх */
+function useFreeOnePage() {
+    if (getFreeUsed()) return showToast("Үнэгүй 1 хуудасны боломж аль хэдийн ашиглагдсан!", "error");
+    printPageCount = 1;
+    setFreeUsed();
+    renderPassSection();
+    closePrintModal();
+    doPrint();
+    showToast("Үнэгүй 1 хуудас хэвлэж байна!", "success");
+}
+
+/* Print pass худалдаж авах */
+function buyPrintPass(pages, price) {
+    pendingProduct   = `Судоку хэвлэх эрх — ${pages} хуудас`;
+    pendingTotal     = price;
+    pendingPassPages = pages;
+    document.getElementById('paymentNote').innerText =
+        `${currentUserEmail} | Судоку хэвлэх эрх ${pages} хуудас | ${price.toLocaleString()}₮`;
+    document.getElementById('paymentModal').classList.add('active');
+}
+
+/* ── PRINT MODAL ───────────────────────────── */
+function showPrintModal() {
+    const remaining = getLocalPass();
+    printPageCount  = 1;
+    document.getElementById('modalRemainingPages').innerText = remaining;
+    updatePrintModalUI();
+    document.getElementById('printModal').classList.add('active');
+}
+function closePrintModal() {
+    document.getElementById('printModal').classList.remove('active');
+}
+function adjustPrintPages(delta) {
+    const remaining = getLocalPass();
+    printPageCount  = Math.max(1, Math.min(remaining, printPageCount + delta));
+    updatePrintModalUI();
+}
+function updatePrintModalUI() {
+    const remaining = getLocalPass();
+    document.getElementById('printPageCountDisplay').innerText = printPageCount;
+    document.getElementById('printSudokuCount').innerText      = printPageCount * 4;
+    const notEnough = document.getElementById('printNotEnough');
+    const btn       = document.getElementById('doPrintBtn');
+    if (printPageCount > remaining) {
+        notEnough.classList.remove('hidden');
+        btn.disabled  = true;
+        btn.className = 'flex-1 bg-gray-300 text-gray-500 py-3 rounded-2xl font-black uppercase italic text-xs cursor-not-allowed';
+    } else {
+        notEnough.classList.add('hidden');
+        btn.disabled  = false;
+        btn.className = 'flex-1 bg-green-700 text-white py-3 rounded-2xl font-black uppercase italic text-xs hover:bg-green-800 transition-all';
+    }
+}
+function executePrint() {
+    const remaining = getLocalPass();
+    if (printPageCount > remaining) return showToast("Эрх хүрэхгүй байна!", "error");
+    // Эрхийг хасна
+    setLocalPass(remaining - printPageCount);
+    // Сервер дээр usedPages-г шинэчлэх (no-cors, алдаа гарсан ч хэвлэнэ)
+    const p = new URLSearchParams();
+    p.append('action',    'usePrintPass');
+    p.append('email',     currentUserEmail);
+    p.append('usedPages', printPageCount);
+    fetch(ORDER_URL, { method:'POST', mode:'no-cors', headers:{'Content-Type':'application/x-www-form-urlencoded'}, body:p.toString() }).catch(()=>{});
+    closePrintModal();
+    renderPassSection();
+    doPrint();
+    showToast(`${printPageCount} хуудас хэвлэж байна! Үлдсэн: ${remaining - printPageCount} хуудас`, "success");
+}
+
+/* ══════════════════════════════════════════════
    СУДОКУ
-   ════════════════════════════════════════════ */
+══════════════════════════════════════════════ */
 function generateSudokuBoard(){
     const base=[[1,2,3,4,5,6,7,8,9],[4,5,6,7,8,9,1,2,3],[7,8,9,1,2,3,4,5,6],[2,3,1,5,6,4,8,9,7],[5,6,4,8,9,7,2,3,1],[8,9,7,2,3,1,5,6,4],[3,1,2,6,4,5,9,7,8],[6,4,5,9,7,8,3,1,2],[9,7,8,3,1,2,6,4,5]];
     for(let block=0;block<3;block++) for(let s=0;s<3;s++){ const r1=block*3+Math.floor(Math.random()*3); const r2=block*3+Math.floor(Math.random()*3); [base[r1],base[r2]]=[base[r2],base[r1]]; }
     const co=shuffle([0,1,2]);
     return base.map(row=>{ const nr=[]; co.forEach(b=>{ for(let c=0;c<3;c++) nr.push(row[b*3+c]); }); return nr; });
 }
-
 function initSudoku(){
     sudokuBoard=generateSudokuBoard();
     const container=document.getElementById('sudokuContainer'); container.innerHTML='';
@@ -709,7 +997,7 @@ function initSudoku(){
         container.appendChild(cell);
     }
 }
-function onSudokuKeyDown(e){ const a=['Backspace','Delete','Tab','ArrowLeft','ArrowRight','ArrowUp','ArrowDown']; if(a.includes(e.key)||( e.key>='1'&&e.key<='9')||Object.values(MONG_NUMS).includes(e.key)) return; e.preventDefault(); }
+function onSudokuKeyDown(e){ const a=['Backspace','Delete','Tab','ArrowLeft','ArrowRight','ArrowUp','ArrowDown']; if(a.includes(e.key)||(e.key>='1'&&e.key<='9')||Object.values(MONG_NUMS).includes(e.key)) return; e.preventDefault(); }
 function onSudokuInput(e){
     const cell=e.target; const raw=cell.value; if(!raw) return;
     let last=raw[raw.length-1]; if(last>='1'&&last<='9') last=MONG_NUMS[last];
@@ -729,57 +1017,9 @@ function checkSudoku(){
     else showToast("Баяр хүргэе! Бүгд зөв!","success");
 }
 
-/* ── СУДОКУ ХЭВЛЭХ ─────────────────────────── */
-function adjustPrintPages(delta){
-    printPageCount=Math.max(1,printPageCount+delta);
-    updatePrintModalUI();
-}
-
-function updatePrintModalUI(){
-    const extra=Math.max(0,printPageCount-1);
-    const price=extra*800;  // нэг нэмэлт хуудас = 800₮
-    document.getElementById('modalPageCount').innerText=printPageCount;
-    document.getElementById('modalPageLabel').innerText=`${printPageCount} хуудас`;
-    document.getElementById('printPageCount').innerText=printPageCount;
-    document.getElementById('extraPagesPrice').innerText=extra>0?`${extra} x 800₮ = ${price.toLocaleString()}₮`:'—';
-    document.getElementById('totalPrintPrice').innerText=price>0?`${price.toLocaleString()}₮`:'Үнэгүй';
-    const noteEl=document.getElementById('printPaymentNote');
-    const btn=document.getElementById('doPrintBtn');
-    if(price>0){
-        noteEl.classList.remove('hidden');
-        btn.innerText='Төлбөр төлж хэвлэх';
-        btn.className='flex-1 bg-orange-700 text-white py-3 rounded-2xl font-black uppercase italic text-xs hover:bg-orange-800 transition-all';
-    } else {
-        noteEl.classList.add('hidden');
-        btn.innerText='Хэвлэх';
-        btn.className='flex-1 bg-green-700 text-white py-3 rounded-2xl font-black uppercase italic text-xs hover:bg-green-800 transition-all';
-    }
-}
-
-function showPrintModal(){ printPageCount=1; updatePrintModalUI(); document.getElementById('printModal').classList.add('active'); }
-function closePrintModal(){ document.getElementById('printModal').classList.remove('active'); }
-
-function executePrint(){
-    const extra=Math.max(0,printPageCount-1);
-    const price=extra*800;
-    if(price>0){
-        /* Төлбөртэй хуудас: эхлээд төлбөр авч, дараа нь хэвлэнэ */
-        pendingPrint   = true;
-        pendingProduct = `Судоку хэвлэх ${printPageCount} хуудас`;
-        pendingTotal   = price;
-        closePrintModal();
-        document.getElementById('paymentNote').innerText=
-            `${currentUserEmail} | Судоку хэвлэх ${printPageCount} хуудас | ${price.toLocaleString()}₮`;
-        document.getElementById('paymentModal').classList.add('active');
-    } else {
-        /* 1-р хуудас үнэгүй — шууд хэвлэнэ */
-        pendingPrint = false;
-        closePrintModal();
-        doPrint();
-    }
-}
-
-/* ── ХЭВЛЭХ АГУУЛГА ҮҮСГЭХ ─────────────────── */
+/* ══════════════════════════════════════════════
+   ХЭВЛЭХ АГУУЛГА
+══════════════════════════════════════════════ */
 function buildPrintPuzzle(board){
     let html='<table style="border-collapse:collapse;width:100%;table-layout:fixed;">';
     for(let r=0;r<9;r++){
@@ -800,25 +1040,20 @@ function buildPrintPuzzle(board){
     html+='</table>';
     return html;
 }
-
 function doPrint(){
     const printArea=document.getElementById('printArea');
     let pagesHtml='';
-
     for(let page=0;page<printPageCount;page++){
         pagesHtml+=`
         <div style="width:194mm;min-height:277mm;padding:0;margin:0 auto;background:white;box-sizing:border-box;${page<printPageCount-1?'page-break-after:always;':''}">
-            <!-- Гарчиг / Лого -->
             <div style="text-align:center;padding:6mm 0 4mm 0;border-bottom:1.5px solid #e0c8a0;margin-bottom:5mm;">
                 <img src="logo.png" alt="logo" style="height:12mm;object-fit:contain;display:inline-block;vertical-align:middle;margin-right:3mm;">
                 <span style="font-family:'Manrope',sans-serif;font-size:14pt;font-weight:900;text-transform:uppercase;color:#7c2d12;letter-spacing:2px;vertical-align:middle;">Сонирхолтой Хэл Бичиг</span>
                 <div style="font-size:8pt;color:#888;margin-top:1mm;font-family:'Manrope',sans-serif;">
-                    Монгол бичиг судоку &nbsp;—&nbsp; ${page+1}-р хуудас &nbsp;${page===0?'<span style="color:#16a34a;font-weight:900;">(Үнэгүй)</span>':'<span style="color:#ea580c;font-weight:900;">(800₮)</span>'}
+                    Монгол бичиг судоку &nbsp;—&nbsp; ${page+1}-р хуудас
                 </div>
             </div>
-            <!-- 4 судоку 2x2 хэлбэрт -->
             <div style="display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;gap:6mm;padding:0 4mm 4mm 4mm;height:248mm;box-sizing:border-box;">`;
-
         for(let q=0;q<4;q++){
             const newBoard=generateSudokuBoard();
             pagesHtml+=`
@@ -832,34 +1067,19 @@ function doPrint(){
         }
         pagesHtml+=`</div></div>`;
     }
-
-    const fullHtml=`
-        <style>
-            @import url('https://fonts.googleapis.com/css2?family=Manrope:wght@700;900&display=swap');
-            *{box-sizing:border-box;margin:0;padding:0;}
-            body{background:white!important;-webkit-print-color-adjust:exact;print-color-adjust:exact;}
-        </style>
-        ${pagesHtml}`;
-
+    const fullHtml=`<style>@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@700;900&display=swap');*{box-sizing:border-box;margin:0;padding:0;}body{background:white!important;-webkit-print-color-adjust:exact;print-color-adjust:exact;}</style>${pagesHtml}`;
     printArea.innerHTML=fullHtml;
     printArea.style.display='block';
-
-    const afterPrint=()=>{
-        printArea.style.display='none';
-        printArea.innerHTML='';
-        window.removeEventListener('afterprint',afterPrint);
-    };
+    const afterPrint=()=>{ printArea.style.display='none'; printArea.innerHTML=''; window.removeEventListener('afterprint',afterPrint); };
     window.addEventListener('afterprint',afterPrint);
     setTimeout(()=>window.print(),200);
 }
 
-/* ════════════════════════════════════════════
+/* ══════════════════════════════════════════════
    ХӨТӨЛБӨР
-   ════════════════════════════════════════════ */
+══════════════════════════════════════════════ */
 let personalTasks=[];
-
 function initPlanner(){ loadPersonalTasks(); loadPlannerSchedule(); renderPersonalTasks(); updatePlannerStats(); }
-
 async function loadPlannerSchedule(){
     const list=document.getElementById('scheduleList');
     list.innerHTML=`<div class="text-center text-gray-400 text-xs py-6">Уншиж байна...</div>`;
@@ -920,9 +1140,9 @@ function renderPersonalTasks(){
     list.innerHTML=[...personalTasks].reverse().map(t=>`<div class="flex items-center gap-2 p-2 rounded-xl border ${t.done?'bg-green-50 border-green-100':'bg-white border-gray-100'} task-item ${t.done?'done':''}"><button onclick="togglePersonalTask(${t.id})" class="w-5 h-5 rounded-full border-2 flex-shrink-0 flex items-center justify-center ${t.done?'bg-green-500 border-green-500':'border-gray-300'} hover:border-green-400 transition-all">${t.done?'<svg class="w-3 h-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/></svg>':''}</button><div class="flex-1 min-w-0"><div class="text-xs font-bold ${t.done?'text-gray-400':'text-gray-700'} truncate">${t.title}</div><span class="text-[9px] font-black px-2 py-0.5 rounded-full ${pc[t.priority]}">${pl[t.priority]}</span></div><button onclick="deletePersonalTask(${t.id})" class="text-gray-300 hover:text-red-400 text-xs font-bold">✕</button></div>`).join('');
 }
 
-/* ════════════════════════════════════════════
+/* ══════════════════════════════════════════════
    ШАЛГАЛТ
-   ════════════════════════════════════════════ */
+══════════════════════════════════════════════ */
 let examQuestions=[],currentExamQs=[],currentQIndex=0,examScoreCount=0,examCorrectCount=0,examWrongCount=0;
 let examTimerInterval=null,examTimeLeft=0,examStartTime=null,currentTopic="",examAnswered=false;
 
@@ -1009,9 +1229,9 @@ function renderExamHistory(){
     el.innerHTML=h.map(r=>`<div class="flex justify-between items-center bg-white border rounded-xl px-4 py-2 text-xs"><div><span class="font-black text-gray-700">${r.topic}</span><span class="text-gray-400 ml-2">${r.date}</span></div><div class="font-black ${r.pct>=80?'text-green-600':r.pct>=50?'text-yellow-600':'text-red-500'}">${r.pct}%</div></div>`).join('');
 }
 
-/* ════════════════════════════════════════════
+/* ══════════════════════════════════════════════
    ТУСЛАХ
-   ════════════════════════════════════════════ */
+══════════════════════════════════════════════ */
 function shuffle(arr){ const a=[...arr]; for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];} return a; }
 function showEl(id){ const el=document.getElementById(id);if(el) el.classList.remove('hidden'); }
 function hideEl(id){ const el=document.getElementById(id);if(el) el.classList.add('hidden'); }
