@@ -769,6 +769,30 @@ async function confirmOrder(){
 /* ══════════════════════════════════════════════
    МИНИЙ САН  ← ЗАСВАРЛАСАН ХЭСЭГ
 ══════════════════════════════════════════════ */
+
+/*
+ * Материалын төрлийг тодорхойлох туслах функц.
+ * Google Apps Script-аас ирэх бичлэгийн талбарын нэр
+ * тогтоогүй байж болох тул хэд хэдэн боломжит нэрийг шалгана.
+ */
+function detectItemType(f) {
+    const typeField = (f.type || f.Type || f.category || f.Category || '').toString().toLowerCase();
+    const titleField = (f.productName || f.title || f.name || f.Title || '').toString().toLowerCase();
+
+    // Судоку хэвлэх эрх мөн эсэхийг шалгах
+    if (
+        typeField.includes('print') ||
+        typeField.includes('судоку') ||
+        typeField.includes('sudoku') ||
+        titleField.includes('судоку хэвлэх') ||
+        titleField.includes('print pass') ||
+        titleField.includes('printpass')
+    ) {
+        return 'printPass';
+    }
+    return 'file';
+}
+
 async function loadMyLibrary(){
     const libGrid = document.getElementById('libraryGrid');
     if (!libGrid) return;
@@ -792,11 +816,40 @@ async function loadMyLibrary(){
         window._libFiles = files;
 
         libGrid.innerHTML = files.map((f, i) => {
-            const title  = f.productName || f.title || f.name || 'Материал';
-            const url    = f.downloadUrl || f.url || f.link || '';
-            const dateStr = f.date ? new Date(f.date).toLocaleDateString('mn-MN') : '';
-            const hasUrl = url && url !== 'undefined' && url.trim() !== '';
+            const title    = f.productName || f.title || f.name || f.Title || 'Материал';
+            const url      = f.downloadUrl || f.url || f.link || '';
+            const dateStr  = f.date ? new Date(f.date).toLocaleDateString('mn-MN') : '';
+            const itemType = detectItemType(f);
 
+            /* ── Судоку хэвлэх эрхийн карт ── */
+            if (itemType === 'printPass') {
+                // Серверээс ирсэн хуудасны тоо (боломжит талбарын нэрүүд)
+                const pages = parseInt(
+                    f.printPages || f.pages || f.remaining || f.PrintPages || 0
+                );
+                return `
+                <div class="bg-white p-4 rounded-[2rem] shadow-md border border-green-100 flex flex-col items-center text-center">
+                    <div class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mb-3 text-xl">🖨️</div>
+                    <h4 class="font-black text-[10px] text-green-900 mb-1 uppercase italic">${escHtml(title)}</h4>
+                    <p class="text-[9px] text-gray-400 mb-1">${dateStr}</p>
+                    ${pages > 0
+                        ? `<div class="bg-green-50 border border-green-200 rounded-xl px-3 py-1.5 mb-3">
+                               <span class="font-black text-green-700 text-sm">${pages}</span>
+                               <span class="text-[9px] text-green-600 ml-1">хуудас үлдсэн</span>
+                           </div>`
+                        : `<div class="bg-gray-50 border border-gray-200 rounded-xl px-3 py-1.5 mb-3">
+                               <span class="text-[9px] text-gray-400">Эрх дууссан</span>
+                           </div>`
+                    }
+                    <button onclick="goToSudokuPrint()"
+                        class="w-full bg-green-700 text-white py-2 rounded-xl font-black uppercase italic text-[9px] hover:bg-green-800 transition-all active:scale-95">
+                        🖨 Судоку хэвлэх
+                    </button>
+                </div>`;
+            }
+
+            /* ── Ердийн файлын карт ── */
+            const hasUrl = url && url !== 'undefined' && url.trim() !== '';
             const btnHtml = hasUrl
                 ? `<button
                         onclick="openLibraryFile(${i})"
@@ -822,12 +875,17 @@ async function loadMyLibrary(){
     }
 }
 
+/* Судоку хэвлэх хэсэг рүү шилжих */
+function goToSudokuPrint() {
+    showSection('games');
+    setTimeout(() => {
+        const el = document.getElementById('printPassSection');
+        if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }, 300);
+}
+
 /*
- * openLibraryFile — ЗАСВАРЛАСАН
- * window.open() нь popup blocker-т баригдахад зарим браузер тухайн
- * хуудсыг redirect хийдэг. Тиймээс DOM-д нуусан <a> tag ашиглан
- * программчилсан дарж нээнэ — ингэхэд браузер шинэ tab нээдэг бөгөөд
- * одоогийн хуудсыг хэзээ ч redirect хийхгүй.
+ * openLibraryFile — далд <a> tag ашиглан шинэ tab-д нээнэ
  */
 function openLibraryFile(idx) {
     const files = window._libFiles || [];
@@ -839,7 +897,6 @@ function openLibraryFile(idx) {
         return showToast("Линк бэлэн болоогүй байна. Туул багштай холбогдоно уу.", "error");
     }
 
-    /* Далд <a> tag-аар програмчлан нээнэ — сайтаас гарахаас сэргийлнэ */
     const anchor = document.getElementById('hiddenFileLink');
     anchor.href  = url;
     anchor.click();
@@ -1172,7 +1229,7 @@ function buildDemoQuestions(){
     return [
         {Topic:'Дүрэм',Question:'Монгол бичгийг ямар шугамаар бичдэг вэ?',A:'Хэвтээ',B:'Босоо',C:'Диагональ',D:'Дугуй',Answer:'B',Explanation:'Монгол бичгийг дээрээс доош чиглэлтэй босоо бичдэг.'},
         {Topic:'Дүрэм',Question:'Монгол бичгийн бичмэл хэлбэрт эгшиг үсэг бүгд ямар зурлагаар эхэлдэг вэ?',A:'шилбэ',B:'шүд',C:'гэдэс',D:'титэм',Answer:'D',Explanation:'Уламжлалт монгол бичгийн бичмэл хэлбэрт бүх эгшиг үсэг титэм зурлагаар эхэлдэг'},
-        {Topic:'Дүрэм',Question:'Монгол бичгийн эгшиг үсэг хэд байдаг вэ?',A:'5',B:'7',C:'9',D:'12',Answer:'B',Explanation:'Монгол бичигт 7 эгшиг үсэг байдаг.'},
+        {Topic:'Дүрэм',Question:'Монгол бичгийн эгшиг үсэг хэд байдаг вэ?',A:'5',B:'7',C:'9',D:'12',Answer:'B',Explanation:'Монгол бичигт 7 эгшиг үсэг байдэг.'},
         {Topic:'Үг',Question:'"Титэм + шүд" нийлээд ямар үсэг вэ',A:'А',B:'Э',C:'И',D:'О',Answer:'A',Explanation:'"Үгийн эхэнд ордог А" үсэг юм.'},
         {Topic:'Үг',Question:'"Шилбэ" ямар үсгийг илэрхийлдэг вэ?',A:'А',B:'Э',C:'И',D:'Ү',Answer:'C',Explanation:'"Үгийн дунд ордог И" үсэг юм.'},
         {Topic:'Дуудлага',Question:'"Титэм+гэдэс+шилбэ" ямар үсэг болох вэ?',A:'О',B:'У',C:'Ө',D:'И',Answer:'C',Explanation:'"Үгийн эхэнд ордог Ө" үсэг бөгөөд монгол бичигт ө/ү үсэг адил бичигддэг.'}
