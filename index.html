@@ -316,13 +316,11 @@
     <div id="gamesSection" class="section-content container mx-auto px-4 py-8 max-w-xl">
         <button onclick="showDashboard()" class="text-orange-800 font-bold mb-4 uppercase text-xs">← Буцах</button>
 
-        <!-- СУДОКУ ТОГЛООМ (үргэлж харагдана, тоглох үнэгүй) -->
         <h2 class="text-center text-xl font-black text-green-900 mb-1 italic uppercase">Монгол бичиг судоку</h2>
         <p class="text-center text-[10px] text-gray-400 font-bold mb-4">Тоглох үнэгүй · Хэвлэхэд эрх шаардлагатай</p>
 
         <div id="sudokuContainer" class="sudoku-grid mb-4"></div>
 
-        <!-- Тооны хөрвүүлэлт хүснэгт -->
         <div class="bg-white rounded-2xl p-3 border border-green-100 shadow-sm mb-4">
             <div class="text-[10px] font-black text-gray-400 uppercase mb-2 text-center">
                 1-9 дарахад автоматаар монгол тоо болно
@@ -349,17 +347,13 @@
             </div>
         </div>
 
-        <!-- Товчнууд -->
         <div class="flex justify-center gap-3 flex-wrap mb-6">
             <button onclick="initSudoku()" class="bg-gray-500 text-white px-5 py-3 rounded-full font-black uppercase italic text-xs shadow-md hover:bg-gray-600 transition-all">Шинэ</button>
             <button onclick="checkSudoku()" class="bg-green-700 text-white px-7 py-3 rounded-full font-black uppercase italic text-xs shadow-md hover:bg-green-800 transition-all">Шалгах</button>
             <button onclick="openPrintPassSection()" class="bg-orange-700 text-white px-5 py-3 rounded-full font-black uppercase italic text-xs shadow-md hover:bg-orange-800 transition-all">🖨 Хэвлэх</button>
         </div>
 
-        <!-- ХЭВЛЭХ ЭРХ ХЭСЭГ -->
         <div id="printPassSection">
-
-            <!-- Эрх байгаа үед харуулах мэдэгдэл -->
             <div id="passActiveInfo" class="hidden bg-green-50 border-2 border-green-300 rounded-2xl p-4 mb-4">
                 <div class="flex items-center justify-between">
                     <div>
@@ -376,19 +370,16 @@
                 </div>
             </div>
 
-            <!-- Сервер шалгаж байгаа байдал -->
             <div id="passCheckingInfo" class="hidden bg-blue-50 border border-blue-200 rounded-2xl p-4 mb-4 text-center">
                 <div class="text-[10px] font-bold text-blue-500 animate-pulse">Эрх шалгаж байна...</div>
             </div>
 
-            <!-- Багц худалдаа -->
             <div id="passShopArea">
                 <div class="flex items-center justify-between mb-3">
                     <h3 class="font-black text-gray-700 uppercase text-xs italic">Хэвлэх эрх авах</h3>
                     <button onclick="checkPrintPassFromServer(true)" class="text-[10px] text-blue-500 font-bold underline">Эрхийг шинэчлэх</button>
                 </div>
                 <div class="grid grid-cols-3 gap-2 mb-3">
-                    <!-- 5 хуудас -->
                     <div onclick="buyPrintPass(5,3000)"
                          class="pass-card bg-white border-2 border-green-200 hover:border-green-500 rounded-2xl p-3 text-center">
                         <div class="text-xl font-black text-green-700">5</div>
@@ -396,7 +387,6 @@
                         <div class="text-[10px] font-black text-orange-700 mt-1">3,000₮</div>
                         <div class="text-[8px] text-gray-400">20 судоку</div>
                     </div>
-                    <!-- 10 хуудас — алдартай -->
                     <div onclick="buyPrintPass(10,5000)"
                          class="pass-card popular rounded-2xl p-3 text-center">
                         <div class="absolute -top-2.5 left-1/2 -translate-x-1/2 bg-yellow-400 text-yellow-900 text-[7px] font-black px-2 py-0.5 rounded-full uppercase whitespace-nowrap">Алдартай</div>
@@ -405,7 +395,6 @@
                         <div class="text-[10px] font-black text-yellow-300 mt-1">5,000₮</div>
                         <div class="text-[8px] text-green-200">40 судоку</div>
                     </div>
-                    <!-- 15 хуудас -->
                     <div onclick="buyPrintPass(15,7000)"
                          class="pass-card bg-white border-2 border-green-200 hover:border-green-500 rounded-2xl p-3 text-center">
                         <div class="text-xl font-black text-green-700">15</div>
@@ -413,7 +402,6 @@
                         <div class="text-[10px] font-black text-orange-700 mt-1">7,000₮</div>
                         <div class="text-[8px] text-gray-400">60 судоку</div>
                     </div>
-                    <!-- 20 хуудас -->
                     <div onclick="buyPrintPass(20,9000)"
                          class="pass-card bg-white border-2 border-green-200 hover:border-green-500 rounded-2xl p-3 text-center">
                         <div class="text-xl font-black text-green-700">20</div>
@@ -421,7 +409,6 @@
                         <div class="text-[10px] font-black text-orange-700 mt-1">9,000₮</div>
                         <div class="text-[8px] text-gray-400">80 судоку</div>
                     </div>
-                    <!-- 25 хуудас -->
                     <div onclick="buyPrintPass(25,11000)"
                          class="pass-card bg-white border-2 border-green-200 hover:border-green-500 rounded-2xl p-3 text-center">
                         <div class="text-xl font-black text-green-700">25</div>
@@ -429,7 +416,6 @@
                         <div class="text-[10px] font-black text-orange-700 mt-1">11,000₮</div>
                         <div class="text-[8px] text-gray-400">100 судоку</div>
                     </div>
-                    <!-- 30 хуудас — хямдрал -->
                     <div onclick="buyPrintPass(30,12000)"
                          class="pass-card deal rounded-2xl p-3 text-center">
                         <div class="absolute -top-2.5 left-1/2 -translate-x-1/2 bg-white text-orange-700 text-[7px] font-black px-2 py-0.5 rounded-full uppercase whitespace-nowrap border border-orange-200">Хямдрал!</div>
@@ -439,7 +425,6 @@
                         <div class="text-[8px] text-orange-100">120 судоку</div>
                     </div>
                 </div>
-                <!-- 1-р хуудас үнэгүй мэдэгдэл -->
                 <div id="freePrintInfo" class="bg-amber-50 border border-amber-200 rounded-xl p-3 text-center">
                     <div class="text-[10px] font-black text-amber-700 uppercase">🎁 1-р хуудас үнэгүй!</div>
                     <div class="text-[9px] text-amber-600 mt-0.5">Эрх авахгүйгээр нэг хуудас (4 судоку) хэвлэх боломжтой</div>
@@ -449,8 +434,7 @@
                     </button>
                 </div>
             </div>
-
-        </div><!-- /printPassSection -->
+        </div>
     </div>
 
     <!-- ===== ДЭЛГҮҮР ===== -->
@@ -487,14 +471,10 @@
 <div id="printModal" class="modal" onclick="if(event.target===this) closePrintModal()">
     <div class="bg-white rounded-[2rem] max-w-sm w-full p-6 shadow-2xl border-4 border-green-100">
         <h2 class="text-lg font-black text-green-900 uppercase italic mb-4 text-center">Судоку хэвлэх</h2>
-
-        <!-- Үлдсэн эрх -->
         <div class="bg-green-50 rounded-2xl p-3 mb-4 text-center border border-green-200">
             <div class="text-[10px] font-bold text-green-600 uppercase mb-1">Таны үлдсэн эрх</div>
             <div class="text-3xl font-black text-green-800"><span id="modalRemainingPages">0</span> хуудас</div>
         </div>
-
-        <!-- Хэдэн хуудас хэвлэх сонгох -->
         <div class="flex items-center justify-center gap-4 mb-4">
             <button onclick="adjustPrintPages(-1)"
                 class="w-10 h-10 bg-gray-100 rounded-full font-black text-gray-700 hover:bg-gray-200 transition-all text-lg">−</button>
@@ -505,12 +485,10 @@
             <button onclick="adjustPrintPages(1)"
                 class="w-10 h-10 bg-green-100 rounded-full font-black text-green-700 hover:bg-green-200 transition-all text-lg">+</button>
         </div>
-
         <div class="bg-gray-50 rounded-xl p-3 mb-5 text-center">
             <div class="text-[10px] text-gray-500 font-bold">Нийт <span id="printSudokuCount">4</span> судоку хэвлэгдэнэ</div>
             <div id="printNotEnough" class="hidden text-[10px] text-red-500 font-black mt-1">⚠ Эрх хүрэхгүй байна!</div>
         </div>
-
         <div class="flex gap-3">
             <button onclick="closePrintModal()"
                 class="flex-1 bg-gray-100 text-gray-600 py-3 rounded-2xl font-black uppercase italic text-xs hover:bg-gray-200 transition-all">Цуцлах</button>
@@ -569,6 +547,9 @@
 <!-- МЭДЭГДЭЛ -->
 <div id="toastBox" class="fixed bottom-6 left-1/2 -translate-x-1/2 z-[9999] flex flex-col gap-2 items-center pointer-events-none"></div>
 
+<!-- ===== ДАЛД ЛИНК — файл нээхэд ашиглана (сайтаас гарахгүй) ===== -->
+<a id="hiddenFileLink" href="#" target="_blank" rel="noopener noreferrer" style="display:none;"></a>
+
 <script>
 /* ══════════════════════════════════════════════
    ТОХИРГОО
@@ -583,7 +564,6 @@ let productsData     = [];
 let cartItems      = [];
 let pendingProduct = "";
 let pendingTotal   = 0;
-// print pass худалдааны үед хэдэн хуудас авахыг хадгалах
 let pendingPassPages = 0;
 
 /* ── СУДОКУ ────────────────────────────────── */
@@ -769,7 +749,6 @@ async function confirmOrder(){
     p.append('email',currentUserEmail);
     p.append('product',pendingProduct);
     p.append('note',note);
-    // Print pass бол тусгайлан тэмдэглэнэ
     if (pendingPassPages > 0) {
         p.append('printPages', pendingPassPages);
         p.append('type', 'printPass');
@@ -788,77 +767,95 @@ async function confirmOrder(){
 }
 
 /* ══════════════════════════════════════════════
-   МИНИЙ САН
+   МИНИЙ САН  ← ЗАСВАРЛАСАН ХЭСЭГ
 ══════════════════════════════════════════════ */
 async function loadMyLibrary(){
-    const libGrid=document.getElementById('libraryGrid'); if(!libGrid) return;
-    libGrid.innerHTML="<p class='col-span-full text-center py-10 opacity-50 text-xs'>Ачаалж байна...</p>";
+    const libGrid = document.getElementById('libraryGrid');
+    if (!libGrid) return;
+    libGrid.innerHTML = "<p class='col-span-full text-center py-10 opacity-50 text-xs'>Ачаалж байна...</p>";
     try {
-        const res=await fetch(`${ORDER_URL}?action=getMyLibrary&email=${encodeURIComponent(currentUserEmail)}`,{redirect:'follow'});
-        const raw=await res.text();
-        let files=[];
-        try { files=JSON.parse(raw); } catch(e){ files=[]; }
-        if(!Array.isArray(files)||files.length===0){
-            libGrid.innerHTML=`<div class="col-span-full text-center py-20"><p class="text-gray-400 text-xs uppercase font-black italic">Одоогоор файл байхгүй байна</p><p class="text-[10px] text-orange-300 mt-2">Төлбөр баталгаажсаны дараа энд харагдана</p></div>`;
+        const res  = await fetch(`${ORDER_URL}?action=getMyLibrary&email=${encodeURIComponent(currentUserEmail)}`, { redirect:'follow' });
+        const raw  = await res.text();
+        let files  = [];
+        try { files = JSON.parse(raw); } catch(e) { files = []; }
+
+        if (!Array.isArray(files) || files.length === 0) {
+            libGrid.innerHTML = `
+                <div class="col-span-full text-center py-20">
+                    <p class="text-gray-400 text-xs uppercase font-black italic">Одоогоор файл байхгүй байна</p>
+                    <p class="text-[10px] text-orange-300 mt-2">Төлбөр баталгаажсаны дараа энд харагдана</p>
+                </div>`;
             return;
         }
-        libGrid.innerHTML=files.map((f,i)=>{
-            const title = f.productName || f.title || f.name || 'Материал';
-            const url   = f.downloadUrl || f.url || f.link || '';
-            const dateStr = f.date ? new Date(f.date).toLocaleDateString('mn-MN') : '';
-            const btnHtml = url
-                ? `<button onclick="openLibraryFile(${i})" class="w-full bg-orange-800 text-white py-2 rounded-xl font-black uppercase italic text-[9px] hover:bg-orange-900 transition-all">Үзэх / Татах</button>`
-                : `<div class="w-full bg-gray-100 text-gray-400 py-2 rounded-xl font-black uppercase italic text-[9px] text-center">Линк байхгүй</div>`;
-            return `<div class="bg-white p-4 rounded-[2rem] shadow-md border border-orange-50 flex flex-col items-center text-center">
-                <div class="w-12 h-12 bg-orange-100 rounded-full flex items-center justify-center mb-3 text-xl">📂</div>
-                <h4 class="font-black text-[10px] text-orange-900 mb-1 uppercase italic">${escHtml(title)}</h4>
-                <p class="text-[9px] text-gray-400 mb-4">${dateStr}</p>
-                ${btnHtml}
-            </div>`;
-        }).join('');
-        // URL-үүдийг JS массивт хадгална — onclick дотор шууд href ашиглахгүй
+
+        /* Файлуудыг глобал массивт хадгалах */
         window._libFiles = files;
-    } catch(e){
+
+        libGrid.innerHTML = files.map((f, i) => {
+            const title  = f.productName || f.title || f.name || 'Материал';
+            const url    = f.downloadUrl || f.url || f.link || '';
+            const dateStr = f.date ? new Date(f.date).toLocaleDateString('mn-MN') : '';
+            const hasUrl = url && url !== 'undefined' && url.trim() !== '';
+
+            const btnHtml = hasUrl
+                ? `<button
+                        onclick="openLibraryFile(${i})"
+                        class="w-full bg-orange-800 text-white py-2 rounded-xl font-black uppercase italic text-[9px] hover:bg-orange-900 transition-all active:scale-95">
+                        Үзэх / Татах
+                   </button>`
+                : `<div class="w-full bg-gray-100 text-gray-400 py-2 rounded-xl font-black uppercase italic text-[9px] text-center">
+                        Линк бэлэн болоогүй
+                   </div>`;
+
+            return `
+                <div class="bg-white p-4 rounded-[2rem] shadow-md border border-orange-50 flex flex-col items-center text-center">
+                    <div class="w-12 h-12 bg-orange-100 rounded-full flex items-center justify-center mb-3 text-xl">📂</div>
+                    <h4 class="font-black text-[10px] text-orange-900 mb-1 uppercase italic">${escHtml(title)}</h4>
+                    <p class="text-[9px] text-gray-400 mb-4">${dateStr}</p>
+                    ${btnHtml}
+                </div>`;
+        }).join('');
+
+    } catch(e) {
         console.error(e);
-        libGrid.innerHTML="<p class='text-red-400 text-center text-[10px] font-bold col-span-full'>Холболтын алдаа гарлаа. Дахин оролдоно уу.</p>";
+        libGrid.innerHTML = "<p class='text-red-400 text-center text-[10px] font-bold col-span-full'>Холболтын алдаа гарлаа. Дахин оролдоно уу.</p>";
     }
 }
 
-function openLibraryFile(idx){
+/*
+ * openLibraryFile — ЗАСВАРЛАСАН
+ * window.open() нь popup blocker-т баригдахад зарим браузер тухайн
+ * хуудсыг redirect хийдэг. Тиймээс DOM-д нуусан <a> tag ашиглан
+ * программчилсан дарж нээнэ — ингэхэд браузер шинэ tab нээдэг бөгөөд
+ * одоогийн хуудсыг хэзээ ч redirect хийхгүй.
+ */
+function openLibraryFile(idx) {
     const files = window._libFiles || [];
-    const f = files[idx];
-    if(!f) return showToast("Файл олдсонгүй","error");
-    const url = f.downloadUrl || f.url || f.link || '';
-    if(!url || url === 'undefined' || url.trim() === ''){
-        return showToast("Линк бэлэн болоогүй байна. Туул багштай холбогдоно уу.","error");
+    const f     = files[idx];
+    if (!f) return showToast("Файл олдсонгүй", "error");
+
+    const url = (f.downloadUrl || f.url || f.link || '').trim();
+    if (!url || url === 'undefined') {
+        return showToast("Линк бэлэн болоогүй байна. Туул багштай холбогдоно уу.", "error");
     }
-    // Хуудсаас гарахгүйгээр шинэ цонхонд нээнэ
-    const win = window.open(url, '_blank', 'noopener,noreferrer');
-    if(!win){
-        // Popup blocker байвал заавар өгнө
-        showToast("Шинэ цонх нээгдсэнгүй. Браузерийн popup блокийг зөвшөөрнө үү.","info");
-    }
+
+    /* Далд <a> tag-аар програмчлан нээнэ — сайтаас гарахаас сэргийлнэ */
+    const anchor = document.getElementById('hiddenFileLink');
+    anchor.href  = url;
+    anchor.click();
 }
 
-function escHtml(str){
+function escHtml(str) {
     return String(str)
-        .replace(/&/g,'&amp;')
-        .replace(/</g,'&lt;')
-        .replace(/>/g,'&gt;')
-        .replace(/"/g,'&quot;');
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;');
 }
 
 /* ══════════════════════════════════════════════
    СУДОКУ PRINT PASS СИСТЕМ
-   ──────────────────────────────────────────────
-   Логик:
-   1. LocalStorage-д үлдсэн хуудасны тоог хадгална
-   2. Сервер (Orders sheet) дотор баталгаажсан
-      printPass бүртгэлийг шалгаж LocalStorage-г шинэчилнэ
-   3. 1 хуудас үнэгүй — "freeUsed_email" key-ээр хянана
 ══════════════════════════════════════════════ */
-
-/* LocalStorage helper */
 function getLocalPass() {
     return parseInt(localStorage.getItem('printPassPages_' + currentUserEmail) || '0');
 }
@@ -872,11 +869,6 @@ function setFreeUsed() {
     localStorage.setItem('freePrintUsed_' + currentUserEmail, 'true');
 }
 
-/* Сервераас баталгаажсан print pass хуудасны тоог авах
-   Google Apps Script-д action=getPrintPass&email=... нэмэх хэрэгтэй
-   → Orders sheet-д type="printPass", status="approved" мөрүүдийн
-     printPages баганыг нийлбэрлэж буцаана
-   → Хэрэглэсэн хуудасны тоог usedPages баганаас хасна */
 async function checkPrintPassFromServer(showMsg = false) {
     const checkEl = document.getElementById('passCheckingInfo');
     if (checkEl) checkEl.classList.remove('hidden');
@@ -886,13 +878,11 @@ async function checkPrintPassFromServer(showMsg = false) {
             { redirect: 'follow' }
         );
         const data = await res.json();
-        // data = { approvedPages: 30, usedPages: 5 }  → үлдсэн = 25
         if (data && typeof data.remaining === 'number') {
             setLocalPass(data.remaining);
             if (showMsg) showToast(`Эрх шинэчлэгдлээ: ${data.remaining} хуудас үлдсэн`, "success");
         }
     } catch(e) {
-        // сервер алдаа гарвал LocalStorage-н утгыг хэрэглэнэ
         if (showMsg) showToast("Серверт холбогдож чадсангүй, локал эрхийг хэрэглэнэ", "info");
     } finally {
         if (checkEl) checkEl.classList.add('hidden');
@@ -900,58 +890,43 @@ async function checkPrintPassFromServer(showMsg = false) {
     }
 }
 
-/* Судоку хэсэг нээгдэхэд ажиллана */
 function initGamesSection() {
     initSudoku();
     renderPassSection();
-    // Сервераас тайван шалгана (UI блоклохгүй)
     checkPrintPassFromServer(false);
 }
 
-/* Pass хэсгийн UI шинэчлэх */
 function renderPassSection() {
     const remaining = getLocalPass();
     const freeUsed  = getFreeUsed();
-
-    const activeEl = document.getElementById('passActiveInfo');
-    const freeEl   = document.getElementById('freePrintInfo');
-    const dispEl   = document.getElementById('passRemainingDisplay');
+    const activeEl  = document.getElementById('passActiveInfo');
+    const freeEl    = document.getElementById('freePrintInfo');
+    const dispEl    = document.getElementById('passRemainingDisplay');
 
     if (remaining > 0) {
-        // Эрх байгаа
         activeEl.classList.remove('hidden');
         if (dispEl) dispEl.innerText = remaining;
-        // Үнэгүй товчийг нуух
         if (freeEl) freeEl.classList.add('hidden');
     } else {
         activeEl.classList.add('hidden');
-        // 1 хуудас үнэгүй тэмдэглэгдсэн эсэх
-        if (freeEl) {
-            freeEl.classList.toggle('hidden', freeUsed);
-        }
+        if (freeEl) freeEl.classList.toggle('hidden', freeUsed);
     }
 }
 
-/* Судоку хэсгийн "Хэвлэх" товч дарахад */
 function openPrintPassSection() {
     const remaining = getLocalPass();
     const freeUsed  = getFreeUsed();
-
     if (remaining > 0) {
-        // Эрх байгаа → хэвлэх modal
         showPrintModal();
     } else if (!freeUsed) {
-        // Үнэгүй 1 хуудас боломжтой
         showToast("1 хуудас үнэгүй хэвлэх боломжтой!", "info");
         document.getElementById('printPassSection').scrollIntoView({ behavior: 'smooth', block: 'center' });
     } else {
-        // Эрх байхгүй, үнэгүй ч ашигласан
         showToast("Хэвлэх эрх байхгүй. Эрх авна уу!", "error");
         document.getElementById('printPassSection').scrollIntoView({ behavior: 'smooth', block: 'center' });
     }
 }
 
-/* Үнэгүй 1 хуудас хэвлэх */
 function useFreeOnePage() {
     if (getFreeUsed()) return showToast("Үнэгүй 1 хуудасны боломж аль хэдийн ашиглагдсан!", "error");
     printPageCount = 1;
@@ -962,7 +937,6 @@ function useFreeOnePage() {
     showToast("Үнэгүй 1 хуудас хэвлэж байна!", "success");
 }
 
-/* Print pass худалдаж авах */
 function buyPrintPass(pages, price) {
     pendingProduct   = `Судоку хэвлэх эрх — ${pages} хуудас`;
     pendingTotal     = price;
@@ -972,7 +946,6 @@ function buyPrintPass(pages, price) {
     document.getElementById('paymentModal').classList.add('active');
 }
 
-/* ── PRINT MODAL ───────────────────────────── */
 function showPrintModal() {
     const remaining = getLocalPass();
     printPageCount  = 1;
@@ -1007,9 +980,7 @@ function updatePrintModalUI() {
 function executePrint() {
     const remaining = getLocalPass();
     if (printPageCount > remaining) return showToast("Эрх хүрэхгүй байна!", "error");
-    // Эрхийг хасна
     setLocalPass(remaining - printPageCount);
-    // Сервер дээр usedPages-г шинэчлэх (no-cors, алдаа гарсан ч хэвлэнэ)
     const p = new URLSearchParams();
     p.append('action',    'usePrintPass');
     p.append('email',     currentUserEmail);
