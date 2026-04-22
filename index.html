@@ -115,7 +115,9 @@
         }
     </style>
 </head>
-    <!--
+    
+<body class="min-h-screen pb-20">
+<!--
   ══════════════════════════════════════════════════════
   МЭЙЛ MODAL — HTML-ийн </body> өмнө нэмнэ үү
   ══════════════════════════════════════════════════════
@@ -206,8 +208,6 @@
   ══════════════════════════════════════════════════════
 -->
     
-<body class="min-h-screen pb-20">
-
 <!-- ===== НЭВТРЭХ ===== -->
 <div id="authScreen" class="min-h-screen flex items-center justify-center px-4">
     <div class="max-w-md w-full bg-white p-10 rounded-[2.5rem] shadow-2xl text-center border-t-8 border-orange-800">
@@ -703,65 +703,18 @@ document.addEventListener('DOMContentLoaded', initApp);
  */
 let _authCallback = null;
 
-function requireEmail(callback) {
-    if (currentUserEmail) {
-        callback();
-        return;
-    }
+    function requireEmail(callback) {
+    if (currentUserEmail) { callback(); return; }
     _authCallback = callback;
-    document.getElementById('emailModal').classList.add('active');
+    const m = document.getElementById('emailModal');
+    m.classList.remove('hidden');
+    m.style.display = '';
     document.getElementById('emailModalInput').value = '';
     document.getElementById('emailModalError').classList.add('hidden');
     document.getElementById('emailModalInput').focus();
 }
-
-async function submitEmailModal() {
-    const email = document.getElementById('emailModalInput').value.trim();
-    const errEl = document.getElementById('emailModalError');
-    const btn   = document.getElementById('emailModalBtn');
-
-    if (!email) {
-        errEl.textContent = 'Мэйл хаягаа оруулна уу!';
-        errEl.classList.remove('hidden');
-        return;
-    }
-
-    btn.disabled  = true;
-    btn.textContent = 'Шалгаж байна...';
-
-    try {
-        const res  = await fetch(`${ORDER_URL}?action=check&email=${encodeURIComponent(email)}`, { redirect:'follow' });
-        const data = await res.json();
-
-        if (data.status === 'success') {
-            currentUserEmail = email;
-            // Навигацийн мэйл харагдах газар байвал шинэчилнэ
-            const navEmail = document.getElementById('navEmail');
-            if (navEmail) navEmail.innerText = email;
-
-            closeEmailModal();
-            loadCart();
-
-            if (_authCallback) {
-                _authCallback();
-                _authCallback = null;
-            }
-        } else {
-            errEl.textContent = 'Бүртгэлгүй мэйл! Эхлээд бүртгүүлнэ үү.';
-            errEl.classList.remove('hidden');
-        }
-    } catch(e) {
-        console.error(e);
-        errEl.textContent = 'Холболтын алдаа. Дахин оролдоно уу.';
-        errEl.classList.remove('hidden');
-    } finally {
-        btn.disabled    = false;
-        btn.textContent = 'Үргэлжлүүлэх';
-    }
-}
-
 function closeEmailModal() {
-    document.getElementById('emailModal').classList.remove('active');
+    document.getElementById('emailModal').classList.add('hidden');
 }
 
 // Enter товч
