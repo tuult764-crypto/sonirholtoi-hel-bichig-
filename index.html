@@ -605,7 +605,7 @@ function showSection(name) {
     const target = document.getElementById(name + 'Section');
     if (target) target.classList.add('active');
     if (name === 'games')   initSudoku();
-    if (name === 'library') loadLibrary();
+    if (name === 'library') loadMyLibrary();
     if (name === 'shop')    loadProducts();
     if (name === 'planner') initPlanner();
     if (name === 'exam')    initExamLobby();
@@ -944,7 +944,7 @@ async function confirmOrder() {
    МИНИЙ САН (ШИНЭЧЛЭГДСЭН)
    ════════════════════════════════════════════ */
 async function loadMyLibrary() {
-    const libGrid = document.getElementById('fullLibraryGrid') || document.getElementById('libraryGrid');
+    const libGrid = document.getElementById('libraryGrid');|| document.getElementById('libraryGrid');
     if (!libGrid) return;
 
     libGrid.innerHTML = "<p class='col-span-full text-center py-10 opacity-50 text-xs'>Ачаалж байна...</p>";
