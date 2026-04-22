@@ -115,6 +115,97 @@
         }
     </style>
 </head>
+    <!--
+  ══════════════════════════════════════════════════════
+  МЭЙЛ MODAL — HTML-ийн </body> өмнө нэмнэ үү
+  ══════════════════════════════════════════════════════
+  Энэ modal нь хэрэглэгч "Авах" / "Сагсаар төлөх" /
+  "Миний сан" / "Хөтөлбөр" / "Шалгалт" хэсгүүдийг
+  нээх үед л гарч ирнэ.
+  ══════════════════════════════════════════════════════
+-->
+
+<!-- EMAIL MODAL -->
+<div id="emailModal"
+     class="fixed inset-0 z-[200] flex items-center justify-center bg-black/50 backdrop-blur-sm hidden"
+     style="display:none"
+     onclick="if(event.target===this)closeEmailModal()">
+
+  <!-- Картны хэсэг -->
+  <div class="bg-white rounded-[2rem] shadow-2xl w-full max-w-sm mx-4 p-6 flex flex-col gap-4"
+       onclick="event.stopPropagation()">
+
+    <!-- Гарчиг -->
+    <div class="text-center">
+      <div class="text-3xl mb-2">📬</div>
+      <h2 class="font-black text-orange-900 text-base uppercase italic">Мэйл хаягаа оруулна уу</h2>
+      <p class="text-[11px] text-gray-400 mt-1">
+        Захиалга болон мэдэгдэл хүлээн авахын тулд<br>бүртгэлтэй мэйлээ оруулна уу.
+      </p>
+    </div>
+
+    <!-- Оролт -->
+    <div class="flex flex-col gap-2">
+      <input
+        id="emailModalInput"
+        type="email"
+        placeholder="example@gmail.com"
+        autocomplete="email"
+        class="w-full border-2 border-orange-200 rounded-2xl px-4 py-3 text-sm font-bold
+               focus:outline-none focus:border-orange-500 transition-colors placeholder-gray-300"
+      />
+      <!-- Алдааны мессеж -->
+      <p id="emailModalError"
+         class="hidden text-[11px] text-red-500 font-bold px-1">
+      </p>
+    </div>
+
+    <!-- Товчлуурууд -->
+    <div class="flex gap-3">
+      <button
+        onclick="closeEmailModal()"
+        class="flex-1 bg-gray-100 text-gray-500 py-3 rounded-2xl font-black uppercase italic text-[11px]
+               hover:bg-gray-200 transition-all active:scale-95">
+        Болих
+      </button>
+      <button
+        id="emailModalBtn"
+        onclick="submitEmailModal()"
+        class="flex-1 bg-orange-800 text-white py-3 rounded-2xl font-black uppercase italic text-[11px]
+               hover:bg-orange-900 transition-all active:scale-95">
+        Үргэлжлүүлэх
+      </button>
+    </div>
+
+    <!-- Бүртгүүлэх холбоос (сонголттой) -->
+    <p class="text-center text-[10px] text-gray-400">
+      Бүртгэлгүй бол
+      <a href="mailto:tuul@example.com"
+         class="text-orange-600 font-black hover:underline">
+        Туул багштай холбогдоно уу
+      </a>
+    </p>
+
+  </div>
+</div>
+
+<!--
+  ══════════════════════════════════════════════════════
+  CSS — <style> тэгийн дотор нэмнэ үү
+  (Tailwind ашигладаг бол шаардлагагүй, зөвхөн
+   .active классыг toggle хийх хэрэгтэй)
+  ══════════════════════════════════════════════════════
+
+  #emailModal.active { display: flex !important; }
+
+  Эсвэл Tailwind ашиглаж байгаа бол "hidden" классыг
+  toggle хийх замаар modal-г нээж/хаана.
+  Script дотор:
+    open:  el.classList.remove('hidden'); el.style.display='';
+    close: el.classList.add('hidden');
+  ══════════════════════════════════════════════════════
+-->
+    
 <body class="min-h-screen pb-20">
 
 <!-- ===== НЭВТРЭХ ===== -->
@@ -585,33 +676,123 @@ const MONG_TO_ASCII = {};
 for (const [a,m] of Object.entries(MONG_NUMS)) MONG_TO_ASCII[m] = a;
 
 /* ══════════════════════════════════════════════
-   НЭВТРЭХ
+   ЭХЛЭХ — шууд дэлгүүр ачаална, нэвтрэх шаардахгүй
 ══════════════════════════════════════════════ */
-async function handleLogin() {
-    const email = document.getElementById('loginEmail').value.trim();
-    if (!email) return showToast("Мэйл хаягаа оруулна уу!", "error");
+function initApp() {
+    // authScreen байвал нуу (HTML-д байж болно)
+    const authScreen = document.getElementById('authScreen');
+    if (authScreen) authScreen.classList.add('hidden');
+
+    const mainSystem = document.getElementById('mainSystem');
+    if (mainSystem) mainSystem.classList.remove('hidden');
+
+    loadProducts();
+}
+
+// Хуудас ачаалагдахад шууд эхлэнэ
+document.addEventListener('DOMContentLoaded', initApp);
+
+/* ══════════════════════════════════════════════
+   МЭЙЛ MODAL — зөвхөн "авах" үед гарна
+══════════════════════════════════════════════ */
+
+/**
+ * Хэрэглэгч нэвтэрсэн эсэхийг шалгана.
+ * Нэвтрээгүй бол email modal нээж, callback-г хадгална.
+ * @param {Function} callback — мэйл оруулсны дараа дуудагдах функц
+ */
+let _authCallback = null;
+
+function requireEmail(callback) {
+    if (currentUserEmail) {
+        callback();
+        return;
+    }
+    _authCallback = callback;
+    document.getElementById('emailModal').classList.add('active');
+    document.getElementById('emailModalInput').value = '';
+    document.getElementById('emailModalError').classList.add('hidden');
+    document.getElementById('emailModalInput').focus();
+}
+
+async function submitEmailModal() {
+    const email = document.getElementById('emailModalInput').value.trim();
+    const errEl = document.getElementById('emailModalError');
+    const btn   = document.getElementById('emailModalBtn');
+
+    if (!email) {
+        errEl.textContent = 'Мэйл хаягаа оруулна уу!';
+        errEl.classList.remove('hidden');
+        return;
+    }
+
+    btn.disabled  = true;
+    btn.textContent = 'Шалгаж байна...';
+
     try {
         const res  = await fetch(`${ORDER_URL}?action=check&email=${encodeURIComponent(email)}`, { redirect:'follow' });
         const data = await res.json();
-        if (data.status === "success") {
+
+        if (data.status === 'success') {
             currentUserEmail = email;
-            document.getElementById('authScreen').classList.add('hidden');
-            document.getElementById('mainSystem').classList.remove('hidden');
-            document.getElementById('navEmail').innerText = email;
-            loadProducts();
+            // Навигацийн мэйл харагдах газар байвал шинэчилнэ
+            const navEmail = document.getElementById('navEmail');
+            if (navEmail) navEmail.innerText = email;
+
+            closeEmailModal();
+            loadCart();
+
+            if (_authCallback) {
+                _authCallback();
+                _authCallback = null;
+            }
         } else {
-            showToast("Бүртгэлгүй мэйл!", "error");
+            errEl.textContent = 'Бүртгэлгүй мэйл! Эхлээд бүртгүүлнэ үү.';
+            errEl.classList.remove('hidden');
         }
     } catch(e) {
         console.error(e);
-        showToast("Холболтын алдаа гарлаа", "error");
+        errEl.textContent = 'Холболтын алдаа. Дахин оролдоно уу.';
+        errEl.classList.remove('hidden');
+    } finally {
+        btn.disabled    = false;
+        btn.textContent = 'Үргэлжлүүлэх';
     }
+}
+
+function closeEmailModal() {
+    document.getElementById('emailModal').classList.remove('active');
+}
+
+// Enter товч
+document.addEventListener('keydown', e => {
+    const modal = document.getElementById('emailModal');
+    if (modal && modal.classList.contains('active') && e.key === 'Enter') {
+        submitEmailModal();
+    }
+});
+
+/* ══════════════════════════════════════════════
+   ХУУЧИН handleLogin — хэрэглэхгүй болсон ч
+   HTML-д линк байвал алдаа гарахаас хамгаалах
+══════════════════════════════════════════════ */
+async function handleLogin() {
+    // Хуучин нэвтрэх форм байвал email modal руу чиглүүлнэ
+    requireEmail(() => showSection('shop'));
 }
 
 /* ══════════════════════════════════════════════
    НАВИГАЦИ
 ══════════════════════════════════════════════ */
 function showSection(name) {
+    // Мэйл шаардах хэсгүүд
+    const protectedSections = ['library', 'planner', 'exam'];
+
+    if (protectedSections.includes(name) && !currentUserEmail) {
+        requireEmail(() => showSection(name));
+        return;
+    }
+
     document.getElementById('dashboardHome').classList.add('hidden');
     document.querySelectorAll('.section-content').forEach(s => s.classList.remove('active'));
     const t = document.getElementById(name + 'Section');
@@ -622,6 +803,7 @@ function showSection(name) {
     if (name === 'planner') initPlanner();
     if (name === 'exam')    initExamLobby();
 }
+
 function showDashboard() {
     document.getElementById('dashboardHome').classList.remove('hidden');
     document.querySelectorAll('.section-content').forEach(s => s.classList.remove('active'));
@@ -708,9 +890,20 @@ document.addEventListener('keydown', e=>{
 /* ══════════════════════════════════════════════
    САГС
 ══════════════════════════════════════════════ */
-function loadCart(){ const s=localStorage.getItem('cart_'+currentUserEmail); cartItems=s?JSON.parse(s):[]; updateCartDisplay(); }
-function saveCart(){ localStorage.setItem('cart_'+currentUserEmail,JSON.stringify(cartItems)); updateCartDisplay(); }
-function addToCart(title,price){ const e=cartItems.find(i=>i.title===title); if(e){e.quantity+=1;}else{cartItems.push({title,price:Number(price),quantity:1});} saveCart(); showToast("Сагсанд нэмэгдлээ!","success"); }
+function loadCart(){
+    const key = currentUserEmail ? 'cart_'+currentUserEmail : 'cart_guest';
+    const s=localStorage.getItem(key);
+    cartItems=s?JSON.parse(s):[]; updateCartDisplay();
+}
+function saveCart(){
+    const key = currentUserEmail ? 'cart_'+currentUserEmail : 'cart_guest';
+    localStorage.setItem(key,JSON.stringify(cartItems)); updateCartDisplay();
+}
+function addToCart(title,price){
+    const e=cartItems.find(i=>i.title===title);
+    if(e){e.quantity+=1;}else{cartItems.push({title,price:Number(price),quantity:1});}
+    saveCart(); showToast("Сагсанд нэмэгдлээ!","success");
+}
 function removeFromCart(title){ cartItems=cartItems.filter(i=>i.title!==title); saveCart(); renderCartItems(); }
 function updateQuantity(title,change){ const item=cartItems.find(i=>i.title===title); if(!item)return; item.quantity+=change; if(item.quantity<=0)removeFromCart(title); else{saveCart();renderCartItems();} }
 function clearCart(){ cartItems=[]; saveCart(); renderCartItems(); }
@@ -724,19 +917,31 @@ function renderCartItems(){
     container.innerHTML=cartItems.map(item=>`<div class="bg-gray-50 rounded-xl p-3 flex items-center justify-between"><div class="flex-1"><div class="font-bold text-xs text-gray-800 mb-1">${item.title}</div><div class="text-orange-600 font-black text-sm">${item.price.toLocaleString()}₮</div></div><div class="flex items-center gap-2"><button onclick="updateQuantity('${item.title.replace(/'/g,"\\'")}', -1)" class="w-6 h-6 bg-gray-200 rounded-full text-gray-600 font-black text-xs hover:bg-gray-300">-</button><span class="font-black text-sm w-6 text-center">${item.quantity}</span><button onclick="updateQuantity('${item.title.replace(/'/g,"\\'")}', 1)" class="w-6 h-6 bg-orange-200 rounded-full text-orange-700 font-black text-xs hover:bg-orange-300">+</button></div><button onclick="removeFromCart('${item.title.replace(/'/g,"\\'")}') "class="ml-3 text-red-400 hover:text-red-600 font-bold text-sm">✕</button></div>`).join('');
     totalEl.textContent=cartItems.reduce((s,i)=>s+i.price*i.quantity,0).toLocaleString()+' ₮';
 }
+
+/**
+ * Сагсны checkout — мэйл шаарддаг
+ */
 function proceedToPayment(){
     if(!cartItems.length) return showToast("Сагс хоосон байна!","error");
-    const summary=cartItems.map(i=>`${i.title} x${i.quantity}`).join(', ');
-    const total=cartItems.reduce((s,i)=>s+i.price*i.quantity,0);
-    pendingProduct=summary; pendingTotal=total; pendingPassPages=0;
-    closeCart();
-    document.getElementById('paymentNote').innerText=currentUserEmail+" | "+summary+" | "+total.toLocaleString()+"₮";
-    document.getElementById('paymentModal').classList.add('active');
+    requireEmail(() => {
+        const summary=cartItems.map(i=>`${i.title} x${i.quantity}`).join(', ');
+        const total=cartItems.reduce((s,i)=>s+i.price*i.quantity,0);
+        pendingProduct=summary; pendingTotal=total; pendingPassPages=0;
+        closeCart();
+        document.getElementById('paymentNote').innerText=currentUserEmail+" | "+summary+" | "+total.toLocaleString()+"₮";
+        document.getElementById('paymentModal').classList.add('active');
+    });
 }
+
+/**
+ * Шууд авах — мэйл шаарддаг
+ */
 function buyNow(title,price){
-    pendingProduct=title; pendingTotal=price; pendingPassPages=0;
-    document.getElementById('paymentNote').innerText=currentUserEmail+" | "+title+" | "+Number(price).toLocaleString()+"₮";
-    document.getElementById('paymentModal').classList.add('active');
+    requireEmail(() => {
+        pendingProduct=title; pendingTotal=price; pendingPassPages=0;
+        document.getElementById('paymentNote').innerText=currentUserEmail+" | "+title+" | "+Number(price).toLocaleString()+"₮";
+        document.getElementById('paymentModal').classList.add('active');
+    });
 }
 function closePayment(){ document.getElementById('paymentModal').classList.remove('active'); }
 
@@ -767,19 +972,11 @@ async function confirmOrder(){
 }
 
 /* ══════════════════════════════════════════════
-   МИНИЙ САН  ← ЗАСВАРЛАСАН ХЭСЭГ
+   МИНИЙ САН
 ══════════════════════════════════════════════ */
-
-/*
- * Материалын төрлийг тодорхойлох туслах функц.
- * Google Apps Script-аас ирэх бичлэгийн талбарын нэр
- * тогтоогүй байж болох тул хэд хэдэн боломжит нэрийг шалгана.
- */
 function detectItemType(f) {
     const typeField = (f.type || f.Type || f.category || f.Category || '').toString().toLowerCase();
     const titleField = (f.productName || f.title || f.name || f.Title || '').toString().toLowerCase();
-
-    // Судоку хэвлэх эрх мөн эсэхийг шалгах
     if (
         typeField.includes('print') ||
         typeField.includes('судоку') ||
@@ -812,7 +1009,6 @@ async function loadMyLibrary(){
             return;
         }
 
-        /* Файлуудыг глобал массивт хадгалах */
         window._libFiles = files;
 
         libGrid.innerHTML = files.map((f, i) => {
@@ -821,12 +1017,8 @@ async function loadMyLibrary(){
             const dateStr  = f.date ? new Date(f.date).toLocaleDateString('mn-MN') : '';
             const itemType = detectItemType(f);
 
-            /* ── Судоку хэвлэх эрхийн карт ── */
             if (itemType === 'printPass') {
-                // Серверээс ирсэн хуудасны тоо (боломжит талбарын нэрүүд)
-                const pages = parseInt(
-                    f.printPages || f.pages || f.remaining || f.PrintPages || 0
-                );
+                const pages = parseInt(f.printPages || f.pages || f.remaining || f.PrintPages || 0);
                 return `
                 <div class="bg-white p-4 rounded-[2rem] shadow-md border border-green-100 flex flex-col items-center text-center">
                     <div class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mb-3 text-xl">🖨️</div>
@@ -848,7 +1040,6 @@ async function loadMyLibrary(){
                 </div>`;
             }
 
-            /* ── Ердийн файлын карт ── */
             const hasUrl = url && url !== 'undefined' && url.trim() !== '';
             const btnHtml = hasUrl
                 ? `<button
@@ -875,7 +1066,6 @@ async function loadMyLibrary(){
     }
 }
 
-/* Судоку хэвлэх хэсэг рүү шилжих */
 function goToSudokuPrint() {
     showSection('games');
     setTimeout(() => {
@@ -884,19 +1074,14 @@ function goToSudokuPrint() {
     }, 300);
 }
 
-/*
- * openLibraryFile — далд <a> tag ашиглан шинэ tab-д нээнэ
- */
 function openLibraryFile(idx) {
     const files = window._libFiles || [];
     const f     = files[idx];
     if (!f) return showToast("Файл олдсонгүй", "error");
-
     const url = (f.downloadUrl || f.url || f.link || '').trim();
     if (!url || url === 'undefined') {
         return showToast("Линк бэлэн болоогүй байна. Туул багштай холбогдоно уу.", "error");
     }
-
     const anchor = document.getElementById('hiddenFileLink');
     anchor.href  = url;
     anchor.click();
@@ -950,7 +1135,8 @@ async function checkPrintPassFromServer(showMsg = false) {
 function initGamesSection() {
     initSudoku();
     renderPassSection();
-    checkPrintPassFromServer(false);
+    // Хэвлэх эрх зөвхөн нэвтэрсэн үед серверээс шалгана
+    if (currentUserEmail) checkPrintPassFromServer(false);
 }
 
 function renderPassSection() {
@@ -961,11 +1147,11 @@ function renderPassSection() {
     const dispEl    = document.getElementById('passRemainingDisplay');
 
     if (remaining > 0) {
-        activeEl.classList.remove('hidden');
+        if (activeEl) activeEl.classList.remove('hidden');
         if (dispEl) dispEl.innerText = remaining;
         if (freeEl) freeEl.classList.add('hidden');
     } else {
-        activeEl.classList.add('hidden');
+        if (activeEl) activeEl.classList.add('hidden');
         if (freeEl) freeEl.classList.toggle('hidden', freeUsed);
     }
 }
@@ -977,10 +1163,12 @@ function openPrintPassSection() {
         showPrintModal();
     } else if (!freeUsed) {
         showToast("1 хуудас үнэгүй хэвлэх боломжтой!", "info");
-        document.getElementById('printPassSection').scrollIntoView({ behavior: 'smooth', block: 'center' });
+        const el = document.getElementById('printPassSection');
+        if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
     } else {
         showToast("Хэвлэх эрх байхгүй. Эрх авна уу!", "error");
-        document.getElementById('printPassSection').scrollIntoView({ behavior: 'smooth', block: 'center' });
+        const el = document.getElementById('printPassSection');
+        if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
     }
 }
 
@@ -995,12 +1183,14 @@ function useFreeOnePage() {
 }
 
 function buyPrintPass(pages, price) {
-    pendingProduct   = `Судоку хэвлэх эрх — ${pages} хуудас`;
-    pendingTotal     = price;
-    pendingPassPages = pages;
-    document.getElementById('paymentNote').innerText =
-        `${currentUserEmail} | Судоку хэвлэх эрх ${pages} хуудас | ${price.toLocaleString()}₮`;
-    document.getElementById('paymentModal').classList.add('active');
+    requireEmail(() => {
+        pendingProduct   = `Судоку хэвлэх эрх — ${pages} хуудас`;
+        pendingTotal     = price;
+        pendingPassPages = pages;
+        document.getElementById('paymentNote').innerText =
+            `${currentUserEmail} | Судоку хэвлэх эрх ${pages} хуудас | ${price.toLocaleString()}₮`;
+        document.getElementById('paymentModal').classList.add('active');
+    });
 }
 
 function showPrintModal() {
