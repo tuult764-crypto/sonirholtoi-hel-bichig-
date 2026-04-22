@@ -209,7 +209,7 @@
 -->
     
 <!-- ===== НЭВТРЭХ ===== -->
-<div id="authScreen" class="min-h-screen flex items-center justify-center px-4">
+<div id="authScreen" class="min-h-screen flex items-center justify-center px-4" style="display:none">
     <div class="max-w-md w-full bg-white p-10 rounded-[2.5rem] shadow-2xl text-center border-t-8 border-orange-800">
         <img src="logo.png" alt="Logo" class="h-20 mx-auto mb-6 object-contain">
         <h1 class="text-2xl font-black text-orange-900 mb-6 uppercase italic">Нэвтрэх</h1>
@@ -679,16 +679,18 @@ for (const [a,m] of Object.entries(MONG_NUMS)) MONG_TO_ASCII[m] = a;
    ЭХЛЭХ — шууд дэлгүүр ачаална, нэвтрэх шаардахгүй
 ══════════════════════════════════════════════ */
 function initApp() {
-    // authScreen байвал нуу (HTML-д байж болно)
     const authScreen = document.getElementById('authScreen');
-    if (authScreen) authScreen.classList.add('hidden');
+    if (authScreen) authScreen.style.display = 'none';
 
     const mainSystem = document.getElementById('mainSystem');
-    if (mainSystem) mainSystem.classList.remove('hidden');
+    if (mainSystem) {
+        mainSystem.classList.remove('hidden');
+        mainSystem.style.display = '';
+    }
 
     loadProducts();
 }
-
+    
 // Хуудас ачаалагдахад шууд эхлэнэ
 document.addEventListener('DOMContentLoaded', initApp);
 
