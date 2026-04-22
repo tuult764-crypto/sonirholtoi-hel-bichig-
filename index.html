@@ -156,7 +156,7 @@
             </button>
         </div>
     </nav>
-    
+
     <!-- DASHBOARD -->
     <div id="dashboardHome" class="container mx-auto px-4 py-8 max-w-6xl">
         <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-8">
@@ -406,30 +406,18 @@
          id="lbInner"
          ontouchstart="lbTouchStartX=event.touches[0].clientX"
          ontouchend="const dx=event.changedTouches[0].clientX-lbTouchStartX; if(dx>50) lbPrev(); else if(dx<-50) lbNext();">
-
-        <!-- Хаах товч -->
         <button onclick="closeLightbox()"
                 style="position:fixed;top:16px;right:20px;background:rgba(255,255,255,0.15);border:none;color:white;
                        width:44px;height:44px;border-radius:50%;font-size:22px;font-weight:900;cursor:pointer;
                        display:flex;align-items:center;justify-content:center;z-index:10;line-height:1;">✕</button>
-
-        <!-- Тоолуур -->
         <div id="lbCounter"
              style="position:fixed;top:20px;left:50%;transform:translateX(-50%);color:rgba(255,255,255,0.7);
                     font-size:12px;font-weight:700;letter-spacing:1px;font-family:'Manrope',sans-serif;"></div>
-
-        <!-- Зураг -->
         <img id="lbImg" src="" alt=""
              style="max-width:92vw;max-height:82vh;object-fit:contain;border-radius:12px;
                     transition:opacity 0.2s;box-shadow:0 8px 40px rgba(0,0,0,0.6);user-select:none;opacity:0;">
-
-        <!-- Өмнөх товч -->
         <button id="lbPrev" onclick="lbPrev()" class="lb-nav-btn" style="left:12px;">&#8249;</button>
-
-        <!-- Дараагийн товч -->
         <button id="lbNext" onclick="lbNext()" class="lb-nav-btn" style="right:12px;">&#8250;</button>
-
-        <!-- Цэгүүд -->
         <div id="lbDots"
              style="position:fixed;bottom:24px;left:50%;transform:translateX(-50%);display:flex;gap:8px;align-items:center;"></div>
     </div>
@@ -527,9 +515,6 @@
 <!-- МЭДЭГДЭЛ -->
 <div id="toastBox" class="fixed bottom-6 left-1/2 -translate-x-1/2 z-[9999] flex flex-col gap-2 items-center pointer-events-none"></div>
 
-<!-- =========================================================
-     JAVASCRIPT
-     ========================================================= -->
 <script>
 /* ── ТОХИРГОО ─────────────────────────────── */
 const ORDER_URL = 'https://script.google.com/macros/s/AKfycbxK_P1rXAzE0CQcA34umqB_innEDg7EkMFQg6k3ANzPZeh_q-yHzyX05SqpZfkOEjDV8A/exec';
@@ -571,22 +556,21 @@ for (const [ascii, mong] of Object.entries(MONG_NUMS)) {
 async function handleLogin() {
     const email = document.getElementById('loginEmail').value.trim();
     if (!email) return showToast("Мэйл хаягаа оруулна уу!", "error");
-    
+
     try {
-        // Энд redirect: 'follow' байгаа эсэхийг заавал шалга
         const res = await fetch(`${ORDER_URL}?action=check&email=${encodeURIComponent(email)}`, {
             method: 'GET',
-            redirect: 'follow' 
+            redirect: 'follow'
         });
-        
+
         const data = await res.json();
-        
+
         if (data.status === "success") {
             currentUserEmail = email;
             document.getElementById('authScreen').classList.add('hidden');
             document.getElementById('mainSystem').classList.remove('hidden');
             document.getElementById('navEmail').innerText = email;
-            loadProducts(); // Нэвтэрсний дараа дэлгүүрийг ачаална
+            loadProducts();
         } else {
             showToast("Бүртгэлгүй мэйл!", "error");
         }
@@ -595,7 +579,7 @@ async function handleLogin() {
         showToast("Холболтын алдаа гарлаа", "error");
     }
 }
-    
+
 /* ════════════════════════════════════════════
    НАВИГАЦИ
    ════════════════════════════════════════════ */
@@ -610,6 +594,7 @@ function showSection(name) {
     if (name === 'planner') initPlanner();
     if (name === 'exam')    initExamLobby();
 }
+
 function showDashboard() {
     document.getElementById('dashboardHome').classList.remove('hidden');
     document.querySelectorAll('.section-content').forEach(s => s.classList.remove('active'));
@@ -617,53 +602,45 @@ function showDashboard() {
 }
 
 /* ════════════════════════════════════════════
-   БАРАА / ДЭЛГҮҮР (Зассан хувилбар)
+   БАРАА / ДЭЛГҮҮР
    ════════════════════════════════════════════ */
 async function loadProducts() {
-    const grid = document.getElementById('materialGrid');
+    const grid     = document.getElementById('materialGrid');
     const shopGrid = document.getElementById('fullShopGrid');
 
     try {
-        // redirect: 'follow' заавал байх ёстой
-        const res = await fetch(`${ORDER_URL}?action=getProducts`, {
-            redirect: 'follow'
-        });
-        
+        const res = await fetch(`${ORDER_URL}?action=getProducts`, { redirect: 'follow' });
         productsData = await res.json();
-        
+
         if (productsData && Array.isArray(productsData)) {
             const html = productsData.map(p => buildProductCard(p)).join('');
-            if (grid) grid.innerHTML = html;
+            if (grid)     grid.innerHTML     = html;
             if (shopGrid) shopGrid.innerHTML = html;
             loadCart();
         } else {
             console.error("Бараа олдсонгүй эсвэл өгөгдөл буруу байна.");
         }
-    } catch (e) { 
-        console.error("Алдаа гарлаа:", e); 
+    } catch (e) {
+        console.error("Алдаа гарлаа:", e);
     }
 }
-/* ── БАРАА КАРТ (слайдер + lightbox) ──────── */
+
 function buildProductCard(p) {
     const safeTitle = p.Title.replace(/'/g, "\\'");
     const price     = Number(p.Price);
 
     const imgFiles = p.Images
-        ? p.Images.split(',')
-            .map(s => s.trim())
-            .filter(s => /\.(png|jpg|jpeg|gif|webp)$/i.test(s))
+        ? p.Images.split(',').map(s => s.trim()).filter(s => /\.(png|jpg|jpeg|gif|webp)$/i.test(s))
         : [];
 
     const cardId = 'c' + Math.random().toString(36).substr(2, 9);
-
-    let imgHtml = '';
+    let imgHtml  = '';
 
     if (imgFiles.length === 0) {
         imgHtml = `
             <div class="w-full h-32 bg-orange-50 rounded-xl mb-3 flex items-center justify-center">
                 <span class="text-orange-200 text-[10px] font-bold">Зураг байхгүй</span>
             </div>`;
-
     } else if (imgFiles.length === 1) {
         const src = GITHUB_BASE + imgFiles[0];
         imgHtml = `
@@ -673,25 +650,19 @@ function buildProductCard(p) {
                      class="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
                      onerror="this.parentElement.innerHTML='<div class=\\'w-full h-full flex items-center justify-center text-orange-200 text-xs font-bold\\'>Зураг байхгүй</div>'">
             </div>`;
-
     } else {
         const allSrcs = JSON.stringify(imgFiles.map(f => GITHUB_BASE + f));
-
-        const slides = imgFiles.map((f, i) => `
+        const slides  = imgFiles.map((f, i) => `
             <img src="${GITHUB_BASE}${f}"
                  class="slide-img ${i === 0 ? 'active' : 'inactive'}"
                  data-idx="${i}"
                  onclick="openLightbox(${allSrcs.replace(/"/g,"'")}, ${i})"
                  style="cursor:zoom-in"
-                 onerror="this.style.display='none'">`
-        ).join('');
-
+                 onerror="this.style.display='none'">`).join('');
         const dots = imgFiles.map((_, i) => `
             <button class="slide-dot ${i === 0 ? 'active' : 'inactive'}"
                     data-dot="${i}"
-                    onclick="event.stopPropagation();slideTo('${cardId}',${i})"></button>`
-        ).join('');
-
+                    onclick="event.stopPropagation();slideTo('${cardId}',${i})"></button>`).join('');
         imgHtml = `
             <div class="slide-wrap relative w-full h-32 bg-orange-50 rounded-xl mb-3 overflow-hidden"
                  id="${cardId}" data-cur="0" data-total="${imgFiles.length}">
@@ -725,13 +696,12 @@ function buildProductCard(p) {
         </div>`;
 }
 
-/* ── СЛАЙДЕР ФУНКЦҮҮД ──────────────────────── */
+/* ── СЛАЙДЕР ──────────────────────────────── */
 function slideTo(cardId, index) {
     const wrap  = document.getElementById(cardId);
     if (!wrap) return;
     const total = parseInt(wrap.dataset.total);
     const idx   = (index + total) % total;
-
     wrap.querySelectorAll('.slide-img').forEach(img => {
         const i = parseInt(img.dataset.idx);
         img.classList.toggle('active',   i === idx);
@@ -750,8 +720,7 @@ function slideTo(cardId, index) {
 function slideDir(cardId, dir) {
     const wrap = document.getElementById(cardId);
     if (!wrap) return;
-    const cur = parseInt(wrap.dataset.cur || '0');
-    slideTo(cardId, cur + dir);
+    slideTo(cardId, parseInt(wrap.dataset.cur || '0') + dir);
 }
 
 /* ════════════════════════════════════════════
@@ -797,7 +766,6 @@ function renderLbDots() {
     `).join('');
 }
 
-/* Гарын товчлол: ← → Esc */
 document.addEventListener('keydown', e => {
     const lb = document.getElementById('lightboxModal');
     if (!lb || !lb.classList.contains('active')) return;
@@ -814,10 +782,12 @@ function loadCart() {
     cartItems = saved ? JSON.parse(saved) : [];
     updateCartDisplay();
 }
+
 function saveCart() {
     localStorage.setItem('cart_' + currentUserEmail, JSON.stringify(cartItems));
     updateCartDisplay();
 }
+
 function addToCart(title, price) {
     const existing = cartItems.find(i => i.title === title);
     if (existing) { existing.quantity += 1; }
@@ -825,10 +795,12 @@ function addToCart(title, price) {
     saveCart();
     showToast("Сагсанд нэмэгдлээ!", "success");
 }
+
 function removeFromCart(title) {
     cartItems = cartItems.filter(i => i.title !== title);
     saveCart(); renderCartItems();
 }
+
 function updateQuantity(title, change) {
     const item = cartItems.find(i => i.title === title);
     if (!item) return;
@@ -836,9 +808,11 @@ function updateQuantity(title, change) {
     if (item.quantity <= 0) removeFromCart(title);
     else { saveCart(); renderCartItems(); }
 }
+
 function clearCart() {
     cartItems = []; saveCart(); renderCartItems();
 }
+
 function updateCartDisplay() {
     const count = cartItems.reduce((s, i) => s + i.quantity, 0);
     const el    = document.getElementById('cartCount');
@@ -846,6 +820,7 @@ function updateCartDisplay() {
     el.textContent = count;
     count > 0 ? el.classList.remove('hidden') : el.classList.add('hidden');
 }
+
 function openCart()  { renderCartItems(); document.getElementById('cartModal').classList.add('active'); }
 function closeCart() { document.getElementById('cartModal').classList.remove('active'); }
 
@@ -855,7 +830,7 @@ function renderCartItems() {
     const checkoutBtn = document.getElementById('checkoutBtn');
     if (cartItems.length === 0) {
         container.innerHTML = `<div class="text-center text-gray-400 py-8"><div class="text-sm">Сагс хоосон байна</div></div>`;
-        totalEl.textContent = '0';
+        totalEl.textContent  = '0';
         checkoutBtn.disabled = true;
         checkoutBtn.classList.add('opacity-50');
         return;
@@ -905,17 +880,17 @@ function buyNow(title, price) {
 function closePayment() { document.getElementById('paymentModal').classList.remove('active'); }
 
 async function confirmOrder() {
-    const btn = document.getElementById('confirmBtn');
+    const btn  = document.getElementById('confirmBtn');
     const note = document.getElementById('paymentNote').innerText;
-    
-    btn.disabled = true;
+
+    btn.disabled  = true;
     btn.innerText = "Илгээж байна...";
 
     const urlParams = new URLSearchParams();
-    urlParams.append('action', 'order');
-    urlParams.append('email', currentUserEmail);
+    urlParams.append('action',  'order');
+    urlParams.append('email',   currentUserEmail);
     urlParams.append('product', pendingProduct);
-    urlParams.append('note', note);
+    urlParams.append('note',    note);
 
     try {
         await fetch(ORDER_URL, {
@@ -925,26 +900,24 @@ async function confirmOrder() {
             body: urlParams.toString()
         });
 
-        // МЭДЭГДЛИЙН ТЕКСТИЙГ ӨӨРЧИЛСӨН ХЭСЭГ:
         showToast("Туул багш төлбөр шалгаад материалыг миний санд байршуулна. Манайхыг сонгосон танд баярлалаа. Өдрийн сайхан өнгөрүүлээрэй!", "success");
-        
         closePayment();
-        if (typeof clearCart === "function") clearCart(); 
-        
+        clearCart();
+
     } catch (error) {
         console.error("Алдаа:", error);
         showToast("Холболтын алдаа гарлаа!", "error");
     } finally {
-        btn.disabled = false;
+        btn.disabled  = false;
         btn.innerText = "Төлсөн, хүсэлт илгээх";
     }
 }
 
 /* ════════════════════════════════════════════
-   МИНИЙ САН (ШИНЭЧЛЭГДСЭН)
+   МИНИЙ САН  ← ЗАСАГДСАН
    ════════════════════════════════════════════ */
 async function loadMyLibrary() {
-    const libGrid = document.getElementById('libraryGrid'); document.getElementById('libraryGrid');
+    const libGrid = document.getElementById('libraryGrid');
     if (!libGrid) return;
 
     libGrid.innerHTML = "<p class='col-span-full text-center py-10 opacity-50 text-xs'>Ачаалж байна...</p>";
@@ -966,7 +939,7 @@ async function loadMyLibrary() {
                     <div class="w-12 h-12 bg-orange-100 rounded-full flex items-center justify-center mb-3 text-xl">📂</div>
                     <h4 class="font-black text-[10px] text-orange-900 mb-1 uppercase italic">${f.productName}</h4>
                     <p class="text-[9px] text-gray-400 mb-4">${new Date(f.date).toLocaleDateString()}</p>
-                    <a href="${f.downloadUrl}" target="_blank" 
+                    <a href="${f.downloadUrl}" target="_blank"
                        class="w-full bg-orange-800 text-white py-2 rounded-xl font-black uppercase italic text-[9px] hover:bg-orange-900 transition-all text-center">
                         Үзэх / Татах
                     </a>
@@ -978,6 +951,7 @@ async function loadMyLibrary() {
         libGrid.innerHTML = "<p class='text-red-400 text-center text-[10px] font-bold'>Холболтын алдаа гарлаа</p>";
     }
 }
+
 /* ════════════════════════════════════════════
    СУДОКУ
    ════════════════════════════════════════════ */
@@ -1019,9 +993,9 @@ function initSudoku() {
         for (let c = 0; c < 9; c++) {
             const val  = sudokuBoard[r][c];
             const cell = document.createElement('input');
-            cell.type      = 'text';
-            cell.maxLength = 2;
-            cell.className = 'sudoku-cell';
+            cell.type       = 'text';
+            cell.maxLength  = 2;
+            cell.className  = 'sudoku-cell';
             cell.dataset.answer = String(val);
             if (Math.random() < 0.45) {
                 cell.value    = MONG_NUMS[String(val)];
@@ -1095,6 +1069,7 @@ function adjustPrintPages(delta) {
     printPageCount = Math.max(1, printPageCount + delta);
     updatePrintModalUI();
 }
+
 function updatePrintModalUI() {
     const extra = Math.max(0, printPageCount - 1);
     const price = extra * 400;
@@ -1103,7 +1078,7 @@ function updatePrintModalUI() {
     document.getElementById('printPageCount').innerText  = printPageCount;
     document.getElementById('extraPagesPrice').innerText = extra > 0 ? `${extra} x 400 = ${price.toLocaleString()} T` : 'Байхгүй';
     document.getElementById('totalPrintPrice').innerText = price > 0 ? `${price.toLocaleString()} T` : 'Үнэгүй';
-    const noteEl  = document.getElementById('printPaymentNote');
+    const noteEl   = document.getElementById('printPaymentNote');
     const printBtn = document.getElementById('doPrintBtn');
     if (price > 0) {
         noteEl.classList.remove('hidden');
@@ -1117,14 +1092,17 @@ function updatePrintModalUI() {
         printBtn.classList.add('bg-green-700','hover:bg-green-800');
     }
 }
+
 function showPrintModal() {
     printPageCount = 1;
     updatePrintModalUI();
     document.getElementById('printModal').classList.add('active');
 }
+
 function closePrintModal() {
     document.getElementById('printModal').classList.remove('active');
 }
+
 function buildPrintPuzzle(board) {
     let html = '<div class="print-grid">';
     for (let r = 0; r < 9; r++) {
@@ -1140,6 +1118,7 @@ function buildPrintPuzzle(board) {
     html += '</div>';
     return html;
 }
+
 function executePrint() {
     const extra = Math.max(0, printPageCount - 1);
     const price = extra * 800;
@@ -1154,16 +1133,17 @@ function executePrint() {
     }
     doPrint();
 }
+
 function doPrint() {
     const printArea = document.getElementById('printArea');
-    let pagesHtml = '';
+    let pagesHtml   = '';
 
     for (let page = 0; page < printPageCount; page++) {
         pagesHtml += `
         <div style="page-break-after:${page < printPageCount - 1 ? 'always' : 'auto'};
                     padding:10mm; background:white; width:210mm; height:297mm; box-sizing:border-box;
-                    display: flex; flex-direction: column; overflow: hidden;">
-            <div style="text-align:center; margin-bottom:5mm; font-family:'Manrope',sans-serif; flex-shrink: 0;">
+                    display:flex; flex-direction:column; overflow:hidden;">
+            <div style="text-align:center; margin-bottom:5mm; font-family:'Manrope',sans-serif; flex-shrink:0;">
                 <div style="font-size:14pt; font-weight:900; text-transform:uppercase; color:#7c2d12; letter-spacing:2px;">
                     Сонирхолтой Хэл Бичиг
                 </div>
@@ -1171,21 +1151,21 @@ function doPrint() {
                     Монгол бичиг судоку — ${page + 1}-р хуудас ${page === 0 ? '(Үнэгүй)' : '(800T)'}
                 </div>
             </div>
-            <div style="display:grid; grid-template-columns:1fr 1fr; grid-template-rows: 1fr 1fr; gap:5mm; flex: 1;">`;
+            <div style="display:grid; grid-template-columns:1fr 1fr; grid-template-rows:1fr 1fr; gap:5mm; flex:1;">`;
 
         for (let q = 0; q < 4; q++) {
             const newBoard = generateSudokuBoard();
             pagesHtml += `
                 <div style="border:1px solid #ddd; border-radius:3mm; padding:3mm; background:#fff;
-                            display: flex; flex-direction: column; justify-content: center; align-items: center;">
+                            display:flex; flex-direction:column; justify-content:center; align-items:center;">
                     <div style="font-size:7pt; font-weight:700; color:#7c2d12; text-transform:uppercase;
                                 margin-bottom:2mm; text-align:center;">
                         ${page * 4 + q + 1}-р судоку
                     </div>
-                    <div style="width: 85mm;">
+                    <div style="width:85mm;">
                         ${buildPrintPuzzle(newBoard)}
                     </div>
-                    <div style="margin-top:2mm; text-align:right; width: 100%; font-size:6pt; color:#aaa;">Зай: _______</div>
+                    <div style="margin-top:2mm; text-align:right; width:100%; font-size:6pt; color:#aaa;">Зай: _______</div>
                 </div>`;
         }
         pagesHtml += `</div></div>`;
@@ -1194,16 +1174,16 @@ function doPrint() {
     pagesHtml = `
         <style>
             @import url('https://fonts.googleapis.com/css2?family=Manrope:wght@700;900&display=swap');
-            * { box-sizing: border-box; margin: 0; padding: 0; }
-            body { background: white !important; }
-            .print-grid { display: grid; grid-template-columns: repeat(9, 1fr); border: 2px solid #000; width: 100%; }
-            .print-cell { aspect-ratio: 1/1; border: 1px solid #bbb; display: flex; align-items: center; justify-content: center; font-size: 10pt; font-weight: 700; font-family: 'Manrope', sans-serif; }
-            .pfixed { background: #f1f5f9 !important; -webkit-print-color-adjust: exact; color: #1a1a1a; }
-            .pempty { background: #fff !important; color: transparent; }
-            .print-cell:nth-child(3n) { border-right: 2px solid #000; }
-            .print-cell:nth-child(9n) { border-right: none; }
+            * { box-sizing:border-box; margin:0; padding:0; }
+            body { background:white !important; }
+            .print-grid { display:grid; grid-template-columns:repeat(9,1fr); border:2px solid #000; width:100%; }
+            .print-cell { aspect-ratio:1/1; border:1px solid #bbb; display:flex; align-items:center; justify-content:center; font-size:10pt; font-weight:700; font-family:'Manrope',sans-serif; }
+            .pfixed { background:#f1f5f9 !important; -webkit-print-color-adjust:exact; color:#1a1a1a; }
+            .pempty { background:#fff !important; color:transparent; }
+            .print-cell:nth-child(3n) { border-right:2px solid #000; }
+            .print-cell:nth-child(9n) { border-right:none; }
             .print-cell:nth-child(n+19):nth-child(-n+27),
-            .print-cell:nth-child(n+46):nth-child(-n+54) { border-bottom: 2px solid #000; }
+            .print-cell:nth-child(n+46):nth-child(-n+54) { border-bottom:2px solid #000; }
         </style>
         ${pagesHtml}`;
 
@@ -1215,7 +1195,6 @@ function doPrint() {
         printArea.innerHTML = '';
         window.removeEventListener('afterprint', afterPrint);
     };
-
     window.addEventListener('afterprint', afterPrint);
     setTimeout(() => window.print(), 150);
 }
@@ -1225,7 +1204,12 @@ function doPrint() {
    ════════════════════════════════════════════ */
 let personalTasks = [];
 
-function initPlanner() { loadPlannerSchedule(); renderPersonalTasks(); updatePlannerStats(); }
+function initPlanner() {
+    loadPersonalTasks();
+    loadPlannerSchedule();
+    renderPersonalTasks();
+    updatePlannerStats();
+}
 
 async function loadPlannerSchedule() {
     const list = document.getElementById('scheduleList');
@@ -1299,14 +1283,16 @@ function isPlannerItemDone(key) {
     const data = JSON.parse(localStorage.getItem('plannerDone_' + currentUserEmail) || '{}');
     return !!data[key];
 }
+
 function setItemDone(key, val) {
     const data = JSON.parse(localStorage.getItem('plannerDone_' + currentUserEmail) || '{}');
     data[key] = val;
     localStorage.setItem('plannerDone_' + currentUserEmail, JSON.stringify(data));
 }
+
 function updatePlannerStats() {
-    const allItems  = document.querySelectorAll('#scheduleList .task-item');
-    const doneItems = document.querySelectorAll('#scheduleList .task-item.done');
+    const allItems      = document.querySelectorAll('#scheduleList .task-item');
+    const doneItems     = document.querySelectorAll('#scheduleList .task-item.done');
     const totalPersonal = personalTasks.length;
     const donePersonal  = personalTasks.filter(t => t.done).length;
     const total = allItems.length + totalPersonal;
@@ -1318,12 +1304,15 @@ function updatePlannerStats() {
     document.getElementById('progressLabel').innerText     = `${done} / ${total}`;
     document.getElementById('progressBar').style.width     = pct + '%';
 }
+
 function loadPersonalTasks() {
     personalTasks = JSON.parse(localStorage.getItem('personalTasks_' + currentUserEmail) || '[]');
 }
+
 function savePersonalTasks() {
     localStorage.setItem('personalTasks_' + currentUserEmail, JSON.stringify(personalTasks));
 }
+
 function addPersonalTask() {
     const input = document.getElementById('newTaskInput');
     const title = input.value.trim();
@@ -1334,14 +1323,17 @@ function addPersonalTask() {
     renderPersonalTasks(); updatePlannerStats();
     showToast("Даалгавар нэмэгдлээ!", "success");
 }
+
 function togglePersonalTask(id) {
     const t = personalTasks.find(t => t.id === id);
     if (t) { t.done = !t.done; savePersonalTasks(); renderPersonalTasks(); updatePlannerStats(); }
 }
+
 function deletePersonalTask(id) {
     personalTasks = personalTasks.filter(t => t.id !== id);
     savePersonalTasks(); renderPersonalTasks(); updatePlannerStats();
 }
+
 function renderPersonalTasks() {
     const list = document.getElementById('personalTaskList');
     if (!personalTasks.length) {
@@ -1400,7 +1392,7 @@ function buildDemoQuestions() {
         { Topic:'Дүрэм', Question:'Монгол бичгийг ямар шугамаар бичдэг вэ?', A:'Хэвтээ', B:'Босоо', C:'Диагональ', D:'Дугуй', Answer:'B', Explanation:'Монгол бичгийг дээрээс доош чиглэлтэй босоо бичдэг.' },
         { Topic:'Дүрэм', Question:'Монгол бичгийн бичмэл хэлбэрт эгшиг үсэг бүгд ямар зурлагаар эхэлдэг вэ?', A:'шилбэ', B:'шүд', C:'гэдэс', D:'титэм', Answer:'D', Explanation:'Уламжлалт монгол бичгийн бичмэл хэлбэрт бүх эгшиг үсэг титэм зурлагаар эхэлдэг' },
         { Topic:'Дүрэм', Question:'Монгол бичгийн эгшиг үсэг хэд байдаг вэ?', A:'5', B:'7', C:'9', D:'12', Answer:'B', Explanation:'Монгол бичигт 7 эгшиг үсэг байдаг.' },
-        { Topic:'Үг', Question:'"Титэм + шүд" нийлээд ямар үсэг вэ' , A:'А', B:'Э', C:'И', D:'О', Answer:'A', Explanation:'"Үгийн эхэнд ордог А" үсэг юм.' },
+        { Topic:'Үг', Question:'"Титэм + шүд" нийлээд ямар үсэг вэ', A:'А', B:'Э', C:'И', D:'О', Answer:'A', Explanation:'"Үгийн эхэнд ордог А" үсэг юм.' },
         { Topic:'Үг', Question:'"Шилбэ" ямар үсгийг илэрхийлдэг вэ?', A:'А', B:'Э', C:'И', D:'Ү', Answer:'C', Explanation:'"Үгийн дунд ордог И" үсэг юм.' },
         { Topic:'Дуудлага', Question:'Титэм+гэдэс+шилбэ" ямар үсэг болох вэ?', A:'О', B:'У', C:'Ө', D:'И', Answer:'C', Explanation:'"Үгийн эхэнд ордог Ө" үсэг бөгөөд монгол бичигт ө/ү үсэг адил бичигдд.' }
     ];
@@ -1409,6 +1401,7 @@ function buildDemoQuestions() {
 function getTopics() {
     return [...new Set(examQuestions.map(q => q.Topic || q.topic || 'Ерөнхий'))];
 }
+
 function renderTopics() {
     const topics = getTopics();
     const el     = document.getElementById('examTopicList');
@@ -1524,10 +1517,12 @@ function finishExam() {
 }
 
 function retryExam() { startExam(currentTopic); }
+
 function backToLobby() {
     stopExamTimer(); hideEl('examResult'); hideEl('examActive'); showEl('examLobby');
     renderExamHistory();
 }
+
 function startExamTimer() {
     stopExamTimer(); updateTimerDisplay();
     examTimerInterval = setInterval(() => {
@@ -1535,9 +1530,11 @@ function startExamTimer() {
         if (examTimeLeft <= 0) { clearInterval(examTimerInterval); showToast("Цаг дууслаа!", "error"); finishExam(); }
     }, 1000);
 }
+
 function stopExamTimer() {
     if (examTimerInterval) { clearInterval(examTimerInterval); examTimerInterval = null; }
 }
+
 function updateTimerDisplay() {
     const el = document.getElementById('examTimer');
     if (!el) return;
@@ -1546,12 +1543,14 @@ function updateTimerDisplay() {
     el.innerText = `${m}:${s}`;
     el.classList.toggle('timer-warning', examTimeLeft <= 30);
 }
+
 function saveExamResult(result) {
     const key     = 'examHistory_' + currentUserEmail;
     const history = JSON.parse(localStorage.getItem(key) || '[]');
     history.unshift(result);
     localStorage.setItem(key, JSON.stringify(history.slice(0, 10)));
 }
+
 function renderExamHistory() {
     const key     = 'examHistory_' + currentUserEmail;
     const history = JSON.parse(localStorage.getItem(key) || '[]');
@@ -1580,8 +1579,10 @@ function shuffle(arr) {
     }
     return a;
 }
+
 function showEl(id) { const el = document.getElementById(id); if (el) el.classList.remove('hidden'); }
 function hideEl(id) { const el = document.getElementById(id); if (el) el.classList.add('hidden'); }
+
 function showToast(msg, type = 'info') {
     const box    = document.getElementById('toastBox');
     const toast  = document.createElement('div');
