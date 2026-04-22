@@ -56,25 +56,6 @@
         @keyframes pulse-red { 0%,100%{color:#dc2626}50%{color:#fca5a5} }
         .timer-warning { animation: pulse-red 1s infinite; }
 
-        /* ===== ХЭВЛЭХ ===== */
-        @media print {
-            @page { size: A4; margin: 10mm; }
-            body * { visibility: hidden; }
-            #printArea, #printArea * { visibility: visible; }
-            #printArea { position: absolute; left: 0; top: 0; width: 100%; display: block !important; }
-            .print-page {
-                display: grid;
-                grid-template-columns: repeat(2, 1fr);
-                grid-template-rows: repeat(2, 1fr);
-                gap: 15mm;
-                height: 270mm;
-                page-break-after: always;
-                padding: 5mm;
-            }
-            .print-item { border: 1px solid #ddd; padding: 5mm; display: flex; flex-direction: column; align-items: center; justify-content: center; }
-            .print-grid { display: grid; grid-template-columns: repeat(9, 1fr); border: 2px solid #000; width: 100%; max-width: 85mm; }
-        }
-
         /* ===== СЛАЙДЕР ===== */
         .slide-img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transition: opacity 0.3s; }
         .slide-img.active { opacity: 1; }
@@ -92,25 +73,27 @@
         #lightboxModal { background: rgba(0,0,0,0.93) !important; padding: 0 !important; }
         #lbImg { transition: opacity 0.2s; }
         .lb-nav-btn {
-            position: fixed;
-            top: 50%;
-            transform: translateY(-50%);
-            background: rgba(255,255,255,0.15);
-            border: none;
-            color: white;
-            width: 48px;
-            height: 48px;
-            border-radius: 50%;
-            font-size: 26px;
-            font-weight: 900;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: background 0.2s;
-            z-index: 10;
+            position: fixed; top: 50%; transform: translateY(-50%);
+            background: rgba(255,255,255,0.15); border: none; color: white;
+            width: 48px; height: 48px; border-radius: 50%; font-size: 26px; font-weight: 900;
+            cursor: pointer; display: flex; align-items: center; justify-content: center;
+            transition: background 0.2s; z-index: 10;
         }
         .lb-nav-btn:hover { background: rgba(255,255,255,0.3); }
+
+        /* ===== ХЭВЛЭХ ===== */
+        @media print {
+            @page { size: A4 portrait; margin: 8mm; }
+            body * { visibility: hidden !important; }
+            #printArea, #printArea * { visibility: visible !important; }
+            #printArea {
+                position: fixed !important;
+                left: 0 !important; top: 0 !important;
+                width: 100% !important; height: auto !important;
+                display: block !important;
+                background: white !important;
+            }
+        }
     </style>
 </head>
 <body class="min-h-screen pb-20">
@@ -151,8 +134,7 @@
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                           d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/>
                 </svg>
-                <span id="cartCount"
-                      class="absolute -top-1 -right-1 bg-red-500 text-white text-[8px] font-bold px-1.5 py-0.5 rounded-full hidden">0</span>
+                <span id="cartCount" class="absolute -top-1 -right-1 bg-red-500 text-white text-[8px] font-bold px-1.5 py-0.5 rounded-full hidden">0</span>
             </button>
         </div>
     </nav>
@@ -160,23 +142,19 @@
     <!-- DASHBOARD -->
     <div id="dashboardHome" class="container mx-auto px-4 py-8 max-w-6xl">
         <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-8">
-            <div onclick="showSection('planner')"
-                 class="bg-orange-600 p-6 rounded-3xl text-white cursor-pointer shadow-md hover:shadow-xl transition-all hover:-translate-y-1 text-center">
+            <div onclick="showSection('planner')" class="bg-orange-600 p-6 rounded-3xl text-white cursor-pointer shadow-md hover:shadow-xl transition-all hover:-translate-y-1 text-center">
                 <div class="text-2xl mb-2 font-black">P</div>
                 <div class="text-[10px] font-black uppercase italic">Хөтөлбөр</div>
             </div>
-            <div onclick="showSection('exam')"
-                 class="bg-blue-600 p-6 rounded-3xl text-white cursor-pointer shadow-md hover:shadow-xl transition-all hover:-translate-y-1 text-center">
+            <div onclick="showSection('exam')" class="bg-blue-600 p-6 rounded-3xl text-white cursor-pointer shadow-md hover:shadow-xl transition-all hover:-translate-y-1 text-center">
                 <div class="text-2xl mb-2 font-black">E</div>
                 <div class="text-[10px] font-black uppercase italic">Шалгалт</div>
             </div>
-            <div onclick="showSection('games')"
-                 class="bg-green-600 p-6 rounded-3xl text-white cursor-pointer shadow-md hover:shadow-xl transition-all hover:-translate-y-1 text-center">
+            <div onclick="showSection('games')" class="bg-green-600 p-6 rounded-3xl text-white cursor-pointer shadow-md hover:shadow-xl transition-all hover:-translate-y-1 text-center">
                 <div class="text-2xl mb-2 font-black">S</div>
                 <div class="text-[10px] font-black uppercase italic">Судоку</div>
             </div>
-            <div onclick="showSection('shop')"
-                 class="bg-yellow-500 p-6 rounded-3xl text-white cursor-pointer shadow-md hover:shadow-xl transition-all hover:-translate-y-1 text-center">
+            <div onclick="showSection('shop')" class="bg-yellow-500 p-6 rounded-3xl text-white cursor-pointer shadow-md hover:shadow-xl transition-all hover:-translate-y-1 text-center">
                 <div class="text-2xl mb-2 font-black">D</div>
                 <div class="text-[10px] font-black uppercase italic">Дэлгүүр</div>
             </div>
@@ -187,7 +165,7 @@
 
     <!-- ===== ХӨТӨЛБӨР ===== -->
     <div id="plannerSection" class="section-content container mx-auto px-4 py-8 max-w-4xl">
-        <button onclick="showDashboard()" class="text-orange-800 font-bold mb-6 uppercase text-xs">Back Буцах</button>
+        <button onclick="showDashboard()" class="text-orange-800 font-bold mb-6 uppercase text-xs">← Буцах</button>
         <div class="grid grid-cols-3 gap-3 mb-8">
             <div class="bg-orange-600 text-white p-4 rounded-2xl text-center shadow-md">
                 <div id="plannerTotalTasks" class="text-2xl font-black">0</div>
@@ -214,8 +192,7 @@
             <div class="bg-white rounded-3xl p-6 shadow-md border border-orange-50">
                 <div class="flex justify-between items-center mb-4">
                     <h3 class="font-black text-orange-900 uppercase italic text-sm">Хичээлийн хөтөлбөр</h3>
-                    <button onclick="loadPlannerSchedule()"
-                            class="bg-orange-100 text-orange-800 px-3 py-1 rounded-full text-[10px] font-bold uppercase">Шинэчлэх</button>
+                    <button onclick="loadPlannerSchedule()" class="bg-orange-100 text-orange-800 px-3 py-1 rounded-full text-[10px] font-bold uppercase">Шинэчлэх</button>
                 </div>
                 <div id="scheduleList" class="space-y-2 max-h-80 overflow-y-auto pr-1">
                     <div class="text-center text-gray-400 text-xs py-8">Уншиж байна...</div>
@@ -227,14 +204,12 @@
                     <input type="text" id="newTaskInput" placeholder="Даалгавар бичих..."
                            class="w-full bg-white border border-orange-100 rounded-xl px-3 py-2 text-xs font-bold outline-none focus:ring-2 ring-orange-200 mb-2"
                            onkeydown="if(event.key==='Enter') addPersonalTask()">
-                    <select id="newTaskPriority"
-                            class="w-full bg-white border border-orange-100 rounded-xl px-3 py-2 text-xs font-bold outline-none mb-2">
+                    <select id="newTaskPriority" class="w-full bg-white border border-orange-100 rounded-xl px-3 py-2 text-xs font-bold outline-none mb-2">
                         <option value="high">Яаралтай</option>
                         <option value="mid" selected>Дунд</option>
                         <option value="low">Энгийн</option>
                     </select>
-                    <button onclick="addPersonalTask()"
-                            class="w-full bg-orange-800 text-white py-2 rounded-xl font-black uppercase italic text-[10px]">+ Нэмэх</button>
+                    <button onclick="addPersonalTask()" class="w-full bg-orange-800 text-white py-2 rounded-xl font-black uppercase italic text-[10px]">+ Нэмэх</button>
                 </div>
                 <div id="personalTaskList" class="space-y-2 max-h-64 overflow-y-auto pr-1"></div>
             </div>
@@ -243,7 +218,7 @@
 
     <!-- ===== ШАЛГАЛТ ===== -->
     <div id="examSection" class="section-content container mx-auto px-4 py-8 max-w-2xl">
-        <button onclick="showDashboard()" class="text-orange-800 font-bold mb-6 uppercase text-xs">Back Буцах</button>
+        <button onclick="showDashboard()" class="text-orange-800 font-bold mb-6 uppercase text-xs">← Буцах</button>
         <div id="examLobby">
             <div class="text-center mb-8">
                 <h2 class="text-2xl font-black text-blue-900 uppercase italic mb-2">Шалгалт</h2>
@@ -276,8 +251,7 @@
                 <div id="examProgress" class="bg-blue-500 h-2 rounded-full transition-all duration-500" style="width:0%"></div>
             </div>
             <div class="bg-white rounded-3xl p-6 shadow-md border mb-4">
-                <div id="examQuestionBadge"
-                     class="inline-block bg-blue-100 text-blue-700 text-[10px] font-black uppercase px-3 py-1 rounded-full mb-3"></div>
+                <div id="examQuestionBadge" class="inline-block bg-blue-100 text-blue-700 text-[10px] font-black uppercase px-3 py-1 rounded-full mb-3"></div>
                 <p class="font-black text-gray-800 text-base leading-relaxed" id="examQuestion"></p>
             </div>
             <div id="examOptions" class="space-y-3 mb-6"></div>
@@ -312,14 +286,8 @@
                 </div>
                 <div id="resultReview" class="text-left mb-6 space-y-2 max-h-64 overflow-y-auto"></div>
                 <div class="flex gap-3">
-                    <button onclick="retryExam()"
-                            class="flex-1 bg-blue-600 text-white py-3 rounded-2xl font-black uppercase italic text-xs hover:bg-blue-700 transition-all">
-                        Дахин өгөх
-                    </button>
-                    <button onclick="backToLobby()"
-                            class="flex-1 bg-gray-100 text-gray-700 py-3 rounded-2xl font-black uppercase italic text-xs hover:bg-gray-200 transition-all">
-                        Буцах
-                    </button>
+                    <button onclick="retryExam()" class="flex-1 bg-blue-600 text-white py-3 rounded-2xl font-black uppercase italic text-xs hover:bg-blue-700 transition-all">Дахин өгөх</button>
+                    <button onclick="backToLobby()" class="flex-1 bg-gray-100 text-gray-700 py-3 rounded-2xl font-black uppercase italic text-xs hover:bg-gray-200 transition-all">Буцах</button>
                 </div>
             </div>
         </div>
@@ -327,19 +295,18 @@
 
     <!-- ===== СУДОКУ ===== -->
     <div id="gamesSection" class="section-content container mx-auto px-4 py-8 max-w-xl">
-        <button onclick="showDashboard()" class="text-orange-800 font-bold mb-4 uppercase text-xs">Back Буцах</button>
+        <button onclick="showDashboard()" class="text-orange-800 font-bold mb-4 uppercase text-xs">← Буцах</button>
         <div class="bg-green-50 border border-green-200 rounded-2xl p-4 mb-4 flex items-center justify-between">
             <div>
                 <div class="font-black text-green-800 text-sm uppercase italic">Хэвлэх хуудас</div>
                 <div class="text-[10px] text-green-600 font-bold mt-0.5">
                     1-р хуудас <span class="text-green-700 font-black">ҮНЭГҮЙ</span>
-                    &nbsp;|&nbsp; 2+ хуудас <span class="text-orange-700 font-black">800</span>
+                    &nbsp;|&nbsp; 2+ хуудас нэг бүр <span class="text-orange-700 font-black">800₮</span>
                 </div>
             </div>
             <div class="flex items-center gap-2">
                 <span class="text-[10px] font-black text-gray-500 uppercase">Хуудас:</span>
-                <div id="printPageCount"
-                     class="w-10 text-center font-black text-green-800 bg-white border border-green-300 rounded-xl py-1 text-sm">1</div>
+                <div id="printPageCount" class="w-10 text-center font-black text-green-800 bg-white border border-green-300 rounded-xl py-1 text-sm">1</div>
             </div>
         </div>
         <h2 class="text-center text-xl font-black text-green-900 mb-4 italic uppercase">Монгол бичиг судоку</h2>
@@ -370,30 +337,21 @@
             </div>
         </div>
         <div class="mt-4 flex justify-center gap-3 flex-wrap">
-            <button onclick="initSudoku()"
-                    class="bg-gray-500 text-white px-5 py-3 rounded-full font-black uppercase italic text-xs shadow-md hover:bg-gray-600 transition-all">
-                Шинэ
-            </button>
-            <button onclick="checkSudoku()"
-                    class="bg-green-700 text-white px-7 py-3 rounded-full font-black uppercase italic text-xs shadow-md hover:bg-green-800 transition-all">
-                Шалгах
-            </button>
-            <button onclick="showPrintModal()"
-                    class="bg-orange-700 text-white px-5 py-3 rounded-full font-black uppercase italic text-xs shadow-md hover:bg-orange-800 transition-all">
-                Хэвлэх
-            </button>
+            <button onclick="initSudoku()" class="bg-gray-500 text-white px-5 py-3 rounded-full font-black uppercase italic text-xs shadow-md hover:bg-gray-600 transition-all">Шинэ</button>
+            <button onclick="checkSudoku()" class="bg-green-700 text-white px-7 py-3 rounded-full font-black uppercase italic text-xs shadow-md hover:bg-green-800 transition-all">Шалгах</button>
+            <button onclick="showPrintModal()" class="bg-orange-700 text-white px-5 py-3 rounded-full font-black uppercase italic text-xs shadow-md hover:bg-orange-800 transition-all">Хэвлэх</button>
         </div>
     </div>
 
     <!-- ===== ДЭЛГҮҮР ===== -->
     <div id="shopSection" class="section-content container mx-auto px-4 py-8">
-        <button onclick="showDashboard()" class="text-orange-800 font-bold mb-6 uppercase text-xs">Back Буцах</button>
+        <button onclick="showDashboard()" class="text-orange-800 font-bold mb-6 uppercase text-xs">← Буцах</button>
         <div id="fullShopGrid" class="grid grid-cols-2 lg:grid-cols-4 gap-6"></div>
     </div>
 
     <!-- ===== МИНИЙ САН ===== -->
     <div id="librarySection" class="section-content container mx-auto px-4 py-8">
-        <button onclick="showDashboard()" class="text-orange-800 font-bold mb-6 uppercase text-xs">Back Буцах</button>
+        <button onclick="showDashboard()" class="text-orange-800 font-bold mb-6 uppercase text-xs">← Буцах</button>
         <h2 class="text-xl font-black text-orange-900 mb-6 uppercase italic">Миний материалууд</h2>
         <div id="libraryGrid" class="grid grid-cols-1 md:grid-cols-3 gap-6"></div>
     </div>
@@ -406,20 +364,12 @@
          id="lbInner"
          ontouchstart="lbTouchStartX=event.touches[0].clientX"
          ontouchend="const dx=event.changedTouches[0].clientX-lbTouchStartX; if(dx>50) lbPrev(); else if(dx<-50) lbNext();">
-        <button onclick="closeLightbox()"
-                style="position:fixed;top:16px;right:20px;background:rgba(255,255,255,0.15);border:none;color:white;
-                       width:44px;height:44px;border-radius:50%;font-size:22px;font-weight:900;cursor:pointer;
-                       display:flex;align-items:center;justify-content:center;z-index:10;line-height:1;">✕</button>
-        <div id="lbCounter"
-             style="position:fixed;top:20px;left:50%;transform:translateX(-50%);color:rgba(255,255,255,0.7);
-                    font-size:12px;font-weight:700;letter-spacing:1px;font-family:'Manrope',sans-serif;"></div>
-        <img id="lbImg" src="" alt=""
-             style="max-width:92vw;max-height:82vh;object-fit:contain;border-radius:12px;
-                    transition:opacity 0.2s;box-shadow:0 8px 40px rgba(0,0,0,0.6);user-select:none;opacity:0;">
+        <button onclick="closeLightbox()" style="position:fixed;top:16px;right:20px;background:rgba(255,255,255,0.15);border:none;color:white;width:44px;height:44px;border-radius:50%;font-size:22px;font-weight:900;cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:10;line-height:1;">✕</button>
+        <div id="lbCounter" style="position:fixed;top:20px;left:50%;transform:translateX(-50%);color:rgba(255,255,255,0.7);font-size:12px;font-weight:700;letter-spacing:1px;font-family:'Manrope',sans-serif;"></div>
+        <img id="lbImg" src="" alt="" style="max-width:92vw;max-height:82vh;object-fit:contain;border-radius:12px;transition:opacity 0.2s;box-shadow:0 8px 40px rgba(0,0,0,0.6);user-select:none;opacity:0;">
         <button id="lbPrev" onclick="lbPrev()" class="lb-nav-btn" style="left:12px;">&#8249;</button>
         <button id="lbNext" onclick="lbNext()" class="lb-nav-btn" style="right:12px;">&#8250;</button>
-        <div id="lbDots"
-             style="position:fixed;bottom:24px;left:50%;transform:translateX(-50%);display:flex;gap:8px;align-items:center;"></div>
+        <div id="lbDots" style="position:fixed;bottom:24px;left:50%;transform:translateX(-50%);display:flex;gap:8px;align-items:center;"></div>
     </div>
 </div>
 
@@ -432,49 +382,41 @@
             <div class="text-[10px] font-bold text-green-600 uppercase mt-1">хуудас (4 судоку / хуудас)</div>
         </div>
         <div class="flex items-center justify-center gap-4 mb-4">
-            <button onclick="adjustPrintPages(-1)"
-                    class="w-10 h-10 bg-gray-100 rounded-full font-black text-gray-700 hover:bg-gray-200 transition-all text-lg">-</button>
+            <button onclick="adjustPrintPages(-1)" class="w-10 h-10 bg-gray-100 rounded-full font-black text-gray-700 hover:bg-gray-200 transition-all text-lg">-</button>
             <span class="font-black text-gray-700 text-sm" id="modalPageLabel">1 хуудас</span>
-            <button onclick="adjustPrintPages(1)"
-                    class="w-10 h-10 bg-green-100 rounded-full font-black text-green-700 hover:bg-green-200 transition-all text-lg">+</button>
+            <button onclick="adjustPrintPages(1)" class="w-10 h-10 bg-green-100 rounded-full font-black text-green-700 hover:bg-green-200 transition-all text-lg">+</button>
         </div>
         <div class="bg-orange-50 rounded-2xl p-4 mb-6 border border-orange-100">
             <div class="flex justify-between text-xs font-bold text-gray-600 mb-1">
                 <span>1-р хуудас:</span><span class="text-green-700 font-black">Үнэгүй</span>
             </div>
-            <div class="flex justify-between text-xs font-bold text-gray-600 mb-2" id="extraPagesRow">
-                <span>Нэмэлт хуудас:</span><span id="extraPagesPrice">0</span>
+            <div class="flex justify-between text-xs font-bold text-gray-600 mb-2">
+                <span>Нэмэлт хуудас:</span><span id="extraPagesPrice" class="text-orange-700 font-black">—</span>
             </div>
             <div class="border-t border-orange-200 pt-2 flex justify-between font-black text-orange-900">
                 <span class="text-sm uppercase italic">Нийт:</span>
-                <span class="text-lg" id="totalPrintPrice">0</span>
+                <span class="text-lg" id="totalPrintPrice">Үнэгүй</span>
             </div>
         </div>
         <div id="printPaymentNote" class="hidden bg-blue-50 border border-blue-200 rounded-2xl p-3 mb-4 text-xs text-blue-700 font-bold text-center">
-            Хэвлэхийн өмнө төлбөрийг үйлдвэрлэгчид QR-ээр төлнө үү
+            Хэвлэхийн өмнө төлбөрийг QR-ээр төлж, "Төлсөн, хэвлэх" дарна уу
         </div>
         <div class="flex gap-3">
-            <button onclick="closePrintModal()"
-                    class="flex-1 bg-gray-100 text-gray-600 py-3 rounded-2xl font-black uppercase italic text-xs hover:bg-gray-200 transition-all">
-                Цуцлах
-            </button>
-            <button onclick="executePrint()" id="doPrintBtn"
-                    class="flex-1 bg-green-700 text-white py-3 rounded-2xl font-black uppercase italic text-xs hover:bg-green-800 transition-all">
-                Хэвлэх
-            </button>
+            <button onclick="closePrintModal()" class="flex-1 bg-gray-100 text-gray-600 py-3 rounded-2xl font-black uppercase italic text-xs hover:bg-gray-200 transition-all">Цуцлах</button>
+            <button onclick="executePrint()" id="doPrintBtn" class="flex-1 bg-green-700 text-white py-3 rounded-2xl font-black uppercase italic text-xs hover:bg-green-800 transition-all">Хэвлэх</button>
         </div>
     </div>
 </div>
 
 <!-- ===== ХЭВЛЭХ ТАЛБАР ===== -->
-<div id="printArea" class="hidden"></div>
+<div id="printArea" style="display:none;"></div>
 
 <!-- ===== САГС MODAL ===== -->
 <div id="cartModal" class="modal" onclick="if(event.target===this) closeCart()">
     <div class="bg-white p-6 rounded-[2rem] max-w-sm w-full border-8 border-orange-50 shadow-2xl">
         <div class="flex justify-between items-center mb-4">
             <h2 class="text-lg font-black text-orange-900 uppercase italic">Миний сагс</h2>
-            <button onclick="closeCart()" class="text-gray-400 font-bold text-lg">X</button>
+            <button onclick="closeCart()" class="text-gray-400 font-bold text-lg">✕</button>
         </div>
         <div id="cartItems" class="space-y-3 mb-6 max-h-60 overflow-y-auto"></div>
         <div class="border-t pt-4 mb-6">
@@ -492,7 +434,7 @@
 <!-- ===== ТӨЛБӨР MODAL ===== -->
 <div id="paymentModal" class="modal" onclick="if(event.target===this) closePayment()">
     <div class="bg-white p-8 rounded-[2.5rem] max-w-sm w-full text-center border-8 border-orange-50 relative">
-        <button onclick="closePayment()" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600 font-bold">X</button>
+        <button onclick="closePayment()" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600 font-bold">✕</button>
         <h2 class="text-lg font-black text-orange-900 mb-4 uppercase italic">Төлбөр төлөх</h2>
         <div class="bg-white p-2 border-2 border-orange-100 rounded-2xl mb-4 inline-block shadow-inner">
             <img src="qr.png" alt="Payment QR" class="w-48 h-48 object-contain">
@@ -517,7 +459,7 @@
 
 <script>
 /* ── ТОХИРГОО ─────────────────────────────── */
-const ORDER_URL = 'https://script.google.com/macros/s/AKfycbxK_P1rXAzE0CQcA34umqB_innEDg7EkMFQg6k3ANzPZeh_q-yHzyX05SqpZfkOEjDV8A/exec';
+const ORDER_URL   = 'https://script.google.com/macros/s/AKfycbxK_P1rXAzE0CQcA34umqB_innEDg7EkMFQg6k3ANzPZeh_q-yHzyX05SqpZfkOEjDV8A/exec';
 const GITHUB_BASE = 'https://raw.githubusercontent.com/tuult764-crypto/sonirholtoi-hel-bichig-/main/';
 
 let currentUserEmail = "";
@@ -528,11 +470,12 @@ let cartItems      = [];
 let pendingProduct = "";
 let pendingTotal   = 0;
 
-/* ── СУДОКУ ГЛОБАЛ ─────────────────────────── */
+/* ── СУДОКУ / ХЭВЛЭХ ──────────────────────── */
 let sudokuBoard    = [];
 let printPageCount = 1;
+let pendingPrint   = false;   // ← төлбөр баталгаажсаны дараа хэвлэх flag
 
-/* ── LIGHTBOX ГЛОБАЛ ───────────────────────── */
+/* ── LIGHTBOX ──────────────────────────────── */
 let lbImages      = [];
 let lbIndex       = 0;
 let lbTouchStartX = 0;
@@ -541,14 +484,12 @@ let lbTouchStartX = 0;
    МОНГОЛ ТОО
    ════════════════════════════════════════════ */
 const MONG_NUMS = {
-    '1': '\u1811', '2': '\u1812', '3': '\u1813',
-    '4': '\u1814', '5': '\u1815', '6': '\u1816',
-    '7': '\u1817', '8': '\u1818', '9': '\u1819'
+    '1':'\u1811','2':'\u1812','3':'\u1813',
+    '4':'\u1814','5':'\u1815','6':'\u1816',
+    '7':'\u1817','8':'\u1818','9':'\u1819'
 };
 const MONG_TO_ASCII = {};
-for (const [ascii, mong] of Object.entries(MONG_NUMS)) {
-    MONG_TO_ASCII[mong] = ascii;
-}
+for (const [a,m] of Object.entries(MONG_NUMS)) MONG_TO_ASCII[m] = a;
 
 /* ════════════════════════════════════════════
    НЭВТРЭХ
@@ -556,15 +497,9 @@ for (const [ascii, mong] of Object.entries(MONG_NUMS)) {
 async function handleLogin() {
     const email = document.getElementById('loginEmail').value.trim();
     if (!email) return showToast("Мэйл хаягаа оруулна уу!", "error");
-
     try {
-        const res = await fetch(`${ORDER_URL}?action=check&email=${encodeURIComponent(email)}`, {
-            method: 'GET',
-            redirect: 'follow'
-        });
-
+        const res  = await fetch(`${ORDER_URL}?action=check&email=${encodeURIComponent(email)}`, { redirect:'follow' });
         const data = await res.json();
-
         if (data.status === "success") {
             currentUserEmail = email;
             document.getElementById('authScreen').classList.add('hidden');
@@ -574,8 +509,8 @@ async function handleLogin() {
         } else {
             showToast("Бүртгэлгүй мэйл!", "error");
         }
-    } catch (e) {
-        console.error("Login error:", e);
+    } catch(e) {
+        console.error(e);
         showToast("Холболтын алдаа гарлаа", "error");
     }
 }
@@ -586,15 +521,14 @@ async function handleLogin() {
 function showSection(name) {
     document.getElementById('dashboardHome').classList.add('hidden');
     document.querySelectorAll('.section-content').forEach(s => s.classList.remove('active'));
-    const target = document.getElementById(name + 'Section');
-    if (target) target.classList.add('active');
+    const t = document.getElementById(name + 'Section');
+    if (t) t.classList.add('active');
     if (name === 'games')   initSudoku();
     if (name === 'library') loadMyLibrary();
     if (name === 'shop')    loadProducts();
     if (name === 'planner') initPlanner();
     if (name === 'exam')    initExamLobby();
 }
-
 function showDashboard() {
     document.getElementById('dashboardHome').classList.remove('hidden');
     document.querySelectorAll('.section-content').forEach(s => s.classList.remove('active'));
@@ -605,993 +539,489 @@ function showDashboard() {
    БАРАА / ДЭЛГҮҮР
    ════════════════════════════════════════════ */
 async function loadProducts() {
-    const grid     = document.getElementById('materialGrid');
-    const shopGrid = document.getElementById('fullShopGrid');
-
+    const grid = document.getElementById('materialGrid');
+    const shop = document.getElementById('fullShopGrid');
     try {
-        const res = await fetch(`${ORDER_URL}?action=getProducts`, { redirect: 'follow' });
+        const res  = await fetch(`${ORDER_URL}?action=getProducts`, { redirect:'follow' });
         productsData = await res.json();
-
-        if (productsData && Array.isArray(productsData)) {
+        if (Array.isArray(productsData)) {
             const html = productsData.map(p => buildProductCard(p)).join('');
-            if (grid)     grid.innerHTML     = html;
-            if (shopGrid) shopGrid.innerHTML = html;
+            if (grid) grid.innerHTML = html;
+            if (shop) shop.innerHTML = html;
             loadCart();
-        } else {
-            console.error("Бараа олдсонгүй эсвэл өгөгдөл буруу байна.");
         }
-    } catch (e) {
-        console.error("Алдаа гарлаа:", e);
-    }
+    } catch(e) { console.error(e); }
 }
 
 function buildProductCard(p) {
-    const safeTitle = p.Title.replace(/'/g, "\\'");
+    const safeTitle = p.Title.replace(/'/g,"\\'");
     const price     = Number(p.Price);
-
-    const imgFiles = p.Images
-        ? p.Images.split(',').map(s => s.trim()).filter(s => /\.(png|jpg|jpeg|gif|webp)$/i.test(s))
+    const imgFiles  = p.Images
+        ? p.Images.split(',').map(s=>s.trim()).filter(s=>/\.(png|jpg|jpeg|gif|webp)$/i.test(s))
         : [];
-
-    const cardId = 'c' + Math.random().toString(36).substr(2, 9);
+    const cardId = 'c' + Math.random().toString(36).substr(2,9);
     let imgHtml  = '';
 
     if (imgFiles.length === 0) {
-        imgHtml = `
-            <div class="w-full h-32 bg-orange-50 rounded-xl mb-3 flex items-center justify-center">
-                <span class="text-orange-200 text-[10px] font-bold">Зураг байхгүй</span>
-            </div>`;
+        imgHtml = `<div class="w-full h-32 bg-orange-50 rounded-xl mb-3 flex items-center justify-center"><span class="text-orange-200 text-[10px] font-bold">Зураг байхгүй</span></div>`;
     } else if (imgFiles.length === 1) {
         const src = GITHUB_BASE + imgFiles[0];
-        imgHtml = `
-            <div class="w-full h-32 bg-orange-50 rounded-xl mb-3 overflow-hidden cursor-zoom-in"
-                 onclick="openLightbox(['${src}'], 0)">
-                <img src="${src}"
-                     class="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
-                     onerror="this.parentElement.innerHTML='<div class=\\'w-full h-full flex items-center justify-center text-orange-200 text-xs font-bold\\'>Зураг байхгүй</div>'">
-            </div>`;
+        imgHtml = `<div class="w-full h-32 bg-orange-50 rounded-xl mb-3 overflow-hidden cursor-zoom-in" onclick="openLightbox(['${src}'],0)"><img src="${src}" class="w-full h-full object-cover hover:scale-105 transition-transform duration-300" onerror="this.parentElement.innerHTML='<div class=\\'w-full h-full flex items-center justify-center text-orange-200 text-xs font-bold\\'>Зураг байхгүй</div>'"></div>`;
     } else {
-        const allSrcs = JSON.stringify(imgFiles.map(f => GITHUB_BASE + f));
-        const slides  = imgFiles.map((f, i) => `
-            <img src="${GITHUB_BASE}${f}"
-                 class="slide-img ${i === 0 ? 'active' : 'inactive'}"
-                 data-idx="${i}"
-                 onclick="openLightbox(${allSrcs.replace(/"/g,"'")}, ${i})"
-                 style="cursor:zoom-in"
-                 onerror="this.style.display='none'">`).join('');
-        const dots = imgFiles.map((_, i) => `
-            <button class="slide-dot ${i === 0 ? 'active' : 'inactive'}"
-                    data-dot="${i}"
-                    onclick="event.stopPropagation();slideTo('${cardId}',${i})"></button>`).join('');
-        imgHtml = `
-            <div class="slide-wrap relative w-full h-32 bg-orange-50 rounded-xl mb-3 overflow-hidden"
-                 id="${cardId}" data-cur="0" data-total="${imgFiles.length}">
-                ${slides}
-                <button class="slide-btn prev" onclick="event.stopPropagation();slideDir('${cardId}',-1)">&#8249;</button>
-                <button class="slide-btn next" onclick="event.stopPropagation();slideDir('${cardId}', 1)">&#8250;</button>
-                <div class="absolute bottom-1.5 left-0 right-0 flex justify-center gap-1 pointer-events-none">
-                    <div class="flex gap-1 pointer-events-auto">${dots}</div>
-                </div>
-                <div class="absolute top-1.5 right-2 bg-black/40 text-white text-[9px] font-bold px-1.5 py-0.5 rounded-full" id="${cardId}_n">
-                    1 / ${imgFiles.length}
-                </div>
-            </div>`;
+        const allSrcs = JSON.stringify(imgFiles.map(f=>GITHUB_BASE+f));
+        const slides  = imgFiles.map((f,i)=>`<img src="${GITHUB_BASE}${f}" class="slide-img ${i===0?'active':'inactive'}" data-idx="${i}" onclick="openLightbox(${allSrcs.replace(/"/g,"'")},${i})" style="cursor:zoom-in" onerror="this.style.display='none'">`).join('');
+        const dots    = imgFiles.map((_,i)=>`<button class="slide-dot ${i===0?'active':'inactive'}" data-dot="${i}" onclick="event.stopPropagation();slideTo('${cardId}',${i})"></button>`).join('');
+        imgHtml = `<div class="slide-wrap relative w-full h-32 bg-orange-50 rounded-xl mb-3 overflow-hidden" id="${cardId}" data-cur="0" data-total="${imgFiles.length}">${slides}<button class="slide-btn prev" onclick="event.stopPropagation();slideDir('${cardId}',-1)">&#8249;</button><button class="slide-btn next" onclick="event.stopPropagation();slideDir('${cardId}',1)">&#8250;</button><div class="absolute bottom-1.5 left-0 right-0 flex justify-center gap-1 pointer-events-none"><div class="flex gap-1 pointer-events-auto">${dots}</div></div><div class="absolute top-1.5 right-2 bg-black/40 text-white text-[9px] font-bold px-1.5 py-0.5 rounded-full" id="${cardId}_n">1 / ${imgFiles.length}</div></div>`;
     }
 
-    return `
-        <div class="bg-white p-4 rounded-[2rem] shadow-md border border-orange-50 flex flex-col">
-            ${imgHtml}
-            <h3 class="font-black text-[10px] text-orange-900 mb-1 uppercase italic">${p.Title}</h3>
-            <p class="font-bold text-orange-600 text-xs mb-3">${price.toLocaleString()}</p>
-            <div class="mt-auto flex gap-2">
-                <button onclick="addToCart('${safeTitle}', ${price})"
-                        class="flex-1 bg-orange-100 text-orange-800 py-2 rounded-lg font-black uppercase italic text-[9px] hover:bg-orange-200 transition-all">
-                    + Сагс
-                </button>
-                <button onclick="buyNow('${safeTitle}', ${price})"
-                        class="flex-1 bg-orange-800 text-white py-2 rounded-lg font-black uppercase italic text-[9px] hover:bg-orange-900 transition-all">
-                    Авах
-                </button>
-            </div>
-        </div>`;
+    return `<div class="bg-white p-4 rounded-[2rem] shadow-md border border-orange-50 flex flex-col">${imgHtml}<h3 class="font-black text-[10px] text-orange-900 mb-1 uppercase italic">${p.Title}</h3><p class="font-bold text-orange-600 text-xs mb-3">${price.toLocaleString()}₮</p><div class="mt-auto flex gap-2"><button onclick="addToCart('${safeTitle}',${price})" class="flex-1 bg-orange-100 text-orange-800 py-2 rounded-lg font-black uppercase italic text-[9px] hover:bg-orange-200 transition-all">+ Сагс</button><button onclick="buyNow('${safeTitle}',${price})" class="flex-1 bg-orange-800 text-white py-2 rounded-lg font-black uppercase italic text-[9px] hover:bg-orange-900 transition-all">Авах</button></div></div>`;
 }
 
-/* ── СЛАЙДЕР ──────────────────────────────── */
 function slideTo(cardId, index) {
-    const wrap  = document.getElementById(cardId);
-    if (!wrap) return;
+    const wrap = document.getElementById(cardId); if (!wrap) return;
     const total = parseInt(wrap.dataset.total);
-    const idx   = (index + total) % total;
-    wrap.querySelectorAll('.slide-img').forEach(img => {
-        const i = parseInt(img.dataset.idx);
-        img.classList.toggle('active',   i === idx);
-        img.classList.toggle('inactive', i !== idx);
-    });
-    wrap.querySelectorAll('.slide-dot').forEach(dot => {
-        const i = parseInt(dot.dataset.dot);
-        dot.classList.toggle('active',   i === idx);
-        dot.classList.toggle('inactive', i !== idx);
-    });
-    const counter = document.getElementById(cardId + '_n');
-    if (counter) counter.textContent = `${idx + 1} / ${total}`;
+    const idx   = (index+total)%total;
+    wrap.querySelectorAll('.slide-img').forEach(img=>{ const i=parseInt(img.dataset.idx); img.classList.toggle('active',i===idx); img.classList.toggle('inactive',i!==idx); });
+    wrap.querySelectorAll('.slide-dot').forEach(dot=>{ const i=parseInt(dot.dataset.dot); dot.classList.toggle('active',i===idx); dot.classList.toggle('inactive',i!==idx); });
+    const c = document.getElementById(cardId+'_n'); if(c) c.textContent=`${idx+1} / ${total}`;
     wrap.dataset.cur = idx;
 }
-
-function slideDir(cardId, dir) {
-    const wrap = document.getElementById(cardId);
-    if (!wrap) return;
-    slideTo(cardId, parseInt(wrap.dataset.cur || '0') + dir);
-}
+function slideDir(cardId, dir) { const w=document.getElementById(cardId); if(w) slideTo(cardId,parseInt(w.dataset.cur||'0')+dir); }
 
 /* ════════════════════════════════════════════
    LIGHTBOX
    ════════════════════════════════════════════ */
-function openLightbox(images, startIndex) {
-    lbImages = images;
-    lbIndex  = startIndex;
-    renderLightbox();
-    document.getElementById('lightboxModal').classList.add('active');
-    document.body.style.overflow = 'hidden';
-}
-
-function closeLightbox() {
-    document.getElementById('lightboxModal').classList.remove('active');
-    document.body.style.overflow = '';
-}
-
+function openLightbox(images, startIndex) { lbImages=images; lbIndex=startIndex; renderLightbox(); document.getElementById('lightboxModal').classList.add('active'); document.body.style.overflow='hidden'; }
+function closeLightbox() { document.getElementById('lightboxModal').classList.remove('active'); document.body.style.overflow=''; }
 function renderLightbox() {
-    const img = document.getElementById('lbImg');
-    img.style.opacity = '0';
-    img.onload = () => { img.style.opacity = '1'; };
-    img.src = lbImages[lbIndex];
-    document.getElementById('lbCounter').innerText =
-        lbImages.length > 1 ? `${lbIndex + 1} / ${lbImages.length}` : '';
-    document.getElementById('lbPrev').style.display = lbImages.length > 1 ? 'flex' : 'none';
-    document.getElementById('lbNext').style.display = lbImages.length > 1 ? 'flex' : 'none';
+    const img=document.getElementById('lbImg'); img.style.opacity='0'; img.onload=()=>{img.style.opacity='1';}; img.src=lbImages[lbIndex];
+    document.getElementById('lbCounter').innerText=lbImages.length>1?`${lbIndex+1} / ${lbImages.length}`:'';
+    document.getElementById('lbPrev').style.display=lbImages.length>1?'flex':'none';
+    document.getElementById('lbNext').style.display=lbImages.length>1?'flex':'none';
     renderLbDots();
 }
-
-function lbPrev() { lbIndex = (lbIndex - 1 + lbImages.length) % lbImages.length; renderLightbox(); }
-function lbNext() { lbIndex = (lbIndex + 1) % lbImages.length; renderLightbox(); }
-function lbGoTo(i) { lbIndex = i; renderLightbox(); }
-
-function renderLbDots() {
-    const c = document.getElementById('lbDots');
-    if (lbImages.length <= 1) { c.innerHTML = ''; return; }
-    c.innerHTML = lbImages.map((_, i) => `
-        <button onclick="lbGoTo(${i})"
-                style="width:8px;height:8px;border-radius:50%;border:none;cursor:pointer;padding:0;
-                       background:${i === lbIndex ? '#fff' : 'rgba(255,255,255,0.4)'};
-                       transition:background 0.2s;"></button>
-    `).join('');
+function lbPrev(){ lbIndex=(lbIndex-1+lbImages.length)%lbImages.length; renderLightbox(); }
+function lbNext(){ lbIndex=(lbIndex+1)%lbImages.length; renderLightbox(); }
+function lbGoTo(i){ lbIndex=i; renderLightbox(); }
+function renderLbDots(){
+    const c=document.getElementById('lbDots'); if(lbImages.length<=1){c.innerHTML='';return;}
+    c.innerHTML=lbImages.map((_,i)=>`<button onclick="lbGoTo(${i})" style="width:8px;height:8px;border-radius:50%;border:none;cursor:pointer;padding:0;background:${i===lbIndex?'#fff':'rgba(255,255,255,0.4)'};transition:background 0.2s;"></button>`).join('');
 }
-
-document.addEventListener('keydown', e => {
-    const lb = document.getElementById('lightboxModal');
-    if (!lb || !lb.classList.contains('active')) return;
-    if (e.key === 'ArrowLeft')  lbPrev();
-    if (e.key === 'ArrowRight') lbNext();
-    if (e.key === 'Escape')     closeLightbox();
+document.addEventListener('keydown', e=>{
+    const lb=document.getElementById('lightboxModal'); if(!lb||!lb.classList.contains('active')) return;
+    if(e.key==='ArrowLeft') lbPrev(); if(e.key==='ArrowRight') lbNext(); if(e.key==='Escape') closeLightbox();
 });
 
 /* ════════════════════════════════════════════
    САГС
    ════════════════════════════════════════════ */
-function loadCart() {
-    const saved = localStorage.getItem('cart_' + currentUserEmail);
-    cartItems = saved ? JSON.parse(saved) : [];
-    updateCartDisplay();
+function loadCart(){ const s=localStorage.getItem('cart_'+currentUserEmail); cartItems=s?JSON.parse(s):[]; updateCartDisplay(); }
+function saveCart(){ localStorage.setItem('cart_'+currentUserEmail,JSON.stringify(cartItems)); updateCartDisplay(); }
+function addToCart(title,price){ const e=cartItems.find(i=>i.title===title); if(e){e.quantity+=1;}else{cartItems.push({title,price:Number(price),quantity:1});} saveCart(); showToast("Сагсанд нэмэгдлээ!","success"); }
+function removeFromCart(title){ cartItems=cartItems.filter(i=>i.title!==title); saveCart(); renderCartItems(); }
+function updateQuantity(title,change){ const item=cartItems.find(i=>i.title===title); if(!item)return; item.quantity+=change; if(item.quantity<=0)removeFromCart(title); else{saveCart();renderCartItems();} }
+function clearCart(){ cartItems=[]; saveCart(); renderCartItems(); }
+function updateCartDisplay(){ const count=cartItems.reduce((s,i)=>s+i.quantity,0); const el=document.getElementById('cartCount'); if(!el)return; el.textContent=count; count>0?el.classList.remove('hidden'):el.classList.add('hidden'); }
+function openCart(){ renderCartItems(); document.getElementById('cartModal').classList.add('active'); }
+function closeCart(){ document.getElementById('cartModal').classList.remove('active'); }
+function renderCartItems(){
+    const container=document.getElementById('cartItems'); const totalEl=document.getElementById('cartTotal'); const btn=document.getElementById('checkoutBtn');
+    if(cartItems.length===0){ container.innerHTML=`<div class="text-center text-gray-400 py-8 text-sm">Сагс хоосон байна</div>`; totalEl.textContent='0'; btn.disabled=true; btn.classList.add('opacity-50'); return; }
+    btn.disabled=false; btn.classList.remove('opacity-50');
+    container.innerHTML=cartItems.map(item=>`<div class="bg-gray-50 rounded-xl p-3 flex items-center justify-between"><div class="flex-1"><div class="font-bold text-xs text-gray-800 mb-1">${item.title}</div><div class="text-orange-600 font-black text-sm">${item.price.toLocaleString()}₮</div></div><div class="flex items-center gap-2"><button onclick="updateQuantity('${item.title.replace(/'/g,"\\'")}', -1)" class="w-6 h-6 bg-gray-200 rounded-full text-gray-600 font-black text-xs hover:bg-gray-300">-</button><span class="font-black text-sm w-6 text-center">${item.quantity}</span><button onclick="updateQuantity('${item.title.replace(/'/g,"\\'")}', 1)" class="w-6 h-6 bg-orange-200 rounded-full text-orange-700 font-black text-xs hover:bg-orange-300">+</button></div><button onclick="removeFromCart('${item.title.replace(/'/g,"\\'")}') "class="ml-3 text-red-400 hover:text-red-600 font-bold text-sm">✕</button></div>`).join('');
+    totalEl.textContent=cartItems.reduce((s,i)=>s+i.price*i.quantity,0).toLocaleString()+' ₮';
 }
-
-function saveCart() {
-    localStorage.setItem('cart_' + currentUserEmail, JSON.stringify(cartItems));
-    updateCartDisplay();
-}
-
-function addToCart(title, price) {
-    const existing = cartItems.find(i => i.title === title);
-    if (existing) { existing.quantity += 1; }
-    else { cartItems.push({ title, price: Number(price), quantity: 1 }); }
-    saveCart();
-    showToast("Сагсанд нэмэгдлээ!", "success");
-}
-
-function removeFromCart(title) {
-    cartItems = cartItems.filter(i => i.title !== title);
-    saveCart(); renderCartItems();
-}
-
-function updateQuantity(title, change) {
-    const item = cartItems.find(i => i.title === title);
-    if (!item) return;
-    item.quantity += change;
-    if (item.quantity <= 0) removeFromCart(title);
-    else { saveCart(); renderCartItems(); }
-}
-
-function clearCart() {
-    cartItems = []; saveCart(); renderCartItems();
-}
-
-function updateCartDisplay() {
-    const count = cartItems.reduce((s, i) => s + i.quantity, 0);
-    const el    = document.getElementById('cartCount');
-    if (!el) return;
-    el.textContent = count;
-    count > 0 ? el.classList.remove('hidden') : el.classList.add('hidden');
-}
-
-function openCart()  { renderCartItems(); document.getElementById('cartModal').classList.add('active'); }
-function closeCart() { document.getElementById('cartModal').classList.remove('active'); }
-
-function renderCartItems() {
-    const container   = document.getElementById('cartItems');
-    const totalEl     = document.getElementById('cartTotal');
-    const checkoutBtn = document.getElementById('checkoutBtn');
-    if (cartItems.length === 0) {
-        container.innerHTML = `<div class="text-center text-gray-400 py-8"><div class="text-sm">Сагс хоосон байна</div></div>`;
-        totalEl.textContent  = '0';
-        checkoutBtn.disabled = true;
-        checkoutBtn.classList.add('opacity-50');
-        return;
-    }
-    checkoutBtn.disabled = false;
-    checkoutBtn.classList.remove('opacity-50');
-    container.innerHTML = cartItems.map(item => `
-        <div class="bg-gray-50 rounded-xl p-3 flex items-center justify-between">
-            <div class="flex-1">
-                <div class="font-bold text-xs text-gray-800 mb-1">${item.title}</div>
-                <div class="text-orange-600 font-black text-sm">${item.price.toLocaleString()}</div>
-            </div>
-            <div class="flex items-center gap-2">
-                <button onclick="updateQuantity('${item.title.replace(/'/g,"\\'")}', -1)"
-                        class="w-6 h-6 bg-gray-200 rounded-full text-gray-600 font-black text-xs hover:bg-gray-300 transition-all">-</button>
-                <span class="font-black text-sm w-6 text-center">${item.quantity}</span>
-                <button onclick="updateQuantity('${item.title.replace(/'/g,"\\'")}', 1)"
-                        class="w-6 h-6 bg-orange-200 rounded-full text-orange-700 font-black text-xs hover:bg-orange-300 transition-all">+</button>
-            </div>
-            <button onclick="removeFromCart('${item.title.replace(/'/g,"\\'")}')"
-                    class="ml-3 text-red-400 hover:text-red-600 font-bold text-sm">X</button>
-        </div>`).join('');
-    const total = cartItems.reduce((s, i) => s + i.price * i.quantity, 0);
-    totalEl.textContent = total.toLocaleString() + ' T';
-}
-
-function proceedToPayment() {
-    if (!cartItems.length) return showToast("Сагс хоосон байна!", "error");
-    const summary = cartItems.map(i => `${i.title} x${i.quantity}`).join(', ');
-    const total   = cartItems.reduce((s, i) => s + i.price * i.quantity, 0);
-    pendingProduct = summary;
-    pendingTotal   = total;
+function proceedToPayment(){
+    if(!cartItems.length) return showToast("Сагс хоосон байна!","error");
+    const summary=cartItems.map(i=>`${i.title} x${i.quantity}`).join(', ');
+    const total=cartItems.reduce((s,i)=>s+i.price*i.quantity,0);
+    pendingProduct=summary; pendingTotal=total; pendingPrint=false;
     closeCart();
-    document.getElementById('paymentNote').innerText =
-        currentUserEmail + " | " + summary + " | " + total.toLocaleString() + "₮";
+    document.getElementById('paymentNote').innerText=currentUserEmail+" | "+summary+" | "+total.toLocaleString()+"₮";
     document.getElementById('paymentModal').classList.add('active');
 }
-
-function buyNow(title, price) {
-    pendingProduct = title;
-    pendingTotal   = price;
-    document.getElementById('paymentNote').innerText =
-        currentUserEmail + " | " + title + " | " + Number(price).toLocaleString() + "₮";
+function buyNow(title,price){
+    pendingProduct=title; pendingTotal=price; pendingPrint=false;
+    document.getElementById('paymentNote').innerText=currentUserEmail+" | "+title+" | "+Number(price).toLocaleString()+"₮";
     document.getElementById('paymentModal').classList.add('active');
 }
+function closePayment(){ document.getElementById('paymentModal').classList.remove('active'); }
 
-function closePayment() { document.getElementById('paymentModal').classList.remove('active'); }
-
-async function confirmOrder() {
-    const btn  = document.getElementById('confirmBtn');
-    const note = document.getElementById('paymentNote').innerText;
-
-    btn.disabled  = true;
-    btn.innerText = "Илгээж байна...";
-
-    const urlParams = new URLSearchParams();
-    urlParams.append('action',  'order');
-    urlParams.append('email',   currentUserEmail);
-    urlParams.append('product', pendingProduct);
-    urlParams.append('note',    note);
-
+async function confirmOrder(){
+    const btn=document.getElementById('confirmBtn');
+    const note=document.getElementById('paymentNote').innerText;
+    btn.disabled=true; btn.innerText="Илгээж байна...";
+    const p=new URLSearchParams();
+    p.append('action','order'); p.append('email',currentUserEmail);
+    p.append('product',pendingProduct); p.append('note',note);
     try {
-        await fetch(ORDER_URL, {
-            method: 'POST',
-            mode: 'no-cors',
-            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-            body: urlParams.toString()
-        });
-
-        showToast("Туул багш төлбөр шалгаад материалыг миний санд байршуулна. Манайхыг сонгосон танд баярлалаа. Өдрийн сайхан өнгөрүүлээрэй!", "success");
+        await fetch(ORDER_URL,{ method:'POST', mode:'no-cors', headers:{'Content-Type':'application/x-www-form-urlencoded'}, body:p.toString() });
+        showToast("Туул багш төлбөр шалгаад материалыг миний санд байршуулна. Баярлалаа!", "success");
         closePayment();
         clearCart();
-
-    } catch (error) {
-        console.error("Алдаа:", error);
-        showToast("Холболтын алдаа гарлаа!", "error");
+        /* ── Судоку хэвлэх pending байвал хэвлэнэ ── */
+        if (pendingPrint) {
+            pendingPrint = false;
+            setTimeout(() => doPrint(), 600);
+        }
+    } catch(e){
+        console.error(e); showToast("Холболтын алдаа гарлаа!","error");
     } finally {
-        btn.disabled  = false;
-        btn.innerText = "Төлсөн, хүсэлт илгээх";
+        btn.disabled=false; btn.innerText="Төлсөн, хүсэлт илгээх";
     }
 }
 
 /* ════════════════════════════════════════════
-   МИНИЙ САН  ← ЗАСАГДСАН
+   МИНИЙ САН
    ════════════════════════════════════════════ */
-async function loadMyLibrary() {
-    const libGrid = document.getElementById('libraryGrid');
-    if (!libGrid) return;
-
-    libGrid.innerHTML = "<p class='col-span-full text-center py-10 opacity-50 text-xs'>Ачаалж байна...</p>";
-
+async function loadMyLibrary(){
+    const libGrid=document.getElementById('libraryGrid'); if(!libGrid) return;
+    libGrid.innerHTML="<p class='col-span-full text-center py-10 opacity-50 text-xs'>Ачаалж байна...</p>";
     try {
-        const url = `${ORDER_URL}?action=getMyLibrary&email=${encodeURIComponent(currentUserEmail)}`;
-        const res = await fetch(url, { redirect: 'follow' });
-        const files = await res.json();
-
-        if (!files || files.length === 0) {
-            libGrid.innerHTML = `
-                <div class="col-span-full text-center py-20">
-                    <p class="text-gray-400 text-xs uppercase font-black italic">Одоогоор файл байхгүй байна</p>
-                    <p class="text-[10px] text-orange-300 mt-2">Төлбөр баталгаажсаны дараа энд харагдана</p>
-                </div>`;
+        const res=await fetch(`${ORDER_URL}?action=getMyLibrary&email=${encodeURIComponent(currentUserEmail)}`,{redirect:'follow'});
+        const files=await res.json();
+        if(!files||files.length===0){
+            libGrid.innerHTML=`<div class="col-span-full text-center py-20"><p class="text-gray-400 text-xs uppercase font-black italic">Одоогоор файл байхгүй байна</p><p class="text-[10px] text-orange-300 mt-2">Төлбөр баталгаажсаны дараа энд харагдана</p></div>`;
         } else {
-            libGrid.innerHTML = files.map(f => `
-                <div class="bg-white p-4 rounded-[2rem] shadow-md border border-orange-50 flex flex-col items-center text-center">
-                    <div class="w-12 h-12 bg-orange-100 rounded-full flex items-center justify-center mb-3 text-xl">📂</div>
-                    <h4 class="font-black text-[10px] text-orange-900 mb-1 uppercase italic">${f.productName}</h4>
-                    <p class="text-[9px] text-gray-400 mb-4">${new Date(f.date).toLocaleDateString()}</p>
-                    <a href="${f.downloadUrl}" target="_blank"
-                       class="w-full bg-orange-800 text-white py-2 rounded-xl font-black uppercase italic text-[9px] hover:bg-orange-900 transition-all text-center">
-                        Үзэх / Татах
-                    </a>
-                </div>
-            `).join('');
+            libGrid.innerHTML=files.map(f=>`<div class="bg-white p-4 rounded-[2rem] shadow-md border border-orange-50 flex flex-col items-center text-center"><div class="w-12 h-12 bg-orange-100 rounded-full flex items-center justify-center mb-3 text-xl">📂</div><h4 class="font-black text-[10px] text-orange-900 mb-1 uppercase italic">${f.productName}</h4><p class="text-[9px] text-gray-400 mb-4">${new Date(f.date).toLocaleDateString()}</p><a href="${f.downloadUrl}" target="_blank" class="w-full bg-orange-800 text-white py-2 rounded-xl font-black uppercase italic text-[9px] hover:bg-orange-900 transition-all text-center">Үзэх / Татах</a></div>`).join('');
         }
-    } catch (e) {
-        console.error("Library load error:", e);
-        libGrid.innerHTML = "<p class='text-red-400 text-center text-[10px] font-bold'>Холболтын алдаа гарлаа</p>";
-    }
+    } catch(e){ console.error(e); libGrid.innerHTML="<p class='text-red-400 text-center text-[10px] font-bold'>Холболтын алдаа гарлаа</p>"; }
 }
 
 /* ════════════════════════════════════════════
    СУДОКУ
    ════════════════════════════════════════════ */
-function generateSudokuBoard() {
-    const base = [
-        [1,2,3,4,5,6,7,8,9],
-        [4,5,6,7,8,9,1,2,3],
-        [7,8,9,1,2,3,4,5,6],
-        [2,3,1,5,6,4,8,9,7],
-        [5,6,4,8,9,7,2,3,1],
-        [8,9,7,2,3,1,5,6,4],
-        [3,1,2,6,4,5,9,7,8],
-        [6,4,5,9,7,8,3,1,2],
-        [9,7,8,3,1,2,6,4,5]
-    ];
-    for (let block = 0; block < 3; block++) {
-        for (let swap = 0; swap < 3; swap++) {
-            const r1 = block * 3 + Math.floor(Math.random() * 3);
-            const r2 = block * 3 + Math.floor(Math.random() * 3);
-            [base[r1], base[r2]] = [base[r2], base[r1]];
-        }
-    }
-    const colOrder = shuffle([0,1,2]);
-    const newBase  = base.map(row => {
-        const newRow = [];
-        colOrder.forEach(blockIdx => {
-            for (let c = 0; c < 3; c++) newRow.push(row[blockIdx * 3 + c]);
-        });
-        return newRow;
-    });
-    return newBase;
+function generateSudokuBoard(){
+    const base=[[1,2,3,4,5,6,7,8,9],[4,5,6,7,8,9,1,2,3],[7,8,9,1,2,3,4,5,6],[2,3,1,5,6,4,8,9,7],[5,6,4,8,9,7,2,3,1],[8,9,7,2,3,1,5,6,4],[3,1,2,6,4,5,9,7,8],[6,4,5,9,7,8,3,1,2],[9,7,8,3,1,2,6,4,5]];
+    for(let block=0;block<3;block++) for(let s=0;s<3;s++){ const r1=block*3+Math.floor(Math.random()*3); const r2=block*3+Math.floor(Math.random()*3); [base[r1],base[r2]]=[base[r2],base[r1]]; }
+    const co=shuffle([0,1,2]);
+    return base.map(row=>{ const nr=[]; co.forEach(b=>{ for(let c=0;c<3;c++) nr.push(row[b*3+c]); }); return nr; });
 }
 
-function initSudoku() {
-    sudokuBoard = generateSudokuBoard();
-    const container = document.getElementById('sudokuContainer');
-    container.innerHTML = '';
-    for (let r = 0; r < 9; r++) {
-        for (let c = 0; c < 9; c++) {
-            const val  = sudokuBoard[r][c];
-            const cell = document.createElement('input');
-            cell.type       = 'text';
-            cell.maxLength  = 2;
-            cell.className  = 'sudoku-cell';
-            cell.dataset.answer = String(val);
-            if (Math.random() < 0.45) {
-                cell.value    = MONG_NUMS[String(val)];
-                cell.readOnly = true;
-                cell.classList.add('cell-fixed');
-            } else {
-                cell.classList.add('cell-user');
-                cell.addEventListener('keydown', onSudokuKeyDown);
-                cell.addEventListener('input',   onSudokuInput);
-                cell.addEventListener('focus',   () => { cell.style.backgroundColor = '#fef9c3'; });
-                cell.addEventListener('blur',    () => { cell.style.backgroundColor = ''; });
-            }
-            container.appendChild(cell);
-        }
+function initSudoku(){
+    sudokuBoard=generateSudokuBoard();
+    const container=document.getElementById('sudokuContainer'); container.innerHTML='';
+    for(let r=0;r<9;r++) for(let c=0;c<9;c++){
+        const val=sudokuBoard[r][c]; const cell=document.createElement('input');
+        cell.type='text'; cell.maxLength=2; cell.className='sudoku-cell'; cell.dataset.answer=String(val);
+        if(Math.random()<0.45){ cell.value=MONG_NUMS[String(val)]; cell.readOnly=true; cell.classList.add('cell-fixed'); }
+        else { cell.classList.add('cell-user'); cell.addEventListener('keydown',onSudokuKeyDown); cell.addEventListener('input',onSudokuInput); cell.addEventListener('focus',()=>{cell.style.backgroundColor='#fef9c3';}); cell.addEventListener('blur',()=>{cell.style.backgroundColor='';}); }
+        container.appendChild(cell);
     }
 }
-
-function onSudokuKeyDown(e) {
-    const allowed = ['Backspace','Delete','Tab','ArrowLeft','ArrowRight','ArrowUp','ArrowDown'];
-    if (allowed.includes(e.key)) return;
-    if (e.key >= '1' && e.key <= '9') return;
-    if (Object.values(MONG_NUMS).includes(e.key)) return;
-    e.preventDefault();
-}
-
-function onSudokuInput(e) {
-    const cell = e.target;
-    const raw  = cell.value;
-    if (!raw) return;
-    let last = raw[raw.length - 1];
-    if (last >= '1' && last <= '9') last = MONG_NUMS[last];
-    if (!Object.values(MONG_NUMS).includes(last)) {
-        requestAnimationFrame(() => { cell.value = ''; });
-        return;
-    }
-    requestAnimationFrame(() => {
-        cell.value = last;
-        cell.style.backgroundColor = '#fef9c3';
-        const ascii = MONG_TO_ASCII[last];
-        if (ascii && ascii === cell.dataset.answer) {
-            cell.classList.add('cell-correct');
-            cell.classList.remove('cell-wrong');
-        } else {
-            cell.classList.remove('cell-correct');
-            cell.classList.remove('cell-wrong');
-        }
+function onSudokuKeyDown(e){ const a=['Backspace','Delete','Tab','ArrowLeft','ArrowRight','ArrowUp','ArrowDown']; if(a.includes(e.key)||( e.key>='1'&&e.key<='9')||Object.values(MONG_NUMS).includes(e.key)) return; e.preventDefault(); }
+function onSudokuInput(e){
+    const cell=e.target; const raw=cell.value; if(!raw) return;
+    let last=raw[raw.length-1]; if(last>='1'&&last<='9') last=MONG_NUMS[last];
+    if(!Object.values(MONG_NUMS).includes(last)){ requestAnimationFrame(()=>{cell.value='';}); return; }
+    requestAnimationFrame(()=>{
+        cell.value=last; cell.style.backgroundColor='#fef9c3';
+        const ascii=MONG_TO_ASCII[last];
+        if(ascii&&ascii===cell.dataset.answer){ cell.classList.add('cell-correct'); cell.classList.remove('cell-wrong'); }
+        else { cell.classList.remove('cell-correct','cell-wrong'); }
     });
 }
-
-function checkSudoku() {
-    const cells = document.querySelectorAll('#sudokuContainer .sudoku-cell');
-    let correct = 0, wrong = 0, empty = 0;
-    cells.forEach(cell => {
-        if (cell.readOnly) return;
-        const val   = cell.value.trim();
-        const ascii = MONG_TO_ASCII[val] || val;
-        if (!val) { empty++; cell.style.backgroundColor = '#fffbeb'; return; }
-        if (ascii === cell.dataset.answer) {
-            cell.classList.add('cell-correct'); cell.classList.remove('cell-wrong'); correct++;
-        } else {
-            cell.classList.add('cell-wrong'); cell.classList.remove('cell-correct'); wrong++;
-        }
-    });
-    if (empty > 0)      showToast(`${empty} хоосон нүд байна!`, "error");
-    else if (wrong > 0) showToast(`${wrong} нүд буруу байна!`, "error");
-    else                showToast("Баяр хүргэе! Бүгд зөв!", "success");
+function checkSudoku(){
+    const cells=document.querySelectorAll('#sudokuContainer .sudoku-cell'); let correct=0,wrong=0,empty=0;
+    cells.forEach(cell=>{ if(cell.readOnly)return; const val=cell.value.trim(); const ascii=MONG_TO_ASCII[val]||val; if(!val){empty++;cell.style.backgroundColor='#fffbeb';return;} if(ascii===cell.dataset.answer){cell.classList.add('cell-correct');cell.classList.remove('cell-wrong');correct++;}else{cell.classList.add('cell-wrong');cell.classList.remove('cell-correct');wrong++;} });
+    if(empty>0) showToast(`${empty} хоосон нүд байна!`,"error");
+    else if(wrong>0) showToast(`${wrong} нүд буруу байна!`,"error");
+    else showToast("Баяр хүргэе! Бүгд зөв!","success");
 }
 
 /* ── СУДОКУ ХЭВЛЭХ ─────────────────────────── */
-function adjustPrintPages(delta) {
-    printPageCount = Math.max(1, printPageCount + delta);
+function adjustPrintPages(delta){
+    printPageCount=Math.max(1,printPageCount+delta);
     updatePrintModalUI();
 }
 
-function updatePrintModalUI() {
-    const extra = Math.max(0, printPageCount - 1);
-    const price = extra * 400;
-    document.getElementById('modalPageCount').innerText  = printPageCount;
-    document.getElementById('modalPageLabel').innerText  = `${printPageCount} хуудас`;
-    document.getElementById('printPageCount').innerText  = printPageCount;
-    document.getElementById('extraPagesPrice').innerText = extra > 0 ? `${extra} x 400 = ${price.toLocaleString()} T` : 'Байхгүй';
-    document.getElementById('totalPrintPrice').innerText = price > 0 ? `${price.toLocaleString()} T` : 'Үнэгүй';
-    const noteEl   = document.getElementById('printPaymentNote');
-    const printBtn = document.getElementById('doPrintBtn');
-    if (price > 0) {
+function updatePrintModalUI(){
+    const extra=Math.max(0,printPageCount-1);
+    const price=extra*800;  // нэг нэмэлт хуудас = 800₮
+    document.getElementById('modalPageCount').innerText=printPageCount;
+    document.getElementById('modalPageLabel').innerText=`${printPageCount} хуудас`;
+    document.getElementById('printPageCount').innerText=printPageCount;
+    document.getElementById('extraPagesPrice').innerText=extra>0?`${extra} x 800₮ = ${price.toLocaleString()}₮`:'—';
+    document.getElementById('totalPrintPrice').innerText=price>0?`${price.toLocaleString()}₮`:'Үнэгүй';
+    const noteEl=document.getElementById('printPaymentNote');
+    const btn=document.getElementById('doPrintBtn');
+    if(price>0){
         noteEl.classList.remove('hidden');
-        printBtn.innerText = 'Төлбөр төлөх';
-        printBtn.classList.remove('bg-green-700','hover:bg-green-800');
-        printBtn.classList.add('bg-orange-700','hover:bg-orange-800');
+        btn.innerText='Төлбөр төлж хэвлэх';
+        btn.className='flex-1 bg-orange-700 text-white py-3 rounded-2xl font-black uppercase italic text-xs hover:bg-orange-800 transition-all';
     } else {
         noteEl.classList.add('hidden');
-        printBtn.innerText = 'Хэвлэх';
-        printBtn.classList.remove('bg-orange-700','hover:bg-orange-800');
-        printBtn.classList.add('bg-green-700','hover:bg-green-800');
+        btn.innerText='Хэвлэх';
+        btn.className='flex-1 bg-green-700 text-white py-3 rounded-2xl font-black uppercase italic text-xs hover:bg-green-800 transition-all';
     }
 }
 
-function showPrintModal() {
-    printPageCount = 1;
-    updatePrintModalUI();
-    document.getElementById('printModal').classList.add('active');
+function showPrintModal(){ printPageCount=1; updatePrintModalUI(); document.getElementById('printModal').classList.add('active'); }
+function closePrintModal(){ document.getElementById('printModal').classList.remove('active'); }
+
+function executePrint(){
+    const extra=Math.max(0,printPageCount-1);
+    const price=extra*800;
+    if(price>0){
+        /* Төлбөртэй хуудас: эхлээд төлбөр авч, дараа нь хэвлэнэ */
+        pendingPrint   = true;
+        pendingProduct = `Судоку хэвлэх ${printPageCount} хуудас`;
+        pendingTotal   = price;
+        closePrintModal();
+        document.getElementById('paymentNote').innerText=
+            `${currentUserEmail} | Судоку хэвлэх ${printPageCount} хуудас | ${price.toLocaleString()}₮`;
+        document.getElementById('paymentModal').classList.add('active');
+    } else {
+        /* 1-р хуудас үнэгүй — шууд хэвлэнэ */
+        pendingPrint = false;
+        closePrintModal();
+        doPrint();
+    }
 }
 
-function closePrintModal() {
-    document.getElementById('printModal').classList.remove('active');
-}
-
-function buildPrintPuzzle(board) {
-    let html = '<div class="print-grid">';
-    for (let r = 0; r < 9; r++) {
-        for (let c = 0; c < 9; c++) {
-            const val  = board[r][c];
-            const mong = MONG_NUMS[String(val)];
-            const show = ((r * 9 + c) % 5 !== 0) && ((r * 3 + c) % 7 !== 2);
-            html += show
-                ? `<div class="print-cell pfixed">${mong}</div>`
-                : `<div class="print-cell pempty">&nbsp;</div>`;
+/* ── ХЭВЛЭХ АГУУЛГА ҮҮСГЭХ ─────────────────── */
+function buildPrintPuzzle(board){
+    let html='<table style="border-collapse:collapse;width:100%;table-layout:fixed;">';
+    for(let r=0;r<9;r++){
+        html+='<tr>';
+        for(let c=0;c<9;c++){
+            const val=board[r][c];
+            const mong=MONG_NUMS[String(val)];
+            const show=((r*9+c)%5!==0)&&((r*3+c)%7!==2);
+            const borderR=(c===2||c===5)?'border-right:2.5px solid #000;':'border-right:1px solid #ccc;';
+            const borderB=(r===2||r===5)?'border-bottom:2.5px solid #000;':'border-bottom:1px solid #ccc;';
+            const borderL=c===0?'border-left:1px solid #ccc;':'';
+            const borderT=r===0?'border-top:1px solid #ccc;':'';
+            const bg=show?'background:#f1f5f9;':'background:#fff;';
+            html+=`<td style="width:11.1%;aspect-ratio:1/1;height:8mm;text-align:center;vertical-align:middle;font-size:10pt;font-weight:700;${borderR}${borderB}${borderL}${borderT}${bg}padding:0;">${show?mong:'&nbsp;'}</td>`;
         }
+        html+='</tr>';
     }
-    html += '</div>';
+    html+='</table>';
     return html;
 }
 
-function executePrint() {
-    const extra = Math.max(0, printPageCount - 1);
-    const price = extra * 800;
-    if (price > 0) {
-        closePrintModal();
-        pendingProduct = 'Судоку хэвлэх ' + printPageCount + ' хуудас';
-        pendingTotal   = price;
-        document.getElementById('paymentNote').innerText =
-            currentUserEmail + ' | Судоку хэвлэх ' + printPageCount + ' хуудас | ' + price.toLocaleString() + 'T';
-        document.getElementById('paymentModal').classList.add('active');
-        return;
-    }
-    doPrint();
-}
+function doPrint(){
+    const printArea=document.getElementById('printArea');
+    let pagesHtml='';
 
-function doPrint() {
-    const printArea = document.getElementById('printArea');
-    let pagesHtml   = '';
-
-    for (let page = 0; page < printPageCount; page++) {
-        pagesHtml += `
-        <div style="page-break-after:${page < printPageCount - 1 ? 'always' : 'auto'};
-                    padding:10mm; background:white; width:210mm; height:297mm; box-sizing:border-box;
-                    display:flex; flex-direction:column; overflow:hidden;">
-            <div style="text-align:center; margin-bottom:5mm; font-family:'Manrope',sans-serif; flex-shrink:0;">
-                <div style="font-size:14pt; font-weight:900; text-transform:uppercase; color:#7c2d12; letter-spacing:2px;">
-                    Сонирхолтой Хэл Бичиг
-                </div>
-                <div style="font-size:9pt; color:#555; margin-top:1mm;">
-                    Монгол бичиг судоку — ${page + 1}-р хуудас ${page === 0 ? '(Үнэгүй)' : '(800T)'}
+    for(let page=0;page<printPageCount;page++){
+        pagesHtml+=`
+        <div style="width:194mm;min-height:277mm;padding:0;margin:0 auto;background:white;box-sizing:border-box;${page<printPageCount-1?'page-break-after:always;':''}">
+            <!-- Гарчиг / Лого -->
+            <div style="text-align:center;padding:6mm 0 4mm 0;border-bottom:1.5px solid #e0c8a0;margin-bottom:5mm;">
+                <img src="logo.png" alt="logo" style="height:12mm;object-fit:contain;display:inline-block;vertical-align:middle;margin-right:3mm;">
+                <span style="font-family:'Manrope',sans-serif;font-size:14pt;font-weight:900;text-transform:uppercase;color:#7c2d12;letter-spacing:2px;vertical-align:middle;">Сонирхолтой Хэл Бичиг</span>
+                <div style="font-size:8pt;color:#888;margin-top:1mm;font-family:'Manrope',sans-serif;">
+                    Монгол бичиг судоку &nbsp;—&nbsp; ${page+1}-р хуудас &nbsp;${page===0?'<span style="color:#16a34a;font-weight:900;">(Үнэгүй)</span>':'<span style="color:#ea580c;font-weight:900;">(800₮)</span>'}
                 </div>
             </div>
-            <div style="display:grid; grid-template-columns:1fr 1fr; grid-template-rows:1fr 1fr; gap:5mm; flex:1;">`;
+            <!-- 4 судоку 2x2 хэлбэрт -->
+            <div style="display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;gap:6mm;padding:0 4mm 4mm 4mm;height:248mm;box-sizing:border-box;">`;
 
-        for (let q = 0; q < 4; q++) {
-            const newBoard = generateSudokuBoard();
-            pagesHtml += `
-                <div style="border:1px solid #ddd; border-radius:3mm; padding:3mm; background:#fff;
-                            display:flex; flex-direction:column; justify-content:center; align-items:center;">
-                    <div style="font-size:7pt; font-weight:700; color:#7c2d12; text-transform:uppercase;
-                                margin-bottom:2mm; text-align:center;">
-                        ${page * 4 + q + 1}-р судоку
+        for(let q=0;q<4;q++){
+            const newBoard=generateSudokuBoard();
+            pagesHtml+=`
+                <div style="border:1px solid #ddd;border-radius:3mm;padding:3mm 3mm 2mm 3mm;background:#fff;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;">
+                    <div style="font-size:7pt;font-weight:900;color:#7c2d12;text-transform:uppercase;margin-bottom:2mm;text-align:center;font-family:'Manrope',sans-serif;letter-spacing:1px;">
+                        ${page*4+q+1}-р судоку
                     </div>
-                    <div style="width:85mm;">
-                        ${buildPrintPuzzle(newBoard)}
-                    </div>
-                    <div style="margin-top:2mm; text-align:right; width:100%; font-size:6pt; color:#aaa;">Зай: _______</div>
+                    <div style="width:100%;">${buildPrintPuzzle(newBoard)}</div>
+                    <div style="margin-top:2mm;text-align:right;width:100%;font-size:6pt;color:#aaa;font-family:'Manrope',sans-serif;">Нэр: _______________</div>
                 </div>`;
         }
-        pagesHtml += `</div></div>`;
+        pagesHtml+=`</div></div>`;
     }
 
-    pagesHtml = `
+    const fullHtml=`
         <style>
             @import url('https://fonts.googleapis.com/css2?family=Manrope:wght@700;900&display=swap');
-            * { box-sizing:border-box; margin:0; padding:0; }
-            body { background:white !important; }
-            .print-grid { display:grid; grid-template-columns:repeat(9,1fr); border:2px solid #000; width:100%; }
-            .print-cell { aspect-ratio:1/1; border:1px solid #bbb; display:flex; align-items:center; justify-content:center; font-size:10pt; font-weight:700; font-family:'Manrope',sans-serif; }
-            .pfixed { background:#f1f5f9 !important; -webkit-print-color-adjust:exact; color:#1a1a1a; }
-            .pempty { background:#fff !important; color:transparent; }
-            .print-cell:nth-child(3n) { border-right:2px solid #000; }
-            .print-cell:nth-child(9n) { border-right:none; }
-            .print-cell:nth-child(n+19):nth-child(-n+27),
-            .print-cell:nth-child(n+46):nth-child(-n+54) { border-bottom:2px solid #000; }
+            *{box-sizing:border-box;margin:0;padding:0;}
+            body{background:white!important;-webkit-print-color-adjust:exact;print-color-adjust:exact;}
         </style>
         ${pagesHtml}`;
 
-    printArea.innerHTML = pagesHtml;
-    printArea.classList.remove('hidden');
+    printArea.innerHTML=fullHtml;
+    printArea.style.display='block';
 
-    const afterPrint = () => {
-        printArea.classList.add('hidden');
-        printArea.innerHTML = '';
-        window.removeEventListener('afterprint', afterPrint);
+    const afterPrint=()=>{
+        printArea.style.display='none';
+        printArea.innerHTML='';
+        window.removeEventListener('afterprint',afterPrint);
     };
-    window.addEventListener('afterprint', afterPrint);
-    setTimeout(() => window.print(), 150);
+    window.addEventListener('afterprint',afterPrint);
+    setTimeout(()=>window.print(),200);
 }
 
 /* ════════════════════════════════════════════
    ХӨТӨЛБӨР
    ════════════════════════════════════════════ */
-let personalTasks = [];
+let personalTasks=[];
 
-function initPlanner() {
-    loadPersonalTasks();
-    loadPlannerSchedule();
-    renderPersonalTasks();
-    updatePlannerStats();
-}
+function initPlanner(){ loadPersonalTasks(); loadPlannerSchedule(); renderPersonalTasks(); updatePlannerStats(); }
 
-async function loadPlannerSchedule() {
-    const list = document.getElementById('scheduleList');
-    list.innerHTML = `<div class="text-center text-gray-400 text-xs py-6">Уншиж байна...</div>`;
+async function loadPlannerSchedule(){
+    const list=document.getElementById('scheduleList');
+    list.innerHTML=`<div class="text-center text-gray-400 text-xs py-6">Уншиж байна...</div>`;
     try {
-        const res  = await fetch(`${ORDER_URL}?action=getSchedule`);
-        const data = await res.json();
-        if (!Array.isArray(data) || !data.length) {
-            list.innerHTML = `<div class="text-center text-gray-400 text-xs py-6">Хөтөлбөр байхгүй.</div>`;
-            return;
-        }
+        const res=await fetch(`${ORDER_URL}?action=getSchedule`);
+        const data=await res.json();
+        if(!Array.isArray(data)||!data.length){ list.innerHTML=`<div class="text-center text-gray-400 text-xs py-6">Хөтөлбөр байхгүй.</div>`; return; }
         renderScheduleList(data);
-    } catch (e) {
-        const demo = [
-            { Week:'1-р долоо хоног', Title:'Монгол бичгийн үсэг таних-1', Description:'Үндсэн зурлага, эгшиг үсэг' },
-            { Week:'2-р долоо хоног', Title:'Гийгүүлэгч үсэг таних - 2', Description:'На,Ма,Ла,Ба,Нг,Га/Ха,Ра' },
-            { Week:'3-р долоо хоног', Title:'Гийгүүлэгч үсэг таних - 3', Description:'Да/Та,Са,Ша,За/Жа,Ца/Ча,Йа,' },
-            { Week:'4-р долоо хоног', Title:'Богино үг, өгүүлбэр уншиж', Description:'үе холбон үг унших' }
-        ];
-        renderScheduleList(demo);
+    } catch(e){
+        renderScheduleList([
+            {Week:'1-р долоо хоног',Title:'Монгол бичгийн үсэг таних-1',Description:'Үндсэн зурлага, эгшиг үсэг'},
+            {Week:'2-р долоо хоног',Title:'Гийгүүлэгч үсэг таних - 2',Description:'На,Ма,Ла,Ба,Нг,Га/Ха,Ра'},
+            {Week:'3-р долоо хоног',Title:'Гийгүүлэгч үсэг таних - 3',Description:'Да/Та,Са,Ша,За/Жа,Ца/Ча,Йа'},
+            {Week:'4-р долоо хоног',Title:'Богино үг, өгүүлбэр уншиж',Description:'үе холбон үг унших'}
+        ]);
     }
 }
-
-function renderScheduleList(data) {
-    const list = document.getElementById('scheduleList');
-    list.innerHTML = data.map((item, i) => {
-        const week  = item.Week || item.week || '';
-        const title = item.Title || item.title || item.Lesson || 'Хичээл';
-        const desc  = item.Description || item.description || '';
-        const done  = isPlannerItemDone('schedule_' + i);
-        return `
-            <div class="flex items-start gap-3 p-3 rounded-2xl border ${done ? 'bg-green-50 border-green-100' : 'bg-gray-50 border-gray-100'} cursor-pointer task-item ${done ? 'done' : ''}"
-                 onclick="toggleScheduleItem(${i}, this)">
-                <div class="mt-0.5 w-5 h-5 rounded-full border-2 flex-shrink-0 flex items-center justify-center
-                     ${done ? 'bg-green-500 border-green-500' : 'border-gray-300'}">
-                    ${done ? '<svg class="w-3 h-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/></svg>' : ''}
-                </div>
-                <div class="flex-1 min-w-0">
-                    <div class="text-[10px] font-black text-orange-600 uppercase">${week}</div>
-                    <div class="font-bold text-xs text-gray-800 task-title">${title}</div>
-                    ${desc ? `<div class="text-[10px] text-gray-400 mt-0.5">${desc}</div>` : ''}
-                </div>
-            </div>`;
+function renderScheduleList(data){
+    const list=document.getElementById('scheduleList');
+    list.innerHTML=data.map((item,i)=>{ const week=item.Week||item.week||''; const title=item.Title||item.title||item.Lesson||'Хичээл'; const desc=item.Description||item.description||''; const done=isPlannerItemDone('schedule_'+i);
+        return `<div class="flex items-start gap-3 p-3 rounded-2xl border ${done?'bg-green-50 border-green-100':'bg-gray-50 border-gray-100'} cursor-pointer task-item ${done?'done':''}" onclick="toggleScheduleItem(${i},this)"><div class="mt-0.5 w-5 h-5 rounded-full border-2 flex-shrink-0 flex items-center justify-center ${done?'bg-green-500 border-green-500':'border-gray-300'}">${done?'<svg class="w-3 h-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/></svg>':''}</div><div class="flex-1 min-w-0"><div class="text-[10px] font-black text-orange-600 uppercase">${week}</div><div class="font-bold text-xs text-gray-800">${title}</div>${desc?`<div class="text-[10px] text-gray-400 mt-0.5">${desc}</div>`:''}</div></div>`;
     }).join('');
     updatePlannerStats();
 }
-
-function toggleScheduleItem(i, el) {
-    const key  = 'schedule_' + i;
-    const done = !isPlannerItemDone(key);
-    setItemDone(key, done);
-    el.classList.toggle('done',             done);
-    el.classList.toggle('bg-green-50',      done);
-    el.classList.toggle('border-green-100', done);
-    el.classList.toggle('bg-gray-50',      !done);
-    el.classList.toggle('border-gray-100', !done);
-    const circle = el.querySelector('.rounded-full');
-    if (done) {
-        circle.classList.add('bg-green-500','border-green-500');
-        circle.classList.remove('border-gray-300');
-        circle.innerHTML = '<svg class="w-3 h-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/></svg>';
-    } else {
-        circle.classList.remove('bg-green-500','border-green-500');
-        circle.classList.add('border-gray-300');
-        circle.innerHTML = '';
-    }
+function toggleScheduleItem(i,el){
+    const key='schedule_'+i; const done=!isPlannerItemDone(key); setItemDone(key,done);
+    el.classList.toggle('done',done); el.classList.toggle('bg-green-50',done); el.classList.toggle('border-green-100',done); el.classList.toggle('bg-gray-50',!done); el.classList.toggle('border-gray-100',!done);
+    const circle=el.querySelector('.rounded-full');
+    if(done){ circle.classList.add('bg-green-500','border-green-500'); circle.classList.remove('border-gray-300'); circle.innerHTML='<svg class="w-3 h-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/></svg>'; }
+    else { circle.classList.remove('bg-green-500','border-green-500'); circle.classList.add('border-gray-300'); circle.innerHTML=''; }
     updatePlannerStats();
 }
-
-function isPlannerItemDone(key) {
-    const data = JSON.parse(localStorage.getItem('plannerDone_' + currentUserEmail) || '{}');
-    return !!data[key];
+function isPlannerItemDone(key){ const d=JSON.parse(localStorage.getItem('plannerDone_'+currentUserEmail)||'{}'); return !!d[key]; }
+function setItemDone(key,val){ const d=JSON.parse(localStorage.getItem('plannerDone_'+currentUserEmail)||'{}'); d[key]=val; localStorage.setItem('plannerDone_'+currentUserEmail,JSON.stringify(d)); }
+function updatePlannerStats(){
+    const all=document.querySelectorAll('#scheduleList .task-item'); const done=document.querySelectorAll('#scheduleList .task-item.done');
+    const tp=personalTasks.length; const dp=personalTasks.filter(t=>t.done).length;
+    const total=all.length+tp; const doneCount=done.length+dp; const pct=total>0?Math.round((doneCount/total)*100):0;
+    document.getElementById('plannerTotalTasks').innerText=total; document.getElementById('plannerDoneTasks').innerText=doneCount;
+    document.getElementById('plannerPercent').innerText=pct+'%'; document.getElementById('progressLabel').innerText=`${doneCount} / ${total}`;
+    document.getElementById('progressBar').style.width=pct+'%';
 }
-
-function setItemDone(key, val) {
-    const data = JSON.parse(localStorage.getItem('plannerDone_' + currentUserEmail) || '{}');
-    data[key] = val;
-    localStorage.setItem('plannerDone_' + currentUserEmail, JSON.stringify(data));
+function loadPersonalTasks(){ personalTasks=JSON.parse(localStorage.getItem('personalTasks_'+currentUserEmail)||'[]'); }
+function savePersonalTasks(){ localStorage.setItem('personalTasks_'+currentUserEmail,JSON.stringify(personalTasks)); }
+function addPersonalTask(){
+    const input=document.getElementById('newTaskInput'); const title=input.value.trim(); if(!title) return showToast("Даалгавар бичнэ үү!","error");
+    const priority=document.getElementById('newTaskPriority').value;
+    personalTasks.push({id:Date.now(),title,priority,done:false}); savePersonalTasks(); input.value='';
+    renderPersonalTasks(); updatePlannerStats(); showToast("Даалгавар нэмэгдлээ!","success");
 }
-
-function updatePlannerStats() {
-    const allItems      = document.querySelectorAll('#scheduleList .task-item');
-    const doneItems     = document.querySelectorAll('#scheduleList .task-item.done');
-    const totalPersonal = personalTasks.length;
-    const donePersonal  = personalTasks.filter(t => t.done).length;
-    const total = allItems.length + totalPersonal;
-    const done  = doneItems.length + donePersonal;
-    const pct   = total > 0 ? Math.round((done / total) * 100) : 0;
-    document.getElementById('plannerTotalTasks').innerText = total;
-    document.getElementById('plannerDoneTasks').innerText  = done;
-    document.getElementById('plannerPercent').innerText    = pct + '%';
-    document.getElementById('progressLabel').innerText     = `${done} / ${total}`;
-    document.getElementById('progressBar').style.width     = pct + '%';
-}
-
-function loadPersonalTasks() {
-    personalTasks = JSON.parse(localStorage.getItem('personalTasks_' + currentUserEmail) || '[]');
-}
-
-function savePersonalTasks() {
-    localStorage.setItem('personalTasks_' + currentUserEmail, JSON.stringify(personalTasks));
-}
-
-function addPersonalTask() {
-    const input = document.getElementById('newTaskInput');
-    const title = input.value.trim();
-    if (!title) return showToast("Даалгавар бичнэ үү!", "error");
-    const priority = document.getElementById('newTaskPriority').value;
-    personalTasks.push({ id: Date.now(), title, priority, done: false });
-    savePersonalTasks(); input.value = '';
-    renderPersonalTasks(); updatePlannerStats();
-    showToast("Даалгавар нэмэгдлээ!", "success");
-}
-
-function togglePersonalTask(id) {
-    const t = personalTasks.find(t => t.id === id);
-    if (t) { t.done = !t.done; savePersonalTasks(); renderPersonalTasks(); updatePlannerStats(); }
-}
-
-function deletePersonalTask(id) {
-    personalTasks = personalTasks.filter(t => t.id !== id);
-    savePersonalTasks(); renderPersonalTasks(); updatePlannerStats();
-}
-
-function renderPersonalTasks() {
-    const list = document.getElementById('personalTaskList');
-    if (!personalTasks.length) {
-        list.innerHTML = `<div class="text-center text-gray-300 text-xs py-4">Даалгавар байхгүй</div>`;
-        return;
-    }
-    const priorityColor = { high:'bg-red-100 text-red-700', mid:'bg-yellow-100 text-yellow-700', low:'bg-gray-100 text-gray-600' };
-    const priorityLabel = { high:'Яаралтай', mid:'Дунд', low:'Энгийн' };
-    list.innerHTML = [...personalTasks].reverse().map(t => `
-        <div class="flex items-center gap-2 p-2 rounded-xl border ${t.done ? 'bg-green-50 border-green-100' : 'bg-white border-gray-100'} task-item ${t.done ? 'done' : ''}">
-            <button onclick="togglePersonalTask(${t.id})"
-                    class="w-5 h-5 rounded-full border-2 flex-shrink-0 flex items-center justify-center
-                           ${t.done ? 'bg-green-500 border-green-500' : 'border-gray-300'} hover:border-green-400 transition-all">
-                ${t.done ? '<svg class="w-3 h-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/></svg>' : ''}
-            </button>
-            <div class="flex-1 min-w-0">
-                <div class="text-xs font-bold task-title ${t.done ? 'text-gray-400' : 'text-gray-700'} truncate">${t.title}</div>
-                <span class="text-[9px] font-black px-2 py-0.5 rounded-full ${priorityColor[t.priority]}">${priorityLabel[t.priority]}</span>
-            </div>
-            <button onclick="deletePersonalTask(${t.id})" class="text-gray-300 hover:text-red-400 transition-all text-xs font-bold">X</button>
-        </div>`).join('');
+function togglePersonalTask(id){ const t=personalTasks.find(t=>t.id===id); if(t){t.done=!t.done;savePersonalTasks();renderPersonalTasks();updatePlannerStats();} }
+function deletePersonalTask(id){ personalTasks=personalTasks.filter(t=>t.id!==id); savePersonalTasks();renderPersonalTasks();updatePlannerStats(); }
+function renderPersonalTasks(){
+    const list=document.getElementById('personalTaskList');
+    if(!personalTasks.length){ list.innerHTML=`<div class="text-center text-gray-300 text-xs py-4">Даалгавар байхгүй</div>`; return; }
+    const pc={high:'bg-red-100 text-red-700',mid:'bg-yellow-100 text-yellow-700',low:'bg-gray-100 text-gray-600'};
+    const pl={high:'Яаралтай',mid:'Дунд',low:'Энгийн'};
+    list.innerHTML=[...personalTasks].reverse().map(t=>`<div class="flex items-center gap-2 p-2 rounded-xl border ${t.done?'bg-green-50 border-green-100':'bg-white border-gray-100'} task-item ${t.done?'done':''}"><button onclick="togglePersonalTask(${t.id})" class="w-5 h-5 rounded-full border-2 flex-shrink-0 flex items-center justify-center ${t.done?'bg-green-500 border-green-500':'border-gray-300'} hover:border-green-400 transition-all">${t.done?'<svg class="w-3 h-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/></svg>':''}</button><div class="flex-1 min-w-0"><div class="text-xs font-bold ${t.done?'text-gray-400':'text-gray-700'} truncate">${t.title}</div><span class="text-[9px] font-black px-2 py-0.5 rounded-full ${pc[t.priority]}">${pl[t.priority]}</span></div><button onclick="deletePersonalTask(${t.id})" class="text-gray-300 hover:text-red-400 text-xs font-bold">✕</button></div>`).join('');
 }
 
 /* ════════════════════════════════════════════
    ШАЛГАЛТ
    ════════════════════════════════════════════ */
-let examQuestions     = [];
-let currentExamQs     = [];
-let currentQIndex     = 0;
-let examScoreCount    = 0;
-let examCorrectCount  = 0;
-let examWrongCount    = 0;
-let examTimerInterval = null;
-let examTimeLeft      = 0;
-let examStartTime     = null;
-let currentTopic      = "";
-let examAnswered      = false;
+let examQuestions=[],currentExamQs=[],currentQIndex=0,examScoreCount=0,examCorrectCount=0,examWrongCount=0;
+let examTimerInterval=null,examTimeLeft=0,examStartTime=null,currentTopic="",examAnswered=false;
 
-async function initExamLobby() {
-    showEl('examLobby'); hideEl('examActive'); hideEl('examResult');
-    stopExamTimer();
-    const topicList = document.getElementById('examTopicList');
-    topicList.innerHTML = `<div class="text-center text-gray-400 py-6 text-xs">Уншиж байна...</div>`;
-    try {
-        const res = await fetch(`${ORDER_URL}?action=getQuestions`);
-        examQuestions = await res.json();
-    } catch (e) {
-        examQuestions = buildDemoQuestions();
-    }
-    renderTopics();
-    renderExamHistory();
+async function initExamLobby(){
+    showEl('examLobby');hideEl('examActive');hideEl('examResult');stopExamTimer();
+    document.getElementById('examTopicList').innerHTML=`<div class="text-center text-gray-400 py-6 text-xs">Уншиж байна...</div>`;
+    try { const res=await fetch(`${ORDER_URL}?action=getQuestions`); examQuestions=await res.json(); }
+    catch(e){ examQuestions=buildDemoQuestions(); }
+    renderTopics(); renderExamHistory();
 }
-
-function buildDemoQuestions() {
+function buildDemoQuestions(){
     return [
-        { Topic:'Дүрэм', Question:'Монгол бичгийг ямар шугамаар бичдэг вэ?', A:'Хэвтээ', B:'Босоо', C:'Диагональ', D:'Дугуй', Answer:'B', Explanation:'Монгол бичгийг дээрээс доош чиглэлтэй босоо бичдэг.' },
-        { Topic:'Дүрэм', Question:'Монгол бичгийн бичмэл хэлбэрт эгшиг үсэг бүгд ямар зурлагаар эхэлдэг вэ?', A:'шилбэ', B:'шүд', C:'гэдэс', D:'титэм', Answer:'D', Explanation:'Уламжлалт монгол бичгийн бичмэл хэлбэрт бүх эгшиг үсэг титэм зурлагаар эхэлдэг' },
-        { Topic:'Дүрэм', Question:'Монгол бичгийн эгшиг үсэг хэд байдаг вэ?', A:'5', B:'7', C:'9', D:'12', Answer:'B', Explanation:'Монгол бичигт 7 эгшиг үсэг байдаг.' },
-        { Topic:'Үг', Question:'"Титэм + шүд" нийлээд ямар үсэг вэ', A:'А', B:'Э', C:'И', D:'О', Answer:'A', Explanation:'"Үгийн эхэнд ордог А" үсэг юм.' },
-        { Topic:'Үг', Question:'"Шилбэ" ямар үсгийг илэрхийлдэг вэ?', A:'А', B:'Э', C:'И', D:'Ү', Answer:'C', Explanation:'"Үгийн дунд ордог И" үсэг юм.' },
-        { Topic:'Дуудлага', Question:'Титэм+гэдэс+шилбэ" ямар үсэг болох вэ?', A:'О', B:'У', C:'Ө', D:'И', Answer:'C', Explanation:'"Үгийн эхэнд ордог Ө" үсэг бөгөөд монгол бичигт ө/ү үсэг адил бичигдд.' }
+        {Topic:'Дүрэм',Question:'Монгол бичгийг ямар шугамаар бичдэг вэ?',A:'Хэвтээ',B:'Босоо',C:'Диагональ',D:'Дугуй',Answer:'B',Explanation:'Монгол бичгийг дээрээс доош чиглэлтэй босоо бичдэг.'},
+        {Topic:'Дүрэм',Question:'Монгол бичгийн бичмэл хэлбэрт эгшиг үсэг бүгд ямар зурлагаар эхэлдэг вэ?',A:'шилбэ',B:'шүд',C:'гэдэс',D:'титэм',Answer:'D',Explanation:'Уламжлалт монгол бичгийн бичмэл хэлбэрт бүх эгшиг үсэг титэм зурлагаар эхэлдэг'},
+        {Topic:'Дүрэм',Question:'Монгол бичгийн эгшиг үсэг хэд байдаг вэ?',A:'5',B:'7',C:'9',D:'12',Answer:'B',Explanation:'Монгол бичигт 7 эгшиг үсэг байдаг.'},
+        {Topic:'Үг',Question:'"Титэм + шүд" нийлээд ямар үсэг вэ',A:'А',B:'Э',C:'И',D:'О',Answer:'A',Explanation:'"Үгийн эхэнд ордог А" үсэг юм.'},
+        {Topic:'Үг',Question:'"Шилбэ" ямар үсгийг илэрхийлдэг вэ?',A:'А',B:'Э',C:'И',D:'Ү',Answer:'C',Explanation:'"Үгийн дунд ордог И" үсэг юм.'},
+        {Topic:'Дуудлага',Question:'"Титэм+гэдэс+шилбэ" ямар үсэг болох вэ?',A:'О',B:'У',C:'Ө',D:'И',Answer:'C',Explanation:'"Үгийн эхэнд ордог Ө" үсэг бөгөөд монгол бичигт ө/ү үсэг адил бичигддэг.'}
     ];
 }
-
-function getTopics() {
-    return [...new Set(examQuestions.map(q => q.Topic || q.topic || 'Ерөнхий'))];
-}
-
-function renderTopics() {
-    const topics = getTopics();
-    const el     = document.getElementById('examTopicList');
-    if (!topics.length) { el.innerHTML = `<div class="text-center text-gray-400 py-6 text-xs">Асуулт олдсонгүй.</div>`; return; }
-    el.innerHTML = topics.map(topic => {
-        const count = examQuestions.filter(q => (q.Topic || q.topic || 'Ерөнхий') === topic).length;
-        return `
-            <button onclick="startExam('${topic.replace(/'/g,"\\'")}')"
-                    class="w-full bg-white border-2 border-blue-100 hover:border-blue-400 hover:bg-blue-50
-                           rounded-2xl p-4 text-left flex justify-between items-center transition-all group">
-                <div>
-                    <div class="font-black text-blue-900 text-sm">${topic}</div>
-                    <div class="text-[10px] text-gray-400 font-bold mt-0.5">${count} асуулт</div>
-                </div>
-                <div class="bg-blue-600 text-white text-[10px] font-black uppercase px-4 py-2 rounded-xl group-hover:bg-blue-700 transition-all">
-                    Эхлэх
-                </div>
-            </button>`;
+function getTopics(){ return [...new Set(examQuestions.map(q=>q.Topic||q.topic||'Ерөнхий'))]; }
+function renderTopics(){
+    const topics=getTopics(); const el=document.getElementById('examTopicList');
+    if(!topics.length){ el.innerHTML=`<div class="text-center text-gray-400 py-6 text-xs">Асуулт олдсонгүй.</div>`; return; }
+    el.innerHTML=topics.map(topic=>{ const count=examQuestions.filter(q=>(q.Topic||q.topic||'Ерөнхий')===topic).length;
+        return `<button onclick="startExam('${topic.replace(/'/g,"\\'")}') "class="w-full bg-white border-2 border-blue-100 hover:border-blue-400 hover:bg-blue-50 rounded-2xl p-4 text-left flex justify-between items-center transition-all group"><div><div class="font-black text-blue-900 text-sm">${topic}</div><div class="text-[10px] text-gray-400 font-bold mt-0.5">${count} асуулт</div></div><div class="bg-blue-600 text-white text-[10px] font-black uppercase px-4 py-2 rounded-xl group-hover:bg-blue-700 transition-all">Эхлэх</div></button>`;
     }).join('');
 }
-
-function startExam(topic) {
-    currentTopic     = topic;
-    const qs         = examQuestions.filter(q => (q.Topic || q.topic || 'Ерөнхий') === topic);
-    currentExamQs    = shuffle(qs).slice(0, 10);
-    currentQIndex    = 0;
-    examScoreCount   = 0;
-    examCorrectCount = 0;
-    examWrongCount   = 0;
-    hideEl('examLobby'); hideEl('examResult'); showEl('examActive');
-    examTimeLeft = currentExamQs.length * 30;
-    startExamTimer();
-    examStartTime = Date.now();
-    renderExamQuestion();
+function startExam(topic){
+    currentTopic=topic; const qs=examQuestions.filter(q=>(q.Topic||q.topic||'Ерөнхий')===topic);
+    currentExamQs=shuffle(qs).slice(0,10); currentQIndex=0; examScoreCount=0; examCorrectCount=0; examWrongCount=0;
+    hideEl('examLobby');hideEl('examResult');showEl('examActive');
+    examTimeLeft=currentExamQs.length*30; startExamTimer(); examStartTime=Date.now(); renderExamQuestion();
 }
-
-function renderExamQuestion() {
-    if (currentQIndex >= currentExamQs.length) { finishExam(); return; }
-    examAnswered = false;
-    const q = currentExamQs[currentQIndex];
-    document.getElementById('examQuestionCount').innerText = `${currentQIndex + 1} / ${currentExamQs.length}`;
-    document.getElementById('examScore').innerText         = examScoreCount;
-    document.getElementById('examProgress').style.width   = `${(currentQIndex / currentExamQs.length) * 100}%`;
-    document.getElementById('examQuestionBadge').innerText = q.Topic || q.topic || 'Ерөнхий';
-    document.getElementById('examQuestion').innerText      = q.Question || q.question || '';
-    const opts = ['A','B','C','D'];
-    document.getElementById('examOptions').innerHTML = opts.map(opt => {
-        const text = q[opt];
-        if (!text) return '';
-        return `
-            <button id="opt_${opt}" onclick="selectAnswer('${opt}')"
-                    class="option-btn w-full text-left bg-white border-2 border-gray-200 rounded-2xl px-5 py-3
-                           font-bold text-sm text-gray-700 hover:border-blue-300">
-                <span class="inline-block w-6 h-6 rounded-full bg-blue-100 text-blue-700 text-xs font-black
-                              text-center leading-6 mr-3">${opt}</span>${text}
-            </button>`;
-    }).join('');
+function renderExamQuestion(){
+    if(currentQIndex>=currentExamQs.length){finishExam();return;} examAnswered=false;
+    const q=currentExamQs[currentQIndex];
+    document.getElementById('examQuestionCount').innerText=`${currentQIndex+1} / ${currentExamQs.length}`;
+    document.getElementById('examScore').innerText=examScoreCount;
+    document.getElementById('examProgress').style.width=`${(currentQIndex/currentExamQs.length)*100}%`;
+    document.getElementById('examQuestionBadge').innerText=q.Topic||q.topic||'Ерөнхий';
+    document.getElementById('examQuestion').innerText=q.Question||q.question||'';
+    document.getElementById('examOptions').innerHTML=['A','B','C','D'].map(opt=>{ const text=q[opt]; if(!text)return ''; return `<button id="opt_${opt}" onclick="selectAnswer('${opt}')" class="option-btn w-full text-left bg-white border-2 border-gray-200 rounded-2xl px-5 py-3 font-bold text-sm text-gray-700 hover:border-blue-300"><span class="inline-block w-6 h-6 rounded-full bg-blue-100 text-blue-700 text-xs font-black text-center leading-6 mr-3">${opt}</span>${text}</button>`; }).join('');
     document.getElementById('examExplanation').classList.add('hidden');
     document.getElementById('examNextBtn').classList.add('hidden');
 }
-
-function selectAnswer(opt) {
-    if (examAnswered) return;
-    examAnswered = true;
-    const q       = currentExamQs[currentQIndex];
-    const correct = q.Answer || q.answer || 'A';
-    const isOK    = opt === correct;
-    const selBtn  = document.getElementById('opt_' + opt);
-    if (selBtn) selBtn.classList.add(isOK ? 'correct' : 'wrong');
-    if (!isOK) {
-        const corrBtn = document.getElementById('opt_' + correct);
-        if (corrBtn) corrBtn.classList.add('correct');
-    }
-    document.querySelectorAll('#examOptions .option-btn').forEach(b => b.disabled = true);
-    if (isOK) { examScoreCount += 10; examCorrectCount++; showToast("Зөв! +10 оноо", "success"); }
-    else       { examWrongCount++; showToast("Буруу!", "error"); }
-    const explanation = q.Explanation || q.explanation || '';
-    if (explanation) {
-        document.getElementById('examExplanationText').innerText = explanation;
-        document.getElementById('examExplanation').classList.remove('hidden');
-    }
-    document.getElementById('examScore').innerText = examScoreCount;
+function selectAnswer(opt){
+    if(examAnswered)return; examAnswered=true;
+    const q=currentExamQs[currentQIndex]; const correct=q.Answer||q.answer||'A'; const isOK=opt===correct;
+    const selBtn=document.getElementById('opt_'+opt); if(selBtn) selBtn.classList.add(isOK?'correct':'wrong');
+    if(!isOK){ const cb=document.getElementById('opt_'+correct); if(cb) cb.classList.add('correct'); }
+    document.querySelectorAll('#examOptions .option-btn').forEach(b=>b.disabled=true);
+    if(isOK){examScoreCount+=10;examCorrectCount++;showToast("Зөв! +10 оноо","success");}
+    else{examWrongCount++;showToast("Буруу!","error");}
+    const expl=q.Explanation||q.explanation||'';
+    if(expl){ document.getElementById('examExplanationText').innerText=expl; document.getElementById('examExplanation').classList.remove('hidden'); }
+    document.getElementById('examScore').innerText=examScoreCount;
     document.getElementById('examNextBtn').classList.remove('hidden');
-    document.getElementById('examNextBtn').innerText = currentQIndex + 1 < currentExamQs.length ? 'Дараагийн асуулт' : 'Үр дүн харах';
+    document.getElementById('examNextBtn').innerText=currentQIndex+1<currentExamQs.length?'Дараагийн асуулт':'Үр дүн харах';
 }
-
-function nextQuestion() {
-    currentQIndex++;
-    if (currentQIndex >= currentExamQs.length) finishExam();
-    else renderExamQuestion();
+function nextQuestion(){ currentQIndex++; if(currentQIndex>=currentExamQs.length)finishExam(); else renderExamQuestion(); }
+function finishExam(){
+    stopExamTimer(); const elapsed=Math.round((Date.now()-examStartTime)/1000);
+    const pct=currentExamQs.length>0?Math.round((examCorrectCount/currentExamQs.length)*100):0;
+    hideEl('examActive');showEl('examResult');
+    document.getElementById('resultScore').innerText=examScoreCount+' оноо';
+    document.getElementById('resultDetail').innerText=`${pct}% зөв — ${currentTopic}`;
+    document.getElementById('resultCorrect').innerText=examCorrectCount;
+    document.getElementById('resultWrong').innerText=examWrongCount;
+    document.getElementById('resultTime').innerText=elapsed+'s';
+    document.getElementById('resultEmoji').innerText=pct>=80?'GREAT!':pct>=50?'GOOD':'TRY AGAIN';
+    document.getElementById('resultReview').innerHTML=currentExamQs.map((q,i)=>{ const c=q.Answer||q.answer||'A'; return `<div class="p-3 rounded-xl text-xs font-bold bg-white border"><div class="text-gray-500 mb-1">${i+1}. ${q.Question||''}</div><div class="text-green-700">Зөв: ${q[c]||c}</div></div>`; }).join('');
+    saveExamResult({topic:currentTopic,score:examScoreCount,pct,date:new Date().toLocaleDateString('mn-MN'),elapsed});
 }
-
-function finishExam() {
-    stopExamTimer();
-    const elapsed = Math.round((Date.now() - examStartTime) / 1000);
-    const pct     = currentExamQs.length > 0 ? Math.round((examCorrectCount / currentExamQs.length) * 100) : 0;
-    hideEl('examActive'); showEl('examResult');
-    document.getElementById('resultScore').innerText   = examScoreCount + ' оноо';
-    document.getElementById('resultDetail').innerText  = `${pct}% зөв — ${currentTopic}`;
-    document.getElementById('resultCorrect').innerText = examCorrectCount;
-    document.getElementById('resultWrong').innerText   = examWrongCount;
-    document.getElementById('resultTime').innerText    = elapsed + 's';
-    document.getElementById('resultEmoji').innerText   = pct >= 80 ? 'GREAT!' : pct >= 50 ? 'GOOD' : 'TRY AGAIN';
-    document.getElementById('resultReview').innerHTML  = currentExamQs.map((q, i) => {
-        const correct = q.Answer || q.answer || 'A';
-        return `
-            <div class="p-3 rounded-xl text-xs font-bold bg-white border">
-                <div class="text-gray-500 mb-1">${i+1}. ${q.Question || ''}</div>
-                <div class="text-green-700">Зөв: ${q[correct] || correct}</div>
-            </div>`;
-    }).join('');
-    saveExamResult({ topic: currentTopic, score: examScoreCount, pct, date: new Date().toLocaleDateString('mn-MN'), elapsed });
-}
-
-function retryExam() { startExam(currentTopic); }
-
-function backToLobby() {
-    stopExamTimer(); hideEl('examResult'); hideEl('examActive'); showEl('examLobby');
-    renderExamHistory();
-}
-
-function startExamTimer() {
-    stopExamTimer(); updateTimerDisplay();
-    examTimerInterval = setInterval(() => {
-        examTimeLeft--; updateTimerDisplay();
-        if (examTimeLeft <= 0) { clearInterval(examTimerInterval); showToast("Цаг дууслаа!", "error"); finishExam(); }
-    }, 1000);
-}
-
-function stopExamTimer() {
-    if (examTimerInterval) { clearInterval(examTimerInterval); examTimerInterval = null; }
-}
-
-function updateTimerDisplay() {
-    const el = document.getElementById('examTimer');
-    if (!el) return;
-    const m = String(Math.floor(examTimeLeft / 60)).padStart(2, '0');
-    const s = String(examTimeLeft % 60).padStart(2, '0');
-    el.innerText = `${m}:${s}`;
-    el.classList.toggle('timer-warning', examTimeLeft <= 30);
-}
-
-function saveExamResult(result) {
-    const key     = 'examHistory_' + currentUserEmail;
-    const history = JSON.parse(localStorage.getItem(key) || '[]');
-    history.unshift(result);
-    localStorage.setItem(key, JSON.stringify(history.slice(0, 10)));
-}
-
-function renderExamHistory() {
-    const key     = 'examHistory_' + currentUserEmail;
-    const history = JSON.parse(localStorage.getItem(key) || '[]');
-    const el      = document.getElementById('examHistoryList');
-    if (!history.length) { el.innerHTML = `<div class="text-xs text-gray-300 text-center py-2">Одоохондоо байхгүй</div>`; return; }
-    el.innerHTML = history.map(h => `
-        <div class="flex justify-between items-center bg-white border rounded-xl px-4 py-2 text-xs">
-            <div>
-                <span class="font-black text-gray-700">${h.topic}</span>
-                <span class="text-gray-400 ml-2">${h.date}</span>
-            </div>
-            <div class="font-black ${h.pct >= 80 ? 'text-green-600' : h.pct >= 50 ? 'text-yellow-600' : 'text-red-500'}">
-                ${h.pct}%
-            </div>
-        </div>`).join('');
+function retryExam(){ startExam(currentTopic); }
+function backToLobby(){ stopExamTimer();hideEl('examResult');hideEl('examActive');showEl('examLobby');renderExamHistory(); }
+function startExamTimer(){ stopExamTimer();updateTimerDisplay(); examTimerInterval=setInterval(()=>{ examTimeLeft--;updateTimerDisplay(); if(examTimeLeft<=0){clearInterval(examTimerInterval);showToast("Цаг дууслаа!","error");finishExam();} },1000); }
+function stopExamTimer(){ if(examTimerInterval){clearInterval(examTimerInterval);examTimerInterval=null;} }
+function updateTimerDisplay(){ const el=document.getElementById('examTimer');if(!el)return; const m=String(Math.floor(examTimeLeft/60)).padStart(2,'0');const s=String(examTimeLeft%60).padStart(2,'0'); el.innerText=`${m}:${s}`; el.classList.toggle('timer-warning',examTimeLeft<=30); }
+function saveExamResult(result){ const key='examHistory_'+currentUserEmail; const h=JSON.parse(localStorage.getItem(key)||'[]'); h.unshift(result); localStorage.setItem(key,JSON.stringify(h.slice(0,10))); }
+function renderExamHistory(){
+    const key='examHistory_'+currentUserEmail; const h=JSON.parse(localStorage.getItem(key)||'[]'); const el=document.getElementById('examHistoryList');
+    if(!h.length){el.innerHTML=`<div class="text-xs text-gray-300 text-center py-2">Одоохондоо байхгүй</div>`;return;}
+    el.innerHTML=h.map(r=>`<div class="flex justify-between items-center bg-white border rounded-xl px-4 py-2 text-xs"><div><span class="font-black text-gray-700">${r.topic}</span><span class="text-gray-400 ml-2">${r.date}</span></div><div class="font-black ${r.pct>=80?'text-green-600':r.pct>=50?'text-yellow-600':'text-red-500'}">${r.pct}%</div></div>`).join('');
 }
 
 /* ════════════════════════════════════════════
-   ТУСЛАХ ФУНКЦҮҮД
+   ТУСЛАХ
    ════════════════════════════════════════════ */
-function shuffle(arr) {
-    const a = [...arr];
-    for (let i = a.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [a[i], a[j]] = [a[j], a[i]];
-    }
-    return a;
-}
-
-function showEl(id) { const el = document.getElementById(id); if (el) el.classList.remove('hidden'); }
-function hideEl(id) { const el = document.getElementById(id); if (el) el.classList.add('hidden'); }
-
-function showToast(msg, type = 'info') {
-    const box    = document.getElementById('toastBox');
-    const toast  = document.createElement('div');
-    const colors = { success:'bg-green-700', error:'bg-red-600', info:'bg-blue-600' };
-    toast.className = `${colors[type]||colors.info} text-white px-6 py-3 rounded-2xl text-xs font-black shadow-xl pointer-events-auto transition-all opacity-0`;
-    toast.innerText = msg;
-    box.appendChild(toast);
-    setTimeout(() => toast.style.opacity = '1', 10);
-    setTimeout(() => { toast.style.opacity = '0'; setTimeout(() => toast.remove(), 300); }, 2800);
+function shuffle(arr){ const a=[...arr]; for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];} return a; }
+function showEl(id){ const el=document.getElementById(id);if(el) el.classList.remove('hidden'); }
+function hideEl(id){ const el=document.getElementById(id);if(el) el.classList.add('hidden'); }
+function showToast(msg,type='info'){
+    const box=document.getElementById('toastBox'); const toast=document.createElement('div');
+    const colors={success:'bg-green-700',error:'bg-red-600',info:'bg-blue-600'};
+    toast.className=`${colors[type]||colors.info} text-white px-6 py-3 rounded-2xl text-xs font-black shadow-xl pointer-events-auto transition-all opacity-0`;
+    toast.innerText=msg; box.appendChild(toast);
+    setTimeout(()=>toast.style.opacity='1',10);
+    setTimeout(()=>{toast.style.opacity='0';setTimeout(()=>toast.remove(),300);},2800);
 }
 </script>
 </body>
