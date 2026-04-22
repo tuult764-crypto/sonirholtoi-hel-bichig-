@@ -795,13 +795,57 @@ async function loadMyLibrary(){
     libGrid.innerHTML="<p class='col-span-full text-center py-10 opacity-50 text-xs'>Ачаалж байна...</p>";
     try {
         const res=await fetch(`${ORDER_URL}?action=getMyLibrary&email=${encodeURIComponent(currentUserEmail)}`,{redirect:'follow'});
-        const files=await res.json();
-        if(!files||files.length===0){
+        const raw=await res.text();
+        let files=[];
+        try { files=JSON.parse(raw); } catch(e){ files=[]; }
+        if(!Array.isArray(files)||files.length===0){
             libGrid.innerHTML=`<div class="col-span-full text-center py-20"><p class="text-gray-400 text-xs uppercase font-black italic">Одоогоор файл байхгүй байна</p><p class="text-[10px] text-orange-300 mt-2">Төлбөр баталгаажсаны дараа энд харагдана</p></div>`;
-        } else {
-            libGrid.innerHTML=files.map(f=>`<div class="bg-white p-4 rounded-[2rem] shadow-md border border-orange-50 flex flex-col items-center text-center"><div class="w-12 h-12 bg-orange-100 rounded-full flex items-center justify-center mb-3 text-xl">📂</div><h4 class="font-black text-[10px] text-orange-900 mb-1 uppercase italic">${f.productName}</h4><p class="text-[9px] text-gray-400 mb-4">${new Date(f.date).toLocaleDateString()}</p><a href="${f.downloadUrl}" target="_blank" class="w-full bg-orange-800 text-white py-2 rounded-xl font-black uppercase italic text-[9px] hover:bg-orange-900 transition-all text-center">Үзэх / Татах</a></div>`).join('');
+            return;
         }
-    } catch(e){ console.error(e); libGrid.innerHTML="<p class='text-red-400 text-center text-[10px] font-bold'>Холболтын алдаа гарлаа</p>"; }
+        libGrid.innerHTML=files.map((f,i)=>{
+            const title = f.productName || f.title || f.name || 'Материал';
+            const url   = f.downloadUrl || f.url || f.link || '';
+            const dateStr = f.date ? new Date(f.date).toLocaleDateString('mn-MN') : '';
+            const btnHtml = url
+                ? `<button onclick="openLibraryFile(${i})" class="w-full bg-orange-800 text-white py-2 rounded-xl font-black uppercase italic text-[9px] hover:bg-orange-900 transition-all">Үзэх / Татах</button>`
+                : `<div class="w-full bg-gray-100 text-gray-400 py-2 rounded-xl font-black uppercase italic text-[9px] text-center">Линк байхгүй</div>`;
+            return `<div class="bg-white p-4 rounded-[2rem] shadow-md border border-orange-50 flex flex-col items-center text-center">
+                <div class="w-12 h-12 bg-orange-100 rounded-full flex items-center justify-center mb-3 text-xl">📂</div>
+                <h4 class="font-black text-[10px] text-orange-900 mb-1 uppercase italic">${escHtml(title)}</h4>
+                <p class="text-[9px] text-gray-400 mb-4">${dateStr}</p>
+                ${btnHtml}
+            </div>`;
+        }).join('');
+        // URL-үүдийг JS массивт хадгална — onclick дотор шууд href ашиглахгүй
+        window._libFiles = files;
+    } catch(e){
+        console.error(e);
+        libGrid.innerHTML="<p class='text-red-400 text-center text-[10px] font-bold col-span-full'>Холболтын алдаа гарлаа. Дахин оролдоно уу.</p>";
+    }
+}
+
+function openLibraryFile(idx){
+    const files = window._libFiles || [];
+    const f = files[idx];
+    if(!f) return showToast("Файл олдсонгүй","error");
+    const url = f.downloadUrl || f.url || f.link || '';
+    if(!url || url === 'undefined' || url.trim() === ''){
+        return showToast("Линк бэлэн болоогүй байна. Туул багштай холбогдоно уу.","error");
+    }
+    // Хуудсаас гарахгүйгээр шинэ цонхонд нээнэ
+    const win = window.open(url, '_blank', 'noopener,noreferrer');
+    if(!win){
+        // Popup blocker байвал заавар өгнө
+        showToast("Шинэ цонх нээгдсэнгүй. Браузерийн popup блокийг зөвшөөрнө үү.","info");
+    }
+}
+
+function escHtml(str){
+    return String(str)
+        .replace(/&/g,'&amp;')
+        .replace(/</g,'&lt;')
+        .replace(/>/g,'&gt;')
+        .replace(/"/g,'&quot;');
 }
 
 /* ══════════════════════════════════════════════
