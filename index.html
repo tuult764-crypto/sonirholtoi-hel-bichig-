@@ -644,7 +644,6 @@ function closeEmailModal() {
 async function submitEmailModal() {
     const email = document.getElementById('emailModalInput').value.trim();
     const errEl = document.getElementById('emailModalError');
-    const btn   = document.getElementById('emailModalBtn');
 
     if (!email) {
         errEl.textContent = 'Мэйл хаягаа оруулна уу!';
@@ -652,35 +651,12 @@ async function submitEmailModal() {
         return;
     }
 
-    btn.disabled    = true;
-    btn.textContent = 'Шалгаж байна...';
-
-    try {
-        const url = `${ORDER_URL}?action=check&email=${encodeURIComponent(email)}`;
-        const res  = await fetch(url, { redirect: 'follow' });
-        const text = await res.text();
-        let data;
-        try { data = JSON.parse(text); } catch(e) { data = {}; }
-
-        if (data.status === 'success') {
-            currentUserEmail = email;
-            const navEmail = document.getElementById('navEmail');
-            if (navEmail) navEmail.innerText = email;
-            closeEmailModal();
-            loadCart();
-            if (_authCallback) { _authCallback(); _authCallback = null; }
-        } else {
-            errEl.textContent = data.message || 'Бүртгэлгүй мэйл! Туул багштай холбогдоно уу.';
-            errEl.classList.remove('hidden');
-        }
-    } catch(e) {
-        console.error(e);
-        errEl.textContent = 'Холболтын алдаа. Дахин оролдоно уу.';
-        errEl.classList.remove('hidden');
-    } finally {
-        btn.disabled    = false;
-        btn.textContent = 'Үргэлжлүүлэх';
-    }
+    currentUserEmail = email;
+    const navEmail = document.getElementById('navEmail');
+    if (navEmail) navEmail.innerText = email;
+    closeEmailModal();
+    loadCart();
+    if (_authCallback) { _authCallback(); _authCallback = null; }
 }
 
 // Enter товч — emailModal нээлттэй үед
