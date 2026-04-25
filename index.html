@@ -38,7 +38,6 @@
             color: var(--on-surface);
             min-height: 100vh;
         }
-        /* ── NAV ── */
         .nav-glass {
             background: rgba(252,249,248,0.85);
             backdrop-filter: blur(20px);
@@ -57,8 +56,6 @@
         .btn-icon:hover { background: var(--surface-container-high); }
         .btn-icon svg { width: 18px; height: 18px; stroke: var(--on-surface-variant); fill: none; stroke-width: 1.8; }
         .cart-badge { position: absolute; top: -2px; right: -2px; background: var(--error); color: #fff; font-size: 9px; font-weight: 700; width: 16px; height: 16px; border-radius: 50%; display: flex; align-items: center; justify-content: center; display: none; }
-
-        /* ── HERO ── */
         .hero { max-width: 1280px; margin: 0 auto; padding: 80px 32px 64px; display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: center; }
         .hero-label { display: inline-flex; align-items: center; gap: 6px; background: rgba(148,74,0,0.08); color: var(--primary); font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; padding: 6px 14px; border-radius: 9999px; margin-bottom: 20px; }
         .hero-title { font-size: 48px; font-weight: 700; line-height: 1.15; letter-spacing: -0.02em; color: var(--on-surface); margin-bottom: 20px; }
@@ -75,21 +72,15 @@
         .hero-card-icon { width: 40px; height: 40px; border-radius: 12px; display: flex; align-items: center; justify-content: center; margin-bottom: 12px; font-size: 18px; }
         .hero-card-label { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; color: var(--on-surface-variant); }
         .hero-card-title { font-size: 14px; font-weight: 600; color: var(--on-surface); margin-top: 4px; }
-
-        /* ── SECTION ── */
         .section { max-width: 1280px; margin: 0 auto; padding: 0 32px 80px; }
         .section-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 32px; }
         .section-title { font-size: 24px; font-weight: 700; color: var(--on-surface); letter-spacing: -0.01em; }
         .section-link { font-size: 12px; font-weight: 600; color: var(--primary); text-transform: uppercase; letter-spacing: 0.04em; cursor: pointer; text-decoration: none; }
         .section-link:hover { text-decoration: underline; }
-
-        /* ── NAV PILLS ── */
         .nav-pills { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 4px; margin-bottom: 24px; scrollbar-width: none; }
         .nav-pills::-webkit-scrollbar { display: none; }
         .pill { background: var(--surface-container); border: 1px solid transparent; color: var(--on-surface-variant); padding: 8px 18px; border-radius: 9999px; font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em; cursor: pointer; white-space: nowrap; transition: all 0.2s; }
         .pill.active, .pill:hover { background: var(--primary); color: #fff; border-color: var(--primary); }
-
-        /* ── PRODUCT GRID ── */
         .product-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 20px; }
         .product-card { background: #fff; border: 1px solid var(--outline-variant); border-radius: 16px; overflow: hidden; transition: all 0.25s; display: flex; flex-direction: column; }
         .product-card:hover { transform: translateY(-4px); box-shadow: 0 8px 24px rgba(0,0,0,0.08); }
@@ -106,15 +97,11 @@
         .btn-add:hover { background: var(--surface-container-high); }
         .btn-buy { flex: 1; background: var(--primary); border: none; color: #fff; padding: 9px; border-radius: 8px; font-family: 'Lexend', sans-serif; font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.03em; cursor: pointer; transition: all 0.2s; }
         .btn-buy:hover { background: #7a3d00; }
-
-        /* ── FEATURE STRIP ── */
         .feature-strip { background: var(--inverse-surface); border-radius: 20px; padding: 48px; margin-bottom: 80px; display: grid; grid-template-columns: repeat(4, 1fr); gap: 32px; }
         .feature-item { text-align: center; }
         .feature-icon { width: 48px; height: 48px; border-radius: 12px; margin: 0 auto 14px; display: flex; align-items: center; justify-content: center; }
         .feature-num { font-size: 28px; font-weight: 700; color: var(--inverse-primary); margin-bottom: 6px; }
         .feature-label { font-size: 12px; font-weight: 500; color: rgba(255,255,255,0.55); text-transform: uppercase; letter-spacing: 0.04em; }
-
-        /* ── MODULE SECTION ── */
         .module-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
         .module-card { border-radius: 16px; padding: 28px; cursor: pointer; transition: all 0.25s; display: flex; align-items: flex-start; gap: 18px; border: 1px solid transparent; }
         .module-card:hover { transform: translateY(-3px); }
@@ -140,17 +127,8 @@
         .module-card.purple .module-badge { color: var(--accent-purple); }
         .module-title { font-size: 15px; font-weight: 600; color: var(--on-surface); margin-bottom: 6px; }
         .module-desc { font-size: 12px; font-weight: 400; color: var(--on-surface-variant); line-height: 1.6; }
-
-        /* ── SUDOKU PREVIEW ── */
-        .sudoku-mini { display: grid; grid-template-columns: repeat(9,1fr); border: 2px solid var(--on-surface); }
-        .sudoku-mini-cell { aspect-ratio: 1/1; display: flex; align-items: center; justify-content: center; font-size: 9px; font-weight: 700; border: 0.5px solid #ccc; background: #fff; }
-        .sudoku-mini-cell.filled { background: var(--surface-container); }
-
-        /* ── SECTIONS ── */
         .content-section { display: none; }
         .content-section.active { display: block; }
-
-        /* ── MODALS ── */
         .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); backdrop-filter: blur(4px); z-index: 1000; align-items: center; justify-content: center; padding: 20px; }
         .modal-overlay.active { display: flex; }
         .modal-box { background: #fff; border-radius: 24px; padding: 32px; width: 100%; max-width: 400px; box-shadow: 0 24px 64px rgba(0,0,0,0.2); }
@@ -162,8 +140,6 @@
         .btn-cancel { flex: 1; background: var(--surface-container); border: none; color: var(--on-surface-variant); padding: 12px; border-radius: 12px; font-family: 'Lexend', sans-serif; font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.03em; cursor: pointer; }
         .btn-confirm { flex: 1; background: var(--primary); border: none; color: #fff; padding: 12px; border-radius: 12px; font-family: 'Lexend', sans-serif; font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.03em; cursor: pointer; }
         .btn-confirm:hover { background: #7a3d00; }
-
-        /* ── EXAM ── */
         .exam-topic-btn { width: 100%; background: #fff; border: 1.5px solid var(--outline-variant); border-radius: 16px; padding: 18px 20px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; transition: all 0.2s; text-align: left; font-family: 'Lexend', sans-serif; }
         .exam-topic-btn:hover { border-color: var(--secondary); background: rgba(0,96,172,0.03); }
         .exam-topic-name { font-size: 14px; font-weight: 600; color: var(--on-surface); }
@@ -176,8 +152,6 @@
         .option-btn.correct .option-letter { background: var(--tertiary); color: #fff; }
         .option-btn.wrong { background: rgba(186,26,26,0.08) !important; border-color: var(--error) !important; }
         .option-btn.wrong .option-letter { background: var(--error); color: #fff; }
-
-        /* ── SUDOKU GAME ── */
         .sudoku-grid { display: grid; grid-template-columns: repeat(9,1fr); border: 3px solid var(--on-surface); max-width: 360px; margin: 0 auto; border-radius: 4px; overflow: hidden; }
         .sudoku-cell { width: 100%; aspect-ratio: 1/1; text-align: center; font-family: 'Lexend', sans-serif; font-size: 14px; font-weight: 700; border: 0.5px solid #ccc; outline: none; padding: 0; background: #fff; cursor: text; }
         .sudoku-cell:focus { background: #fff8f0; z-index: 1; }
@@ -188,8 +162,6 @@
         .sudoku-cell:nth-child(9n) { border-right: none; }
         .sudoku-cell:nth-child(n+19):nth-child(-n+27),
         .sudoku-cell:nth-child(n+46):nth-child(-n+54) { border-bottom: 2.5px solid var(--on-surface); }
-
-        /* ── PASS CARDS ── */
         .pass-card { border: 1.5px solid var(--outline-variant); border-radius: 14px; padding: 16px; text-align: center; cursor: pointer; transition: all 0.2s; position: relative; background: #fff; }
         .pass-card:hover { border-color: var(--tertiary); transform: translateY(-2px); box-shadow: 0 8px 20px rgba(0,0,0,0.08); }
         .pass-card.popular { background: var(--tertiary); border-color: var(--tertiary); color: #fff; }
@@ -197,13 +169,9 @@
         .pass-badge { position: absolute; top: -10px; left: 50%; transform: translateX(-50%); white-space: nowrap; font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; padding: 3px 10px; border-radius: 9999px; }
         .pass-badge.yellow { background: #fbbf24; color: #78350f; }
         .pass-badge.white { background: #fff; color: var(--primary); border: 1px solid var(--outline-variant); }
-
-        /* ── LIBRARY ── */
         .library-card { background: #fff; border: 1px solid var(--outline-variant); border-radius: 16px; padding: 20px; display: flex; flex-direction: column; align-items: center; text-align: center; gap: 10px; transition: all 0.2s; }
         .library-card:hover { box-shadow: 0 8px 24px rgba(0,0,0,0.07); }
         .lib-icon { width: 52px; height: 52px; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 22px; }
-
-        /* ── PLANNER ── */
         .task-item { display: flex; align-items: flex-start; gap: 12px; padding: 12px 16px; border-radius: 12px; border: 1px solid var(--outline-variant); background: #fff; cursor: pointer; transition: all 0.18s; }
         .task-item.done { background: rgba(0,109,66,0.06); border-color: rgba(0,109,66,0.2); }
         .task-check { width: 20px; height: 20px; border-radius: 50%; border: 2px solid var(--outline); display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px; transition: all 0.18s; }
@@ -214,43 +182,29 @@
         .stat-card { border-radius: 14px; padding: 18px; text-align: center; }
         .stat-num { font-size: 28px; font-weight: 700; }
         .stat-lbl { font-size: 9px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; margin-top: 4px; opacity: 0.8; }
-
-        /* ── CART ── */
         .cart-item { background: var(--surface-container-low); border-radius: 12px; padding: 12px 16px; display: flex; align-items: center; gap: 12px; }
         .qty-btn { width: 26px; height: 26px; border-radius: 50%; border: none; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 14px; }
-
-        /* ── PROGRESS ── */
         .prog-track { height: 10px; background: var(--surface-container-high); border-radius: 9999px; overflow: hidden; }
         .prog-fill { height: 100%; background: linear-gradient(90deg, var(--primary), var(--primary-container)); border-radius: 9999px; transition: width 0.5s ease; }
-
-        /* ── TOASTS ── */
         #toastBox { position: fixed; bottom: 28px; left: 50%; transform: translateX(-50%); z-index: 9999; display: flex; flex-direction: column; gap: 8px; align-items: center; pointer-events: none; }
         .toast { padding: 10px 20px; border-radius: 9999px; font-family: 'Lexend', sans-serif; font-size: 12px; font-weight: 600; color: #fff; opacity: 0; transition: opacity 0.25s; pointer-events: auto; }
         .toast.success { background: var(--tertiary); }
         .toast.error { background: var(--error); }
         .toast.info { background: var(--secondary); }
-
-        /* ── LIGHTBOX ── */
         #lightboxModal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.92); z-index: 2000; align-items: center; justify-content: center; padding: 20px; }
         #lightboxModal.active { display: flex; }
-
-        /* ── EXAM ACTIVE ── */
         .exam-header { background: #fff; border: 1px solid var(--outline-variant); border-radius: 16px; padding: 16px 20px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
         .exam-stat-lbl { font-size: 9px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em; color: var(--on-surface-variant); }
         .exam-stat-val { font-size: 15px; font-weight: 700; color: var(--on-surface); }
         .exam-badge { display: inline-block; background: rgba(0,96,172,0.1); color: var(--secondary); font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; padding: 4px 12px; border-radius: 9999px; margin-bottom: 12px; }
         .progress-track { height: 4px; background: var(--surface-container-high); border-radius: 9999px; overflow: hidden; margin-bottom: 20px; }
         .progress-fill { height: 100%; background: var(--secondary); border-radius: 9999px; transition: width 0.4s; }
-
-        /* PRINT */
         @media print {
             @page { size: A4 portrait; margin: 8mm; }
             body * { visibility: hidden !important; }
             #printArea, #printArea * { visibility: visible !important; }
             #printArea { position: fixed !important; left: 0 !important; top: 0 !important; width: 100% !important; background: white !important; }
         }
-
-        /* RESPONSIVE */
         @media (max-width: 768px) {
             .hero { grid-template-columns: 1fr; padding: 40px 20px 32px; gap: 32px; }
             .hero-title { font-size: 32px; }
@@ -265,14 +219,11 @@
             .feature-strip { grid-template-columns: 1fr 1fr; }
             .product-grid { grid-template-columns: 1fr 1fr; gap: 12px; }
         }
-
-        /* ANIMATIONS */
         @keyframes fadeUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
         .fade-up { animation: fadeUp 0.4s ease both; }
         .delay-1 { animation-delay: 0.05s; }
         .delay-2 { animation-delay: 0.1s; }
         .delay-3 { animation-delay: 0.15s; }
-
         .hidden { display: none !important; }
         .timer-warning { color: var(--error) !important; }
     </style>
@@ -320,8 +271,6 @@
 
   <!-- DASHBOARD -->
   <div id="dashboardHome">
-
-    <!-- HERO -->
     <div class="hero">
       <div class="fade-up">
         <div class="hero-label">
@@ -367,7 +316,6 @@
       </div>
     </div>
 
-    <!-- STATS STRIP -->
     <div class="section">
       <div class="feature-strip">
         <div class="feature-item">
@@ -388,7 +336,6 @@
         </div>
       </div>
 
-      <!-- MODULES -->
       <div class="section-header">
         <h2 class="section-title">Сургалтын хэсгүүд</h2>
       </div>
@@ -435,16 +382,17 @@
         </div>
       </div>
 
-      <!-- PRODUCTS -->
       <div class="section-header">
         <h2 class="section-title">Шинэ материалууд</h2>
         <a class="section-link" onclick="showSection('shop')">Бүгдийг харах →</a>
       </div>
-      <div id="materialGrid" class="product-grid"></div>
+      <div id="materialGrid" class="product-grid">
+        <div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--on-surface-variant);font-size:13px;">Ачаалж байна...</div>
+      </div>
     </div>
   </div>
 
-  <!-- ══ ХӨТӨЛБӨР ══ -->
+  <!-- ХӨТӨЛБӨР -->
   <div id="plannerSection" class="content-section">
     <div class="section" style="padding-top:40px;">
       <button onclick="showDashboard()" style="background:none;border:none;font-family:'Lexend',sans-serif;font-size:12px;font-weight:600;color:var(--primary);cursor:pointer;text-transform:uppercase;letter-spacing:0.04em;margin-bottom:28px;">← Буцах</button>
@@ -493,11 +441,10 @@
     </div>
   </div>
 
-  <!-- ══ ШАЛГАЛТ ══ -->
+  <!-- ШАЛГАЛТ -->
   <div id="examSection" class="content-section">
     <div class="section" style="padding-top:40px;max-width:720px;">
       <button onclick="showDashboard()" style="background:none;border:none;font-family:'Lexend',sans-serif;font-size:12px;font-weight:600;color:var(--primary);cursor:pointer;text-transform:uppercase;letter-spacing:0.04em;margin-bottom:28px;">← Буцах</button>
-
       <div id="examLobby">
         <h2 style="font-size:24px;font-weight:700;color:var(--on-surface);margin-bottom:6px;">Шалгалт</h2>
         <p style="font-size:13px;color:var(--on-surface-variant);margin-bottom:24px;">Сэдвийг сонгоод эхлүүлнэ үү</p>
@@ -509,7 +456,6 @@
           <div id="examHistoryList" style="display:flex;flex-direction:column;gap:8px;"></div>
         </div>
       </div>
-
       <div id="examActive" class="hidden">
         <div class="exam-header">
           <div><div class="exam-stat-lbl">Асуулт</div><div class="exam-stat-val" id="examQuestionCount">1 / 10</div></div>
@@ -528,7 +474,6 @@
         </div>
         <button onclick="nextQuestion()" id="examNextBtn" class="hidden btn-primary" style="width:100%;padding:14px;border-radius:14px;font-size:13px;">Дараагийн асуулт</button>
       </div>
-
       <div id="examResult" class="hidden">
         <div style="background:#fff;border:1px solid var(--outline-variant);border-radius:20px;padding:36px;text-align:center;">
           <div style="font-size:22px;font-weight:700;color:var(--secondary);margin-bottom:12px;" id="resultEmoji">---</div>
@@ -550,15 +495,13 @@
     </div>
   </div>
 
-  <!-- ══ СУДОКУ ══ -->
+  <!-- СУДОКУ -->
   <div id="gamesSection" class="content-section">
     <div class="section" style="padding-top:40px;max-width:560px;">
       <button onclick="showDashboard()" style="background:none;border:none;font-family:'Lexend',sans-serif;font-size:12px;font-weight:600;color:var(--primary);cursor:pointer;text-transform:uppercase;letter-spacing:0.04em;margin-bottom:20px;">← Буцах</button>
       <h2 style="font-size:22px;font-weight:700;color:var(--on-surface);margin-bottom:4px;">Монгол бичиг судоку</h2>
       <p style="font-size:12px;color:var(--on-surface-variant);margin-bottom:24px;">Тоглох үнэгүй · Хэвлэхэд эрх шаардлагатай</p>
-
       <div id="sudokuContainer" class="sudoku-grid" style="margin-bottom:16px;"></div>
-
       <div style="background:#fff;border:1px solid var(--outline-variant);border-radius:14px;padding:14px;margin-bottom:16px;">
         <div style="font-size:10px;font-weight:600;color:var(--on-surface-variant);text-transform:uppercase;letter-spacing:0.04em;text-align:center;margin-bottom:10px;">1–9 дарахад автоматаар монгол тоо болно</div>
         <div style="display:grid;grid-template-columns:repeat(9,1fr);gap:2px;text-align:center;">
@@ -566,13 +509,11 @@
           <div style="font-size:13px;font-weight:700;color:var(--tertiary);">&#x1811;</div><div style="font-size:13px;font-weight:700;color:var(--tertiary);">&#x1812;</div><div style="font-size:13px;font-weight:700;color:var(--tertiary);">&#x1813;</div><div style="font-size:13px;font-weight:700;color:var(--tertiary);">&#x1814;</div><div style="font-size:13px;font-weight:700;color:var(--tertiary);">&#x1815;</div><div style="font-size:13px;font-weight:700;color:var(--tertiary);">&#x1816;</div><div style="font-size:13px;font-weight:700;color:var(--tertiary);">&#x1817;</div><div style="font-size:13px;font-weight:700;color:var(--tertiary);">&#x1818;</div><div style="font-size:13px;font-weight:700;color:var(--tertiary);">&#x1819;</div>
         </div>
       </div>
-
       <div style="display:flex;gap:10px;justify-content:center;margin-bottom:28px;flex-wrap:wrap;">
         <button onclick="initSudoku()" style="background:var(--surface-container-high);border:none;font-family:'Lexend',sans-serif;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.04em;padding:11px 22px;border-radius:9999px;cursor:pointer;">Шинэ</button>
         <button onclick="checkSudoku()" class="btn-primary" style="padding:11px 28px;font-size:11px;">Шалгах</button>
         <button onclick="openPrintPassSection()" style="background:var(--tertiary);border:none;color:#fff;font-family:'Lexend',sans-serif;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.04em;padding:11px 22px;border-radius:9999px;cursor:pointer;">Хэвлэх</button>
       </div>
-
       <div id="printPassSection">
         <div id="passActiveInfo" class="hidden" style="background:rgba(0,109,66,0.08);border:1.5px solid rgba(0,109,66,0.25);border-radius:14px;padding:16px;margin-bottom:14px;">
           <div style="display:flex;align-items:center;justify-content:space-between;">
@@ -608,16 +549,18 @@
     </div>
   </div>
 
-  <!-- ══ ДЭЛГҮҮР ══ -->
+  <!-- ДЭЛГҮҮР -->
   <div id="shopSection" class="content-section">
     <div class="section" style="padding-top:40px;">
       <button onclick="showDashboard()" style="background:none;border:none;font-family:'Lexend',sans-serif;font-size:12px;font-weight:600;color:var(--primary);cursor:pointer;text-transform:uppercase;letter-spacing:0.04em;margin-bottom:28px;">← Буцах</button>
       <h2 style="font-size:24px;font-weight:700;color:var(--on-surface);margin-bottom:24px;">Материалын дэлгүүр</h2>
-      <div id="fullShopGrid" class="product-grid"></div>
+      <div id="fullShopGrid" class="product-grid">
+        <div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--on-surface-variant);font-size:13px;">Ачаалж байна...</div>
+      </div>
     </div>
   </div>
 
-  <!-- ══ МИНИЙ САН ══ -->
+  <!-- МИНИЙ САН -->
   <div id="librarySection" class="content-section">
     <div class="section" style="padding-top:40px;">
       <button onclick="showDashboard()" style="background:none;border:none;font-family:'Lexend',sans-serif;font-size:12px;font-weight:600;color:var(--primary);cursor:pointer;text-transform:uppercase;letter-spacing:0.04em;margin-bottom:28px;">← Буцах</button>
@@ -626,7 +569,7 @@
     </div>
   </div>
 
-</div><!-- /mainSystem -->
+</div>
 
 <!-- LIGHTBOX -->
 <div id="lightboxModal" onclick="if(event.target===this||event.target.id==='lightboxModal') closeLightbox()">
@@ -683,7 +626,7 @@
 
 <!-- PAYMENT MODAL -->
 <div id="paymentModal" class="modal-overlay" onclick="if(event.target===this) closePayment()">
-  <div class="modal-box" style="text-align:center;">
+  <div class="modal-box" style="text-align:center;position:relative;">
     <button onclick="closePayment()" style="position:absolute;top:16px;right:16px;background:none;border:none;font-size:18px;cursor:pointer;color:var(--on-surface-variant);">✕</button>
     <h2 class="modal-title" style="margin-bottom:16px;">Төлбөр төлөх</h2>
     <div style="background:#fff;border:1.5px solid var(--outline-variant);border-radius:16px;padding:10px;display:inline-block;margin-bottom:16px;">
@@ -691,354 +634,777 @@
     </div>
     <div style="background:var(--surface-container-low);border-radius:14px;padding:14px;text-align:left;margin-bottom:16px;">
       <div style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:0.05em;color:var(--on-surface-variant);margin-bottom:6px;">Гүйлгээний утга:</div>
-<!-- PAYMENT MODAL дотор paymentNote хэсгийг солино -->
-<div style="background:var(--surface-container-low);border-radius:14px;padding:14px;text-align:left;margin-bottom:16px;">
-  
-  <!-- Заавар -->
-  <div style="background:rgba(186,26,26,0.08);border:1px solid rgba(186,26,26,0.2);border-radius:10px;padding:10px 12px;margin-bottom:12px;">
-    <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.04em;color:var(--error);margin-bottom:4px;">⚠ Заавал бичих</div>
-    <div style="font-size:11px;color:var(--on-surface);line-height:1.6;">Гүйлгээний <strong>утга/тайлбар</strong> хэсэгт доорх кодыг <strong>яг хуулж</strong> бичнэ үү. Код байхгүй бол эрх автоматаар идэвхжихгүй.</div>
-  </div>
-
-  <div style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:0.05em;color:var(--on-surface-variant);margin-bottom:6px;">Гүйлгээний утга (хуулж бичнэ үү):</div>
-  
-  <div style="display:flex;align-items:center;gap:8px;">
-    <div id="paymentNote" style="flex:1;font-size:16px;font-weight:800;color:var(--primary);background:#fff;padding:12px 14px;border-radius:10px;border:2px solid var(--primary);letter-spacing:0.05em;word-break:break-all;"></div>
-    <button onclick="copyOrderCode()" style="background:var(--primary);border:none;color:#fff;font-family:'Lexend',sans-serif;font-size:10px;font-weight:700;text-transform:uppercase;padding:10px 14px;border-radius:10px;cursor:pointer;white-space:nowrap;" id="copyBtn">Хуулах</button>
-  </div>
-
-  <div style="margin-top:12px;padding-top:10px;border-top:1px solid var(--outline-variant);font-size:12px;color:var(--on-surface-variant);">
-    <div>ХАС БАНК: <strong style="color:var(--on-surface);">5006069631</strong></div>
-    <div style="margin-top:4px;">ХҮЛЭЭН АВАГЧ: <strong style="color:var(--on-surface);">МӨНХДАЛАЙ ТУУЛ</strong></div>
-    <div style="margin-top:4px;">ДҮНГ: <strong style="color:var(--primary);" id="paymentAmount"></strong></div>
+      <div id="paymentNote" style="font-size:13px;font-weight:700;color:var(--primary);background:#fff;padding:10px 12px;border-radius:10px;border:1px solid var(--outline-variant);word-break:break-all;"></div>
+      <div style="margin-top:12px;padding-top:10px;border-top:1px solid var(--outline-variant);font-size:12px;color:var(--on-surface-variant);">
+        <div>ХАС БАНК: <strong style="color:var(--on-surface);">5006069631</strong></div>
+        <div style="margin-top:4px;">ХҮЛЭЭН АВАГЧ: <strong style="color:var(--on-surface);">МӨНХДАЛАЙ ТУУЛ</strong></div>
+      </div>
+    </div>
+    <button onclick="confirmOrder()" id="confirmBtn" class="btn-primary" style="width:100%;padding:14px;border-radius:12px;">Төлсөн, хүсэлт илгээх</button>
   </div>
 </div>
 
-<!-- TOAST -->
 <div id="toastBox"></div>
 <a id="hiddenFileLink" href="#" target="_blank" rel="noopener noreferrer" style="display:none;"></a>
 <div id="printArea" style="display:none;"></div>
 
 <script>
-const ORDER_URL   = 'https://script.google.com/macros/s/AKfycbxahWquQi1Wlw0cQzl5xuB0AP2wz8CQnLhdsRQMjgwY_ZP1X2Hw4-S5Ove3AFIHXThXkQ/exec';
+/* ═══════════════════════════════════════════════════
+   ЗАСВАРЛАСАН ХЭСГҮҮД:
+   1. fetchJSON() — redirect follow + text parse (материал харагдахгүй асуудлыг засав)
+   2. loadMyLibrary() — CORS error handling засав
+   3. loadProducts() — fetchJSON ашиглаж шинэчлэв
+   ═══════════════════════════════════════════════════ */
+
+const ORDER_URL   = 'https://script.google.com/macros/s/AKfycbyNlKTyvrT5kVWN2WV50gkFgpD2F7_vmzmJTEA2z3EI8QyBwPN5zjJ_Ys_n_Pyzmb_W1A/exec';
 const GITHUB_BASE = 'https://raw.githubusercontent.com/tuult764-crypto/sonirholtoi-hel-bichig-/main/';
-let currentUserEmail='',productsData=[],cartItems=[],pendingProduct='',pendingTotal=0,pendingPassPages=0;
-let sudokuBoard=[],printPageCount=1,lbImages=[],lbIndex=0,lbTouchStartX=0;
-const MONG_NUMS={'1':'\u1811','2':'\u1812','3':'\u1813','4':'\u1814','5':'\u1815','6':'\u1816','7':'\u1817','8':'\u1818','9':'\u1819'};
-const MONG_TO_ASCII={};
-for(const [a,m] of Object.entries(MONG_NUMS)) MONG_TO_ASCII[m]=a;
 
-function initApp(){ document.getElementById('mainSystem').style.display=''; loadProducts(); }
-document.addEventListener('DOMContentLoaded',initApp);
+let currentUserEmail='', productsData=[], cartItems=[], pendingProduct='', pendingTotal=0, pendingPassPages=0;
+let sudokuBoard=[], printPageCount=1, lbImages=[], lbIndex=0, lbTouchStartX=0;
 
-/* EMAIL */
-let _authCallback=null;
-function requireEmail(cb){ if(currentUserEmail){cb();return;} _authCallback=cb; const m=document.getElementById('emailModal'); m.classList.add('active'); m.style.display=''; document.getElementById('emailModalInput').value=''; document.getElementById('emailModalError').classList.add('hidden'); setTimeout(()=>document.getElementById('emailModalInput').focus(),100); }
-function closeEmailModal(){ const m=document.getElementById('emailModal'); m.classList.remove('active'); }
-async function submitEmailModal(){ const email=document.getElementById('emailModalInput').value.trim(); const err=document.getElementById('emailModalError'); if(!email){err.textContent='Мэйл хаягаа оруулна уу!';err.classList.remove('hidden');return;} currentUserEmail=email; const ne=document.getElementById('navEmail'); if(ne){ne.innerText=email;ne.style.display='';} closeEmailModal(); loadCart(); if(_authCallback){_authCallback();_authCallback=null;} }
-document.addEventListener('keydown',e=>{ const m=document.getElementById('emailModal'); if(m&&m.classList.contains('active')&&e.key==='Enter') submitEmailModal(); });
+const MONG_NUMS = {'1':'\u1811','2':'\u1812','3':'\u1813','4':'\u1814','5':'\u1815','6':'\u1816','7':'\u1817','8':'\u1818','9':'\u1819'};
+const MONG_TO_ASCII = {};
+for (const [a,m] of Object.entries(MONG_NUMS)) MONG_TO_ASCII[m] = a;
 
-/* NAV */
-function showSection(name){
-    const p=['library','planner','exam'];
-    if(p.includes(name)&&!currentUserEmail){requireEmail(()=>showSection(name));return;}
+/* ─── ЗАСВАР 1: fetchJSON — Apps Script redirect + JSON parse ─── */
+async function fetchJSON(url) {
+    try {
+        const res = await fetch(url, {
+            method: 'GET',
+            redirect: 'follow',
+            cache: 'no-cache',
+            headers: { 'Accept': 'application/json' }
+        });
+        const text = await res.text();
+        // Apps Script заримдаа HTML wrapper-тэй буцаадаг — JSON хэсгийг гарган авна
+        const jsonMatch = text.match(/(\[[\s\S]*\]|\{[\s\S]*\})/);
+        if (!jsonMatch) throw new Error('JSON олдсонгүй');
+        return JSON.parse(jsonMatch[1]);
+    } catch (err) {
+        console.warn('fetchJSON алдаа:', err);
+        return null;
+    }
+}
+
+function initApp() {
+    loadProducts();
+}
+document.addEventListener('DOMContentLoaded', initApp);
+
+/* ─── EMAIL ─── */
+let _authCallback = null;
+function requireEmail(cb) {
+    if (currentUserEmail) { cb(); return; }
+    _authCallback = cb;
+    const m = document.getElementById('emailModal');
+    m.classList.add('active');
+    m.style.display = '';
+    document.getElementById('emailModalInput').value = '';
+    document.getElementById('emailModalError').classList.add('hidden');
+    setTimeout(() => document.getElementById('emailModalInput').focus(), 100);
+}
+function closeEmailModal() {
+    document.getElementById('emailModal').classList.remove('active');
+}
+async function submitEmailModal() {
+    const email = document.getElementById('emailModalInput').value.trim();
+    const err = document.getElementById('emailModalError');
+    if (!email) { err.textContent = 'Мэйл хаягаа оруулна уу!'; err.classList.remove('hidden'); return; }
+    currentUserEmail = email;
+    const ne = document.getElementById('navEmail');
+    if (ne) { ne.innerText = email; ne.style.display = ''; }
+    closeEmailModal();
+    loadCart();
+    if (_authCallback) { _authCallback(); _authCallback = null; }
+}
+document.addEventListener('keydown', e => {
+    const m = document.getElementById('emailModal');
+    if (m && m.classList.contains('active') && e.key === 'Enter') submitEmailModal();
+});
+
+/* ─── NAV ─── */
+function showSection(name) {
+    const p = ['library','planner','exam'];
+    if (p.includes(name) && !currentUserEmail) { requireEmail(() => showSection(name)); return; }
     document.getElementById('dashboardHome').classList.add('hidden');
-    document.querySelectorAll('.content-section').forEach(s=>s.classList.remove('active'));
-    const t=document.getElementById(name+'Section'); if(t) t.classList.add('active');
-    if(name==='games') initGamesSection();
-    if(name==='library') loadMyLibrary();
-    if(name==='shop') loadProducts();
-    if(name==='planner') initPlanner();
-    if(name==='exam') initExamLobby();
+    document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active'));
+    const t = document.getElementById(name+'Section');
+    if (t) t.classList.add('active');
+    if (name === 'games')   initGamesSection();
+    if (name === 'library') loadMyLibrary();
+    if (name === 'shop')    loadProducts();
+    if (name === 'planner') initPlanner();
+    if (name === 'exam')    initExamLobby();
 }
-function showDashboard(){ document.getElementById('dashboardHome').classList.remove('hidden'); document.querySelectorAll('.content-section').forEach(s=>s.classList.remove('active')); stopExamTimer(); }
+function showDashboard() {
+    document.getElementById('dashboardHome').classList.remove('hidden');
+    document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active'));
+    stopExamTimer();
+}
 
-/* PRODUCTS */
-async function loadProducts(){
-    const grid=document.getElementById('materialGrid'); const shop=document.getElementById('fullShopGrid');
-    try { const res=await fetch(`${ORDER_URL}?action=getProducts`,{redirect:'follow'}); productsData=await res.json(); if(Array.isArray(productsData)){ const html=productsData.map(p=>buildProductCard(p)).join(''); if(grid) grid.innerHTML=html; if(shop) shop.innerHTML=html; loadCart(); } }
-    catch(e){console.error(e);}
+/* ─── ЗАСВАР 2: loadProducts — fetchJSON ашиглана ─── */
+async function loadProducts() {
+    const grid = document.getElementById('materialGrid');
+    const shop = document.getElementById('fullShopGrid');
+
+    const setLoading = (el) => {
+        if (el) el.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--on-surface-variant);font-size:13px;">Ачаалж байна...</div>';
+    };
+    setLoading(grid); setLoading(shop);
+
+    try {
+        const data = await fetchJSON(`${ORDER_URL}?action=getProducts`);
+        if (data && Array.isArray(data) && data.length > 0) {
+            productsData = data;
+            const html = productsData.map(p => buildProductCard(p)).join('');
+            if (grid) grid.innerHTML = html;
+            if (shop) shop.innerHTML = html;
+        } else {
+            const msg = '<div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--on-surface-variant);font-size:13px;">Материал олдсонгүй.</div>';
+            if (grid) grid.innerHTML = msg;
+            if (shop) shop.innerHTML = msg;
+        }
+        loadCart();
+    } catch(e) {
+        console.error('loadProducts алдаа:', e);
+        const msg = '<div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--error);font-size:13px;">Холболтын алдаа гарлаа. Дахин оролдоно уу.</div>';
+        if (grid) grid.innerHTML = msg;
+        if (shop) shop.innerHTML = msg;
+    }
 }
-function buildProductCard(p){
-    const safeTitle=p.Title.replace(/'/g,"\\'"); const price=Number(p.Price);
-    const imgFiles=p.Images?p.Images.split(',').map(s=>s.trim()).filter(s=>/\.(png|jpg|jpeg|gif|webp)$/i.test(s)):[];
-    const cardId='c'+Math.random().toString(36).substr(2,9);
-    let imgHtml='';
-    if(imgFiles.length===0){ imgHtml=`<div class="product-img"><div class="product-img-placeholder">Зураг байхгүй</div></div>`; }
-    else if(imgFiles.length===1){ const src=GITHUB_BASE+imgFiles[0]; imgHtml=`<div class="product-img" onclick="openLightbox(['${src}'],0)" style="cursor:zoom-in;"><img src="${src}" onerror="this.parentElement.innerHTML='<div class=\\'product-img-placeholder\\'>Зураг байхгүй</div>'"></div>`; }
-    else { const allSrcs=JSON.stringify(imgFiles.map(f=>GITHUB_BASE+f)); const slides=imgFiles.map((f,i)=>`<img src="${GITHUB_BASE}${f}" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:opacity 0.3s;opacity:${i===0?1:0};" data-idx="${i}" onclick="openLightbox(${allSrcs.replace(/"/g,"'")},${i})">`).join('');
-    imgHtml=`<div class="product-img" id="${cardId}" data-cur="0" data-total="${imgFiles.length}" style="position:relative;">${slides}<button style="position:absolute;left:6px;top:50%;transform:translateY(-50%);width:24px;height:24px;border-radius:50%;background:rgba(0,0,0,0.35);border:none;color:white;font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;" onclick="event.stopPropagation();slideDir('${cardId}',-1)">‹</button><button style="position:absolute;right:6px;top:50%;transform:translateY(-50%);width:24px;height:24px;border-radius:50%;background:rgba(0,0,0,0.35);border:none;color:white;font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;" onclick="event.stopPropagation();slideDir('${cardId}',1)">›</button></div>`; }
+
+function buildProductCard(p) {
+    const safeTitle = p.Title.replace(/'/g, "\\'");
+    const price = Number(p.Price);
+    const imgFiles = p.Images ? p.Images.split(',').map(s=>s.trim()).filter(s=>/\.(png|jpg|jpeg|gif|webp)$/i.test(s)) : [];
+    const cardId = 'c' + Math.random().toString(36).substr(2,9);
+    let imgHtml = '';
+    if (imgFiles.length === 0) {
+        imgHtml = `<div class="product-img"><div class="product-img-placeholder">Зураг байхгүй</div></div>`;
+    } else if (imgFiles.length === 1) {
+        const src = GITHUB_BASE + imgFiles[0];
+        imgHtml = `<div class="product-img" onclick="openLightbox(['${src}'],0)" style="cursor:zoom-in;"><img src="${src}" onerror="this.parentElement.innerHTML='<div class=\\'product-img-placeholder\\'>Зураг байхгүй</div>'"></div>`;
+    } else {
+        const allSrcs = JSON.stringify(imgFiles.map(f => GITHUB_BASE+f));
+        const slides = imgFiles.map((f,i) => `<img src="${GITHUB_BASE}${f}" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:opacity 0.3s;opacity:${i===0?1:0};" data-idx="${i}" onclick="openLightbox(${allSrcs.replace(/"/g,"'")},${i})">`).join('');
+        imgHtml = `<div class="product-img" id="${cardId}" data-cur="0" data-total="${imgFiles.length}" style="position:relative;">${slides}<button style="position:absolute;left:6px;top:50%;transform:translateY(-50%);width:24px;height:24px;border-radius:50%;background:rgba(0,0,0,0.35);border:none;color:white;font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;" onclick="event.stopPropagation();slideDir('${cardId}',-1)">‹</button><button style="position:absolute;right:6px;top:50%;transform:translateY(-50%);width:24px;height:24px;border-radius:50%;background:rgba(0,0,0,0.35);border:none;color:white;font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;" onclick="event.stopPropagation();slideDir('${cardId}',1)">›</button></div>`;
+    }
     return `<div class="product-card"><div>${imgHtml}</div><div class="product-body"><div class="product-tag">Материал</div><div class="product-title">${p.Title}</div><div class="product-price">${price.toLocaleString()}₮</div><div class="product-actions"><button class="btn-add" onclick="addToCart('${safeTitle}',${price})">+ Сагс</button><button class="btn-buy" onclick="buyNow('${safeTitle}',${price})">Авах</button></div></div></div>`;
 }
-function slideTo(cId,idx){ const w=document.getElementById(cId); if(!w) return; const total=parseInt(w.dataset.total); const i=(idx+total)%total; w.querySelectorAll('img[data-idx]').forEach(img=>{img.style.opacity=parseInt(img.dataset.idx)===i?'1':'0';}); w.dataset.cur=i; }
-function slideDir(cId,dir){ const w=document.getElementById(cId); if(w) slideTo(cId,parseInt(w.dataset.cur||'0')+dir); }
 
-/* LIGHTBOX */
-function openLightbox(imgs,start){ lbImages=imgs; lbIndex=start; renderLB(); document.getElementById('lightboxModal').classList.add('active'); document.body.style.overflow='hidden'; }
-function closeLightbox(){ document.getElementById('lightboxModal').classList.remove('active'); document.body.style.overflow=''; }
-function renderLB(){ const img=document.getElementById('lbImg'); img.style.opacity='0'; img.onload=()=>{img.style.opacity='1';}; img.src=lbImages[lbIndex]; document.getElementById('lbCounter').innerText=lbImages.length>1?`${lbIndex+1} / ${lbImages.length}`:''; document.getElementById('lbPrev').style.display=lbImages.length>1?'flex':'none'; document.getElementById('lbNext').style.display=lbImages.length>1?'flex':'none'; renderLbDots(); }
-function lbPrev(){ lbIndex=(lbIndex-1+lbImages.length)%lbImages.length; renderLB(); }
-function lbNext(){ lbIndex=(lbIndex+1)%lbImages.length; renderLB(); }
-function renderLbDots(){ const c=document.getElementById('lbDots'); if(lbImages.length<=1){c.innerHTML='';return;} c.innerHTML=lbImages.map((_,i)=>`<button onclick="lbIndex=${i};renderLB()" style="width:8px;height:8px;border-radius:50%;border:none;cursor:pointer;background:${i===lbIndex?'#fff':'rgba(255,255,255,0.4)'};padding:0;"></button>`).join(''); }
-document.addEventListener('keydown',e=>{ const lb=document.getElementById('lightboxModal'); if(!lb||!lb.classList.contains('active'))return; if(e.key==='ArrowLeft')lbPrev(); if(e.key==='ArrowRight')lbNext(); if(e.key==='Escape')closeLightbox(); });
+function slideTo(cId, idx) {
+    const w = document.getElementById(cId); if (!w) return;
+    const total = parseInt(w.dataset.total);
+    const i = (idx+total)%total;
+    w.querySelectorAll('img[data-idx]').forEach(img => { img.style.opacity = parseInt(img.dataset.idx)===i ? '1' : '0'; });
+    w.dataset.cur = i;
+}
+function slideDir(cId, dir) {
+    const w = document.getElementById(cId); if (w) slideTo(cId, parseInt(w.dataset.cur||'0')+dir);
+}
 
-/* CART */
-function loadCart(){ const key=currentUserEmail?'cart_'+currentUserEmail:'cart_guest'; const s=localStorage.getItem(key); cartItems=s?JSON.parse(s):[]; updateCartDisplay(); }
-function saveCart(){ const key=currentUserEmail?'cart_'+currentUserEmail:'cart_guest'; localStorage.setItem(key,JSON.stringify(cartItems)); updateCartDisplay(); }
-function addToCart(title,price){ const e=cartItems.find(i=>i.title===title); if(e){e.quantity+=1;}else{cartItems.push({title,price:Number(price),quantity:1});} saveCart(); showToast('Сагсанд нэмэгдлээ!','success'); }
-function removeFromCart(title){ cartItems=cartItems.filter(i=>i.title!==title); saveCart(); renderCartItems(); }
-function updateQuantity(title,change){ const item=cartItems.find(i=>i.title===title); if(!item)return; item.quantity+=change; if(item.quantity<=0)removeFromCart(title); else{saveCart();renderCartItems();} }
-function clearCart(){ cartItems=[]; saveCart(); renderCartItems(); }
-function updateCartDisplay(){ const count=cartItems.reduce((s,i)=>s+i.quantity,0); const el=document.getElementById('cartCount'); if(!el)return; el.textContent=count; el.style.display=count>0?'flex':'none'; }
-function openCart(){ renderCartItems(); document.getElementById('cartModal').classList.add('active'); }
-function closeCart(){ document.getElementById('cartModal').classList.remove('active'); }
-function renderCartItems(){
-    const c=document.getElementById('cartItems'); const tEl=document.getElementById('cartTotal'); const btn=document.getElementById('checkoutBtn');
-    if(!cartItems.length){c.innerHTML=`<div style="text-align:center;color:var(--on-surface-variant);padding:32px 0;font-size:13px;">Сагс хоосон байна</div>`;tEl.textContent='0';btn.disabled=true;btn.style.opacity='0.5';return;}
-    btn.disabled=false;btn.style.opacity='1';
-    c.innerHTML=cartItems.map(item=>`<div class="cart-item"><div style="flex:1;"><div style="font-size:12px;font-weight:600;color:var(--on-surface);margin-bottom:2px;">${item.title}</div><div style="font-size:13px;font-weight:700;color:var(--primary);">${item.price.toLocaleString()}₮</div></div><div style="display:flex;align-items:center;gap:8px;"><button class="qty-btn" style="background:var(--surface-container-high);" onclick="updateQuantity('${item.title.replace(/'/g,"\\'")}', -1)">−</button><span style="font-size:13px;font-weight:700;min-width:20px;text-align:center;">${item.quantity}</span><button class="qty-btn" style="background:rgba(148,74,0,0.1);color:var(--primary);" onclick="updateQuantity('${item.title.replace(/'/g,"\\'")}', 1)">+</button></div><button onclick="removeFromCart('${item.title.replace(/'/g,"\\'")}') " style="background:none;border:none;color:var(--error);font-size:16px;cursor:pointer;padding:4px;">✕</button></div>`).join('');
-    tEl.textContent=cartItems.reduce((s,i)=>s+i.price*i.quantity,0).toLocaleString()+' ₮';
+/* ─── LIGHTBOX ─── */
+function openLightbox(imgs, start) { lbImages=imgs; lbIndex=start; renderLB(); document.getElementById('lightboxModal').classList.add('active'); document.body.style.overflow='hidden'; }
+function closeLightbox() { document.getElementById('lightboxModal').classList.remove('active'); document.body.style.overflow=''; }
+function renderLB() {
+    const img = document.getElementById('lbImg');
+    img.style.opacity='0'; img.onload=()=>{img.style.opacity='1';};
+    img.src = lbImages[lbIndex];
+    document.getElementById('lbCounter').innerText = lbImages.length>1 ? `${lbIndex+1} / ${lbImages.length}` : '';
+    document.getElementById('lbPrev').style.display = lbImages.length>1 ? 'flex' : 'none';
+    document.getElementById('lbNext').style.display = lbImages.length>1 ? 'flex' : 'none';
+    renderLbDots();
+}
+function lbPrev() { lbIndex=(lbIndex-1+lbImages.length)%lbImages.length; renderLB(); }
+function lbNext() { lbIndex=(lbIndex+1)%lbImages.length; renderLB(); }
+function renderLbDots() {
+    const c = document.getElementById('lbDots');
+    if (lbImages.length<=1) { c.innerHTML=''; return; }
+    c.innerHTML = lbImages.map((_,i) => `<button onclick="lbIndex=${i};renderLB()" style="width:8px;height:8px;border-radius:50%;border:none;cursor:pointer;background:${i===lbIndex?'#fff':'rgba(255,255,255,0.4)'};padding:0;"></button>`).join('');
+}
+document.addEventListener('keydown', e => {
+    const lb = document.getElementById('lightboxModal');
+    if (!lb || !lb.classList.contains('active')) return;
+    if (e.key==='ArrowLeft') lbPrev();
+    if (e.key==='ArrowRight') lbNext();
+    if (e.key==='Escape') closeLightbox();
+});
+
+/* ─── CART ─── */
+function loadCart() {
+    const key = currentUserEmail ? 'cart_'+currentUserEmail : 'cart_guest';
+    const s = localStorage.getItem(key);
+    cartItems = s ? JSON.parse(s) : [];
+    updateCartDisplay();
+}
+function saveCart() {
+    const key = currentUserEmail ? 'cart_'+currentUserEmail : 'cart_guest';
+    localStorage.setItem(key, JSON.stringify(cartItems));
+    updateCartDisplay();
+}
+function addToCart(title, price) {
+    const e = cartItems.find(i => i.title===title);
+    if (e) { e.quantity+=1; } else { cartItems.push({title, price:Number(price), quantity:1}); }
+    saveCart(); showToast('Сагсанд нэмэгдлээ!','success');
+}
+function removeFromCart(title) { cartItems=cartItems.filter(i=>i.title!==title); saveCart(); renderCartItems(); }
+function updateQuantity(title, change) {
+    const item = cartItems.find(i=>i.title===title); if (!item) return;
+    item.quantity+=change;
+    if (item.quantity<=0) removeFromCart(title); else { saveCart(); renderCartItems(); }
+}
+function clearCart() { cartItems=[]; saveCart(); renderCartItems(); }
+function updateCartDisplay() {
+    const count = cartItems.reduce((s,i)=>s+i.quantity,0);
+    const el = document.getElementById('cartCount'); if (!el) return;
+    el.textContent=count; el.style.display=count>0?'flex':'none';
+}
+function openCart() { renderCartItems(); document.getElementById('cartModal').classList.add('active'); }
+function closeCart() { document.getElementById('cartModal').classList.remove('active'); }
+function renderCartItems() {
+    const c = document.getElementById('cartItems');
+    const tEl = document.getElementById('cartTotal');
+    const btn = document.getElementById('checkoutBtn');
+    if (!cartItems.length) {
+        c.innerHTML=`<div style="text-align:center;color:var(--on-surface-variant);padding:32px 0;font-size:13px;">Сагс хоосон байна</div>`;
+        tEl.textContent='0'; btn.disabled=true; btn.style.opacity='0.5'; return;
+    }
+    btn.disabled=false; btn.style.opacity='1';
+    c.innerHTML = cartItems.map(item => `<div class="cart-item"><div style="flex:1;"><div style="font-size:12px;font-weight:600;color:var(--on-surface);margin-bottom:2px;">${item.title}</div><div style="font-size:13px;font-weight:700;color:var(--primary);">${item.price.toLocaleString()}₮</div></div><div style="display:flex;align-items:center;gap:8px;"><button class="qty-btn" style="background:var(--surface-container-high);" onclick="updateQuantity('${item.title.replace(/'/g,"\\'")}', -1)">−</button><span style="font-size:13px;font-weight:700;min-width:20px;text-align:center;">${item.quantity}</span><button class="qty-btn" style="background:rgba(148,74,0,0.1);color:var(--primary);" onclick="updateQuantity('${item.title.replace(/'/g,"\\'")}', 1)">+</button></div><button onclick="removeFromCart('${item.title.replace(/'/g,"\\'")}') " style="background:none;border:none;color:var(--error);font-size:16px;cursor:pointer;padding:4px;">✕</button></div>`).join('');
+    tEl.textContent = cartItems.reduce((s,i)=>s+i.price*i.quantity,0).toLocaleString()+' ₮';
 }
 function proceedToPayment() {
-  if (!cartItems.length) return showToast('Сагс хоосон байна!', 'error');
-  requireEmail(() => {
-    const summary = cartItems.map(i => `${i.title} x${i.quantity}`).join(', ');
-    const total = cartItems.reduce((s, i) => s + i.price * i.quantity, 0);
-    pendingProduct = summary;
-    pendingTotal = total;
-    pendingPassPages = 0;
-    closeCart();
-    document.getElementById('paymentNote').innerText =
-      currentUserEmail + ' | ' + summary + ' | ' + total.toLocaleString() + '₮';
-    document.getElementById('paymentModal').classList.add('active');
-  });
-}
-function buyNow(title,price){ requireEmail(()=>{ pendingProduct=title;pendingTotal=price;pendingPassPages=0; document.getElementById('paymentNote').innerText=currentUserEmail+' | '+title+' | '+Number(price).toLocaleString()+'₮'; document.getElementById('paymentModal').classList.add('active'); }); }
-function closePayment(){ document.getElementById('paymentModal').classList.remove('active'); }
-async function confirmOrder(){ const btn=document.getElementById('confirmBtn'); const note=document.getElementById('paymentNote').innerText; btn.disabled=true;btn.innerText='Илгээж байна...'; const p=new URLSearchParams(); p.append('action','order');p.append('email',currentUserEmail);p.append('product',pendingProduct);p.append('note',note); if(pendingPassPages>0){p.append('printPages',pendingPassPages);p.append('type','printPass');} try{ await fetch(ORDER_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:p.toString()}); showToast('Хүсэлт илгээгдлээ! Туул багш шалгаад эрхийг идэвхжүүлнэ.','success'); closePayment();clearCart();pendingPassPages=0; }catch(e){showToast('Холболтын алдаа гарлаа!','error');} finally{btn.disabled=false;btn.innerText='Төлсөн, хүсэлт илгээх';} }
-// Давтагдашгүй код үүсгэх
-function generateOrderCode() {
-  const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
-  let code = 'SHB-';
-  for (let i = 0; i < 6; i++) {
-    code += chars[Math.floor(Math.random() * chars.length)];
-  }
-  return code;
-}
-
-// pendingOrderCode глобал хувьсагч нэмнэ (файлын эхэнд)
-let pendingOrderCode = '';
-
-// proceedToPayment функцыг солино уу
-function proceedToPayment() {
-  if (!cartItems.length) return showToast('Сагс хоосон байна!', 'error');
-  requireEmail(() => {
-    const summary = cartItems.map(i => `${i.title} x${i.quantity}`).join(', ');
-    const total = cartItems.reduce((s, i) => s + i.price * i.quantity, 0);
-    pendingProduct = summary;
-    pendingTotal = total;
-    pendingPassPages = 0;
-    pendingOrderCode = generateOrderCode();
-    closeCart();
-    showPaymentModal();
-  });
-}
-
-// buyNow функцыг солино уу
-function buyNow(title, price) {
-  requireEmail(() => {
-    pendingProduct = title;
-    pendingTotal = price;
-    pendingPassPages = 0;
-    pendingOrderCode = generateOrderCode();
-    showPaymentModal();
-  });
-}
-
-// buyPrintPass функцыг солино уу
-function buyPrintPass(pages, price) {
-  requireEmail(() => {
-    pendingProduct = `Судоку хэвлэх эрх — ${pages} хуудас`;
-    pendingTotal = price;
-    pendingPassPages = pages;
-    pendingOrderCode = generateOrderCode();
-    showPaymentModal();
-  });
-}
-
-// Төлбөрийн modal харуулах тусдаа функц
-function showPaymentModal() {
-  const note = `${pendingOrderCode} | ${currentUserEmail}`;
-  document.getElementById('paymentNote').innerText = note;
-  document.getElementById('paymentModal').classList.add('active');
-}
-
-// confirmOrder функцыг солино уу
-async function confirmOrder() {
-  const btn = document.getElementById('confirmBtn');
-  btn.disabled = true;
-  btn.innerText = 'Илгээж байна...';
-  
-  const p = new URLSearchParams();
-  p.append('action', 'order');
-  p.append('email', currentUserEmail);
-  p.append('product', pendingProduct);
-  p.append('amount', pendingTotal);
-  p.append('orderCode', pendingOrderCode);  // ← код илгээнэ
-  p.append('note', `${pendingOrderCode} | ${currentUserEmail} | ${pendingProduct} | ${pendingTotal}₮`);
-  
-  if (pendingPassPages > 0) {
-    p.append('printPages', pendingPassPages);
-    p.append('type', 'printPass');
-  }
-  
-  try {
-    await fetch(ORDER_URL, {
-      method: 'POST',
-      mode: 'no-cors',
-      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-      body: p.toString()
+    if (!cartItems.length) return showToast('Сагс хоосон байна!','error');
+    requireEmail(() => {
+        const summary = cartItems.map(i=>`${i.title} x${i.quantity}`).join(', ');
+        const total = cartItems.reduce((s,i)=>s+i.price*i.quantity,0);
+        pendingProduct=summary; pendingTotal=total; pendingPassPages=0;
+        closeCart();
+        document.getElementById('paymentNote').innerText = currentUserEmail+' | '+summary+' | '+total.toLocaleString()+'₮';
+        document.getElementById('paymentModal').classList.add('active');
     });
-    showToast('Хүсэлт илгээгдлээ! Туул багш шалгаад эрхийг идэвхжүүлнэ.', 'success');
-    closePayment();
-    clearCart();
-    pendingPassPages = 0;
-    pendingOrderCode = '';
-  } catch (e) {
-    showToast('Холболтын алдаа гарлаа!', 'error');
-  } finally {
-    btn.disabled = false;
-    btn.innerText = 'Төлсөн, хүсэлт илгээх';
-  }
 }
-/* LIBRARY */
-function detectItemType(f){ const t=(f.type||f.Type||'').toLowerCase(); const ti=(f.productName||f.title||f.Title||'').toLowerCase(); if(t.includes('print')||t.includes('судоку')||ti.includes('судоку хэвлэх')||ti.includes('print pass')) return 'printPass'; return 'file'; }
-async function loadMyLibrary(){
-    const g=document.getElementById('libraryGrid'); if(!g) return;
-    g.innerHTML="<p style='grid-column:1/-1;text-align:center;padding:32px;color:var(--on-surface-variant);font-size:12px;'>Ачаалж байна...</p>";
-    try{ const res=await fetch(`${ORDER_URL}?action=getMyLibrary&email=${encodeURIComponent(currentUserEmail)}`,{redirect:'follow'}); const raw=await res.text(); let files=[]; try{files=JSON.parse(raw);}catch(e){files=[];} if(!Array.isArray(files)||!files.length){g.innerHTML=`<div style="grid-column:1/-1;text-align:center;padding:60px 0;"><p style="color:var(--on-surface-variant);font-size:13px;font-weight:600;text-transform:uppercase;letter-spacing:0.04em;">Одоогоор файл байхгүй байна</p><p style="font-size:12px;color:var(--outline);margin-top:8px;">Төлбөр баталгаажсаны дараа энд харагдана</p></div>`;return;} window._libFiles=files; g.innerHTML=files.map((f,i)=>{ const title=f.productName||f.title||f.Title||'Материал'; const url=f.downloadUrl||f.url||f.link||''; const dateStr=f.date?new Date(f.date).toLocaleDateString('mn-MN'):''; const itemType=detectItemType(f); if(itemType==='printPass'){ const pages=parseInt(f.printPages||f.pages||f.remaining||0); return `<div class="library-card"><div class="lib-icon" style="background:rgba(0,109,66,0.1);">🖨</div><div style="font-size:12px;font-weight:700;color:var(--on-surface);">${escHtml(title)}</div><div style="font-size:11px;color:var(--on-surface-variant);">${dateStr}</div>${pages>0?`<div style="background:rgba(0,109,66,0.08);border:1px solid rgba(0,109,66,0.2);border-radius:9999px;padding:4px 14px;font-size:12px;font-weight:700;color:var(--tertiary);">${pages} хуудас үлдсэн</div>`:`<div style="background:var(--surface-container);border-radius:9999px;padding:4px 14px;font-size:11px;color:var(--on-surface-variant);">Эрх дууссан</div>`}<button onclick="goToSudokuPrint()" style="width:100%;background:var(--tertiary);border:none;color:#fff;font-family:'Lexend',sans-serif;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.04em;padding:10px;border-radius:10px;cursor:pointer;">Судоку хэвлэх</button></div>`; } const hasUrl=url&&url!=='undefined'&&url.trim()!==''; return `<div class="library-card"><div class="lib-icon" style="background:rgba(148,74,0,0.08);">📂</div><div style="font-size:12px;font-weight:700;color:var(--on-surface);">${escHtml(title)}</div><div style="font-size:11px;color:var(--on-surface-variant);">${dateStr}</div>${hasUrl?`<button onclick="openLibraryFile(${i})" style="width:100%;background:var(--primary);border:none;color:#fff;font-family:'Lexend',sans-serif;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.04em;padding:10px;border-radius:10px;cursor:pointer;">Үзэх / Татах</button>`:`<div style="width:100%;background:var(--surface-container);border-radius:10px;padding:10px;text-align:center;font-size:11px;color:var(--on-surface-variant);font-weight:600;">Линк бэлэн болоогүй</div>`}</div>`; }).join(''); }catch(e){g.innerHTML="<p style='color:var(--error);text-align:center;font-size:12px;grid-column:1/-1;'>Холболтын алдаа гарлаа.</p>";} }
-function goToSudokuPrint(){ showSection('games'); setTimeout(()=>{ const el=document.getElementById('printPassSection'); if(el) el.scrollIntoView({behavior:'smooth',block:'center'}); },300); }
-function openLibraryFile(idx){ const files=window._libFiles||[]; const f=files[idx]; if(!f) return showToast('Файл олдсонгүй','error'); const url=(f.downloadUrl||f.url||f.link||'').trim(); if(!url||url==='undefined') return showToast('Линк бэлэн болоогүй байна.','error'); const a=document.getElementById('hiddenFileLink'); a.href=url; a.click(); }
-function escHtml(str){ return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+function buyNow(title, price) {
+    requireEmail(() => {
+        pendingProduct=title; pendingTotal=price; pendingPassPages=0;
+        document.getElementById('paymentNote').innerText = currentUserEmail+' | '+title+' | '+Number(price).toLocaleString()+'₮';
+        document.getElementById('paymentModal').classList.add('active');
+    });
+}
+function closePayment() { document.getElementById('paymentModal').classList.remove('active'); }
+async function confirmOrder() {
+    const btn = document.getElementById('confirmBtn');
+    const note = document.getElementById('paymentNote').innerText;
+    btn.disabled=true; btn.innerText='Илгээж байна...';
+    const p = new URLSearchParams();
+    p.append('action','order'); p.append('email',currentUserEmail);
+    p.append('product',pendingProduct); p.append('note',note);
+    if (pendingPassPages>0) { p.append('printPages',pendingPassPages); p.append('type','printPass'); }
+    try {
+        await fetch(ORDER_URL, {method:'POST',mode:'no-cors',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:p.toString()});
+        showToast('Хүсэлт илгээгдлээ! Туул багш шалгаад эрхийг идэвхжүүлнэ.','success');
+        closePayment(); clearCart(); pendingPassPages=0;
+    } catch(e) {
+        showToast('Холболтын алдаа гарлаа!','error');
+    } finally {
+        btn.disabled=false; btn.innerText='Төлсөн, хүсэлт илгээх';
+    }
+}
 
-/* PRINT PASS */
-function getLocalPass(){ return parseInt(localStorage.getItem('printPassPages_'+currentUserEmail)||'0'); }
-function setLocalPass(pages){ localStorage.setItem('printPassPages_'+currentUserEmail,String(Math.max(0,pages))); }
-function getFreeUsed(){ return localStorage.getItem('freePrintUsed_'+currentUserEmail)==='true'; }
-function setFreeUsed(){ localStorage.setItem('freePrintUsed_'+currentUserEmail,'true'); }
-async function checkPrintPassFromServer(showMsg=false){ const chk=document.getElementById('passCheckingInfo'); if(chk) chk.classList.remove('hidden'); try{ const res=await fetch(`${ORDER_URL}?action=getPrintPass&email=${encodeURIComponent(currentUserEmail)}`,{redirect:'follow'}); const data=await res.json(); if(data&&typeof data.remaining==='number'){setLocalPass(data.remaining);if(showMsg) showToast(`Эрх шинэчлэгдлээ: ${data.remaining} хуудас үлдсэн`,'success');} }catch(e){if(showMsg) showToast('Серверт холбогдож чадсангүй','info');} finally{ if(chk) chk.classList.add('hidden'); renderPassSection(); } }
-function initGamesSection(){ initSudoku(); renderPassSection(); if(currentUserEmail) checkPrintPassFromServer(false); }
-function renderPassSection(){ const remaining=getLocalPass(); const freeUsed=getFreeUsed(); const activeEl=document.getElementById('passActiveInfo'); const freeEl=document.getElementById('freePrintInfo'); const dispEl=document.getElementById('passRemainingDisplay'); if(remaining>0){if(activeEl) activeEl.classList.remove('hidden'); if(dispEl) dispEl.innerText=remaining; if(freeEl) freeEl.classList.add('hidden');}else{if(activeEl) activeEl.classList.add('hidden'); if(freeEl) freeEl.classList.toggle('hidden',freeUsed);} }
-function openPrintPassSection(){ const r=getLocalPass(); const fu=getFreeUsed(); if(r>0){showPrintModal();}else if(!fu){showToast('1 хуудас үнэгүй хэвлэх боломжтой!','info'); const el=document.getElementById('printPassSection'); if(el) el.scrollIntoView({behavior:'smooth',block:'center'});}else{showToast('Хэвлэх эрх байхгүй. Эрх авна уу!','error'); const el=document.getElementById('printPassSection'); if(el) el.scrollIntoView({behavior:'smooth',block:'center'});} }
-function useFreeOnePage(){ if(getFreeUsed()) return showToast('Үнэгүй 1 хуудасны боломж аль хэдийн ашиглагдсан!','error'); printPageCount=1; setFreeUsed(); renderPassSection(); closePrintModal(); doPrint(); showToast('Үнэгүй 1 хуудас хэвлэж байна!','success'); }
-function buyPrintPass(pages,price){ requireEmail(()=>{ pendingProduct=`Судоку хэвлэх эрх — ${pages} хуудас`;pendingTotal=price;pendingPassPages=pages; document.getElementById('paymentNote').innerText=`${currentUserEmail} | Судоку хэвлэх эрх ${pages} хуудас | ${price.toLocaleString()}₮`; document.getElementById('paymentModal').classList.add('active'); }); }
-function showPrintModal() {
-  const r = getLocalPass();
-  // r-ийн дотор байгаа хамгийн ойрын 5-ын үржвэрээс эхэлнэ
-  printPageCount = [5,10,15,20,25,30].filter(v => v <= r)[0] || 5;
-  document.getElementById('modalRemainingPages').innerText = r;
-  updatePrintModalUI();
-  document.getElementById('printModal').classList.add('active');
+/* ─── ЗАСВАР 3: loadMyLibrary — CORS болон error засав ─── */
+function detectItemType(f) {
+    const t = (f.type||f.Type||'').toLowerCase();
+    const ti = (f.productName||f.title||f.Title||'').toLowerCase();
+    if (t.includes('print')||t.includes('судоку')||ti.includes('судоку хэвлэх')||ti.includes('print pass')) return 'printPass';
+    return 'file';
 }
-function closePrintModal(){ document.getElementById('printModal').classList.remove('active'); }
+
+async function loadMyLibrary() {
+    const g = document.getElementById('libraryGrid'); if (!g) return;
+    g.innerHTML = "<p style='grid-column:1/-1;text-align:center;padding:32px;color:var(--on-surface-variant);font-size:12px;'>Ачаалж байна...</p>";
+    try {
+        // ЗАСВАР: redirect:'follow' нэмж, text()-р унших
+        const res = await fetch(`${ORDER_URL}?action=getMyLibrary&email=${encodeURIComponent(currentUserEmail)}`, {
+            method: 'GET',
+            redirect: 'follow',
+            cache: 'no-cache'
+        });
+        const raw = await res.text();
+        let files = [];
+        try {
+            // JSON хэсгийг гарган авах
+            const jsonMatch = raw.match(/(\[[\s\S]*\]|\{[\s\S]*\})/);
+            if (jsonMatch) files = JSON.parse(jsonMatch[1]);
+            if (!Array.isArray(files)) files = [];
+        } catch(e) {
+            files = [];
+        }
+
+        if (!files.length) {
+            g.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:60px 0;">
+                <p style="color:var(--on-surface-variant);font-size:13px;font-weight:600;text-transform:uppercase;letter-spacing:0.04em;">Одоогоор файл байхгүй байна</p>
+                <p style="font-size:12px;color:var(--outline);margin-top:8px;">Төлбөр баталгаажсаны дараа энд харагдана</p>
+            </div>`;
+            return;
+        }
+
+        window._libFiles = files;
+        g.innerHTML = files.map((f,i) => {
+            const title = f.productName||f.title||f.Title||'Материал';
+            const url = f.downloadUrl||f.url||f.link||'';
+            const dateStr = f.date ? new Date(f.date).toLocaleDateString('mn-MN') : '';
+            const itemType = detectItemType(f);
+
+            if (itemType === 'printPass') {
+                const pages = parseInt(f.printPages||f.pages||f.remaining||0);
+                return `<div class="library-card">
+                    <div class="lib-icon" style="background:rgba(0,109,66,0.1);">🖨</div>
+                    <div style="font-size:12px;font-weight:700;color:var(--on-surface);">${escHtml(title)}</div>
+                    <div style="font-size:11px;color:var(--on-surface-variant);">${dateStr}</div>
+                    ${pages>0
+                        ? `<div style="background:rgba(0,109,66,0.08);border:1px solid rgba(0,109,66,0.2);border-radius:9999px;padding:4px 14px;font-size:12px;font-weight:700;color:var(--tertiary);">${pages} хуудас үлдсэн</div>`
+                        : `<div style="background:var(--surface-container);border-radius:9999px;padding:4px 14px;font-size:11px;color:var(--on-surface-variant);">Эрх дууссан</div>`
+                    }
+                    <button onclick="goToSudokuPrint()" style="width:100%;background:var(--tertiary);border:none;color:#fff;font-family:'Lexend',sans-serif;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.04em;padding:10px;border-radius:10px;cursor:pointer;">Судоку хэвлэх</button>
+                </div>`;
+            }
+
+            const hasUrl = url && url!=='undefined' && url.trim()!=='';
+            return `<div class="library-card">
+                <div class="lib-icon" style="background:rgba(148,74,0,0.08);">📂</div>
+                <div style="font-size:12px;font-weight:700;color:var(--on-surface);">${escHtml(title)}</div>
+                <div style="font-size:11px;color:var(--on-surface-variant);">${dateStr}</div>
+                ${hasUrl
+                    ? `<button onclick="openLibraryFile(${i})" style="width:100%;background:var(--primary);border:none;color:#fff;font-family:'Lexend',sans-serif;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.04em;padding:10px;border-radius:10px;cursor:pointer;">Үзэх / Татах</button>`
+                    : `<div style="width:100%;background:var(--surface-container);border-radius:10px;padding:10px;text-align:center;font-size:11px;color:var(--on-surface-variant);font-weight:600;">Линк бэлэн болоогүй</div>`
+                }
+            </div>`;
+        }).join('');
+    } catch(e) {
+        console.error('loadMyLibrary алдаа:', e);
+        g.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:40px;">
+            <p style="color:var(--error);font-size:13px;font-weight:600;margin-bottom:8px;">Холболтын алдаа гарлаа</p>
+            <button onclick="loadMyLibrary()" style="background:var(--primary);border:none;color:#fff;font-family:'Lexend',sans-serif;font-size:11px;font-weight:600;padding:10px 20px;border-radius:9999px;cursor:pointer;text-transform:uppercase;">Дахин оролдох</button>
+        </div>`;
+    }
+}
+
+function goToSudokuPrint() {
+    showSection('games');
+    setTimeout(() => {
+        const el = document.getElementById('printPassSection');
+        if (el) el.scrollIntoView({behavior:'smooth',block:'center'});
+    }, 300);
+}
+function openLibraryFile(idx) {
+    const files = window._libFiles || [];
+    const f = files[idx];
+    if (!f) return showToast('Файл олдсонгүй','error');
+    const url = (f.downloadUrl||f.url||f.link||'').trim();
+    if (!url || url==='undefined') return showToast('Линк бэлэн болоогүй байна.','error');
+    const a = document.getElementById('hiddenFileLink');
+    a.href = url; a.click();
+}
+function escHtml(str) {
+    return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+/* ─── PRINT PASS ─── */
+function getLocalPass() { return parseInt(localStorage.getItem('printPassPages_'+currentUserEmail)||'0'); }
+function setLocalPass(pages) { localStorage.setItem('printPassPages_'+currentUserEmail, String(Math.max(0,pages))); }
+function getFreeUsed() { return localStorage.getItem('freePrintUsed_'+currentUserEmail)==='true'; }
+function setFreeUsed() { localStorage.setItem('freePrintUsed_'+currentUserEmail,'true'); }
+
+async function checkPrintPassFromServer(showMsg=false) {
+    const chk = document.getElementById('passCheckingInfo');
+    if (chk) chk.classList.remove('hidden');
+    try {
+        const data = await fetchJSON(`${ORDER_URL}?action=getPrintPass&email=${encodeURIComponent(currentUserEmail)}`);
+        if (data && typeof data.remaining==='number') {
+            setLocalPass(data.remaining);
+            if (showMsg) showToast(`Эрх шинэчлэгдлээ: ${data.remaining} хуудас үлдсэн`,'success');
+        }
+    } catch(e) {
+        if (showMsg) showToast('Серверт холбогдож чадсангүй','info');
+    } finally {
+        if (chk) chk.classList.add('hidden');
+        renderPassSection();
+    }
+}
+
+function initGamesSection() {
+    initSudoku();
+    renderPassSection();
+    if (currentUserEmail) checkPrintPassFromServer(false);
+}
+function renderPassSection() {
+    const remaining = getLocalPass();
+    const freeUsed = getFreeUsed();
+    const activeEl = document.getElementById('passActiveInfo');
+    const freeEl = document.getElementById('freePrintInfo');
+    const dispEl = document.getElementById('passRemainingDisplay');
+    if (remaining>0) {
+        if (activeEl) activeEl.classList.remove('hidden');
+        if (dispEl) dispEl.innerText = remaining;
+        if (freeEl) freeEl.classList.add('hidden');
+    } else {
+        if (activeEl) activeEl.classList.add('hidden');
+        if (freeEl) freeEl.classList.toggle('hidden', freeUsed);
+    }
+}
+function openPrintPassSection() {
+    const r = getLocalPass(); const fu = getFreeUsed();
+    if (r>0) { showPrintModal(); }
+    else if (!fu) {
+        showToast('1 хуудас үнэгүй хэвлэх боломжтой!','info');
+        const el = document.getElementById('printPassSection');
+        if (el) el.scrollIntoView({behavior:'smooth',block:'center'});
+    } else {
+        showToast('Хэвлэх эрх байхгүй. Эрх авна уу!','error');
+        const el = document.getElementById('printPassSection');
+        if (el) el.scrollIntoView({behavior:'smooth',block:'center'});
+    }
+}
+function useFreeOnePage() {
+    if (getFreeUsed()) return showToast('Үнэгүй 1 хуудасны боломж аль хэдийн ашиглагдсан!','error');
+    printPageCount=1; setFreeUsed(); renderPassSection(); closePrintModal(); doPrint();
+    showToast('Үнэгүй 1 хуудас хэвлэж байна!','success');
+}
+function buyPrintPass(pages, price) {
+    requireEmail(() => {
+        pendingProduct=`Судоку хэвлэх эрх — ${pages} хуудас`;
+        pendingTotal=price; pendingPassPages=pages;
+        document.getElementById('paymentNote').innerText = `${currentUserEmail} | Судоку хэвлэх эрх ${pages} хуудас | ${price.toLocaleString()}₮`;
+        document.getElementById('paymentModal').classList.add('active');
+    });
+}
+function showPrintModal() {
+    const r = getLocalPass(); printPageCount=1;
+    document.getElementById('modalRemainingPages').innerText = r;
+    updatePrintModalUI();
+    document.getElementById('printModal').classList.add('active');
+}
+function closePrintModal() { document.getElementById('printModal').classList.remove('active'); }
 function adjustPrintPages(delta) {
-  const r = getLocalPass();
-  const steps = [5, 10, 15, 20, 25, 30].filter(v => v <= r);
-  if (!steps.length) return;
-  const curIdx = steps.indexOf(printPageCount);
-  if (delta > 0) {
-    printPageCount = steps[Math.min(curIdx + 1, steps.length - 1)];
-  } else {
-    printPageCount = steps[Math.max(curIdx - 1, 0)];
-  }
-  updatePrintModalUI();
+    const r = getLocalPass();
+    printPageCount = Math.max(1, Math.min(r, printPageCount+delta));
+    updatePrintModalUI();
 }
 function updatePrintModalUI() {
-  const r = getLocalPass();
-  const steps = [5, 10, 15, 20, 25, 30].filter(v => v <= r);
-  document.getElementById('printPageCountDisplay').innerText = printPageCount;
-  document.getElementById('printSudokuCount').innerText = printPageCount * 4;
-  const notEnough = document.getElementById('printNotEnough');
-  const btn = document.getElementById('doPrintBtn');
-  if (!steps.includes(printPageCount) || printPageCount > r) {
-    notEnough.classList.remove('hidden');
-    btn.disabled = true;
-    btn.style.opacity = '0.5';
-  } else {
-    notEnough.classList.add('hidden');
-    btn.disabled = false;
-    btn.style.opacity = '1';
-  }
+    const r = getLocalPass();
+    document.getElementById('printPageCountDisplay').innerText = printPageCount;
+    document.getElementById('printSudokuCount').innerText = printPageCount*4;
+    const notEnough = document.getElementById('printNotEnough');
+    const btn = document.getElementById('doPrintBtn');
+    if (printPageCount>r) { notEnough.classList.remove('hidden'); btn.disabled=true; btn.style.opacity='0.5'; }
+    else { notEnough.classList.add('hidden'); btn.disabled=false; btn.style.opacity='1'; }
 }
-function executePrint(){ const r=getLocalPass(); if(printPageCount>r) return showToast('Эрх хүрэхгүй байна!','error'); setLocalPass(r-printPageCount); const p=new URLSearchParams(); p.append('action','usePrintPass');p.append('email',currentUserEmail);p.append('usedPages',printPageCount); fetch(ORDER_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:p.toString()}).catch(()=>{}); closePrintModal();renderPassSection();doPrint(); showToast(`${printPageCount} хуудас хэвлэж байна! Үлдсэн: ${r-printPageCount} хуудас`,'success'); }
+function executePrint() {
+    const r = getLocalPass();
+    if (printPageCount>r) return showToast('Эрх хүрэхгүй байна!','error');
+    setLocalPass(r-printPageCount);
+    const p = new URLSearchParams();
+    p.append('action','usePrintPass'); p.append('email',currentUserEmail); p.append('usedPages',printPageCount);
+    fetch(ORDER_URL, {method:'POST',mode:'no-cors',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:p.toString()}).catch(()=>{});
+    closePrintModal(); renderPassSection(); doPrint();
+    showToast(`${printPageCount} хуудас хэвлэж байна! Үлдсэн: ${r-printPageCount} хуудас`,'success');
+}
 
-/* SUDOKU */
-function generateSudokuBoard(){ const base=[[1,2,3,4,5,6,7,8,9],[4,5,6,7,8,9,1,2,3],[7,8,9,1,2,3,4,5,6],[2,3,1,5,6,4,8,9,7],[5,6,4,8,9,7,2,3,1],[8,9,7,2,3,1,5,6,4],[3,1,2,6,4,5,9,7,8],[6,4,5,9,7,8,3,1,2],[9,7,8,3,1,2,6,4,5]]; for(let b=0;b<3;b++) for(let s=0;s<3;s++){const r1=b*3+Math.floor(Math.random()*3);const r2=b*3+Math.floor(Math.random()*3);[base[r1],base[r2]]=[base[r2],base[r1]];} const co=shuffle([0,1,2]); return base.map(row=>{const nr=[];co.forEach(b=>{for(let c=0;c<3;c++) nr.push(row[b*3+c]);});return nr;}); }
-function initSudoku(){ sudokuBoard=generateSudokuBoard(); const c=document.getElementById('sudokuContainer'); c.innerHTML=''; for(let r=0;r<9;r++) for(let col=0;col<9;col++){const val=sudokuBoard[r][col];const cell=document.createElement('input'); cell.type='text';cell.maxLength=2;cell.className='sudoku-cell';cell.dataset.answer=String(val); if(Math.random()<0.45){cell.value=MONG_NUMS[String(val)];cell.readOnly=true;cell.classList.add('cell-fixed');}else{cell.classList.add('cell-user');cell.addEventListener('keydown',onSudokuKeyDown);cell.addEventListener('input',onSudokuInput);} c.appendChild(cell); } }
-function onSudokuKeyDown(e){ const a=['Backspace','Delete','Tab','ArrowLeft','ArrowRight','ArrowUp','ArrowDown']; if(a.includes(e.key)||(e.key>='1'&&e.key<='9')||Object.values(MONG_NUMS).includes(e.key)) return; e.preventDefault(); }
-function onSudokuInput(e){ const cell=e.target;const raw=cell.value;if(!raw)return; let last=raw[raw.length-1];if(last>='1'&&last<='9') last=MONG_NUMS[last]; if(!Object.values(MONG_NUMS).includes(last)){requestAnimationFrame(()=>{cell.value='';});return;} requestAnimationFrame(()=>{cell.value=last;const ascii=MONG_TO_ASCII[last];if(ascii&&ascii===cell.dataset.answer){cell.classList.add('cell-correct');cell.classList.remove('cell-wrong');}else{cell.classList.remove('cell-correct','cell-wrong');}}); }
-function checkSudoku(){ const cells=document.querySelectorAll('#sudokuContainer .sudoku-cell');let correct=0,wrong=0,empty=0; cells.forEach(cell=>{if(cell.readOnly)return;const val=cell.value.trim();const ascii=MONG_TO_ASCII[val]||val;if(!val){empty++;return;}if(ascii===cell.dataset.answer){cell.classList.add('cell-correct');cell.classList.remove('cell-wrong');correct++;}else{cell.classList.add('cell-wrong');cell.classList.remove('cell-correct');wrong++;}}); if(empty>0) showToast(`${empty} хоосон нүд байна!`,'error'); else if(wrong>0) showToast(`${wrong} нүд буруу байна!`,'error'); else showToast('Баяр хүргэе! Бүгд зөв!','success'); }
+/* ─── SUDOKU ─── */
+function generateSudokuBoard() {
+    const base = [[1,2,3,4,5,6,7,8,9],[4,5,6,7,8,9,1,2,3],[7,8,9,1,2,3,4,5,6],[2,3,1,5,6,4,8,9,7],[5,6,4,8,9,7,2,3,1],[8,9,7,2,3,1,5,6,4],[3,1,2,6,4,5,9,7,8],[6,4,5,9,7,8,3,1,2],[9,7,8,3,1,2,6,4,5]];
+    for (let b=0;b<3;b++) for (let s=0;s<3;s++) {
+        const r1=b*3+Math.floor(Math.random()*3); const r2=b*3+Math.floor(Math.random()*3);
+        [base[r1],base[r2]]=[base[r2],base[r1]];
+    }
+    const co = shuffle([0,1,2]);
+    return base.map(row => { const nr=[]; co.forEach(b=>{for(let c=0;c<3;c++) nr.push(row[b*3+c]);}); return nr; });
+}
+function initSudoku() {
+    sudokuBoard = generateSudokuBoard();
+    const c = document.getElementById('sudokuContainer'); c.innerHTML='';
+    for (let r=0;r<9;r++) for (let col=0;col<9;col++) {
+        const val = sudokuBoard[r][col];
+        const cell = document.createElement('input');
+        cell.type='text'; cell.maxLength=2; cell.className='sudoku-cell';
+        cell.dataset.answer = String(val);
+        if (Math.random()<0.45) {
+            cell.value = MONG_NUMS[String(val)]; cell.readOnly=true; cell.classList.add('cell-fixed');
+        } else {
+            cell.classList.add('cell-user');
+            cell.addEventListener('keydown', onSudokuKeyDown);
+            cell.addEventListener('input', onSudokuInput);
+        }
+        c.appendChild(cell);
+    }
+}
+function onSudokuKeyDown(e) {
+    const a = ['Backspace','Delete','Tab','ArrowLeft','ArrowRight','ArrowUp','ArrowDown'];
+    if (a.includes(e.key)||(e.key>='1'&&e.key<='9')||Object.values(MONG_NUMS).includes(e.key)) return;
+    e.preventDefault();
+}
+function onSudokuInput(e) {
+    const cell=e.target; const raw=cell.value; if(!raw)return;
+    let last=raw[raw.length-1];
+    if (last>='1'&&last<='9') last=MONG_NUMS[last];
+    if (!Object.values(MONG_NUMS).includes(last)) { requestAnimationFrame(()=>{cell.value='';}); return; }
+    requestAnimationFrame(()=>{
+        cell.value=last;
+        const ascii=MONG_TO_ASCII[last];
+        if (ascii&&ascii===cell.dataset.answer) { cell.classList.add('cell-correct'); cell.classList.remove('cell-wrong'); }
+        else { cell.classList.remove('cell-correct','cell-wrong'); }
+    });
+}
+function checkSudoku() {
+    const cells=document.querySelectorAll('#sudokuContainer .sudoku-cell');
+    let correct=0,wrong=0,empty=0;
+    cells.forEach(cell=>{
+        if(cell.readOnly)return;
+        const val=cell.value.trim(); const ascii=MONG_TO_ASCII[val]||val;
+        if(!val){empty++;return;}
+        if(ascii===cell.dataset.answer){cell.classList.add('cell-correct');cell.classList.remove('cell-wrong');correct++;}
+        else{cell.classList.add('cell-wrong');cell.classList.remove('cell-correct');wrong++;}
+    });
+    if(empty>0) showToast(`${empty} хоосон нүд байна!`,'error');
+    else if(wrong>0) showToast(`${wrong} нүд буруу байна!`,'error');
+    else showToast('Баяр хүргэе! Бүгд зөв!','success');
+}
 
-/* PRINT */
-function buildPrintPuzzle(board){ let html='<table style="border-collapse:collapse;width:100%;table-layout:fixed;">'; for(let r=0;r<9;r++){html+='<tr>';for(let c=0;c<9;c++){const val=board[r][c];const mong=MONG_NUMS[String(val)];const show=((r*9+c)%5!==0)&&((r*3+c)%7!==2);const bR=(c===2||c===5)?'border-right:2.5px solid #000;':'border-right:1px solid #ccc;';const bB=(r===2||r===5)?'border-bottom:2.5px solid #000;':'border-bottom:1px solid #ccc;';const bL=c===0?'border-left:1px solid #ccc;':'';const bT=r===0?'border-top:1px solid #ccc;':'';const bg=show?'background:#f0edec;':'background:#fff;'; html+=`<td style="width:11.1%;aspect-ratio:1/1;height:8mm;text-align:center;vertical-align:middle;font-size:10pt;font-weight:700;${bR}${bB}${bL}${bT}${bg}padding:0;">${show?mong:'&nbsp;'}</td>`;} html+='</tr>';} html+='</table>';return html; }
-function doPrint(){ const printArea=document.getElementById('printArea'); let pagesHtml=''; for(let page=0;page<printPageCount;page++){pagesHtml+=`<div style="width:194mm;min-height:277mm;padding:0;margin:0 auto;background:white;box-sizing:border-box;${page<printPageCount-1?'page-break-after:always;':''}"><div style="text-align:center;padding:6mm 0 4mm 0;border-bottom:1.5px solid #dbc2b2;margin-bottom:5mm;"><img src="logo.png" alt="logo" style="height:12mm;object-fit:contain;display:inline-block;vertical-align:middle;margin-right:3mm;"><span style="font-family:'Lexend',sans-serif;font-size:14pt;font-weight:700;text-transform:uppercase;color:#944a00;letter-spacing:2px;vertical-align:middle;">Сонирхолтой Хэл Бичиг</span><div style="font-size:8pt;color:#887365;margin-top:1mm;font-family:'Lexend',sans-serif;">Монгол бичиг судоку — ${page+1}-р хуудас</div></div><div style="display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;gap:6mm;padding:0 4mm 4mm 4mm;height:248mm;box-sizing:border-box;">`; for(let q=0;q<4;q++){const nb=generateSudokuBoard(); pagesHtml+=`<div style="border:1px solid #dbc2b2;border-radius:3mm;padding:3mm 3mm 2mm 3mm;background:#fff;display:flex;flex-direction:column;align-items:center;"><div style="font-size:7pt;font-weight:700;color:#944a00;text-transform:uppercase;margin-bottom:2mm;font-family:'Lexend',sans-serif;">${page*4+q+1}-р судоку</div><div style="width:100%;">${buildPrintPuzzle(nb)}</div><div style="margin-top:2mm;text-align:right;width:100%;font-size:6pt;color:#887365;font-family:'Lexend',sans-serif;">Нэр: _______________</div></div>`;} pagesHtml+=`</div></div>`;} const fullHtml=`<style>@import url('https://fonts.googleapis.com/css2?family=Lexend:wght@700&display=swap');*{box-sizing:border-box;margin:0;padding:0;}body{background:white!important;}</style>${pagesHtml}`; printArea.innerHTML=fullHtml;printArea.style.display='block'; const after=()=>{printArea.style.display='none';printArea.innerHTML='';window.removeEventListener('afterprint',after);}; window.addEventListener('afterprint',after); setTimeout(()=>window.print(),200); }
+/* ─── PRINT ─── */
+function buildPrintPuzzle(board) {
+    let html='<table style="border-collapse:collapse;width:100%;table-layout:fixed;">';
+    for(let r=0;r<9;r++){
+        html+='<tr>';
+        for(let c=0;c<9;c++){
+            const val=board[r][c]; const mong=MONG_NUMS[String(val)];
+            const show=((r*9+c)%5!==0)&&((r*3+c)%7!==2);
+            const bR=(c===2||c===5)?'border-right:2.5px solid #000;':'border-right:1px solid #ccc;';
+            const bB=(r===2||r===5)?'border-bottom:2.5px solid #000;':'border-bottom:1px solid #ccc;';
+            const bL=c===0?'border-left:1px solid #ccc;':''; const bT=r===0?'border-top:1px solid #ccc;':'';
+            const bg=show?'background:#f0edec;':'background:#fff;';
+            html+=`<td style="width:11.1%;aspect-ratio:1/1;height:8mm;text-align:center;vertical-align:middle;font-size:10pt;font-weight:700;${bR}${bB}${bL}${bT}${bg}padding:0;">${show?mong:'&nbsp;'}</td>`;
+        }
+        html+='</tr>';
+    }
+    html+='</table>'; return html;
+}
+function doPrint() {
+    const printArea=document.getElementById('printArea');
+    let pagesHtml='';
+    for(let page=0;page<printPageCount;page++){
+        pagesHtml+=`<div style="width:194mm;min-height:277mm;padding:0;margin:0 auto;background:white;box-sizing:border-box;${page<printPageCount-1?'page-break-after:always;':''}"><div style="text-align:center;padding:6mm 0 4mm 0;border-bottom:1.5px solid #dbc2b2;margin-bottom:5mm;"><img src="logo.png" alt="logo" style="height:12mm;object-fit:contain;display:inline-block;vertical-align:middle;margin-right:3mm;"><span style="font-family:'Lexend',sans-serif;font-size:14pt;font-weight:700;text-transform:uppercase;color:#944a00;letter-spacing:2px;vertical-align:middle;">Сонирхолтой Хэл Бичиг</span><div style="font-size:8pt;color:#887365;margin-top:1mm;font-family:'Lexend',sans-serif;">Монгол бичиг судоку — ${page+1}-р хуудас</div></div><div style="display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;gap:6mm;padding:0 4mm 4mm 4mm;height:248mm;box-sizing:border-box;">`;
+        for(let q=0;q<4;q++){
+            const nb=generateSudokuBoard();
+            pagesHtml+=`<div style="border:1px solid #dbc2b2;border-radius:3mm;padding:3mm 3mm 2mm 3mm;background:#fff;display:flex;flex-direction:column;align-items:center;"><div style="font-size:7pt;font-weight:700;color:#944a00;text-transform:uppercase;margin-bottom:2mm;font-family:'Lexend',sans-serif;">${page*4+q+1}-р судоку</div><div style="width:100%;">${buildPrintPuzzle(nb)}</div><div style="margin-top:2mm;text-align:right;width:100%;font-size:6pt;color:#887365;font-family:'Lexend',sans-serif;">Нэр: _______________</div></div>`;
+        }
+        pagesHtml+=`</div></div>`;
+    }
+    const fullHtml=`<style>@import url('https://fonts.googleapis.com/css2?family=Lexend:wght@700&display=swap');*{box-sizing:border-box;margin:0;padding:0;}body{background:white!important;}</style>${pagesHtml}`;
+    printArea.innerHTML=fullHtml; printArea.style.display='block';
+    const after=()=>{printArea.style.display='none';printArea.innerHTML='';window.removeEventListener('afterprint',after);};
+    window.addEventListener('afterprint',after);
+    setTimeout(()=>window.print(),200);
+}
 
-/* PLANNER */
+/* ─── PLANNER ─── */
 let personalTasks=[];
-function initPlanner(){ loadPersonalTasks();loadPlannerSchedule();renderPersonalTasks();updatePlannerStats(); }
-async function loadPlannerSchedule(){ const list=document.getElementById('scheduleList'); list.innerHTML=`<div style="text-align:center;color:var(--on-surface-variant);font-size:12px;padding:24px;">Уншиж байна...</div>`; try{const res=await fetch(`${ORDER_URL}?action=getSchedule`);const data=await res.json();if(!Array.isArray(data)||!data.length){list.innerHTML=`<div style="text-align:center;color:var(--on-surface-variant);font-size:12px;padding:24px;">Хөтөлбөр байхгүй.</div>`;return;}renderScheduleList(data);}catch(e){renderScheduleList([{Week:'1-р долоо хоног',Title:'Монгол бичгийн үсэг таних-1',Description:'Үндсэн зурлага, эгшиг үсэг'},{Week:'2-р долоо хоног',Title:'Гийгүүлэгч үсэг таних - 2',Description:'На,Ма,Ла,Ба,Нг,Га/Ха,Ра'},{Week:'3-р долоо хоног',Title:'Гийгүүлэгч үсэг таних - 3',Description:'Да/Та,Са,Ша,За/Жа,Ца/Ча,Йа'},{Week:'4-р долоо хоног',Title:'Богино үг, өгүүлбэр уншиж',Description:'үе холбон үг унших'}]);} }
-function renderScheduleList(data){ const list=document.getElementById('scheduleList'); list.innerHTML=data.map((item,i)=>{const week=item.Week||item.week||'';const title=item.Title||item.title||'Хичээл';const desc=item.Description||item.description||'';const done=isPlannerItemDone('schedule_'+i); return `<div class="task-item ${done?'done':''}" onclick="toggleScheduleItem(${i},this)"><div class="task-check">${done?`<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round"><path d="M5 13l4 4L19 7"/></svg>`:''}</div><div><div class="task-week">${week}</div><div class="task-title">${title}</div>${desc?`<div class="task-desc">${desc}</div>`:''}</div></div>`;}).join(''); updatePlannerStats(); }
-function toggleScheduleItem(i,el){ const key='schedule_'+i;const done=!isPlannerItemDone(key);setItemDone(key,done);el.classList.toggle('done',done);const c=el.querySelector('.task-check');if(done){c.innerHTML=`<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round"><path d="M5 13l4 4L19 7"/></svg>`;}else{c.innerHTML='';}updatePlannerStats(); }
-function isPlannerItemDone(key){ const d=JSON.parse(localStorage.getItem('plannerDone_'+currentUserEmail)||'{}');return !!d[key]; }
-function setItemDone(key,val){ const d=JSON.parse(localStorage.getItem('plannerDone_'+currentUserEmail)||'{}');d[key]=val;localStorage.setItem('plannerDone_'+currentUserEmail,JSON.stringify(d)); }
-function updatePlannerStats(){ const all=document.querySelectorAll('#scheduleList .task-item');const done=document.querySelectorAll('#scheduleList .task-item.done'); const tp=personalTasks.length;const dp=personalTasks.filter(t=>t.done).length; const total=all.length+tp;const doneCount=done.length+dp;const pct=total>0?Math.round((doneCount/total)*100):0; document.getElementById('plannerTotalTasks').innerText=total;document.getElementById('plannerDoneTasks').innerText=doneCount; document.getElementById('plannerPercent').innerText=pct+'%';document.getElementById('progressLabel').innerText=`${doneCount} / ${total}`; document.getElementById('progressBar').style.width=pct+'%'; }
-function loadPersonalTasks(){ personalTasks=JSON.parse(localStorage.getItem('personalTasks_'+currentUserEmail)||'[]'); }
-function savePersonalTasks(){ localStorage.setItem('personalTasks_'+currentUserEmail,JSON.stringify(personalTasks)); }
-function addPersonalTask(){ const input=document.getElementById('newTaskInput');const title=input.value.trim();if(!title) return showToast('Даалгавар бичнэ үү!','error'); const priority=document.getElementById('newTaskPriority').value; personalTasks.push({id:Date.now(),title,priority,done:false});savePersonalTasks();input.value='';renderPersonalTasks();updatePlannerStats();showToast('Даалгавар нэмэгдлээ!','success'); }
-function togglePersonalTask(id){ const t=personalTasks.find(t=>t.id===id);if(t){t.done=!t.done;savePersonalTasks();renderPersonalTasks();updatePlannerStats();} }
-function deletePersonalTask(id){ personalTasks=personalTasks.filter(t=>t.id!==id);savePersonalTasks();renderPersonalTasks();updatePlannerStats(); }
-function renderPersonalTasks(){ const list=document.getElementById('personalTaskList'); if(!personalTasks.length){list.innerHTML=`<div style="text-align:center;color:var(--outline);font-size:12px;padding:16px;">Даалгавар байхгүй</div>`;return;} const pc={high:'rgba(186,26,26,0.1)',mid:'rgba(148,74,0,0.08)',low:'var(--surface-container)'}; const tc={high:'var(--error)',mid:'var(--primary)',low:'var(--on-surface-variant)'}; const pl={high:'Яаралтай',mid:'Дунд',low:'Энгийн'}; list.innerHTML=[...personalTasks].reverse().map(t=>`<div style="display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:10px;border:1px solid ${t.done?'rgba(0,109,66,0.2)':'var(--outline-variant)'};background:${t.done?'rgba(0,109,66,0.06)':'#fff'};" class="task-item ${t.done?'done':''}"><button onclick="togglePersonalTask(${t.id})" style="width:18px;height:18px;border-radius:50%;border:2px solid ${t.done?'var(--tertiary)':'var(--outline)'};background:${t.done?'var(--tertiary)':'transparent'};cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;">${t.done?`<svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round"><path d="M5 13l4 4L19 7"/></svg>`:''}</button><div style="flex:1;"><div style="font-size:12px;font-weight:500;color:${t.done?'var(--on-surface-variant)':'var(--on-surface)'};text-decoration:${t.done?'line-through':'none'};">${t.title}</div><span style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:0.04em;padding:2px 8px;border-radius:9999px;background:${pc[t.priority]};color:${tc[t.priority]};">${pl[t.priority]}</span></div><button onclick="deletePersonalTask(${t.id})" style="background:none;border:none;color:var(--outline);font-size:14px;cursor:pointer;">✕</button></div>`).join(''); }
+function initPlanner() { loadPersonalTasks(); loadPlannerSchedule(); renderPersonalTasks(); updatePlannerStats(); }
+async function loadPlannerSchedule() {
+    const list=document.getElementById('scheduleList');
+    list.innerHTML=`<div style="text-align:center;color:var(--on-surface-variant);font-size:12px;padding:24px;">Уншиж байна...</div>`;
+    try {
+        const data = await fetchJSON(`${ORDER_URL}?action=getSchedule`);
+        if (!data||!Array.isArray(data)||!data.length) throw new Error('empty');
+        renderScheduleList(data);
+    } catch(e) {
+        renderScheduleList([
+            {Week:'1-р долоо хоног',Title:'Монгол бичгийн үсэг таних-1',Description:'Үндсэн зурлага, эгшиг үсэг'},
+            {Week:'2-р долоо хоног',Title:'Гийгүүлэгч үсэг таних - 2',Description:'На,Ма,Ла,Ба,Нг,Га/Ха,Ра'},
+            {Week:'3-р долоо хоног',Title:'Гийгүүлэгч үсэг таних - 3',Description:'Да/Та,Са,Ша,За/Жа,Ца/Ча,Йа'},
+            {Week:'4-р долоо хоног',Title:'Богино үг, өгүүлбэр уншиж',Description:'үе холбон үг унших'}
+        ]);
+    }
+}
+function renderScheduleList(data) {
+    const list=document.getElementById('scheduleList');
+    list.innerHTML=data.map((item,i)=>{
+        const week=item.Week||item.week||''; const title=item.Title||item.title||'Хичээл';
+        const desc=item.Description||item.description||''; const done=isPlannerItemDone('schedule_'+i);
+        return `<div class="task-item ${done?'done':''}" onclick="toggleScheduleItem(${i},this)"><div class="task-check">${done?`<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round"><path d="M5 13l4 4L19 7"/></svg>`:''}</div><div><div class="task-week">${week}</div><div class="task-title">${title}</div>${desc?`<div class="task-desc">${desc}</div>`:''}</div></div>`;
+    }).join('');
+    updatePlannerStats();
+}
+function toggleScheduleItem(i, el) {
+    const key='schedule_'+i; const done=!isPlannerItemDone(key); setItemDone(key,done);
+    el.classList.toggle('done',done);
+    const c=el.querySelector('.task-check');
+    if(done){c.innerHTML=`<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round"><path d="M5 13l4 4L19 7"/></svg>`;}
+    else{c.innerHTML='';}
+    updatePlannerStats();
+}
+function isPlannerItemDone(key) { const d=JSON.parse(localStorage.getItem('plannerDone_'+currentUserEmail)||'{}'); return !!d[key]; }
+function setItemDone(key,val) { const d=JSON.parse(localStorage.getItem('plannerDone_'+currentUserEmail)||'{}'); d[key]=val; localStorage.setItem('plannerDone_'+currentUserEmail,JSON.stringify(d)); }
+function updatePlannerStats() {
+    const all=document.querySelectorAll('#scheduleList .task-item'); const done=document.querySelectorAll('#scheduleList .task-item.done');
+    const tp=personalTasks.length; const dp=personalTasks.filter(t=>t.done).length;
+    const total=all.length+tp; const doneCount=done.length+dp;
+    const pct=total>0?Math.round((doneCount/total)*100):0;
+    document.getElementById('plannerTotalTasks').innerText=total;
+    document.getElementById('plannerDoneTasks').innerText=doneCount;
+    document.getElementById('plannerPercent').innerText=pct+'%';
+    document.getElementById('progressLabel').innerText=`${doneCount} / ${total}`;
+    document.getElementById('progressBar').style.width=pct+'%';
+}
+function loadPersonalTasks() { personalTasks=JSON.parse(localStorage.getItem('personalTasks_'+currentUserEmail)||'[]'); }
+function savePersonalTasks() { localStorage.setItem('personalTasks_'+currentUserEmail,JSON.stringify(personalTasks)); }
+function addPersonalTask() {
+    const input=document.getElementById('newTaskInput'); const title=input.value.trim();
+    if(!title) return showToast('Даалгавар бичнэ үү!','error');
+    const priority=document.getElementById('newTaskPriority').value;
+    personalTasks.push({id:Date.now(),title,priority,done:false});
+    savePersonalTasks(); input.value=''; renderPersonalTasks(); updatePlannerStats();
+    showToast('Даалгавар нэмэгдлээ!','success');
+}
+function togglePersonalTask(id) { const t=personalTasks.find(t=>t.id===id); if(t){t.done=!t.done;savePersonalTasks();renderPersonalTasks();updatePlannerStats();} }
+function deletePersonalTask(id) { personalTasks=personalTasks.filter(t=>t.id!==id); savePersonalTasks(); renderPersonalTasks(); updatePlannerStats(); }
+function renderPersonalTasks() {
+    const list=document.getElementById('personalTaskList');
+    if(!personalTasks.length){list.innerHTML=`<div style="text-align:center;color:var(--outline);font-size:12px;padding:16px;">Даалгавар байхгүй</div>`;return;}
+    const pc={high:'rgba(186,26,26,0.1)',mid:'rgba(148,74,0,0.08)',low:'var(--surface-container)'};
+    const tc={high:'var(--error)',mid:'var(--primary)',low:'var(--on-surface-variant)'};
+    const pl={high:'Яаралтай',mid:'Дунд',low:'Энгийн'};
+    list.innerHTML=[...personalTasks].reverse().map(t=>`<div style="display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:10px;border:1px solid ${t.done?'rgba(0,109,66,0.2)':'var(--outline-variant)'};background:${t.done?'rgba(0,109,66,0.06)':'#fff'};" class="task-item ${t.done?'done':''}"><button onclick="togglePersonalTask(${t.id})" style="width:18px;height:18px;border-radius:50%;border:2px solid ${t.done?'var(--tertiary)':'var(--outline)'};background:${t.done?'var(--tertiary)':'transparent'};cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;">${t.done?`<svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round"><path d="M5 13l4 4L19 7"/></svg>`:''}</button><div style="flex:1;"><div style="font-size:12px;font-weight:500;color:${t.done?'var(--on-surface-variant)':'var(--on-surface)'};text-decoration:${t.done?'line-through':'none'};">${t.title}</div><span style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:0.04em;padding:2px 8px;border-radius:9999px;background:${pc[t.priority]};color:${tc[t.priority]};">${pl[t.priority]}</span></div><button onclick="deletePersonalTask(${t.id})" style="background:none;border:none;color:var(--outline);font-size:14px;cursor:pointer;">✕</button></div>`).join('');
+}
 
-/* EXAM */
+/* ─── EXAM ─── */
 let examQuestions=[],currentExamQs=[],currentQIndex=0,examScoreCount=0,examCorrectCount=0,examWrongCount=0;
 let examTimerInterval=null,examTimeLeft=0,examStartTime=null,currentTopic='',examAnswered=false;
-async function initExamLobby(){ showEl('examLobby');hideEl('examActive');hideEl('examResult');stopExamTimer(); document.getElementById('examTopicList').innerHTML=`<div style="text-align:center;color:var(--on-surface-variant);font-size:12px;padding:24px;">Уншиж байна...</div>`; try{const res=await fetch(`${ORDER_URL}?action=getQuestions`);examQuestions=await res.json();}catch(e){examQuestions=buildDemoQuestions();} renderTopics();renderExamHistory(); }
-function buildDemoQuestions(){ return [{Topic:'Дүрэм',Question:'Монгол бичгийг ямар шугамаар бичдэг вэ?',A:'Хэвтээ',B:'Босоо',C:'Диагональ',D:'Дугуй',Answer:'B',Explanation:'Монгол бичгийг дээрээс доош чиглэлтэй босоо бичдэг.'},{Topic:'Дүрэм',Question:'Монгол бичгийн эгшиг үсэг хэд байдаг вэ?',A:'5',B:'7',C:'9',D:'12',Answer:'B',Explanation:'Монгол бичигт 7 эгшиг үсэг байдэг.'},{Topic:'Үг',Question:'"Титэм + шүд" нийлээд ямар үсэг вэ',A:'А',B:'Э',C:'И',D:'О',Answer:'A',Explanation:'"Үгийн эхэнд ордог А" үсэг юм.'},{Topic:'Дуудлага',Question:'"Титэм+гэдэс+шилбэ" ямар үсэг болох вэ?',A:'О',B:'У',C:'Ө',D:'И',Answer:'C',Explanation:'"Үгийн эхэнд ордог Ө" үсэг.'}]; }
-function getTopics(){ return [...new Set(examQuestions.map(q=>q.Topic||q.topic||'Ерөнхий'))]; }
-function renderTopics(){ const topics=getTopics();const el=document.getElementById('examTopicList'); if(!topics.length){el.innerHTML=`<div style="text-align:center;color:var(--on-surface-variant);font-size:12px;padding:24px;">Асуулт олдсонгүй.</div>`;return;} el.innerHTML=topics.map(topic=>{const count=examQuestions.filter(q=>(q.Topic||q.topic||'Ерөнхий')===topic).length; return `<button class="exam-topic-btn" onclick="startExam('${topic.replace(/'/g,"\\'")}')"><div><div class="exam-topic-name">${topic}</div><div class="exam-topic-count">${count} асуулт</div></div><div class="exam-start-badge">Эхлэх</div></button>`; }).join(''); }
-function startExam(topic){ currentTopic=topic;const qs=examQuestions.filter(q=>(q.Topic||q.topic||'Ерөнхий')===topic); currentExamQs=shuffle(qs).slice(0,10);currentQIndex=0;examScoreCount=0;examCorrectCount=0;examWrongCount=0; hideEl('examLobby');hideEl('examResult');showEl('examActive'); examTimeLeft=currentExamQs.length*30;startExamTimer();examStartTime=Date.now();renderExamQuestion(); }
-function renderExamQuestion(){ if(currentQIndex>=currentExamQs.length){finishExam();return;} examAnswered=false; const q=currentExamQs[currentQIndex]; document.getElementById('examQuestionCount').innerText=`${currentQIndex+1} / ${currentExamQs.length}`; document.getElementById('examScore').innerText=examScoreCount; document.getElementById('examProgress').style.width=`${(currentQIndex/currentExamQs.length)*100}%`; document.getElementById('examQuestionBadge').innerText=q.Topic||q.topic||'Ерөнхий'; document.getElementById('examQuestion').innerText=q.Question||q.question||''; document.getElementById('examOptions').innerHTML=['A','B','C','D'].map(opt=>{const text=q[opt];if(!text)return '';return `<button id="opt_${opt}" onclick="selectAnswer('${opt}')" class="option-btn"><div class="option-letter">${opt}</div><span>${text}</span></button>`;}).join(''); document.getElementById('examExplanation').classList.add('hidden'); document.getElementById('examNextBtn').classList.add('hidden'); }
-function selectAnswer(opt){ if(examAnswered)return;examAnswered=true; const q=currentExamQs[currentQIndex];const correct=q.Answer||q.answer||'A';const isOK=opt===correct; const selBtn=document.getElementById('opt_'+opt);if(selBtn) selBtn.classList.add(isOK?'correct':'wrong'); if(!isOK){const cb=document.getElementById('opt_'+correct);if(cb) cb.classList.add('correct');} document.querySelectorAll('#examOptions .option-btn').forEach(b=>b.disabled=true); if(isOK){examScoreCount+=10;examCorrectCount++;showToast('Зөв! +10 оноо','success');}else{examWrongCount++;showToast('Буруу!','error');} const expl=q.Explanation||q.explanation||''; if(expl){document.getElementById('examExplanationText').innerText=expl;document.getElementById('examExplanation').classList.remove('hidden');} document.getElementById('examScore').innerText=examScoreCount; document.getElementById('examNextBtn').classList.remove('hidden'); document.getElementById('examNextBtn').innerText=currentQIndex+1<currentExamQs.length?'Дараагийн асуулт':'Үр дүн харах'; }
-function nextQuestion(){ currentQIndex++;if(currentQIndex>=currentExamQs.length)finishExam();else renderExamQuestion(); }
-function finishExam(){ stopExamTimer();const elapsed=Math.round((Date.now()-examStartTime)/1000); const pct=currentExamQs.length>0?Math.round((examCorrectCount/currentExamQs.length)*100):0; hideEl('examActive');showEl('examResult'); document.getElementById('resultScore').innerText=examScoreCount+' оноо'; document.getElementById('resultDetail').innerText=`${pct}% зөв — ${currentTopic}`; document.getElementById('resultCorrect').innerText=examCorrectCount; document.getElementById('resultWrong').innerText=examWrongCount; document.getElementById('resultTime').innerText=elapsed+'s'; document.getElementById('resultEmoji').innerText=pct>=80?'GREAT!':pct>=50?'GOOD':'TRY AGAIN'; document.getElementById('resultReview').innerHTML=currentExamQs.map((q,i)=>{const c=q.Answer||q.answer||'A';return `<div style="background:var(--surface-container-low);border-radius:10px;padding:10px 12px;font-size:11px;"><div style="color:var(--on-surface-variant);margin-bottom:4px;">${i+1}. ${q.Question||''}</div><div style="color:var(--tertiary);font-weight:600;">Зөв: ${q[c]||c}</div></div>`;}).join(''); saveExamResult({topic:currentTopic,score:examScoreCount,pct,date:new Date().toLocaleDateString('mn-MN'),elapsed}); }
-function retryExam(){ startExam(currentTopic); }
-function backToLobby(){ stopExamTimer();hideEl('examResult');hideEl('examActive');showEl('examLobby');renderExamHistory(); }
-function startExamTimer(){ stopExamTimer();updateTimerDisplay();examTimerInterval=setInterval(()=>{examTimeLeft--;updateTimerDisplay();if(examTimeLeft<=0){clearInterval(examTimerInterval);showToast('Цаг дууслаа!','error');finishExam();}},1000); }
-function stopExamTimer(){ if(examTimerInterval){clearInterval(examTimerInterval);examTimerInterval=null;} }
-function updateTimerDisplay(){ const el=document.getElementById('examTimer');if(!el)return;const m=String(Math.floor(examTimeLeft/60)).padStart(2,'0');const s=String(examTimeLeft%60).padStart(2,'0');el.innerText=`${m}:${s}`;el.classList.toggle('timer-warning',examTimeLeft<=30); }
-function saveExamResult(result){ const key='examHistory_'+currentUserEmail;const h=JSON.parse(localStorage.getItem(key)||'[]');h.unshift(result);localStorage.setItem(key,JSON.stringify(h.slice(0,10))); }
-function renderExamHistory(){ const key='examHistory_'+currentUserEmail;const h=JSON.parse(localStorage.getItem(key)||'[]');const el=document.getElementById('examHistoryList'); if(!h.length){el.innerHTML=`<div style="font-size:11px;color:var(--outline);text-align:center;padding:8px;">Одоохондоо байхгүй</div>`;return;} el.innerHTML=h.map(r=>`<div style="display:flex;justify-content:space-between;align-items:center;background:#fff;border:1px solid var(--outline-variant);border-radius:10px;padding:10px 14px;font-size:12px;"><div><span style="font-weight:600;color:var(--on-surface);">${r.topic}</span><span style="color:var(--on-surface-variant);margin-left:8px;">${r.date}</span></div><div style="font-weight:700;color:${r.pct>=80?'var(--tertiary)':r.pct>=50?'var(--primary)':'var(--error)'};">${r.pct}%</div></div>`).join(''); }
 
-/* UTILS */
-function shuffle(arr){ const a=[...arr];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a; }
-function showEl(id){ const el=document.getElementById(id);if(el) el.classList.remove('hidden'); }
-function hideEl(id){ const el=document.getElementById(id);if(el) el.classList.add('hidden'); }
-function showToast(msg,type='info'){ const box=document.getElementById('toastBox');const toast=document.createElement('div');toast.className=`toast ${type}`;toast.innerText=msg;box.appendChild(toast);setTimeout(()=>toast.style.opacity='1',10);setTimeout(()=>{toast.style.opacity='0';setTimeout(()=>toast.remove(),300);},2800); }
-// ... бусад функцууд ...
-
-function copyOrderCode() {
-  const code = document.getElementById('paymentNote').innerText;
-  navigator.clipboard.writeText(code).then(() => {
-    const btn = document.getElementById('copyBtn');
-    btn.innerText = '✓ Хуулагдлаа';
-    btn.style.background = 'var(--tertiary)';
-    setTimeout(() => {
-      btn.innerText = 'Хуулах';
-      btn.style.background = 'var(--primary)';
-    }, 2000);
-  });
+async function initExamLobby() {
+    showEl('examLobby'); hideEl('examActive'); hideEl('examResult'); stopExamTimer();
+    document.getElementById('examTopicList').innerHTML=`<div style="text-align:center;color:var(--on-surface-variant);font-size:12px;padding:24px;">Уншиж байна...</div>`;
+    try {
+        const data = await fetchJSON(`${ORDER_URL}?action=getQuestions`);
+        examQuestions = data && Array.isArray(data) ? data : buildDemoQuestions();
+    } catch(e) {
+        examQuestions = buildDemoQuestions();
+    }
+    renderTopics(); renderExamHistory();
 }
-    
+function buildDemoQuestions() {
+    return [
+        {Topic:'Дүрэм',Question:'Монгол бичгийг ямар шугамаар бичдэг вэ?',A:'Хэвтээ',B:'Босоо',C:'Диагональ',D:'Дугуй',Answer:'B',Explanation:'Монгол бичгийг дээрээс доош чиглэлтэй босоо бичдэг.'},
+        {Topic:'Дүрэм',Question:'Монгол бичгийн эгшиг үсэг хэд байдаг вэ?',A:'5',B:'7',C:'9',D:'12',Answer:'B',Explanation:'Монгол бичигт 7 эгшиг үсэг байдэг.'},
+        {Topic:'Үг',Question:'"Титэм + шүд" нийлээд ямар үсэг вэ',A:'А',B:'Э',C:'И',D:'О',Answer:'A',Explanation:'"Үгийн эхэнд ордог А" үсэг юм.'},
+        {Topic:'Дуудлага',Question:'"Титэм+гэдэс+шилбэ" ямар үсэг болох вэ?',A:'О',B:'У',C:'Ө',D:'И',Answer:'C',Explanation:'"Үгийн эхэнд ордог Ө" үсэг.'}
+    ];
+}
+function getTopics() { return [...new Set(examQuestions.map(q=>q.Topic||q.topic||'Ерөнхий'))]; }
+function renderTopics() {
+    const topics=getTopics(); const el=document.getElementById('examTopicList');
+    if(!topics.length){el.innerHTML=`<div style="text-align:center;color:var(--on-surface-variant);font-size:12px;padding:24px;">Асуулт олдсонгүй.</div>`;return;}
+    el.innerHTML=topics.map(topic=>{
+        const count=examQuestions.filter(q=>(q.Topic||q.topic||'Ерөнхий')===topic).length;
+        return `<button class="exam-topic-btn" onclick="startExam('${topic.replace(/'/g,"\\'")}')"><div><div class="exam-topic-name">${topic}</div><div class="exam-topic-count">${count} асуулт</div></div><div class="exam-start-badge">Эхлэх</div></button>`;
+    }).join('');
+}
+function startExam(topic) {
+    currentTopic=topic;
+    const qs=examQuestions.filter(q=>(q.Topic||q.topic||'Ерөнхий')===topic);
+    currentExamQs=shuffle(qs).slice(0,10); currentQIndex=0; examScoreCount=0; examCorrectCount=0; examWrongCount=0;
+    hideEl('examLobby'); hideEl('examResult'); showEl('examActive');
+    examTimeLeft=currentExamQs.length*30; startExamTimer(); examStartTime=Date.now();
+    renderExamQuestion();
+}
+function renderExamQuestion() {
+    if(currentQIndex>=currentExamQs.length){finishExam();return;}
+    examAnswered=false;
+    const q=currentExamQs[currentQIndex];
+    document.getElementById('examQuestionCount').innerText=`${currentQIndex+1} / ${currentExamQs.length}`;
+    document.getElementById('examScore').innerText=examScoreCount;
+    document.getElementById('examProgress').style.width=`${(currentQIndex/currentExamQs.length)*100}%`;
+    document.getElementById('examQuestionBadge').innerText=q.Topic||q.topic||'Ерөнхий';
+    document.getElementById('examQuestion').innerText=q.Question||q.question||'';
+    document.getElementById('examOptions').innerHTML=['A','B','C','D'].map(opt=>{
+        const text=q[opt]; if(!text)return '';
+        return `<button id="opt_${opt}" onclick="selectAnswer('${opt}')" class="option-btn"><div class="option-letter">${opt}</div><span>${text}</span></button>`;
+    }).join('');
+    document.getElementById('examExplanation').classList.add('hidden');
+    document.getElementById('examNextBtn').classList.add('hidden');
+}
+function selectAnswer(opt) {
+    if(examAnswered)return; examAnswered=true;
+    const q=currentExamQs[currentQIndex]; const correct=q.Answer||q.answer||'A';
+    const isOK=opt===correct;
+    const selBtn=document.getElementById('opt_'+opt); if(selBtn) selBtn.classList.add(isOK?'correct':'wrong');
+    if(!isOK){const cb=document.getElementById('opt_'+correct);if(cb) cb.classList.add('correct');}
+    document.querySelectorAll('#examOptions .option-btn').forEach(b=>b.disabled=true);
+    if(isOK){examScoreCount+=10;examCorrectCount++;showToast('Зөв! +10 оноо','success');}
+    else{examWrongCount++;showToast('Буруу!','error');}
+    const expl=q.Explanation||q.explanation||'';
+    if(expl){document.getElementById('examExplanationText').innerText=expl;document.getElementById('examExplanation').classList.remove('hidden');}
+    document.getElementById('examScore').innerText=examScoreCount;
+    document.getElementById('examNextBtn').classList.remove('hidden');
+    document.getElementById('examNextBtn').innerText=currentQIndex+1<currentExamQs.length?'Дараагийн асуулт':'Үр дүн харах';
+}
+function nextQuestion() { currentQIndex++; if(currentQIndex>=currentExamQs.length)finishExam(); else renderExamQuestion(); }
+function finishExam() {
+    stopExamTimer(); const elapsed=Math.round((Date.now()-examStartTime)/1000);
+    const pct=currentExamQs.length>0?Math.round((examCorrectCount/currentExamQs.length)*100):0;
+    hideEl('examActive'); showEl('examResult');
+    document.getElementById('resultScore').innerText=examScoreCount+' оноо';
+    document.getElementById('resultDetail').innerText=`${pct}% зөв — ${currentTopic}`;
+    document.getElementById('resultCorrect').innerText=examCorrectCount;
+    document.getElementById('resultWrong').innerText=examWrongCount;
+    document.getElementById('resultTime').innerText=elapsed+'s';
+    document.getElementById('resultEmoji').innerText=pct>=80?'GREAT!':pct>=50?'GOOD':'TRY AGAIN';
+    document.getElementById('resultReview').innerHTML=currentExamQs.map((q,i)=>{
+        const c=q.Answer||q.answer||'A';
+        return `<div style="background:var(--surface-container-low);border-radius:10px;padding:10px 12px;font-size:11px;"><div style="color:var(--on-surface-variant);margin-bottom:4px;">${i+1}. ${q.Question||''}</div><div style="color:var(--tertiary);font-weight:600;">Зөв: ${q[c]||c}</div></div>`;
+    }).join('');
+    saveExamResult({topic:currentTopic,score:examScoreCount,pct,date:new Date().toLocaleDateString('mn-MN'),elapsed});
+}
+function retryExam() { startExam(currentTopic); }
+function backToLobby() { stopExamTimer(); hideEl('examResult'); hideEl('examActive'); showEl('examLobby'); renderExamHistory(); }
+function startExamTimer() {
+    stopExamTimer(); updateTimerDisplay();
+    examTimerInterval=setInterval(()=>{
+        examTimeLeft--; updateTimerDisplay();
+        if(examTimeLeft<=0){clearInterval(examTimerInterval);showToast('Цаг дууслаа!','error');finishExam();}
+    },1000);
+}
+function stopExamTimer() { if(examTimerInterval){clearInterval(examTimerInterval);examTimerInterval=null;} }
+function updateTimerDisplay() {
+    const el=document.getElementById('examTimer'); if(!el)return;
+    const m=String(Math.floor(examTimeLeft/60)).padStart(2,'0');
+    const s=String(examTimeLeft%60).padStart(2,'0');
+    el.innerText=`${m}:${s}`; el.classList.toggle('timer-warning',examTimeLeft<=30);
+}
+function saveExamResult(result) {
+    const key='examHistory_'+currentUserEmail;
+    const h=JSON.parse(localStorage.getItem(key)||'[]');
+    h.unshift(result); localStorage.setItem(key,JSON.stringify(h.slice(0,10)));
+}
+function renderExamHistory() {
+    const key='examHistory_'+currentUserEmail;
+    const h=JSON.parse(localStorage.getItem(key)||'[]');
+    const el=document.getElementById('examHistoryList');
+    if(!h.length){el.innerHTML=`<div style="font-size:11px;color:var(--outline);text-align:center;padding:8px;">Одоохондоо байхгүй</div>`;return;}
+    el.innerHTML=h.map(r=>`<div style="display:flex;justify-content:space-between;align-items:center;background:#fff;border:1px solid var(--outline-variant);border-radius:10px;padding:10px 14px;font-size:12px;"><div><span style="font-weight:600;color:var(--on-surface);">${r.topic}</span><span style="color:var(--on-surface-variant);margin-left:8px;">${r.date}</span></div><div style="font-weight:700;color:${r.pct>=80?'var(--tertiary)':r.pct>=50?'var(--primary)':'var(--error)'};">${r.pct}%</div></div>`).join('');
+}
+
+/* ─── UTILS ─── */
+function shuffle(arr) { const a=[...arr]; for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];} return a; }
+function showEl(id) { const el=document.getElementById(id); if(el) el.classList.remove('hidden'); }
+function hideEl(id) { const el=document.getElementById(id); if(el) el.classList.add('hidden'); }
+function showToast(msg,type='info') {
+    const box=document.getElementById('toastBox');
+    const toast=document.createElement('div');
+    toast.className=`toast ${type}`; toast.innerText=msg;
+    box.appendChild(toast);
+    setTimeout(()=>toast.style.opacity='1',10);
+    setTimeout(()=>{toast.style.opacity='0';setTimeout(()=>toast.remove(),300);},2800);
+}
 </script>
 </body>
 </html>
