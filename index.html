@@ -691,13 +691,26 @@
     </div>
     <div style="background:var(--surface-container-low);border-radius:14px;padding:14px;text-align:left;margin-bottom:16px;">
       <div style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:0.05em;color:var(--on-surface-variant);margin-bottom:6px;">Гүйлгээний утга:</div>
-      <div id="paymentNote" style="font-size:13px;font-weight:700;color:var(--primary);background:#fff;padding:10px 12px;border-radius:10px;border:1px solid var(--outline-variant);word-break:break-all;"></div>
-      <div style="margin-top:12px;padding-top:10px;border-top:1px solid var(--outline-variant);font-size:12px;color:var(--on-surface-variant);">
-        <div>ХАС БАНК: <strong style="color:var(--on-surface);">5006069631</strong></div>
-        <div style="margin-top:4px;">ХҮЛЭЭН АВАГЧ: <strong style="color:var(--on-surface);">МӨНХДАЛАЙ ТУУЛ</strong></div>
-      </div>
-    </div>
-    <button onclick="confirmOrder()" id="confirmBtn" class="btn-primary" style="width:100%;padding:14px;border-radius:12px;">Төлсөн, хүсэлт илгээх</button>
+<!-- PAYMENT MODAL дотор paymentNote хэсгийг солино -->
+<div style="background:var(--surface-container-low);border-radius:14px;padding:14px;text-align:left;margin-bottom:16px;">
+  
+  <!-- Заавар -->
+  <div style="background:rgba(186,26,26,0.08);border:1px solid rgba(186,26,26,0.2);border-radius:10px;padding:10px 12px;margin-bottom:12px;">
+    <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.04em;color:var(--error);margin-bottom:4px;">⚠ Заавал бичих</div>
+    <div style="font-size:11px;color:var(--on-surface);line-height:1.6;">Гүйлгээний <strong>утга/тайлбар</strong> хэсэгт доорх кодыг <strong>яг хуулж</strong> бичнэ үү. Код байхгүй бол эрх автоматаар идэвхжихгүй.</div>
+  </div>
+
+  <div style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:0.05em;color:var(--on-surface-variant);margin-bottom:6px;">Гүйлгээний утга (хуулж бичнэ үү):</div>
+  
+  <div style="display:flex;align-items:center;gap:8px;">
+    <div id="paymentNote" style="flex:1;font-size:16px;font-weight:800;color:var(--primary);background:#fff;padding:12px 14px;border-radius:10px;border:2px solid var(--primary);letter-spacing:0.05em;word-break:break-all;"></div>
+    <button onclick="copyOrderCode()" style="background:var(--primary);border:none;color:#fff;font-family:'Lexend',sans-serif;font-size:10px;font-weight:700;text-transform:uppercase;padding:10px 14px;border-radius:10px;cursor:pointer;white-space:nowrap;" id="copyBtn">Хуулах</button>
+  </div>
+
+  <div style="margin-top:12px;padding-top:10px;border-top:1px solid var(--outline-variant);font-size:12px;color:var(--on-surface-variant);">
+    <div>ХАС БАНК: <strong style="color:var(--on-surface);">5006069631</strong></div>
+    <div style="margin-top:4px;">ХҮЛЭЭН АВАГЧ: <strong style="color:var(--on-surface);">МӨНХДАЛАЙ ТУУЛ</strong></div>
+    <div style="margin-top:4px;">ДҮНГ: <strong style="color:var(--primary);" id="paymentAmount"></strong></div>
   </div>
 </div>
 
@@ -707,7 +720,7 @@
 <div id="printArea" style="display:none;"></div>
 
 <script>
-const ORDER_URL   = 'https://script.google.com/macros/s/AKfycbyNlKTyvrT5kVWN2WV50gkFgpD2F7_vmzmJTEA2z3EI8QyBwPN5zjJ_Ys_n_Pyzmb_W1A/exec';
+const ORDER_URL   = 'https://script.google.com/macros/s/AKfycbxahWquQi1Wlw0cQzl5xuB0AP2wz8CQnLhdsRQMjgwY_ZP1X2Hw4-S5Ove3AFIHXThXkQ/exec';
 const GITHUB_BASE = 'https://raw.githubusercontent.com/tuult764-crypto/sonirholtoi-hel-bichig-/main/';
 let currentUserEmail='',productsData=[],cartItems=[],pendingProduct='',pendingTotal=0,pendingPassPages=0;
 let sudokuBoard=[],printPageCount=1,lbImages=[],lbIndex=0,lbTouchStartX=0;
@@ -786,11 +799,118 @@ function renderCartItems(){
     c.innerHTML=cartItems.map(item=>`<div class="cart-item"><div style="flex:1;"><div style="font-size:12px;font-weight:600;color:var(--on-surface);margin-bottom:2px;">${item.title}</div><div style="font-size:13px;font-weight:700;color:var(--primary);">${item.price.toLocaleString()}₮</div></div><div style="display:flex;align-items:center;gap:8px;"><button class="qty-btn" style="background:var(--surface-container-high);" onclick="updateQuantity('${item.title.replace(/'/g,"\\'")}', -1)">−</button><span style="font-size:13px;font-weight:700;min-width:20px;text-align:center;">${item.quantity}</span><button class="qty-btn" style="background:rgba(148,74,0,0.1);color:var(--primary);" onclick="updateQuantity('${item.title.replace(/'/g,"\\'")}', 1)">+</button></div><button onclick="removeFromCart('${item.title.replace(/'/g,"\\'")}') " style="background:none;border:none;color:var(--error);font-size:16px;cursor:pointer;padding:4px;">✕</button></div>`).join('');
     tEl.textContent=cartItems.reduce((s,i)=>s+i.price*i.quantity,0).toLocaleString()+' ₮';
 }
-function proceedToPayment(){ if(!cartItems.length) return showToast('Сагс хоосон байна!','error'); requireEmail(()=>{ const summary=cartItems.map(i=>`${i.title} x${i.quantity}`).join(', '); const total=cartItems.reduce((s,i)=>s+i.price*i.quantity,0); pendingProduct=summary;pendingTotal=total;pendingPassPages=0; closeCart(); document.getElementById('paymentNote').innerText=currentUserEmail+' | '+summary+' | '+total.toLocaleString()+'₮'; document.getElementById('paymentModal').classList.add('active'); }); }
+function proceedToPayment() {
+  if (!cartItems.length) return showToast('Сагс хоосон байна!', 'error');
+  requireEmail(() => {
+    const summary = cartItems.map(i => `${i.title} x${i.quantity}`).join(', ');
+    const total = cartItems.reduce((s, i) => s + i.price * i.quantity, 0);
+    pendingProduct = summary;
+    pendingTotal = total;
+    pendingPassPages = 0;
+    closeCart();
+    document.getElementById('paymentNote').innerText =
+      currentUserEmail + ' | ' + summary + ' | ' + total.toLocaleString() + '₮';
+    document.getElementById('paymentModal').classList.add('active');
+  });
+}
 function buyNow(title,price){ requireEmail(()=>{ pendingProduct=title;pendingTotal=price;pendingPassPages=0; document.getElementById('paymentNote').innerText=currentUserEmail+' | '+title+' | '+Number(price).toLocaleString()+'₮'; document.getElementById('paymentModal').classList.add('active'); }); }
 function closePayment(){ document.getElementById('paymentModal').classList.remove('active'); }
 async function confirmOrder(){ const btn=document.getElementById('confirmBtn'); const note=document.getElementById('paymentNote').innerText; btn.disabled=true;btn.innerText='Илгээж байна...'; const p=new URLSearchParams(); p.append('action','order');p.append('email',currentUserEmail);p.append('product',pendingProduct);p.append('note',note); if(pendingPassPages>0){p.append('printPages',pendingPassPages);p.append('type','printPass');} try{ await fetch(ORDER_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:p.toString()}); showToast('Хүсэлт илгээгдлээ! Туул багш шалгаад эрхийг идэвхжүүлнэ.','success'); closePayment();clearCart();pendingPassPages=0; }catch(e){showToast('Холболтын алдаа гарлаа!','error');} finally{btn.disabled=false;btn.innerText='Төлсөн, хүсэлт илгээх';} }
+// Давтагдашгүй код үүсгэх
+function generateOrderCode() {
+  const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+  let code = 'SHB-';
+  for (let i = 0; i < 6; i++) {
+    code += chars[Math.floor(Math.random() * chars.length)];
+  }
+  return code;
+}
 
+// pendingOrderCode глобал хувьсагч нэмнэ (файлын эхэнд)
+let pendingOrderCode = '';
+
+// proceedToPayment функцыг солино уу
+function proceedToPayment() {
+  if (!cartItems.length) return showToast('Сагс хоосон байна!', 'error');
+  requireEmail(() => {
+    const summary = cartItems.map(i => `${i.title} x${i.quantity}`).join(', ');
+    const total = cartItems.reduce((s, i) => s + i.price * i.quantity, 0);
+    pendingProduct = summary;
+    pendingTotal = total;
+    pendingPassPages = 0;
+    pendingOrderCode = generateOrderCode();
+    closeCart();
+    showPaymentModal();
+  });
+}
+
+// buyNow функцыг солино уу
+function buyNow(title, price) {
+  requireEmail(() => {
+    pendingProduct = title;
+    pendingTotal = price;
+    pendingPassPages = 0;
+    pendingOrderCode = generateOrderCode();
+    showPaymentModal();
+  });
+}
+
+// buyPrintPass функцыг солино уу
+function buyPrintPass(pages, price) {
+  requireEmail(() => {
+    pendingProduct = `Судоку хэвлэх эрх — ${pages} хуудас`;
+    pendingTotal = price;
+    pendingPassPages = pages;
+    pendingOrderCode = generateOrderCode();
+    showPaymentModal();
+  });
+}
+
+// Төлбөрийн modal харуулах тусдаа функц
+function showPaymentModal() {
+  const note = `${pendingOrderCode} | ${currentUserEmail}`;
+  document.getElementById('paymentNote').innerText = note;
+  document.getElementById('paymentModal').classList.add('active');
+}
+
+// confirmOrder функцыг солино уу
+async function confirmOrder() {
+  const btn = document.getElementById('confirmBtn');
+  btn.disabled = true;
+  btn.innerText = 'Илгээж байна...';
+  
+  const p = new URLSearchParams();
+  p.append('action', 'order');
+  p.append('email', currentUserEmail);
+  p.append('product', pendingProduct);
+  p.append('amount', pendingTotal);
+  p.append('orderCode', pendingOrderCode);  // ← код илгээнэ
+  p.append('note', `${pendingOrderCode} | ${currentUserEmail} | ${pendingProduct} | ${pendingTotal}₮`);
+  
+  if (pendingPassPages > 0) {
+    p.append('printPages', pendingPassPages);
+    p.append('type', 'printPass');
+  }
+  
+  try {
+    await fetch(ORDER_URL, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: p.toString()
+    });
+    showToast('Хүсэлт илгээгдлээ! Туул багш шалгаад эрхийг идэвхжүүлнэ.', 'success');
+    closePayment();
+    clearCart();
+    pendingPassPages = 0;
+    pendingOrderCode = '';
+  } catch (e) {
+    showToast('Холболтын алдаа гарлаа!', 'error');
+  } finally {
+    btn.disabled = false;
+    btn.innerText = 'Төлсөн, хүсэлт илгээх';
+  }
+}
 /* LIBRARY */
 function detectItemType(f){ const t=(f.type||f.Type||'').toLowerCase(); const ti=(f.productName||f.title||f.Title||'').toLowerCase(); if(t.includes('print')||t.includes('судоку')||ti.includes('судоку хэвлэх')||ti.includes('print pass')) return 'printPass'; return 'file'; }
 async function loadMyLibrary(){
@@ -812,10 +932,44 @@ function renderPassSection(){ const remaining=getLocalPass(); const freeUsed=get
 function openPrintPassSection(){ const r=getLocalPass(); const fu=getFreeUsed(); if(r>0){showPrintModal();}else if(!fu){showToast('1 хуудас үнэгүй хэвлэх боломжтой!','info'); const el=document.getElementById('printPassSection'); if(el) el.scrollIntoView({behavior:'smooth',block:'center'});}else{showToast('Хэвлэх эрх байхгүй. Эрх авна уу!','error'); const el=document.getElementById('printPassSection'); if(el) el.scrollIntoView({behavior:'smooth',block:'center'});} }
 function useFreeOnePage(){ if(getFreeUsed()) return showToast('Үнэгүй 1 хуудасны боломж аль хэдийн ашиглагдсан!','error'); printPageCount=1; setFreeUsed(); renderPassSection(); closePrintModal(); doPrint(); showToast('Үнэгүй 1 хуудас хэвлэж байна!','success'); }
 function buyPrintPass(pages,price){ requireEmail(()=>{ pendingProduct=`Судоку хэвлэх эрх — ${pages} хуудас`;pendingTotal=price;pendingPassPages=pages; document.getElementById('paymentNote').innerText=`${currentUserEmail} | Судоку хэвлэх эрх ${pages} хуудас | ${price.toLocaleString()}₮`; document.getElementById('paymentModal').classList.add('active'); }); }
-function showPrintModal(){ const r=getLocalPass(); printPageCount=1; document.getElementById('modalRemainingPages').innerText=r; updatePrintModalUI(); document.getElementById('printModal').classList.add('active'); }
+function showPrintModal() {
+  const r = getLocalPass();
+  // r-ийн дотор байгаа хамгийн ойрын 5-ын үржвэрээс эхэлнэ
+  printPageCount = [5,10,15,20,25,30].filter(v => v <= r)[0] || 5;
+  document.getElementById('modalRemainingPages').innerText = r;
+  updatePrintModalUI();
+  document.getElementById('printModal').classList.add('active');
+}
 function closePrintModal(){ document.getElementById('printModal').classList.remove('active'); }
-function adjustPrintPages(delta){ const r=getLocalPass(); printPageCount=Math.max(1,Math.min(r,printPageCount+delta)); updatePrintModalUI(); }
-function updatePrintModalUI(){ const r=getLocalPass(); document.getElementById('printPageCountDisplay').innerText=printPageCount; document.getElementById('printSudokuCount').innerText=printPageCount*4; const notEnough=document.getElementById('printNotEnough'); const btn=document.getElementById('doPrintBtn'); if(printPageCount>r){notEnough.classList.remove('hidden');btn.disabled=true;btn.style.opacity='0.5';}else{notEnough.classList.add('hidden');btn.disabled=false;btn.style.opacity='1';} }
+function adjustPrintPages(delta) {
+  const r = getLocalPass();
+  const steps = [5, 10, 15, 20, 25, 30].filter(v => v <= r);
+  if (!steps.length) return;
+  const curIdx = steps.indexOf(printPageCount);
+  if (delta > 0) {
+    printPageCount = steps[Math.min(curIdx + 1, steps.length - 1)];
+  } else {
+    printPageCount = steps[Math.max(curIdx - 1, 0)];
+  }
+  updatePrintModalUI();
+}
+function updatePrintModalUI() {
+  const r = getLocalPass();
+  const steps = [5, 10, 15, 20, 25, 30].filter(v => v <= r);
+  document.getElementById('printPageCountDisplay').innerText = printPageCount;
+  document.getElementById('printSudokuCount').innerText = printPageCount * 4;
+  const notEnough = document.getElementById('printNotEnough');
+  const btn = document.getElementById('doPrintBtn');
+  if (!steps.includes(printPageCount) || printPageCount > r) {
+    notEnough.classList.remove('hidden');
+    btn.disabled = true;
+    btn.style.opacity = '0.5';
+  } else {
+    notEnough.classList.add('hidden');
+    btn.disabled = false;
+    btn.style.opacity = '1';
+  }
+}
 function executePrint(){ const r=getLocalPass(); if(printPageCount>r) return showToast('Эрх хүрэхгүй байна!','error'); setLocalPass(r-printPageCount); const p=new URLSearchParams(); p.append('action','usePrintPass');p.append('email',currentUserEmail);p.append('usedPages',printPageCount); fetch(ORDER_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:p.toString()}).catch(()=>{}); closePrintModal();renderPassSection();doPrint(); showToast(`${printPageCount} хуудас хэвлэж байна! Үлдсэн: ${r-printPageCount} хуудас`,'success'); }
 
 /* SUDOKU */
@@ -870,6 +1024,21 @@ function shuffle(arr){ const a=[...arr];for(let i=a.length-1;i>0;i--){const j=Ma
 function showEl(id){ const el=document.getElementById(id);if(el) el.classList.remove('hidden'); }
 function hideEl(id){ const el=document.getElementById(id);if(el) el.classList.add('hidden'); }
 function showToast(msg,type='info'){ const box=document.getElementById('toastBox');const toast=document.createElement('div');toast.className=`toast ${type}`;toast.innerText=msg;box.appendChild(toast);setTimeout(()=>toast.style.opacity='1',10);setTimeout(()=>{toast.style.opacity='0';setTimeout(()=>toast.remove(),300);},2800); }
+// ... бусад функцууд ...
+
+function copyOrderCode() {
+  const code = document.getElementById('paymentNote').innerText;
+  navigator.clipboard.writeText(code).then(() => {
+    const btn = document.getElementById('copyBtn');
+    btn.innerText = '✓ Хуулагдлаа';
+    btn.style.background = 'var(--tertiary)';
+    setTimeout(() => {
+      btn.innerText = 'Хуулах';
+      btn.style.background = 'var(--primary)';
+    }, 2000);
+  });
+}
+    
 </script>
 </body>
 </html>
