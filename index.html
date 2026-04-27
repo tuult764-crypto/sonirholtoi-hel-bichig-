@@ -77,6 +77,10 @@
         .section-title { font-size: 24px; font-weight: 700; color: var(--on-surface); letter-spacing: -0.01em; }
         .section-link { font-size: 12px; font-weight: 600; color: var(--primary); text-transform: uppercase; letter-spacing: 0.04em; cursor: pointer; text-decoration: none; }
         .section-link:hover { text-decoration: underline; }
+        .nav-pills { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 4px; margin-bottom: 24px; scrollbar-width: none; }
+        .nav-pills::-webkit-scrollbar { display: none; }
+        .pill { background: var(--surface-container); border: 1px solid transparent; color: var(--on-surface-variant); padding: 8px 18px; border-radius: 9999px; font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em; cursor: pointer; white-space: nowrap; transition: all 0.2s; }
+        .pill.active, .pill:hover { background: var(--primary); color: #fff; border-color: var(--primary); }
         .product-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 20px; }
         .product-card { background: #fff; border: 1px solid var(--outline-variant); border-radius: 16px; overflow: hidden; transition: all 0.25s; display: flex; flex-direction: column; }
         .product-card:hover { transform: translateY(-4px); box-shadow: 0 8px 24px rgba(0,0,0,0.08); }
@@ -95,6 +99,7 @@
         .btn-buy:hover { background: #7a3d00; }
         .feature-strip { background: var(--inverse-surface); border-radius: 20px; padding: 48px; margin-bottom: 80px; display: grid; grid-template-columns: repeat(4, 1fr); gap: 32px; }
         .feature-item { text-align: center; }
+        .feature-icon { width: 48px; height: 48px; border-radius: 12px; margin: 0 auto 14px; display: flex; align-items: center; justify-content: center; }
         .feature-num { font-size: 28px; font-weight: 700; color: var(--inverse-primary); margin-bottom: 6px; }
         .feature-label { font-size: 12px; font-weight: 500; color: rgba(255,255,255,0.55); text-transform: uppercase; letter-spacing: 0.04em; }
         .module-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
@@ -104,29 +109,22 @@
         .module-card.blue { background: rgba(0,96,172,0.06); border-color: rgba(0,96,172,0.15); }
         .module-card.green { background: rgba(0,109,66,0.06); border-color: rgba(0,109,66,0.15); }
         .module-card.purple { background: rgba(138,5,255,0.06); border-color: rgba(138,5,255,0.15); }
-        .module-card.teal { background: rgba(0,128,128,0.06); border-color: rgba(0,128,128,0.15); }
-        .module-card.rose { background: rgba(190,18,60,0.06); border-color: rgba(190,18,60,0.15); }
         .module-icon { width: 48px; height: 48px; border-radius: 12px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
         .module-card.orange .module-icon { background: rgba(148,74,0,0.12); }
         .module-card.blue .module-icon { background: rgba(0,96,172,0.12); }
         .module-card.green .module-icon { background: rgba(0,109,66,0.12); }
         .module-card.purple .module-icon { background: rgba(138,5,255,0.12); }
-        .module-card.teal .module-icon { background: rgba(0,128,128,0.12); }
-        .module-card.rose .module-icon { background: rgba(190,18,60,0.12); }
         .module-icon svg { width: 22px; height: 22px; fill: none; stroke-width: 1.8; }
         .module-card.orange .module-icon svg { stroke: var(--primary); }
         .module-card.blue .module-icon svg { stroke: var(--secondary); }
         .module-card.green .module-icon svg { stroke: var(--tertiary); }
         .module-card.purple .module-icon svg { stroke: var(--accent-purple); }
-        .module-card.teal .module-icon svg { stroke: #007070; }
-        .module-card.rose .module-icon svg { stroke: #be123c; }
+        .module-content {}
         .module-badge { font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 6px; }
         .module-card.orange .module-badge { color: var(--primary); }
         .module-card.blue .module-badge { color: var(--secondary); }
         .module-card.green .module-badge { color: var(--tertiary); }
         .module-card.purple .module-badge { color: var(--accent-purple); }
-        .module-card.teal .module-badge { color: #007070; }
-        .module-card.rose .module-badge { color: #be123c; }
         .module-title { font-size: 15px; font-weight: 600; color: var(--on-surface); margin-bottom: 6px; }
         .module-desc { font-size: 12px; font-weight: 400; color: var(--on-surface-variant); line-height: 1.6; }
         .content-section { display: none; }
@@ -136,7 +134,7 @@
         .modal-box { background: #fff; border-radius: 24px; padding: 32px; width: 100%; max-width: 400px; box-shadow: 0 24px 64px rgba(0,0,0,0.2); }
         .modal-title { font-size: 18px; font-weight: 700; color: var(--on-surface); margin-bottom: 6px; }
         .modal-sub { font-size: 13px; color: var(--on-surface-variant); margin-bottom: 24px; line-height: 1.5; }
-        .input-field { width: 100%; border: 1.5px solid var(--outline-variant); border-radius: 12px; padding: 12px 16px; font-family: 'Lexend', sans-serif; font-size: 13px; font-weight: 500; outline: none; transition: border-color 0.2s; background: #fff; color: var(--on-surface); }
+        .input-field { width: 100%; border: 1.5px solid var(--outline-variant); border-radius: 12px; padding: 12px 16px; font-family: 'Lexend', sans-serif; font-size: 13px; font-weight: 500; outline: none; transition: border-color 0.2s; }
         .input-field:focus { border-color: var(--primary); }
         .modal-actions { display: flex; gap: 10px; margin-top: 16px; }
         .btn-cancel { flex: 1; background: var(--surface-container); border: none; color: var(--on-surface-variant); padding: 12px; border-radius: 12px; font-family: 'Lexend', sans-serif; font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.03em; cursor: pointer; }
@@ -201,122 +199,8 @@
         .exam-badge { display: inline-block; background: rgba(0,96,172,0.1); color: var(--secondary); font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; padding: 4px 12px; border-radius: 9999px; margin-bottom: 12px; }
         .progress-track { height: 4px; background: var(--surface-container-high); border-radius: 9999px; overflow: hidden; margin-bottom: 20px; }
         .progress-fill { height: 100%; background: var(--secondary); border-radius: 9999px; transition: width 0.4s; }
-
-        /* ── ОНЛАЙН СУРГАЛТ ── */
-        .course-hero { background: linear-gradient(135deg, rgba(148,74,0,0.08) 0%, rgba(242,140,56,0.12) 100%); border: 1px solid rgba(148,74,0,0.18); border-radius: 20px; padding: 36px; margin-bottom: 32px; display: flex; gap: 32px; align-items: flex-start; }
-        .course-hero-info { flex: 1; }
-        .course-badge-row { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px; }
-        .course-badge { font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; padding: 4px 12px; border-radius: 9999px; }
-        .course-badge.new { background: rgba(0,96,172,0.12); color: var(--secondary); }
-        .course-badge.level { background: rgba(0,109,66,0.12); color: var(--tertiary); }
-        .course-title { font-size: 26px; font-weight: 700; color: var(--on-surface); margin-bottom: 12px; line-height: 1.3; }
-        .course-desc { font-size: 13px; color: var(--on-surface-variant); line-height: 1.7; margin-bottom: 20px; }
-        .course-meta { display: flex; gap: 20px; flex-wrap: wrap; margin-bottom: 24px; }
-        .course-meta-item { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--on-surface-variant); font-weight: 500; }
-        .course-meta-item svg { width: 14px; height: 14px; stroke: var(--outline); fill: none; stroke-width: 1.8; }
-        .course-price-box { background: #fff; border: 1.5px solid var(--outline-variant); border-radius: 16px; padding: 24px; min-width: 220px; text-align: center; flex-shrink: 0; }
-        .course-price-main { font-size: 32px; font-weight: 700; color: var(--primary); margin-bottom: 4px; }
-        .course-price-sub { font-size: 11px; color: var(--on-surface-variant); margin-bottom: 16px; }
-        .btn-enroll { width: 100%; background: var(--primary); color: #fff; border: none; padding: 14px; border-radius: 12px; font-family: 'Lexend', sans-serif; font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; cursor: pointer; transition: all 0.2s; margin-bottom: 8px; }
-        .btn-enroll:hover { background: #7a3d00; transform: translateY(-1px); }
-        .btn-enroll.enrolled { background: var(--tertiary); cursor: default; }
-        .btn-enroll.enrolled:hover { background: var(--tertiary); transform: none; }
-        .course-guarantee { font-size: 10px; color: var(--outline); text-align: center; }
-        .curriculum-section { margin-bottom: 32px; }
-        .curriculum-header { font-size: 16px; font-weight: 700; color: var(--on-surface); margin-bottom: 16px; display: flex; align-items: center; gap: 10px; }
-        .curriculum-header::after { content: ''; flex: 1; height: 1px; background: var(--outline-variant); }
-        .lesson-item { display: flex; align-items: center; gap: 14px; padding: 14px 16px; border-radius: 12px; border: 1px solid var(--outline-variant); background: #fff; margin-bottom: 8px; transition: all 0.2s; cursor: pointer; }
-        .lesson-item:hover { border-color: var(--primary-container); background: rgba(148,74,0,0.02); }
-        .lesson-item.locked { opacity: 0.6; cursor: not-allowed; }
-        .lesson-item.locked:hover { border-color: var(--outline-variant); background: #fff; }
-        .lesson-num { width: 32px; height: 32px; border-radius: 9999px; background: var(--surface-container); color: var(--on-surface-variant); font-size: 11px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
-        .lesson-item.unlocked .lesson-num { background: rgba(148,74,0,0.12); color: var(--primary); }
-        .lesson-item.completed .lesson-num { background: var(--tertiary); color: #fff; }
-        .lesson-title { flex: 1; font-size: 13px; font-weight: 600; color: var(--on-surface); }
-        .lesson-type { font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; padding: 3px 9px; border-radius: 9999px; }
-        .lesson-type.video { background: rgba(0,96,172,0.1); color: var(--secondary); }
-        .lesson-type.quiz { background: rgba(148,74,0,0.1); color: var(--primary); }
-        .lesson-type.practice { background: rgba(0,109,66,0.1); color: var(--tertiary); }
-        .lesson-lock { font-size: 14px; }
-        .lesson-duration { font-size: 10px; color: var(--outline); font-weight: 500; }
-
-        /* ── AI ХӨТӨЛБӨР ── */
-        .ai-planner-banner { background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%); border-radius: 20px; padding: 36px; margin-bottom: 32px; color: #fff; position: relative; overflow: hidden; }
-        .ai-planner-banner::before { content: ''; position: absolute; top: -40px; right: -40px; width: 200px; height: 200px; border-radius: 50%; background: rgba(138,5,255,0.15); }
-        .ai-planner-banner::after { content: ''; position: absolute; bottom: -20px; left: 30%; width: 120px; height: 120px; border-radius: 50%; background: rgba(148,74,0,0.2); }
-        .ai-banner-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: rgba(255,183,131,0.9); margin-bottom: 12px; }
-        .ai-banner-title { font-size: 24px; font-weight: 700; margin-bottom: 10px; line-height: 1.3; position: relative; z-index: 1; }
-        .ai-banner-desc { font-size: 13px; color: rgba(255,255,255,0.7); line-height: 1.6; position: relative; z-index: 1; }
-        .ai-credit-pill { display: inline-flex; align-items: center; gap: 8px; background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.2); border-radius: 9999px; padding: 8px 16px; font-size: 12px; font-weight: 700; color: #fff; margin-top: 16px; position: relative; z-index: 1; }
-        .ai-credit-dot { width: 8px; height: 8px; border-radius: 50%; background: #4ade80; animation: pulse 2s infinite; }
-        @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.6;transform:scale(1.3)} }
-        .credit-buy-grid { display: grid; grid-template-columns: repeat(2,1fr); gap: 12px; margin-bottom: 24px; }
-        .credit-buy-card { border: 1.5px solid var(--outline-variant); border-radius: 14px; padding: 16px; text-align: center; cursor: pointer; transition: all 0.2s; background: #fff; position: relative; }
-        .credit-buy-card:hover { border-color: var(--accent-purple); transform: translateY(-2px); box-shadow: 0 8px 20px rgba(138,5,255,0.1); }
-        .credit-buy-card.featured { background: linear-gradient(135deg, #8A05FF 0%, #6200cc 100%); border-color: #8A05FF; color: #fff; }
-        .credit-count { font-size: 28px; font-weight: 700; }
-        .credit-unit { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em; opacity: 0.7; }
-        .credit-price { font-size: 13px; font-weight: 700; margin-top: 4px; }
-        .credit-buy-card:not(.featured) .credit-price { color: var(--primary); }
-        .ai-form-card { background: #fff; border: 1px solid var(--outline-variant); border-radius: 16px; padding: 24px; margin-bottom: 20px; }
-        .ai-form-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--on-surface-variant); margin-bottom: 8px; display: block; }
-        .ai-select { width: 100%; border: 1.5px solid var(--outline-variant); border-radius: 12px; padding: 12px 16px; font-family: 'Lexend', sans-serif; font-size: 13px; font-weight: 500; outline: none; transition: border-color 0.2s; background: #fff; color: var(--on-surface); appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23887365' stroke-width='2.5' stroke-linecap='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 14px center; }
-        .ai-select:focus { border-color: var(--accent-purple); }
-        .btn-ai-generate { width: 100%; background: linear-gradient(135deg, #8A05FF 0%, #6200cc 100%); color: #fff; border: none; padding: 16px; border-radius: 14px; font-family: 'Lexend', sans-serif; font-size: 14px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; justify-content: center; gap: 10px; }
-        .btn-ai-generate:hover { opacity: 0.9; transform: translateY(-1px); box-shadow: 0 8px 24px rgba(138,5,255,0.3); }
-        .btn-ai-generate:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
-        .ai-result-box { background: #fff; border: 1px solid var(--outline-variant); border-radius: 16px; padding: 24px; margin-top: 20px; }
-        .ai-result-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; padding-bottom: 14px; border-bottom: 1px solid var(--outline-variant); }
-        .ai-result-title { font-size: 14px; font-weight: 700; color: var(--on-surface); }
-        .ai-result-content { font-size: 13px; color: var(--on-surface); line-height: 1.8; white-space: pre-wrap; }
-        .ai-typing { display: inline-block; }
-        .ai-typing::after { content: '|'; animation: blink 0.7s infinite; }
-        @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
-        .lesson-plan-table { width: 100%; border-collapse: collapse; margin-top: 8px; }
-        .lesson-plan-table th { background: var(--surface-container); padding: 10px 14px; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; color: var(--on-surface-variant); text-align: left; }
-        .lesson-plan-table td { padding: 12px 14px; font-size: 12px; border-bottom: 1px solid var(--outline-variant); color: var(--on-surface); vertical-align: top; }
-        .lesson-plan-table tr:last-child td { border-bottom: none; }
-        .lesson-plan-table tr:hover td { background: rgba(148,74,0,0.03); }
-
-        /* ── AI ШАЛГАЛТ ── */
-        .assessment-tab-row { display: flex; gap: 8px; margin-bottom: 24px; }
-        .assessment-tab { flex: 1; padding: 14px; border: 1.5px solid var(--outline-variant); border-radius: 14px; background: #fff; font-family: 'Lexend', sans-serif; font-size: 12px; font-weight: 600; cursor: pointer; text-align: center; transition: all 0.2s; color: var(--on-surface-variant); }
-        .assessment-tab.active { border-color: var(--secondary); background: rgba(0,96,172,0.06); color: var(--secondary); }
-        .assessment-tab:hover:not(.active) { border-color: var(--outline); }
-        .bloom-level { display: flex; align-items: center; gap: 10px; padding: 10px 14px; border-radius: 10px; border: 1.5px solid var(--outline-variant); background: #fff; margin-bottom: 8px; cursor: pointer; transition: all 0.18s; user-select: none; }
-        .bloom-level.selected { border-color: var(--secondary); background: rgba(0,96,172,0.06); }
-        .bloom-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
-        .bloom-name { font-size: 12px; font-weight: 600; color: var(--on-surface); flex: 1; }
-        .bloom-desc { font-size: 10px; color: var(--on-surface-variant); }
-        .bloom-check { width: 18px; height: 18px; border-radius: 4px; border: 2px solid var(--outline-variant); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
-        .bloom-level.selected .bloom-check { background: var(--secondary); border-color: var(--secondary); }
-        .time-pill-row { display: flex; gap: 8px; }
-        .time-pill { flex: 1; padding: 10px; border: 1.5px solid var(--outline-variant); border-radius: 10px; background: #fff; font-family: 'Lexend', sans-serif; font-size: 12px; font-weight: 600; cursor: pointer; text-align: center; transition: all 0.2s; color: var(--on-surface-variant); }
-        .time-pill.active { border-color: var(--tertiary); background: rgba(0,109,66,0.08); color: var(--tertiary); }
-        .print-preview-box { background: #fff; border: 2px solid var(--outline-variant); border-radius: 16px; padding: 28px; position: relative; }
-        .print-preview-header { text-align: center; border-bottom: 2px solid var(--outline-variant); padding-bottom: 16px; margin-bottom: 20px; }
-        .print-preview-school { font-size: 11px; font-weight: 600; color: var(--on-surface-variant); text-transform: uppercase; letter-spacing: 0.04em; }
-        .print-preview-subject { font-size: 16px; font-weight: 700; color: var(--on-surface); margin-top: 4px; }
-        .print-preview-meta { display: flex; justify-content: space-between; font-size: 10px; color: var(--on-surface-variant); margin-top: 8px; }
-        .print-question { margin-bottom: 16px; }
-        .print-q-num { font-size: 11px; font-weight: 700; color: var(--primary); text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 4px; }
-        .print-q-text { font-size: 12px; font-weight: 600; color: var(--on-surface); margin-bottom: 6px; line-height: 1.5; }
-        .print-q-options { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; }
-        .print-q-option { font-size: 11px; color: var(--on-surface); padding: 2px 0; }
-        .print-q-open { height: 24px; border-bottom: 1px solid var(--outline-variant); margin-top: 4px; }
-        .btn-print-assessment { background: var(--secondary); color: #fff; border: none; padding: 14px 28px; border-radius: 12px; font-family: 'Lexend', sans-serif; font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; gap: 8px; }
-        .btn-print-assessment:hover { background: #004d8a; }
-        .generating-overlay { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 48px; gap: 16px; }
-        .spinner { width: 40px; height: 40px; border: 3px solid var(--outline-variant); border-top-color: var(--secondary); border-radius: 50%; animation: spin 0.8s linear infinite; }
-        @keyframes spin { to { transform: rotate(360deg); } }
-        .file-drop-zone { border: 2px dashed var(--outline-variant); border-radius: 14px; padding: 32px; text-align: center; transition: all 0.2s; cursor: pointer; background: var(--surface-container-low); }
-        .file-drop-zone:hover, .file-drop-zone.dragover { border-color: var(--secondary); background: rgba(0,96,172,0.04); }
-        .file-drop-icon { font-size: 32px; margin-bottom: 10px; }
-        .file-drop-text { font-size: 13px; font-weight: 600; color: var(--on-surface-variant); }
-        .file-drop-sub { font-size: 11px; color: var(--outline); margin-top: 4px; }
-
         @media print {
-            @page { size: A5 portrait; margin: 8mm; }
+            @page { size: A4 portrait; margin: 8mm; }
             body * { visibility: hidden !important; }
             #printArea, #printArea * { visibility: visible !important; }
             #printArea { position: fixed !important; left: 0 !important; top: 0 !important; width: 100% !important; background: white !important; }
@@ -330,9 +214,6 @@
             .module-grid { grid-template-columns: 1fr; }
             .nav-inner { padding: 0 20px; }
             .nav-logo-text { display: none; }
-            .course-hero { flex-direction: column; }
-            .course-price-box { min-width: unset; width: 100%; }
-            .credit-buy-grid { grid-template-columns: 1fr 1fr; }
         }
         @media (max-width: 480px) {
             .feature-strip { grid-template-columns: 1fr 1fr; }
@@ -399,17 +280,17 @@
         <h1 class="hero-title">Хэл бичгийг<br><span>сонирхолтойгоор</span><br>сур</h1>
         <p class="hero-sub">Уламжлалт монгол бичгийг орчин үеийн аргаар заах цахим тавцан. Хичээл, шалгалт, тоглоом — бүгд нэг дор.</p>
         <div class="hero-cta">
-          <button class="btn-primary" onclick="showSection('course')">Сургалт авах</button>
+          <button class="btn-primary" onclick="showSection('shop')">Материал авах</button>
           <button class="btn-secondary-outline" onclick="showSection('exam')">Шалгалт өгөх</button>
         </div>
       </div>
       <div class="hero-visual fade-up delay-2">
-        <div class="hero-card" onclick="showSection('course')">
+        <div class="hero-card" onclick="showSection('planner')">
           <div class="hero-card-icon" style="background:rgba(148,74,0,0.1);">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#944a00" stroke-width="1.8" stroke-linecap="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#944a00" stroke-width="1.8" stroke-linecap="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
           </div>
-          <div class="hero-card-label">Онлайн сургалт</div>
-          <div class="hero-card-title">Үндэсний бичгийн анхан шат</div>
+          <div class="hero-card-label">Хөтөлбөр</div>
+          <div class="hero-card-title">Хичээлийн төлөвлөгөө</div>
         </div>
         <div class="hero-card" onclick="showSection('exam')">
           <div class="hero-card-icon" style="background:rgba(0,96,172,0.1);">
@@ -438,7 +319,7 @@
     <div class="section">
       <div class="feature-strip">
         <div class="feature-item">
-          <div class="feature-num">6+</div>
+          <div class="feature-num">4+</div>
           <div class="feature-label">Сургалтын хэсэг</div>
         </div>
         <div class="feature-item">
@@ -459,14 +340,14 @@
         <h2 class="section-title">Сургалтын хэсгүүд</h2>
       </div>
       <div class="module-grid" style="margin-bottom:64px;">
-        <div class="module-card orange" onclick="showSection('course')">
+        <div class="module-card orange" onclick="showSection('planner')">
           <div class="module-icon">
-            <svg viewBox="0 0 24 24"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>
+            <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
           </div>
           <div class="module-content">
-            <div class="module-badge">Онлайн сургалт</div>
-            <div class="module-title">Үндэсний бичгийн анхан шат</div>
-            <div class="module-desc">Монгол бичгийг эхнээс нь суралцах бүрэн курс. Видео, тест, дасгал бүгд багтсан. 29,999₮</div>
+            <div class="module-badge">Хөтөлбөр</div>
+            <div class="module-title">Хичээлийн төлөвлөгөө</div>
+            <div class="module-desc">Долоо хоног бүрийн хичээлийн жагсаалт, хувийн даалгавар нэмэх боломжтой.</div>
           </div>
         </div>
         <div class="module-card blue" onclick="showSection('exam')">
@@ -479,26 +360,6 @@
             <div class="module-desc">Дүрэм, үг, дуудлагын сэдвүүдээр олон сонголтын шалгалт өгч, явцаа хянана.</div>
           </div>
         </div>
-        <div class="module-card purple" onclick="showSection('aiplanner')">
-          <div class="module-icon">
-            <svg viewBox="0 0 24 24"><path d="M12 2a2 2 0 012 2v2a2 2 0 01-2 2 2 2 0 01-2-2V4a2 2 0 012-2z"/><path d="M12 16a2 2 0 012 2v2a2 2 0 01-2 2 2 2 0 01-2-2v-2a2 2 0 012-2z"/><path d="M2 12a2 2 0 012-2h2a2 2 0 012 2 2 2 0 01-2 2H4a2 2 0 01-2-2z"/><path d="M16 12a2 2 0 012-2h2a2 2 0 012 2 2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
-          </div>
-          <div class="module-content">
-            <div class="module-badge">AI · Багшид</div>
-            <div class="module-title">Хичээлийн төлөвлөгөө</div>
-            <div class="module-desc">AI-аар ээлжит хичээлийн төлөвлөгөө автоматаар гаргана. Багш нарт зориулсан.</div>
-          </div>
-        </div>
-        <div class="module-card rose" onclick="showSection('aiassessment')">
-          <div class="module-icon">
-            <svg viewBox="0 0 24 24"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="2"/><path d="M9 12l2 2 4-4"/></svg>
-          </div>
-          <div class="module-content">
-            <div class="module-badge">AI · Багшид</div>
-            <div class="module-title">Шалгалтын даалгавар</div>
-            <div class="module-desc">Блүүмийн таксономиор даалгавар үүсгэж, хэвлэхэд бэлэн A5 PDF болгоно.</div>
-          </div>
-        </div>
         <div class="module-card green" onclick="showSection('games')">
           <div class="module-icon">
             <svg viewBox="0 0 24 24"><rect x="2" y="2" width="9" height="9"/><rect x="13" y="2" width="9" height="9"/><rect x="2" y="13" width="9" height="9"/><rect x="13" y="13" width="9" height="9"/></svg>
@@ -509,7 +370,7 @@
             <div class="module-desc">Монгол тоонуудаар судоку тоглож, тархинаа дасгалдуулан бичгийг танина.</div>
           </div>
         </div>
-        <div class="module-card teal" onclick="showSection('shop')">
+        <div class="module-card purple" onclick="showSection('shop')">
           <div class="module-icon">
             <svg viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
           </div>
@@ -531,418 +392,47 @@
     </div>
   </div>
 
-  <!-- ══ ОНЛАЙН СУРГАЛТ ══ -->
-  <div id="courseSection" class="content-section">
-    <div class="section" style="padding-top:40px;max-width:960px;">
-      <button onclick="showDashboard()" style="background:none;border:none;font-family:'Lexend',sans-serif;font-size:12px;font-weight:600;color:var(--primary);cursor:pointer;text-transform:uppercase;letter-spacing:0.04em;margin-bottom:28px;">← Буцах</button>
-
-      <div class="course-hero">
-        <div class="course-hero-info">
-          <div class="course-badge-row">
-            <span class="course-badge new">Шинэ 2025</span>
-            <span class="course-badge level">Анхан шат</span>
-          </div>
-          <h2 class="course-title">Үндэсний Бичгийн Анхан Шат</h2>
-          <p class="course-desc">Монгол бичгийн үндсэн зурлага, үсэг таних, үг уншихаас эхлэн богино өгүүлбэр бичих хүртэл бүрэн гүйцэд сурах онлайн курс. Туул багшийн биечлэн бэлдсэн видео хичээл, дасгал даалгавар, тест бүхий тавцан.</p>
-          <div class="course-meta">
-            <div class="course-meta-item">
-              <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-              12 цагийн хичээл
-            </div>
-            <div class="course-meta-item">
-              <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
-              340+ суралцагч
-            </div>
-            <div class="course-meta-item">
-              <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-              4.9 үнэлгээ
-            </div>
-            <div class="course-meta-item">
-              <svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
-              24 видео хичээл
-            </div>
-          </div>
-        </div>
-        <div class="course-price-box">
-          <div style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:0.04em;color:var(--outline);margin-bottom:4px;text-decoration:line-through;">49,999₮</div>
-          <div class="course-price-main">29,999₮</div>
-          <div class="course-price-sub">Бүрэн хандалт · Насан туршийн</div>
-          <button id="enrollBtn" class="btn-enroll" onclick="enrollCourse()">Эрх авах</button>
-          <div class="course-guarantee">✓ 7 хоногийн буцаалтын баталгаа</div>
-          <div style="margin-top:14px;padding-top:14px;border-top:1px solid var(--outline-variant);">
-            <div style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:0.04em;color:var(--outline);margin-bottom:8px;">Агуулгад багтана:</div>
-            <div id="courseIncludes" style="display:flex;flex-direction:column;gap:6px;text-align:left;"></div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Сургалтын хөтөлбөр -->
-      <div class="curriculum-section">
-        <div class="curriculum-header">Сургалтын хөтөлбөр</div>
-        <div id="curriculumList"></div>
-      </div>
-
-      <!-- Видео Modal -->
-      <div id="videoModal" class="modal-overlay" onclick="if(event.target===this)closeVideoModal()">
-        <div class="modal-box" style="max-width:600px;padding:24px;">
-          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
-            <h3 id="videoModalTitle" style="font-size:15px;font-weight:700;color:var(--on-surface);"></h3>
-            <button onclick="closeVideoModal()" style="background:none;border:none;font-size:20px;cursor:pointer;color:var(--outline);">✕</button>
-          </div>
-          <div style="background:var(--surface-container);border-radius:12px;aspect-ratio:16/9;display:flex;align-items:center;justify-content:center;margin-bottom:16px;">
-            <div style="text-align:center;">
-              <div style="font-size:48px;margin-bottom:10px;">▶</div>
-              <div style="font-size:12px;color:var(--on-surface-variant);">Видео ачаалж байна...</div>
-            </div>
-          </div>
-          <div id="videoModalDesc" style="font-size:12px;color:var(--on-surface-variant);line-height:1.6;"></div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- ══ AI ХӨТӨЛБӨР (БАГШИД) ══ -->
-  <div id="aiplannerSection" class="content-section">
-    <div class="section" style="padding-top:32px;max-width:1100px;">
-      <button onclick="showDashboard()" style="background:none;border:none;font-family:'Lexend',sans-serif;font-size:12px;font-weight:600;color:var(--primary);cursor:pointer;text-transform:uppercase;letter-spacing:0.04em;margin-bottom:20px;">← Буцах</button>
-
-      <!-- Header banner -->
-      <div class="ai-planner-banner" style="margin-bottom:24px;">
-        <div class="ai-banner-label">📋 Монгол улсын боловсролын яамны стандартад нийцсэн</div>
-        <div class="ai-banner-title" style="font-size:20px;">Нэгж болон Ээлжит Хичээлийн Төлөвлөгөө Гаргагч</div>
-        <div class="ai-banner-desc">GitHub дахь жилийн хөтөлбөрөөс сэдэв татаж, AI тусламжтайгаар бүрэн дэлгэрэнгүй хичээлийн төлөвлөгөөг A4 Word хэлбэрээр боловсруулна.</div>
-        <div style="display:flex;align-items:center;gap:16px;margin-top:14px;flex-wrap:wrap;">
-          <div class="ai-credit-pill"><div class="ai-credit-dot"></div>Үлдсэн эрх: <strong id="aiPlannerCredits">0</strong> хичээл</div>
-          <div style="display:flex;gap:8px;">
-            <div onclick="buyAiCredits(10,9900)" style="background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.25);border-radius:9999px;padding:6px 14px;font-size:11px;font-weight:700;color:#fff;cursor:pointer;">10 эрх — 9,900₮</div>
-            <div onclick="buyAiCredits(20,17900)" style="background:#fbbf24;border-radius:9999px;padding:6px 14px;font-size:11px;font-weight:700;color:#78350f;cursor:pointer;">20 эрх — 17,900₮ 🔥</div>
-          </div>
-          <div id="freePlanInfo" style="background:rgba(74,222,128,0.2);border:1px solid rgba(74,222,128,0.4);border-radius:9999px;padding:6px 14px;">
-            <button onclick="useFreeAiCredit()" id="freeAiBtn" style="background:none;border:none;font-family:'Lexend',sans-serif;font-size:11px;font-weight:700;color:#4ade80;cursor:pointer;">✨ 1 удаа үнэгүй туршах</button>
-          </div>
-        </div>
-      </div>
-
-      <!-- 2 column layout: Form LEFT, Preview RIGHT -->
-      <div style="display:grid;grid-template-columns:420px 1fr;gap:24px;align-items:start;">
-
-        <!-- ── LEFT: FORM ── -->
-        <div style="display:flex;flex-direction:column;gap:16px;">
-
-          <!-- Төлөвлөгөөний төрөл -->
-          <div style="display:flex;gap:8px;">
-            <button id="planTypeNegj" onclick="setPlanType('negj')" style="flex:1;padding:12px;border-radius:12px;border:2px solid var(--accent-purple);background:rgba(138,5,255,0.08);font-family:'Lexend',sans-serif;font-size:12px;font-weight:700;color:var(--accent-purple);cursor:pointer;">📘 Нэгж хичээл</button>
-            <button id="planTypeEeljit" onclick="setPlanType('eeljit')" style="flex:1;padding:12px;border-radius:12px;border:2px solid var(--outline-variant);background:#fff;font-family:'Lexend',sans-serif;font-size:12px;font-weight:700;color:var(--on-surface-variant);cursor:pointer;">📄 Ээлжит хичээл</button>
-          </div>
-
-          <!-- Үндсэн мэдээлэл -->
-          <div class="ai-form-card" style="margin-bottom:0;">
-            <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;color:var(--primary);margin-bottom:14px;padding-bottom:10px;border-bottom:1px solid var(--outline-variant);">📌 Үндсэн мэдээлэл</div>
-
-            <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px;">
-              <div>
-                <label class="ai-form-label">Судлагдахуун</label>
-                <select id="planSubject" class="ai-select" onchange="planLoadGithubTopics()">
-                  <option value="">Сонгоно уу</option>
-                  <option value="Монгол хэл">Монгол хэл</option>
-                  <option value="Уран зохиол">Уран зохиол</option>
-                  <option value="Монгол бичиг">Монгол бичиг</option>
-                </select>
-              </div>
-              <div>
-                <label class="ai-form-label">Анги</label>
-                <select id="planGrade" class="ai-select" onchange="planLoadGithubTopics()">
-                  <option value="">Анги</option>
-                  <option value="1">1-р анги</option>
-                  <option value="2">2-р анги</option>
-                  <option value="3">3-р анги</option>
-                  <option value="4">4-р анги</option>
-                  <option value="5">5-р анги</option>
-                  <option value="6">6-р анги</option>
-                  <option value="7">7-р анги</option>
-                  <option value="8">8-р анги</option>
-                  <option value="9">9-р анги</option>
-                  <option value="10">10-р анги</option>
-                  <option value="11">11-р анги</option>
-                  <option value="12">12-р анги</option>
-                </select>
-              </div>
-            </div>
-
-            <!-- Нэгж сэдэв хайлт -->
-            <div style="margin-bottom:12px;position:relative;">
-              <label class="ai-form-label">Нэгж хичээлийн сэдэв <span style="color:var(--outline);font-weight:400;">(хайх эсвэл сонгох)</span></label>
-              <div style="position:relative;">
-                <input type="text" id="planNegj" class="input-field" placeholder="Жишээ: Ерөөл, магтаал..." oninput="planSearchTopics(this.value,'negj')" autocomplete="off" style="padding-right:36px;">
-                <svg style="position:absolute;right:12px;top:50%;transform:translateY(-50%);width:14px;height:14px;stroke:var(--outline);fill:none;stroke-width:2;" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
-              </div>
-              <div id="planNegSearch" style="display:none;position:absolute;z-index:50;width:100%;background:#fff;border:1.5px solid var(--outline-variant);border-radius:12px;box-shadow:0 8px 24px rgba(0,0,0,0.1);max-height:180px;overflow-y:auto;margin-top:4px;"></div>
-            </div>
-
-            <!-- Ээлжит хичээлийн нэр -->
-            <div id="eeljitRow" style="margin-bottom:12px;position:relative;display:none;">
-              <label class="ai-form-label">Ээлжит хичээлийн сэдэв</label>
-              <div style="position:relative;">
-                <input type="text" id="planEeljit" class="input-field" placeholder="Жишээ: Ерөөлийн унших мэдэрч хүлээн авах..." oninput="planSearchTopics(this.value,'eeljit')" autocomplete="off" style="padding-right:36px;">
-                <svg style="position:absolute;right:12px;top:50%;transform:translateY(-50%);width:14px;height:14px;stroke:var(--outline);fill:none;stroke-width:2;" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
-              </div>
-              <div id="planEeljitSearch" style="display:none;position:absolute;z-index:50;width:100%;background:#fff;border:1.5px solid var(--outline-variant);border-radius:12px;box-shadow:0 8px 24px rgba(0,0,0,0.1);max-height:160px;overflow-y:auto;margin-top:4px;"></div>
-            </div>
-
-            <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px;">
-              <div>
-                <label class="ai-form-label">Нийт цаг</label>
-                <input type="number" id="planTotalHours" class="input-field" value="8" min="1" max="40" placeholder="8">
-              </div>
-              <div>
-                <label class="ai-form-label">Хичээлийн хугацаа</label>
-                <select id="planDuration" class="ai-select">
-                  <option value="40">40 минут</option>
-                  <option value="80" selected>80 минут</option>
-                </select>
-              </div>
-            </div>
-          </div>
-
-          <!-- Зорилго, зорилт -->
-          <div class="ai-form-card" style="margin-bottom:0;">
-            <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;color:var(--secondary);margin-bottom:14px;padding-bottom:10px;border-bottom:1px solid var(--outline-variant);">🎯 Зорилго ба Зорилт</div>
-            <div style="margin-bottom:12px;">
-              <label class="ai-form-label">Нэгжийн зорилго</label>
-              <textarea id="planGoal" class="input-field" rows="2" placeholder="Жишээ: Сурагчид ерөөл, магтаалын онцлог, уран дүрслэлийн хэрэгслийг мэдэж, уншиж, бичих чадвар эзэмшинэ." style="resize:vertical;min-height:56px;font-size:12px;"></textarea>
-            </div>
-            <div>
-              <label class="ai-form-label">Нэгжийн зорилт <span style="color:var(--outline);font-weight:400;">(мөр тус бүр = нэг зорилт)</span></label>
-              <textarea id="planObjectives" class="input-field" rows="3" placeholder="1. Ерөөл магтаалын уран дүрслэлийн хэрэгслийг тайлбарлана&#10;2. Зохиолоос жишээ хайж олно&#10;3. Өөрөө бичих дадлага хийнэ" style="resize:vertical;min-height:72px;font-size:12px;"></textarea>
-            </div>
-          </div>
-
-          <!-- Нэмэлт -->
-          <div class="ai-form-card" style="margin-bottom:0;">
-            <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;color:var(--tertiary);margin-bottom:14px;padding-bottom:10px;border-bottom:1px solid var(--outline-variant);">⚙️ Нэмэлт тохиргоо</div>
-            <div style="margin-bottom:12px;">
-              <label class="ai-form-label">Ангийн онцлог <span style="color:var(--outline);font-weight:400;">(заавал биш)</span></label>
-              <textarea id="planClassNote" class="input-field" rows="2" placeholder="Жишээ: Ангид 28 сурагч байгаа, уншлагын түвшин дунджаас дээш..." style="resize:vertical;min-height:52px;font-size:12px;"></textarea>
-            </div>
-            <div>
-              <label class="ai-form-label">Сургуулийн нэр</label>
-              <input type="text" id="planSchoolName" class="input-field" placeholder="Дугаар 37-р сургууль" style="font-size:12px;">
-            </div>
-          </div>
-
-          <!-- Generate button -->
-          <button id="aiGenerateBtn" class="btn-ai-generate" onclick="generateLessonPlan()" style="padding:18px;">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
-            AI-аар Төлөвлөгөө Үүсгэх
-          </button>
-        </div>
-
-        <!-- ── RIGHT: PREVIEW ── -->
-        <div>
-          <!-- Generating -->
-          <div id="aiPlanGenerating" class="hidden" style="background:#fff;border:1px solid var(--outline-variant);border-radius:16px;padding:64px 32px;text-align:center;">
-            <div class="spinner" style="margin:0 auto 16px;border-top-color:var(--accent-purple);"></div>
-            <div style="font-size:14px;font-weight:600;color:var(--on-surface);margin-bottom:8px;" id="aiPlanGenMsg">Хичээлийн төлөвлөгөө боловсруулж байна...</div>
-            <div style="font-size:11px;color:var(--outline);">Боловсролын яамны стандартад нийцүүлэн гаргаж байна</div>
-          </div>
-
-          <!-- Placeholder -->
-          <div id="aiPlanPlaceholder" style="background:#fff;border:1.5px dashed var(--outline-variant);border-radius:16px;padding:64px 32px;text-align:center;">
-            <div style="font-size:48px;margin-bottom:14px;">📋</div>
-            <div style="font-size:14px;font-weight:600;color:var(--on-surface-variant);">Мэдээллээ бөглөөд "Үүсгэх" дарна уу</div>
-            <div style="font-size:12px;color:var(--outline);margin-top:8px;">A4 хэмжээний Word загвараар гарна</div>
-            <div style="margin-top:20px;display:flex;flex-direction:column;gap:8px;text-align:left;max-width:280px;margin-left:auto;margin-right:auto;">
-              <div style="display:flex;align-items:center;gap:8px;font-size:11px;color:var(--on-surface-variant);"><span style="color:var(--tertiary);">✓</span>Боловсролын яамны стандарт</div>
-              <div style="display:flex;align-items:center;gap:8px;font-size:11px;color:var(--on-surface-variant);"><span style="color:var(--tertiary);">✓</span>GitHub-аас жилийн хөтөлбөр татна</div>
-              <div style="display:flex;align-items:center;gap:8px;font-size:11px;color:var(--on-surface-variant);"><span style="color:var(--tertiary);">✓</span>Цагийн төлөвлөлтийн хүснэгт</div>
-              <div style="display:flex;align-items:center;gap:8px;font-size:11px;color:var(--on-surface-variant);"><span style="color:var(--tertiary);">✓</span>Word татах боломж</div>
-            </div>
-          </div>
-
-          <!-- Result -->
-          <div id="aiPlanResult" class="hidden">
-            <!-- Action buttons -->
-            <div style="display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap;">
-              <button onclick="downloadPlanAsWord()" style="background:var(--secondary);border:none;color:#fff;font-family:'Lexend',sans-serif;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.04em;padding:10px 18px;border-radius:10px;cursor:pointer;display:flex;align-items:center;gap:6px;">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-                Word татах (.docx)
-              </button>
-              <button onclick="printAiPlan()" style="background:var(--surface-container);border:1px solid var(--outline-variant);color:var(--on-surface-variant);font-family:'Lexend',sans-serif;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.04em;padding:10px 18px;border-radius:10px;cursor:pointer;">🖨 Хэвлэх</button>
-              <button onclick="copyAiPlan()" style="background:var(--surface-container);border:1px solid var(--outline-variant);color:var(--on-surface-variant);font-family:'Lexend',sans-serif;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.04em;padding:10px 18px;border-radius:10px;cursor:pointer;">📋 Хуулах</button>
-              <button onclick="regeneratePlan()" style="background:rgba(138,5,255,0.08);border:1px solid rgba(138,5,255,0.2);color:var(--accent-purple);font-family:'Lexend',sans-serif;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.04em;padding:10px 18px;border-radius:10px;cursor:pointer;">🔄 Дахин үүсгэх</button>
-            </div>
-
-            <!-- A4 Preview -->
-            <div id="planPreviewA4" style="background:#fff;border:1px solid var(--outline-variant);border-radius:12px;padding:0;overflow:hidden;box-shadow:0 4px 20px rgba(0,0,0,0.06);">
-              <!-- Rendered inside by JS -->
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- ══ AI ШАЛГАЛТ (БАГШИД) ══ -->
-  <div id="aiassessmentSection" class="content-section">
-    <div class="section" style="padding-top:40px;max-width:960px;">
-      <button onclick="showDashboard()" style="background:none;border:none;font-family:'Lexend',sans-serif;font-size:12px;font-weight:600;color:var(--primary);cursor:pointer;text-transform:uppercase;letter-spacing:0.04em;margin-bottom:28px;">← Буцах</button>
-      <h2 style="font-size:22px;font-weight:700;color:var(--on-surface);margin-bottom:4px;">AI Шалгалтын Даалгавар Үүсгэгч</h2>
-      <p style="font-size:13px;color:var(--on-surface-variant);margin-bottom:28px;">Багшийн цагийг хэмнэх хэвлэхэд бэлэн ажлын хуудас</p>
-
-      <div class="assessment-tab-row">
-        <button class="assessment-tab active" id="tabLit" onclick="switchAssessTab('lit')">
-          📚 Уран зохиолын сангаас
-        </button>
-        <button class="assessment-tab" id="tabText" onclick="switchAssessTab('text')">
-          📝 Өөрийн эх оруулах
-        </button>
-      </div>
-
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;align-items:start;">
-        <!-- Left: Тохиргоо -->
-        <div>
-          <!-- Tab 1: Literature -->
-          <div id="assessLitPanel">
-            <div class="ai-form-card">
-              <div style="margin-bottom:16px;">
-                <label class="ai-form-label">Анги</label>
-                <select id="assessGrade" class="ai-select" onchange="updateWorkList()">
-                  <option value="">Анги сонгоно уу</option>
-                  <option value="6">6-р анги</option>
-                  <option value="7">7-р анги</option>
-                  <option value="8">8-р анги</option>
-                  <option value="9">9-р анги</option>
-                  <option value="10">10-р анги</option>
-                  <option value="11">11-р анги</option>
-                  <option value="12">12-р анги</option>
-                </select>
-              </div>
-              <div style="margin-bottom:16px;">
-                <label class="ai-form-label">Зохиолын сан</label>
-                <select id="assessLitWork" class="ai-select">
-                  <option value="">Эхлээд анги сонгоно уу</option>
-                </select>
-              </div>
-              <div style="margin-bottom:16px;">
-                <label class="ai-form-label">Шалгалтын хугацаа</label>
-                <div class="time-pill-row">
-                  <button class="time-pill active" id="tp20" onclick="selectTime(20)">20 мин</button>
-                  <button class="time-pill" id="tp40" onclick="selectTime(40)">40 мин</button>
-                  <button class="time-pill" id="tp60" onclick="selectTime(60)">60 мин</button>
-                </div>
-              </div>
-              <div style="font-size:10px;color:var(--on-surface-variant);background:rgba(148,74,0,0.06);border-radius:10px;padding:10px;margin-bottom:16px;">
-                ✓ 20 мин → A5 хэмжээтэй, хэвлэхэд бэлэн PDF
-              </div>
-              <button class="btn-ai-generate" onclick="generateAssessment('lit')">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="2"/></svg>
-                Даалгавар Үүсгэх
-              </button>
-            </div>
-          </div>
-
-          <!-- Tab 2: Own text -->
-          <div id="assessTextPanel" class="hidden">
-            <div class="ai-form-card">
-              <div style="margin-bottom:14px;">
-                <label class="ai-form-label">Эх текст оруулах</label>
-                <textarea id="assessOwnText" class="input-field" rows="6" placeholder="Энд эхийн текстийг буулгана уу..." style="resize:vertical;min-height:120px;"></textarea>
-              </div>
-              <div style="margin-bottom:14px;">
-                <label class="ai-form-label">Блүүмийн таксономийн түвшин</label>
-                <div id="bloomLevels">
-                  <div class="bloom-level selected" data-level="remember" onclick="toggleBloom(this)">
-                    <div class="bloom-dot" style="background:#ef4444;"></div>
-                    <div><div class="bloom-name">Санах</div><div class="bloom-desc">Тодорхойлох, нэрлэх, жагсаах</div></div>
-                    <div class="bloom-check"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round"><path d="M5 13l4 4L19 7"/></svg></div>
-                  </div>
-                  <div class="bloom-level selected" data-level="understand" onclick="toggleBloom(this)">
-                    <div class="bloom-dot" style="background:#f97316;"></div>
-                    <div><div class="bloom-name">Ойлгох</div><div class="bloom-desc">Тайлбарлах, дүгнэх, харьцуулах</div></div>
-                    <div class="bloom-check"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round"><path d="M5 13l4 4L19 7"/></svg></div>
-                  </div>
-                  <div class="bloom-level" data-level="apply" onclick="toggleBloom(this)">
-                    <div class="bloom-dot" style="background:#eab308;"></div>
-                    <div><div class="bloom-name">Хэрэглэх</div><div class="bloom-desc">Хэрэгжүүлэх, ашиглах</div></div>
-                    <div class="bloom-check"></div>
-                  </div>
-                  <div class="bloom-level" data-level="analyze" onclick="toggleBloom(this)">
-                    <div class="bloom-dot" style="background:#22c55e;"></div>
-                    <div><div class="bloom-name">Шинжлэх</div><div class="bloom-desc">Задлах, харьцуулах, ялгах</div></div>
-                    <div class="bloom-check"></div>
-                  </div>
-                </div>
-              </div>
-              <div style="margin-bottom:16px;">
-                <label class="ai-form-label">Хугацаа</label>
-                <div class="time-pill-row">
-                  <button class="time-pill" id="tp40b" onclick="selectTime2(40)">40 мин</button>
-                  <button class="time-pill active" id="tp60b" onclick="selectTime2(60)">60 мин</button>
-                  <button class="time-pill" id="tp80b" onclick="selectTime2(80)">80 мин</button>
-                </div>
-              </div>
-              <button class="btn-ai-generate" onclick="generateAssessment('text')">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="2"/></svg>
-                Блүүмийн Даалгавар Үүсгэх
-              </button>
-            </div>
-          </div>
-        </div>
-
-        <!-- Right: Preview -->
-        <div>
-          <div id="assessGenerating" class="hidden ai-result-box">
-            <div class="generating-overlay">
-              <div class="spinner" style="border-top-color:var(--secondary);"></div>
-              <div style="font-size:13px;font-weight:600;color:var(--on-surface-variant);">Даалгавар боловсруулж байна...</div>
-            </div>
-          </div>
-
-          <div id="assessResult" class="hidden">
-            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;">
-              <div style="font-size:13px;font-weight:700;color:var(--on-surface);">Урьдчилан харах (A5)</div>
-              <div style="display:flex;gap:8px;">
-                <button onclick="printAssessment()" class="btn-print-assessment" style="font-size:11px;padding:10px 18px;">🖨 Хэвлэх</button>
-              </div>
-            </div>
-            <div class="print-preview-box" id="assessPreviewBox">
-              <!-- dynamically filled -->
-            </div>
-          </div>
-
-          <div id="assessPlaceholder" class="ai-result-box" style="text-align:center;padding:48px;">
-            <div style="font-size:48px;margin-bottom:12px;">📄</div>
-            <div style="font-size:13px;font-weight:600;color:var(--on-surface-variant);">Тохиргоо хийгээд "Даалгавар Үүсгэх" дарна уу</div>
-            <div style="font-size:11px;color:var(--outline);margin-top:6px;">Хэвлэхэд бэлэн A5 форматаар гарна</div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- ХӨТӨЛБӨР (Хуучин) -->
+  <!-- ХӨТӨЛБӨР -->
   <div id="plannerSection" class="content-section">
     <div class="section" style="padding-top:40px;">
       <button onclick="showDashboard()" style="background:none;border:none;font-family:'Lexend',sans-serif;font-size:12px;font-weight:600;color:var(--primary);cursor:pointer;text-transform:uppercase;letter-spacing:0.04em;margin-bottom:28px;">← Буцах</button>
       <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:28px;">
-        <div class="stat-card" style="background:rgba(148,74,0,0.08);color:var(--primary);"><div class="stat-num" id="plannerTotalTasks">0</div><div class="stat-lbl">Нийт даалгавар</div></div>
-        <div class="stat-card" style="background:rgba(0,109,66,0.08);color:var(--tertiary);"><div class="stat-num" id="plannerDoneTasks">0</div><div class="stat-lbl">Гүйцэтгэсэн</div></div>
-        <div class="stat-card" style="background:rgba(0,96,172,0.08);color:var(--secondary);"><div class="stat-num" id="plannerPercent">0%</div><div class="stat-lbl">Явц</div></div>
+        <div class="stat-card" style="background:rgba(148,74,0,0.08);color:var(--primary);">
+          <div class="stat-num" id="plannerTotalTasks">0</div>
+          <div class="stat-lbl">Нийт даалгавар</div>
+        </div>
+        <div class="stat-card" style="background:rgba(0,109,66,0.08);color:var(--tertiary);">
+          <div class="stat-num" id="plannerDoneTasks">0</div>
+          <div class="stat-lbl">Гүйцэтгэсэн</div>
+        </div>
+        <div class="stat-card" style="background:rgba(0,96,172,0.08);color:var(--secondary);">
+          <div class="stat-num" id="plannerPercent">0%</div>
+          <div class="stat-lbl">Явц</div>
+        </div>
       </div>
       <div style="background:#fff;border:1px solid var(--outline-variant);border-radius:14px;padding:16px;margin-bottom:28px;">
-        <div style="display:flex;justify-content:space-between;font-size:11px;font-weight:600;color:var(--on-surface-variant);text-transform:uppercase;letter-spacing:0.04em;margin-bottom:10px;"><span>Нийт явц</span><span id="progressLabel">0 / 0</span></div>
+        <div style="display:flex;justify-content:space-between;font-size:11px;font-weight:600;color:var(--on-surface-variant);text-transform:uppercase;letter-spacing:0.04em;margin-bottom:10px;">
+          <span>Нийт явц</span><span id="progressLabel">0 / 0</span>
+        </div>
         <div class="prog-track"><div id="progressBar" class="prog-fill" style="width:0%"></div></div>
       </div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;">
         <div style="background:#fff;border:1px solid var(--outline-variant);border-radius:16px;padding:20px;">
-          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;"><h3 style="font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:0.04em;color:var(--on-surface);">Хичээлийн хөтөлбөр</h3><button onclick="loadPlannerSchedule()" style="background:var(--surface-container);border:none;font-family:'Lexend',sans-serif;font-size:10px;font-weight:600;color:var(--primary);padding:6px 12px;border-radius:9999px;cursor:pointer;text-transform:uppercase;">Шинэчлэх</button></div>
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
+            <h3 style="font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:0.04em;color:var(--on-surface);">Хичээлийн хөтөлбөр</h3>
+            <button onclick="loadPlannerSchedule()" style="background:var(--surface-container);border:none;font-family:'Lexend',sans-serif;font-size:10px;font-weight:600;color:var(--primary);padding:6px 12px;border-radius:9999px;cursor:pointer;text-transform:uppercase;">Шинэчлэх</button>
+          </div>
           <div id="scheduleList" style="display:flex;flex-direction:column;gap:8px;max-height:320px;overflow-y:auto;"></div>
         </div>
         <div style="background:#fff;border:1px solid var(--outline-variant);border-radius:16px;padding:20px;">
           <h3 style="font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:0.04em;color:var(--on-surface);margin-bottom:16px;">Хувийн даалгавар</h3>
           <div style="background:var(--surface-container-low);border-radius:12px;padding:14px;margin-bottom:14px;display:flex;flex-direction:column;gap:8px;">
             <input type="text" id="newTaskInput" placeholder="Даалгавар бичих..." class="input-field" style="font-size:12px;" onkeydown="if(event.key==='Enter') addPersonalTask()">
-            <select id="newTaskPriority" class="input-field" style="font-size:12px;"><option value="high">Яаралтай</option><option value="mid" selected>Дунд</option><option value="low">Энгийн</option></select>
+            <select id="newTaskPriority" class="input-field" style="font-size:12px;">
+              <option value="high">Яаралтай</option>
+              <option value="mid" selected>Дунд</option>
+              <option value="low">Энгийн</option>
+            </select>
             <button onclick="addPersonalTask()" class="btn-primary" style="border-radius:9999px;font-size:11px;padding:10px;">+ Нэмэх</button>
           </div>
           <div id="personalTaskList" style="display:flex;flex-direction:column;gap:6px;max-height:240px;overflow-y:auto;"></div>
@@ -958,8 +448,13 @@
       <div id="examLobby">
         <h2 style="font-size:24px;font-weight:700;color:var(--on-surface);margin-bottom:6px;">Шалгалт</h2>
         <p style="font-size:13px;color:var(--on-surface-variant);margin-bottom:24px;">Сэдвийг сонгоод эхлүүлнэ үү</p>
-        <div id="examTopicList" style="display:flex;flex-direction:column;gap:10px;margin-bottom:32px;"><div style="text-align:center;color:var(--on-surface-variant);font-size:12px;padding:32px;">Уншиж байна...</div></div>
-        <div id="examHistory"><h3 style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;color:var(--on-surface-variant);margin-bottom:12px;">Өмнөх үр дүн</h3><div id="examHistoryList" style="display:flex;flex-direction:column;gap:8px;"></div></div>
+        <div id="examTopicList" style="display:flex;flex-direction:column;gap:10px;margin-bottom:32px;">
+          <div style="text-align:center;color:var(--on-surface-variant);font-size:12px;padding:32px;">Уншиж байна...</div>
+        </div>
+        <div id="examHistory">
+          <h3 style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;color:var(--on-surface-variant);margin-bottom:12px;">Өмнөх үр дүн</h3>
+          <div id="examHistoryList" style="display:flex;flex-direction:column;gap:8px;"></div>
+        </div>
       </div>
       <div id="examActive" class="hidden">
         <div class="exam-header">
@@ -1059,7 +554,9 @@
     <div class="section" style="padding-top:40px;">
       <button onclick="showDashboard()" style="background:none;border:none;font-family:'Lexend',sans-serif;font-size:12px;font-weight:600;color:var(--primary);cursor:pointer;text-transform:uppercase;letter-spacing:0.04em;margin-bottom:28px;">← Буцах</button>
       <h2 style="font-size:24px;font-weight:700;color:var(--on-surface);margin-bottom:24px;">Материалын дэлгүүр</h2>
-      <div id="fullShopGrid" class="product-grid"><div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--on-surface-variant);font-size:13px;">Ачаалж байна...</div></div>
+      <div id="fullShopGrid" class="product-grid">
+        <div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--on-surface-variant);font-size:13px;">Ачаалж байна...</div>
+      </div>
     </div>
   </div>
 
@@ -1120,7 +617,9 @@
       <button onclick="closeCart()" style="background:none;border:none;font-size:18px;cursor:pointer;color:var(--on-surface-variant);">✕</button>
     </div>
     <div id="cartItems" style="display:flex;flex-direction:column;gap:8px;max-height:240px;overflow-y:auto;margin-bottom:16px;"></div>
-    <div style="border-top:1px solid var(--outline-variant);padding-top:14px;display:flex;justify-content:space-between;font-size:14px;font-weight:700;color:var(--on-surface);margin-bottom:16px;"><span>Нийт:</span><span id="cartTotal">0</span></div>
+    <div style="border-top:1px solid var(--outline-variant);padding-top:14px;display:flex;justify-content:space-between;font-size:14px;font-weight:700;color:var(--on-surface);margin-bottom:16px;">
+      <span>Нийт:</span><span id="cartTotal">0</span>
+    </div>
     <button id="checkoutBtn" onclick="proceedToPayment()" class="btn-primary" style="width:100%;padding:14px;border-radius:12px;">Төлбөр төлөх рүү шилжих</button>
   </div>
 </div>
@@ -1150,6 +649,13 @@
 <div id="printArea" style="display:none;"></div>
 
 <script>
+/* ═══════════════════════════════════════════════════
+   ЗАСВАРЛАСАН ХЭСГҮҮД:
+   1. fetchJSON() — redirect follow + text parse (материал харагдахгүй асуудлыг засав)
+   2. loadMyLibrary() — CORS error handling засав
+   3. loadProducts() — fetchJSON ашиглаж шинэчлэв
+   ═══════════════════════════════════════════════════ */
+
 const ORDER_URL   = 'https://script.google.com/macros/s/AKfycbyNlKTyvrT5kVWN2WV50gkFgpD2F7_vmzmJTEA2z3EI8QyBwPN5zjJ_Ys_n_Pyzmb_W1A/exec';
 const GITHUB_BASE = 'https://raw.githubusercontent.com/tuult764-crypto/sonirholtoi-hel-bichig-/main/';
 
@@ -1160,11 +666,17 @@ const MONG_NUMS = {'1':'\u1811','2':'\u1812','3':'\u1813','4':'\u1814','5':'\u18
 const MONG_TO_ASCII = {};
 for (const [a,m] of Object.entries(MONG_NUMS)) MONG_TO_ASCII[m] = a;
 
-/* ── FETCH ── */
+/* ─── ЗАСВАР 1: fetchJSON — Apps Script redirect + JSON parse ─── */
 async function fetchJSON(url) {
     try {
-        const res = await fetch(url, { method:'GET', redirect:'follow', cache:'no-cache', headers:{'Accept':'application/json'} });
+        const res = await fetch(url, {
+            method: 'GET',
+            redirect: 'follow',
+            cache: 'no-cache',
+            headers: { 'Accept': 'application/json' }
+        });
         const text = await res.text();
+        // Apps Script заримдаа HTML wrapper-тэй буцаадаг — JSON хэсгийг гарган авна
         const jsonMatch = text.match(/(\[[\s\S]*\]|\{[\s\S]*\})/);
         if (!jsonMatch) throw new Error('JSON олдсонгүй');
         return JSON.parse(jsonMatch[1]);
@@ -1174,53 +686,55 @@ async function fetchJSON(url) {
     }
 }
 
-function initApp() { loadProducts(); }
+function initApp() {
+    loadProducts();
+}
 document.addEventListener('DOMContentLoaded', initApp);
 
-/* ── EMAIL ── */
+/* ─── EMAIL ─── */
 let _authCallback = null;
 function requireEmail(cb) {
     if (currentUserEmail) { cb(); return; }
     _authCallback = cb;
     const m = document.getElementById('emailModal');
-    m.classList.add('active'); m.style.display = '';
+    m.classList.add('active');
+    m.style.display = '';
     document.getElementById('emailModalInput').value = '';
     document.getElementById('emailModalError').classList.add('hidden');
     setTimeout(() => document.getElementById('emailModalInput').focus(), 100);
 }
-function closeEmailModal() { document.getElementById('emailModal').classList.remove('active'); }
+function closeEmailModal() {
+    document.getElementById('emailModal').classList.remove('active');
+}
 async function submitEmailModal() {
     const email = document.getElementById('emailModalInput').value.trim();
     const err = document.getElementById('emailModalError');
-    if (!email) { err.textContent='Мэйл хаягаа оруулна уу!'; err.classList.remove('hidden'); return; }
+    if (!email) { err.textContent = 'Мэйл хаягаа оруулна уу!'; err.classList.remove('hidden'); return; }
     currentUserEmail = email;
     const ne = document.getElementById('navEmail');
-    if (ne) { ne.innerText=email; ne.style.display=''; }
+    if (ne) { ne.innerText = email; ne.style.display = ''; }
     closeEmailModal();
     loadCart();
-    if (_authCallback) { _authCallback(); _authCallback=null; }
+    if (_authCallback) { _authCallback(); _authCallback = null; }
 }
 document.addEventListener('keydown', e => {
     const m = document.getElementById('emailModal');
-    if (m && m.classList.contains('active') && e.key==='Enter') submitEmailModal();
+    if (m && m.classList.contains('active') && e.key === 'Enter') submitEmailModal();
 });
 
-/* ── NAV ── */
+/* ─── NAV ─── */
 function showSection(name) {
-    const requireAuth = ['library','planner','aiplanner','aiassessment'];
-    if (requireAuth.includes(name) && !currentUserEmail) { requireEmail(() => showSection(name)); return; }
+    const p = ['library','planner','exam'];
+    if (p.includes(name) && !currentUserEmail) { requireEmail(() => showSection(name)); return; }
     document.getElementById('dashboardHome').classList.add('hidden');
     document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active'));
     const t = document.getElementById(name+'Section');
     if (t) t.classList.add('active');
-    if (name==='games')         initGamesSection();
-    if (name==='library')       loadMyLibrary();
-    if (name==='shop')          loadProducts();
-    if (name==='planner')       initPlanner();
-    if (name==='exam')          initExamLobby();
-    if (name==='course')        initCourseSection();
-    if (name==='aiplanner')     initAiPlanner();
-    if (name==='aiassessment')  initAiAssessment();
+    if (name === 'games')   initGamesSection();
+    if (name === 'library') loadMyLibrary();
+    if (name === 'shop')    loadProducts();
+    if (name === 'planner') initPlanner();
+    if (name === 'exam')    initExamLobby();
 }
 function showDashboard() {
     document.getElementById('dashboardHome').classList.remove('hidden');
@@ -1228,1067 +742,669 @@ function showDashboard() {
     stopExamTimer();
 }
 
-/* ═══════════════════════════════════════
-   ── ОНЛАЙН СУРГАЛТ ──
-═══════════════════════════════════════ */
-const COURSE_DATA = {
-    enrolled: false,
-    lessons: [
-        { num:1, title:'Танилцуулга — Монгол бичиг гэж юу вэ?', type:'video', duration:'8 мин', free:true, desc:'Монгол бичгийн түүх, ач холбогдол, орчин үеийн хэрэглээний тухай.' },
-        { num:2, title:'Үндсэн зурлагууд', type:'video', duration:'12 мин', free:false, desc:'Монгол бичгийн тулгуур зурлага: босоо шугам, нуман зурлага, нөгцийн зурлага.' },
-        { num:3, title:'Эгшиг үсэг — А, Э', type:'video', duration:'15 мин', free:false, desc:'А болон Э эгшиг үсгийн бичих дараалал, дасгал.' },
-        { num:4, title:'Дасгал — Эгшиг үсэг', type:'quiz', duration:'10 мин', free:false, desc:'А, Э үсгийн мэдлэг шалгах тест.' },
-        { num:5, title:'Эгшиг үсэг — И, О, У, Ө, Ү', type:'video', duration:'18 мин', free:false, desc:'Бусад эгшиг үсгүүдийн дэлгэрэнгүй.' },
-        { num:6, title:'Гийгүүлэгч — На, Ма, Ла', type:'video', duration:'14 мин', free:false, desc:'Эхний гийгүүлэгч бүлэг.' },
-        { num:7, title:'Гийгүүлэгч — Ба, Га/Ха, Ра', type:'video', duration:'14 мин', free:false, desc:'Хоёр дахь гийгүүлэгч бүлэг.' },
-        { num:8, title:'Дасгал — Гийгүүлэгч I', type:'practice', duration:'10 мин', free:false, desc:'Сурсан гийгүүлэгчүүдийн бататгал.' },
-        { num:9, title:'Гийгүүлэгч — Да/Та, Са, Ша', type:'video', duration:'14 мин', free:false, desc:'Гурав дахь гийгүүлэгч бүлэг.' },
-        { num:10, title:'Гийгүүлэгч — За/Жа, Ца/Ча, Йа', type:'video', duration:'12 мин', free:false, desc:'Сүүлийн гийгүүлэгч бүлэг.' },
-        { num:11, title:'Үг унших — Анхан шат', type:'video', duration:'16 мин', free:false, desc:'Богино үгийг үсэгчлэн унших.' },
-        { num:12, title:'Дасгал — Үг унших', type:'practice', duration:'15 мин', free:false, desc:'Үг уншихын бататгал.' },
-        { num:13, title:'Богино өгүүлбэр зохиох', type:'video', duration:'14 мин', free:false, desc:'Энгийн өгүүлбэр бичих дүрэм.' },
-        { num:14, title:'Эцсийн шалгалт', type:'quiz', duration:'20 мин', free:false, desc:'Бүх хичээлийн мэдлэг шалгах.' },
-    ],
-    includes: ['14 хичээл (видео + тест)', 'Насан туршийн хандалт', 'Хэвлэх дасгал (PDF)', 'Сертификат']
-};
-
-function initCourseSection() {
-    const enrolled = localStorage.getItem('courseEnrolled') === 'true';
-    COURSE_DATA.enrolled = enrolled;
-    const btn = document.getElementById('enrollBtn');
-    if (enrolled) { btn.textContent='✓ Бүртгэлтэй'; btn.classList.add('enrolled'); }
-    else { btn.textContent='Эрх авах'; btn.classList.remove('enrolled'); }
-    renderCurriculum();
-    const inc = document.getElementById('courseIncludes');
-    inc.innerHTML = COURSE_DATA.includes.map(i => `<div style="display:flex;align-items:center;gap:8px;font-size:11px;color:var(--on-surface-variant);"><span style="color:var(--tertiary);font-weight:700;">✓</span>${i}</div>`).join('');
-}
-
-function renderCurriculum() {
-    const enrolled = COURSE_DATA.enrolled;
-    const list = document.getElementById('curriculumList');
-    list.innerHTML = COURSE_DATA.lessons.map(l => {
-        const unlocked = enrolled || l.free;
-        const typeLabel = {video:'Видео',quiz:'Тест',practice:'Дасгал'}[l.type]||'Хичээл';
-        const typeClass = {video:'video',quiz:'quiz',practice:'practice'}[l.type]||'video';
-        return `<div class="lesson-item ${unlocked?'unlocked':'locked'}" onclick="${unlocked?`openLesson(${l.num-1})`:'showToast(\'Эрх авсны дараа нээгдэнэ!\',\'info\')'}">
-            <div class="lesson-num">${unlocked && enrolled && l.num<=3 ? '✓' : l.num}</div>
-            <div class="lesson-title">${l.title}</div>
-            <span class="lesson-type ${typeClass}">${typeLabel}</span>
-            <span class="lesson-duration">${l.duration}</span>
-            <span class="lesson-lock">${unlocked ? '' : '🔒'}</span>
-        </div>`;
-    }).join('');
-}
-
-function openLesson(idx) {
-    const l = COURSE_DATA.lessons[idx];
-    document.getElementById('videoModalTitle').textContent = l.title;
-    document.getElementById('videoModalDesc').textContent = l.desc;
-    document.getElementById('videoModal').classList.add('active');
-}
-function closeVideoModal() { document.getElementById('videoModal').classList.remove('active'); }
-
-function enrollCourse() {
-    if (COURSE_DATA.enrolled) return;
-    requireEmail(() => {
-        pendingProduct = 'Үндэсний бичгийн анхан шат — Онлайн сургалт';
-        pendingTotal = 29999; pendingPassPages = 0;
-        document.getElementById('paymentNote').innerText = `${currentUserEmail} | Онлайн сургалт (Үндэсний бичгийн анхан шат) | 29,999₮`;
-        document.getElementById('paymentModal').classList.add('active');
-    });
-}
-
-/* ═══════════════════════════════════════
-   ── AI ХӨТӨЛБӨР (БАГШ) — БҮРЭН ШИНЭ ──
-═══════════════════════════════════════ */
-let aiCredits = 0;
-let freeAiUsed = false;
-let currentPlanType = 'negj';       // 'negj' | 'eeljit'
-let githubTopics = [];               // GitHub-аас татсан сэдвүүд
-let lastPlanData = null;             // Сүүлд үүсгэсэн төлөвлөгөөний өгөгдөл
-
-// GitHub-аас жилийн хөтөлбөр татах URL
-const GITHUB_PLAN_BASE = 'https://raw.githubusercontent.com/tuult764-crypto/sonirholtoi-hel-bichig-/main/';
-
-/* ── Статик жилийн хөтөлбөрийн мэдээлэл (GitHub файл байхгүй үед fallback) ── */
-const ANNUAL_PLAN = {
-    'Монгол хэл': {
-        '7': [
-            { negj:'Ерөөл, магтаал', cag:8, eeljit:[
-                'Зохиолыг уншиж, хам сэдвийн хүрэнд мэдэрч, тусган хүлээж авах',
-                'Зохиолын бүтэц, зохиомжийн дараалыг тайлбарлах, үг, хэллэгийн сонголт, уран дүрслэлийн үүргийг шинжлэх',
-                'Зохиолын бүтэц, зохиомжийн дараалыг тайлбарлах, уран дүрслэлийг ашиглан ерөөл зохиох',
-                'Нэгжийн үнэлгээ'
-            ]},
-            { negj:'Туульс', cag:10, eeljit:[
-                'Туульс сонсож, мэдэрч хүлээн авах, сонирхолтой болон сэтгэл хөдлөлтэй хэсгүүдийг ялган таних',
-                'Туульсийн бүтэц, зохиомж, дүрийн шинжийг тайлбарлах',
-                'Туульсийн дүрийн үйл явдлыг шинжлэх, өөрийн санал бодлоо илэрхийлэх',
-                'Нэгжийн үнэлгээ'
-            ]},
-            { negj:'Домог, үлгэр', cag:8, eeljit:[
-                'Домог, үлгэр уншиж мэдэрч хүлээн авах',
-                'Домог, үлгэрийн бүтэц, сэдэв, санааг тайлбарлах',
-                'Домог, үлгэрийн дүрийн шинжийг шинжлэн задлах',
-                'Нэгжийн үнэлгээ'
-            ]},
-        ],
-        '8': [
-            { negj:'Уран зохиолын онол', cag:6, eeljit:[
-                'Уран зохиолын онолын үндсэн ойлголтуудыг таних',
-                'Уран зохиолын жанрын онцлогийг харьцуулан шинжлэх',
-                'Уран зохиолын аргыг практикт хэрэглэх',
-                'Нэгжийн үнэлгээ'
-            ]},
-            { negj:'Яруу найраг', cag:10, eeljit:[
-                'Яруу найргийн бүтэц, хэмнэл, аялгуун уnsих',
-                'Яруу найргийн уран дүрслэлийн хэрэгслийг шинжлэх',
-                'Яруу найраг бичих дадлага хийх',
-                'Нэгжийн үнэлгээ'
-            ]},
-        ],
-    },
-    'Монгол бичиг': {
-        '1': [
-            { negj:'Үндсэн зурлага', cag:8, eeljit:[
-                'Монгол бичгийн үндсэн зурлагыг таних',
-                'Босоо шугам зурах дадлага',
-                'Нуман зурлага бичих',
-                'Нэгжийн үнэлгээ'
-            ]},
-            { negj:'Эгшиг үсэг', cag:10, eeljit:[
-                'А, Э эгшиг үсгийг таних, бичих',
-                'И, О, У эгшиг үсгийг таних, бичих',
-                'Ө, Ү эгшиг үсгийг таних, бичих',
-                'Эгшиг үсгийн давталт, нэгжийн үнэлгээ'
-            ]},
-        ],
-        '2': [
-            { negj:'Гийгүүлэгч үсэг I', cag:10, eeljit:[
-                'На, Ма, Ла гийгүүлэгч үсгийг таних, бичих',
-                'Ба, Га/Ха, Ра гийгүүлэгч үсгийг таних, бичих',
-                'Нэгжийн дасгал, давталт',
-                'Нэгжийн үнэлгээ'
-            ]},
-        ],
-    },
-    'Уран зохиол': {
-        '6': [
-            { negj:'Ардын аман зохиол', cag:8, eeljit:[
-                'Ардын аман зохиолын жанрыг таних',
-                'Ардын аман зохиолын онцлогийг тайлбарлах',
-                'Ардын аман зохиолоос жишээ дурдах, хэлэлцэх',
-                'Нэгжийн үнэлгээ'
-            ]},
-            { negj:'Уран зохиолын дүрслэл', cag:10, eeljit:[
-                'Уран дүрслэлийн хэрэгслийг таних',
-                'Зохиолоос уран дүрслэлийн жишээ олох',
-                'Уран дүрслэлийн хэрэгслийг ашиглан өгүүлбэр зохиох',
-                'Нэгжийн үнэлгээ'
-            ]},
-        ],
-    }
-};
-
-function initAiPlanner() {
-    aiCredits = parseInt(localStorage.getItem('aiCredits_'+(currentUserEmail||'guest'))||'0');
-    freeAiUsed = localStorage.getItem('freeAiUsed_'+(currentUserEmail||'guest'))==='true';
-    updateAiCreditDisplay();
-    setPlanType('negj');
-    if (freeAiUsed) {
-        const btn = document.getElementById('freeAiBtn');
-        if (btn) { btn.textContent='✓ Ашиглагдсан'; btn.disabled=true; btn.style.opacity='0.5'; }
-    }
-    // Reset form
-    ['planSubject','planGrade','planNegj','planEeljit','planGoal','planObjectives','planClassNote'].forEach(id => {
-        const el = document.getElementById(id);
-        if (el) el.value = '';
-    });
-    hideEl('aiPlanResult'); hideEl('aiPlanGenerating');
-    showEl('aiPlanPlaceholder');
-}
-
-function updateAiCreditDisplay() {
-    const el = document.getElementById('aiPlannerCredits');
-    if (el) el.textContent = aiCredits;
-}
-
-function setPlanType(type) {
-    currentPlanType = type;
-    const nb = document.getElementById('planTypeNegj');
-    const eb = document.getElementById('planTypeEeljit');
-    const er = document.getElementById('eeljitRow');
-    if (nb && eb) {
-        nb.style.borderColor = type==='negj' ? 'var(--accent-purple)' : 'var(--outline-variant)';
-        nb.style.background = type==='negj' ? 'rgba(138,5,255,0.08)' : '#fff';
-        nb.style.color = type==='negj' ? 'var(--accent-purple)' : 'var(--on-surface-variant)';
-        eb.style.borderColor = type==='eeljit' ? 'var(--accent-purple)' : 'var(--outline-variant)';
-        eb.style.background = type==='eeljit' ? 'rgba(138,5,255,0.08)' : '#fff';
-        eb.style.color = type==='eeljit' ? 'var(--accent-purple)' : 'var(--on-surface-variant)';
-    }
-    if (er) er.style.display = type==='eeljit' ? 'block' : 'none';
-}
-
-/* ── GitHub-аас жилийн хөтөлбөр татах ── */
-async function planLoadGithubTopics() {
-    const subject = document.getElementById('planSubject').value;
-    const grade = document.getElementById('planGrade').value;
-    if (!subject || !grade) return;
-
-    // ANNUAL_PLAN-аас өгөгдөл авах (GitHub файл хожим нэмэгдэнэ)
-    const subjectData = ANNUAL_PLAN[subject] || {};
-    const gradeData = subjectData[grade] || [];
-    githubTopics = gradeData;
-
-    // Нэгж хичээлийн нэрсийг харуулах
-    if (gradeData.length > 0) {
-        showToast(`${grade}-р ангийн ${gradeData.length} нэгж хичээл ачааллаа`, 'success');
-    }
-}
-
-function planSearchTopics(query, field) {
-    const dropId = field === 'negj' ? 'planNegSearch' : 'planEeljitSearch';
-    const drop = document.getElementById(dropId);
-    if (!drop) return;
-
-    if (!query.trim()) { drop.style.display='none'; return; }
-
-    let results = [];
-    if (field === 'negj') {
-        results = githubTopics.filter(t => t.negj.toLowerCase().includes(query.toLowerCase()));
-        if (!results.length) {
-            // Бүх subject-аас хайх
-            Object.values(ANNUAL_PLAN).forEach(sub => {
-                Object.values(sub).forEach(grade => {
-                    grade.forEach(t => {
-                        if (t.negj.toLowerCase().includes(query.toLowerCase())) results.push(t);
-                    });
-                });
-            });
-        }
-    } else {
-        // Eeljit хайлт: сонгосон нэгжийн ээлжит хичээлүүдээс хайх
-        const negj = document.getElementById('planNegj').value;
-        const found = githubTopics.find(t => t.negj === negj);
-        if (found) {
-            results = found.eeljit
-                .filter(e => e.toLowerCase().includes(query.toLowerCase()))
-                .map(e => ({eeljit: e}));
-        }
-    }
-
-    if (!results.length) { drop.style.display='none'; return; }
-    drop.style.display='block';
-    drop.innerHTML = results.slice(0,8).map(r => {
-        const text = field === 'negj' ? r.negj : r.eeljit;
-        return `<div onclick="planSelectTopic('${field}','${text.replace(/'/g,"\\'")}','${field==='negj'?(r.cag||''):''}','${field==='negj'?JSON.stringify(r.eeljit||[]).replace(/'/g,"\\'"):'[]'}')" style="padding:10px 14px;cursor:pointer;font-size:12px;font-weight:500;color:var(--on-surface);border-bottom:1px solid var(--outline-variant);transition:background 0.15s;" onmouseover="this.style.background='rgba(148,74,0,0.05)'" onmouseout="this.style.background=''">${text}${field==='negj'&&r.cag?`<span style="font-size:10px;color:var(--outline);margin-left:8px;">${r.cag} цаг</span>`:''}</div>`;
-    }).join('');
-}
-
-function planSelectTopic(field, value, cag, eeljitArr) {
-    if (field === 'negj') {
-        document.getElementById('planNegj').value = value;
-        document.getElementById('planNegSearch').style.display = 'none';
-        if (cag) document.getElementById('planTotalHours').value = cag;
-        // Ээлжит хичээлийн dropdown-ийг бэлдэх
-        try {
-            const arr = JSON.parse(eeljitArr.replace(/\\'/g,"'"));
-            if (arr.length) {
-                // Ээлжит сонгогчийн datalist
-                const eeljitInput = document.getElementById('planEeljit');
-                if (eeljitInput) eeljitInput.placeholder = arr[0];
-            }
-        } catch(e) {}
-    } else {
-        document.getElementById('planEeljit').value = value;
-        document.getElementById('planEeljitSearch').style.display = 'none';
-    }
-}
-
-// Гадна дарахад хайлт хаах
-document.addEventListener('click', e => {
-    ['planNegSearch','planEeljitSearch'].forEach(id => {
-        const el = document.getElementById(id);
-        if (el && !el.contains(e.target) && e.target.id !== 'planNegj' && e.target.id !== 'planEeljit') {
-            el.style.display = 'none';
-        }
-    });
-});
-
-function useFreeAiCredit() {
-    if (freeAiUsed) return showToast('Үнэгүй туршилт аль хэдийн ашиглагдсан!','error');
-    freeAiUsed = true;
-    localStorage.setItem('freeAiUsed_'+(currentUserEmail||'guest'),'true');
-    const btn = document.getElementById('freeAiBtn');
-    if (btn) { btn.textContent='✓ Ашиглагдсан'; btn.disabled=true; btn.style.opacity='0.5'; }
-    doGenerateLessonPlan(true);
-}
-
-function buyAiCredits(count, price) {
-    requireEmail(() => {
-        pendingProduct = `AI Хичээлийн эрх — ${count} хичээл`;
-        pendingTotal = price; pendingPassPages = 0;
-        document.getElementById('paymentNote').innerText = `${currentUserEmail} | AI хичээлийн эрх ${count} ш | ${price.toLocaleString()}₮`;
-        document.getElementById('paymentModal').classList.add('active');
-    });
-}
-
-function generateLessonPlan() {
-    if (aiCredits <= 0 && freeAiUsed) return showToast('Эрх байхгүй! Эрх авна уу.','error');
-    if (aiCredits <= 0 && !freeAiUsed) { useFreeAiCredit(); return; }
-    doGenerateLessonPlan(false);
-}
-
-function regeneratePlan() { doGenerateLessonPlan(false); }
-
-async function doGenerateLessonPlan(isFree) {
-    const subject  = document.getElementById('planSubject').value;
-    const grade    = document.getElementById('planGrade').value;
-    const negj     = document.getElementById('planNegj').value.trim();
-    const eeljit   = document.getElementById('planEeljit')?.value.trim() || '';
-    const totalH   = document.getElementById('planTotalHours').value || '8';
-    const duration = document.getElementById('planDuration').value;
-    const goal     = document.getElementById('planGoal').value.trim();
-    const objectives = document.getElementById('planObjectives').value.trim();
-    const classNote  = document.getElementById('planClassNote').value.trim();
-    const school     = document.getElementById('planSchoolName').value.trim();
-
-    if (!subject) return showToast('Судлагдахуун сонгоно уу!','error');
-    if (!grade) return showToast('Анги сонгоно уу!','error');
-    if (!negj) return showToast('Нэгж хичээлийн сэдвийг оруулна уу!','error');
-    if (currentPlanType === 'eeljit' && !eeljit) return showToast('Ээлжит хичээлийн сэдвийг оруулна уу!','error');
-
-    const btn = document.getElementById('aiGenerateBtn');
-    btn.disabled = true;
-    hideEl('aiPlanResult'); hideEl('aiPlanPlaceholder');
-    showEl('aiPlanGenerating');
-
-    const msgs = [
-        'GitHub-аас жилийн хөтөлбөр татаж байна...',
-        'Боловсролын яамны стандарт шалгаж байна...',
-        'Суралцахуйн зорилт боловсруулж байна...',
-        'Цагийн төлөвлөлт гаргаж байна...',
-        'Үнэлгээний шалгуур нэмж байна...',
-        'Баримт бичиг эцэслэж байна...'
-    ];
-    let mi = 0;
-    const msgEl = document.getElementById('aiPlanGenMsg');
-    const msgInt = setInterval(() => {
-        if (msgEl && mi < msgs.length) msgEl.textContent = msgs[mi++];
-    }, 600);
-
-    // Нэгжийн хөтөлбөрөөс ээлжит хичээлийн жагсаалт авах
-    const nObj = githubTopics.find(t => t.negj === negj);
-    const eeljitList = nObj ? nObj.eeljit : [];
-
-    // Prompt бэлдэх
-    const planTypeLabel = currentPlanType === 'negj' ? 'НЭГЖ ХИЧЭЭЛИЙН ХӨТӨЛБӨР' : 'ЭЭЛЖИТ ХИЧЭЭЛИЙН ХӨТӨЛБӨР';
-    let prompt = `Та Монгол улсын боловсролын яамны стандартад нийцсэн ${planTypeLabel} боловсруулж байна.
-
-МЭДЭЭЛЭЛ:
-- Судлагдахуун: ${subject}
-- Анги: ${grade}-р анги
-- Нэгжийн сэдэв: ${negj}
-${currentPlanType==='eeljit' ? `- Ээлжит хичээлийн сэдэв: ${eeljit}` : ''}
-- Нийт цаг: ${totalH} цаг
-- Хичээлийн хугацаа: ${duration} минут
-${goal ? `- Нэгжийн зорилго: ${goal}` : ''}
-${objectives ? `- Нэгжийн зорилт:\n${objectives}` : ''}
-${classNote ? `- Ангийн онцлог: ${classNote}` : ''}
-${eeljitList.length ? `- Жилийн хөтөлбөрийн ээлжит хичээлүүд: ${eeljitList.join(' | ')}` : ''}
-
-ШААРДЛАГА:
-Монгол улсын боловсролын яамны ${new Date().getFullYear()} оны сургалтын хөтөлбөрийн стандартад (БХС-2022) нийцэн дараах бүтэцтэй JSON өгөгдөл буцаа:
-
-{
-  "planType": "${currentPlanType}",
-  "subject": "${subject}",
-  "grade": "${grade}",
-  "negj": "${negj}",
-  ${currentPlanType==='eeljit' ? `"eeljit": "${eeljit}",` : ''}
-  "totalHours": "${totalH}",
-  "duration": "${duration}",
-  "school": "${school || 'Сургуулийн нэр'}",
-  "teacher": "",
-  "date": "${new Date().toLocaleDateString('mn-MN')}",
-  "goal": "Нэгжийн зорилго — 2-3 өгүүлбэр",
-  "objectives": ["Зорилт 1", "Зорилт 2", "Зорилт 3"],
-  "standards": ["7.1а — ...", "7.1б — ...", "7.2а — ..."],
-  "schedule": [
-    {"num":1, "topic":"Ээлжит хичээлийн сэдэв", "objectives":"Суралцахуйн зорилт", "hours":2},
-    {"num":2, "topic":"...", "objectives":"...", "hours":2}
-  ],
-  "assessment": ["Ерөөл, магтаалыг уншиж, тусган хүлээж авах", "Үг, уран дүрслэлийн далд утгыг тайлбарлах", "Ерөөл магтаалын шад холбоцыг тайлбарлах", "Дуурайн зохиох", "Ерөөл магтаалаас сонгон цээжлэх, аялгуулан хэлэх"],
-  "teachingMethods": ["Бүлгийн ажил", "Асуулт-хариулт", "Харьцуулан шинжлэх"],
-  "resources": ["Сурах бичиг", "Унших бичиг", "Самбар, маркер"]
-}
-
-Зөвхөн JSON буцаа, тайлбар бичихгүй.`;
-
-    let planData = null;
-    try {
-        const resp = await fetch('https://api.anthropic.com/v1/messages', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                model: 'claude-sonnet-4-20250514',
-                max_tokens: 2000,
-                messages: [{ role: 'user', content: prompt }]
-            })
-        });
-        const data = await resp.json();
-        const raw = data.content?.map(b => b.text||'').join('') || '';
-        const match = raw.match(/\{[\s\S]*\}/);
-        if (match) planData = JSON.parse(match[0]);
-    } catch(e) {
-        console.warn('AI API алдаа:', e);
-    }
-
-    clearInterval(msgInt);
-
-    // AI амжилтгүй → fallback
-    if (!planData) {
-        planData = buildFallbackPlanData(subject, grade, negj, eeljit, totalH, duration, goal, objectives, school, eeljitList);
-    }
-
-    if (!isFree) {
-        aiCredits--;
-        localStorage.setItem('aiCredits_'+currentUserEmail, String(aiCredits));
-        updateAiCreditDisplay();
-    }
-
-    lastPlanData = planData;
-    hideEl('aiPlanGenerating');
-    showEl('aiPlanResult');
-    renderPlanPreviewA4(planData);
-    btn.disabled = false;
-}
-
-function buildFallbackPlanData(subject, grade, negj, eeljit, totalH, duration, goal, objectives, school, eeljitList) {
-    const hrs = parseInt(totalH) || 8;
-    const dur = parseInt(duration) || 80;
-    const count = Math.ceil(hrs / (dur/40));
-    const schedule = (eeljitList.length ? eeljitList : [negj]).map((e,i) => ({
-        num: i+1,
-        topic: e,
-        objectives: 'Зохиолыг уншиж мэдэрч хүлээн авах, суралцахуйн зорилтыг биелүүлэх',
-        hours: 2
-    }));
-    if (!eeljitList.length) schedule.push({ num:2, topic:'Давталт, нэгжийн үнэлгээ', objectives:'Нэгжийн мэдлэг, чадварыг үнэлэх', hours:2 });
-
-    return {
-        planType: currentPlanType,
-        subject, grade, negj, eeljit, totalHours: totalH, duration,
-        school: school || 'Сургуулийн нэр',
-        teacher: '', date: new Date().toLocaleDateString('mn-MN'),
-        goal: goal || `Сурагчид ${negj} сэдвийн хүрэнд мэдлэг, чадвар эзэмшинэ.`,
-        objectives: objectives ? objectives.split('\n').filter(Boolean) : [
-            `${negj} сэдвийн агуулгыг уншиж, мэдэрч хүлээн авна`,
-            'Гол санаа, дүрслэлийн аргыг тайлбарлана',
-            'Сурсан мэдлэгээ практикт хэрэглэнэ'
-        ],
-        standards: [`${grade}.1а — Монгол хэлний уран зохиолыг уншиж хүлээн авах`, `${grade}.1б — Зохиолын бүтэц, зохиомжийг шинжлэх`, `${grade}.2а — Уран дүрслэлийн хэрэгслийг ашиглан бичих`],
-        schedule,
-        assessment: [
-            `${negj} сэдвийн зохиолыг уншиж, тусган хүлээж авах`,
-            'Үг, уран дүрслэлийн далд утгыг тайлбарлах',
-            'Гол санааг тайлбарлах, шинжлэх',
-            'Дуурайн бичих дадлага хийх',
-            'Цээжлэх, аялгуулан хэлэх'
-        ],
-        teachingMethods: ['Асуулт-хариулт', 'Бүлгийн ажил', 'Харьцуулан шинжлэх', 'Дуурайн бичих'],
-        resources: ['Сурах бичиг', 'Унших бичиг', 'Дэвтэр, үзэг', 'Самбар, маркер', 'Проектор']
-    };
-}
-
-/* ── A4 Preview рендэр ── */
-function renderPlanPreviewA4(d) {
-    const isNegj = d.planType !== 'eeljit';
-    const titleLabel = isNegj ? 'НЭГЖ ХИЧЭЭЛИЙН ХӨТӨЛБӨР' : 'ЭЭЛЖИТ ХИЧЭЭЛИЙН ХӨТӨЛБӨР';
-    const objList = Array.isArray(d.objectives) ? d.objectives : String(d.objectives).split('\n').filter(Boolean);
-    const stdList = Array.isArray(d.standards) ? d.standards : [];
-    const assessList = Array.isArray(d.assessment) ? d.assessment : [];
-    const methodList = Array.isArray(d.teachingMethods) ? d.teachingMethods : [];
-    const resList = Array.isArray(d.resources) ? d.resources : [];
-
-    const html = `
-<div style="font-family:'Times New Roman',serif;font-size:12pt;line-height:1.5;padding:28px 32px;background:#fff;max-width:820px;">
-
-  <!-- Гарчиг хэсэг -->
-  <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px;">
-    <div style="font-size:10pt;color:#555;">СУРГАЛТЫН МЕНЕЖЕР</div>
-    <div style="font-size:10pt;color:#555;">БАТЛАВ</div>
-    <div style="font-size:10pt;color:#555;">Д.ОЮУН-ЭРДЭНЭ</div>
-  </div>
-  <div style="text-align:center;margin-bottom:18px;">
-    <div style="font-size:13pt;font-weight:700;font-style:italic;color:#1a1a1a;">"${d.subject}"</div>
-    <div style="font-size:14pt;font-weight:700;color:#1a1a1a;text-transform:uppercase;letter-spacing:1px;">${titleLabel}</div>
-    <div style="width:80%;height:2px;background:#c0392b;margin:8px auto;"></div>
-  </div>
-
-  <!-- Үндсэн мэдээлэл -->
-  <table style="width:100%;border-collapse:collapse;margin-bottom:14px;font-size:11pt;">
-    <tr>
-      <td style="padding:3px 8px;font-weight:700;width:180px;">Нэгж хичээлийн сэдэв:</td>
-      <td style="padding:3px 8px;font-weight:700;color:#c0392b;">${d.negj}</td>
-      ${isNegj ? '' : `<td style="padding:3px 8px;font-weight:700;width:160px;">Ээлжит хичээл:</td><td style="padding:3px 8px;">${d.eeljit||''}</td>`}
-    </tr>
-    <tr>
-      <td style="padding:3px 8px;font-weight:700;">Судлах цаг:</td>
-      <td style="padding:3px 8px;">${d.totalHours} цаг</td>
-      <td style="padding:3px 8px;font-weight:700;">Хамрах хүрээ:</td>
-      <td style="padding:3px 8px;">${d.grade}-р анги</td>
-    </tr>
-    <tr>
-      <td style="padding:3px 8px;font-weight:700;">Зорилго:</td>
-      <td colspan="3" style="padding:3px 8px;">${d.goal}</td>
-    </tr>
-  </table>
-
-  <!-- Зорилт -->
-  <table style="width:100%;border-collapse:collapse;margin-bottom:14px;border:1px solid #ccc;font-size:11pt;">
-    <thead>
-      <tr style="background:#c0392b;">
-        <th colspan="3" style="padding:7px 10px;color:#fff;text-align:center;font-size:11pt;">Зорилт</th>
-      </tr>
-      <tr style="background:#f8d7da;">
-        <th style="padding:6px 10px;text-align:center;width:50px;border:1px solid #ccc;">№</th>
-        <th style="padding:6px 10px;text-align:left;border:1px solid #ccc;">Зорилтын агуулга</th>
-        <th style="padding:6px 10px;text-align:center;width:80px;border:1px solid #ccc;">Цаг</th>
-      </tr>
-    </thead>
-    <tbody>
-      ${objList.map((o,i) => `<tr style="${i%2===0?'background:#fff':'background:#fef9f9'}"><td style="padding:6px 10px;text-align:center;border:1px solid #ddd;">${i+1}</td><td style="padding:6px 10px;border:1px solid #ddd;">${o}</td><td style="padding:6px 10px;text-align:center;border:1px solid #ddd;">2</td></tr>`).join('')}
-    </tbody>
-  </table>
-
-  <!-- Стандарт -->
-  ${stdList.length ? `
-  <div style="margin-bottom:14px;">
-    <div style="font-weight:700;font-size:11pt;margin-bottom:6px;border-left:4px solid #c0392b;padding-left:8px;">Сургалтын хөтөлбөрийн стандарт:</div>
-    ${stdList.map(s=>`<div style="font-size:10.5pt;padding:3px 0 3px 14px;">• ${s}</div>`).join('')}
-  </div>` : ''}
-
-  <!-- Цагийн төлөвлөлт -->
-  <div style="font-weight:700;font-size:11pt;margin-bottom:8px;border-left:4px solid #c0392b;padding-left:8px;">Цагийн төлөвлөлт:</div>
-  <table style="width:100%;border-collapse:collapse;margin-bottom:14px;font-size:10.5pt;">
-    <thead>
-      <tr style="background:#2e4057;color:#fff;">
-        <th style="padding:8px;text-align:center;width:40px;border:1px solid #999;">№</th>
-        <th style="padding:8px;text-align:left;border:1px solid #999;">Ээлжит хичээлийн сэдэв</th>
-        <th style="padding:8px;text-align:left;border:1px solid #999;">Суралцахуйн зорилт</th>
-        <th style="padding:8px;text-align:center;width:60px;border:1px solid #999;">Цаг</th>
-      </tr>
-    </thead>
-    <tbody>
-      ${(d.schedule||[]).map((row,i) => `
-        <tr style="background:${i%2===0?'#f0f4f8':'#fff'}">
-          <td style="padding:7px;text-align:center;border:1px solid #ddd;">${row.num||i+1}</td>
-          <td style="padding:7px;border:1px solid #ddd;font-weight:${i<(d.schedule.length-1)?'normal':'600'};">${row.topic||''}</td>
-          <td style="padding:7px;border:1px solid #ddd;font-size:10pt;">${row.objectives||''}</td>
-          <td style="padding:7px;text-align:center;border:1px solid #ddd;">${row.hours||2}</td>
-        </tr>`).join('')}
-    </tbody>
-  </table>
-
-  <!-- Үнэлгээний шалгуур -->
-  ${assessList.length ? `
-  <div style="margin-bottom:14px;">
-    <div style="font-weight:700;font-size:11pt;margin-bottom:8px;border-left:4px solid #27ae60;padding-left:8px;">Үнэлгээний шалгуур:</div>
-    ${assessList.map(a=>`<div style="display:flex;align-items:flex-start;gap:8px;font-size:10.5pt;padding:2px 0 2px 14px;"><span style="color:#27ae60;font-weight:700;flex-shrink:0;">✦</span><span>${a}</span></div>`).join('')}
-  </div>` : ''}
-
-  <!-- Арга, хэрэгсэл -->
-  <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:8px;">
-    ${methodList.length ? `
-    <div>
-      <div style="font-weight:700;font-size:10.5pt;margin-bottom:6px;border-left:3px solid #8e44ad;padding-left:6px;">Заах арга, хэлбэр:</div>
-      ${methodList.map(m=>`<div style="font-size:10pt;padding:2px 0 2px 12px;">• ${m}</div>`).join('')}
-    </div>` : ''}
-    ${resList.length ? `
-    <div>
-      <div style="font-weight:700;font-size:10.5pt;margin-bottom:6px;border-left:3px solid #2980b9;padding-left:6px;">Сургалтын хэрэглэгдэхүүн:</div>
-      ${resList.map(r=>`<div style="font-size:10pt;padding:2px 0 2px 12px;">• ${r}</div>`).join('')}
-    </div>` : ''}
-  </div>
-
-  <!-- Гарын үсэг -->
-  <div style="display:flex;justify-content:space-between;margin-top:28px;font-size:10.5pt;border-top:1px solid #ccc;padding-top:14px;">
-    <div>Багш: <span style="display:inline-block;width:160px;border-bottom:1px solid #999;">${d.teacher||''}</span></div>
-    <div>Огноо: <span style="display:inline-block;width:120px;border-bottom:1px solid #999;">${d.date||''}</span></div>
-    <div>Сургууль: <span style="display:inline-block;width:160px;border-bottom:1px solid #999;">${d.school||''}</span></div>
-  </div>
-</div>`;
-
-    document.getElementById('planPreviewA4').innerHTML = html;
-}
-
-function downloadPlanAsWord() {
-    if (!lastPlanData) return showToast('Эхлээд төлөвлөгөө үүсгэнэ үү!','error');
-    const preview = document.getElementById('planPreviewA4');
-    if (!preview) return;
-    const content = preview.innerHTML;
-    const wordHtml = `<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word" xmlns="http://www.w3.org/TR/REC-html40"><head><meta charset="utf-8"><title>Хичээлийн төлөвлөгөө</title><style>@page{size:A4 portrait;margin:2cm;} body{font-family:'Times New Roman',serif;font-size:12pt;} table{border-collapse:collapse;width:100%;} th,td{border:1px solid #ccc;padding:6px;} </style></head><body>${content}</body></html>`;
-    const blob = new Blob([wordHtml], {type:'application/msword'});
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `${lastPlanData.negj||'Хичээл'}_${lastPlanData.grade||''}_анги_төлөвлөгөө.doc`;
-    a.click();
-    URL.revokeObjectURL(url);
-    showToast('Word файл татагдаж байна!','success');
-}
-
-function printAiPlan() {
-    const preview = document.getElementById('planPreviewA4');
-    if (!preview || !preview.innerHTML) return showToast('Эхлээд төлөвлөгөө үүсгэнэ үү!','error');
-    const pa = document.getElementById('printArea');
-    pa.innerHTML = `<style>@page{size:A4 portrait;margin:2cm;} body{font-family:'Times New Roman',serif;font-size:12pt;} table{border-collapse:collapse;width:100%;} th,td{border:1px solid #ccc;padding:6px;}</style>${preview.innerHTML}`;
-    pa.style.display = 'block';
-    const after = () => { pa.style.display='none'; pa.innerHTML=''; window.removeEventListener('afterprint',after); };
-    window.addEventListener('afterprint', after);
-    setTimeout(() => window.print(), 200);
-}
-
-function copyAiPlan() {
-    const preview = document.getElementById('planPreviewA4');
-    if (!preview) return;
-    navigator.clipboard.writeText(preview.innerText).then(() => showToast('Хуулагдлаа!','success')).catch(() => showToast('Хуулж чадсангүй','error'));
-}
-
-/* ═══════════════════════════════════════
-   ── AI ШАЛГАЛТ (БАГШ) ──
-═══════════════════════════════════════ */
-let assessTab = 'lit';
-let selectedTime = 20;
-let selectedTime2 = 60;
-let selectedBloomLevels = ['remember','understand'];
-
-/* ── ЗОХИОЛЫН САН (анги тус бүрээр) ── */
-const literatureDatabase = [
-    // 6-р анги
-    { grade:'6', title:'Д.Нацагдорж — Миний нутаг', content:'Нутгийн агаар ямар цэлмэг, нутгийн усны амт ямар амттай. Хонь малынхаа саалиар цэнгэж, нутгийн тал хээр дайран гүйнэм.' },
-    { grade:'6', title:'С.Буяннэмэх — Уул', content:'Уул бол манай нутгийн тэнгэр. Цасан малгайтай, ногоон дэгэлтэй уул миний эцэг шиг тэгш зогсоно.' },
-    { grade:'6', title:'Б.Явуухулан — Нутгийн дурсамж', content:'Нутгаасаа холдохдоо зүрх минь гунигладаг. Хөхөө шувуу дуугарч, нутгаа санагдуулна.' },
-    // 7-р анги
-    { grade:'7', title:'Б.Явуухулан — Хөх тэнгэр', content:'Хөх тэнгэр манайхны өвөг дээдсийн бурхан. Тэнгэрийн хөх өнгө нь монгол угсааныхны цэвэр сэтгэлийн бэлгэдэл.' },
-    { grade:'7', title:'Д.Нацагдорж — Цагаан сар', content:'Цагаан сарын нэгэн өглөө нар дэлхийг гэрэлтүүлнэ. Ах дүүс нийлж, баяр хүргэлцэнэ.' },
-    // 8-р анги
-    { grade:'8', title:'Ч.Лодойдамба — Тунгалаг тамир', content:'Тамир голын эрэг дагуу хурдан морь давхина. Баатар залуу нутгаа хамгаалахын тулд тулалдана.' },
-    { grade:'8', title:'Д.Гармаа — Хайр', content:'Хайр гэдэг бол өгч буй зүйл. Хайртай хүнийхээ төлөө зовж, баясаж амьдрана.' },
-    // 9-р анги
-    { grade:'9', title:'С.Дашдооров — Нар жаргахуйн өмнө', content:'Нар жаргахын өмнө алтан туяа хаа сайгүй тарана. Тэр агшинд амьдралын утга учрыг ойлгоно.' },
-    { grade:'9', title:'Л.Түдэв — Морин хуур', content:'Морин хуурын аяс уйтан тал нутгийг дүүргэнэ. Хөгжмийн дуу сонсоход нутгийн дурсамж амилна.' },
-    // 10-р анги
-    { grade:'10', title:'Д.Нацагдорж — Учиртай гурван толгой', content:'Гурван толгойн уулын өвөр хаданд гурван нутгийн хүн уулзана. Хувь тавилан тэднийг нэгтгэнэ.' },
-    { grade:'10', title:'Б.Ринчен — Зуун нарны дуу', content:'Зуун нар шиг гэрэлтэй монгол иргэний сэтгэл. Нутаг орноо хайрлах мэдрэмж зүрх бүрт буй.' },
-    // 11-р анги
-    { grade:'11', title:'С.Эрдэнэ — Цэрэгт явах болсон түүх', content:'Залуу цэрэг нутгаасаа салж, улс орноо хамгаалахаар явна. Эхийн нулимс замаас буцаахгүй.' },
-    { grade:'11', title:'Д.Намдаг — Их л юм даа', content:'Амьдрал их л юм даа, хэмжээгүй том. Хайр, гуниг, баяр бүгд нэгэн амьдрал доторх.' },
-    // 12-р анги
-    { grade:'12', title:'Ч.Лодойдамба — Гал голомт', content:'Гал голомт бол монгол гэрийн зүрх. Голомтоо унтраахгүй байх нь үеийн залгамжлал.' },
-    { grade:'12', title:'Б.Явуухулан — Далайг дайран', content:'Далайг дайран нисэх шувуу шиг хүн мөрөөдлөө биелүүлнэ. Тэрслүү зориг бүхнийг дийлнэ.' },
-];
-
-/* ── Анги сонгоход зохиолын жагсаалт шинэчлэх ── */
-function updateWorkList() {
-    const grade = document.getElementById('assessGrade').value;
-    const workSelect = document.getElementById('assessLitWork');
-    workSelect.innerHTML = '<option value="">Зохиолоо сонгоно уу</option>';
-    if (!grade) { workSelect.innerHTML = '<option value="">Эхлээд анги сонгоно уу</option>'; return; }
-    const filtered = literatureDatabase.filter(item => item.grade === grade);
-    if (!filtered.length) {
-        workSelect.innerHTML = '<option value="">Зохиол олдсонгүй</option>';
-        return;
-    }
-    filtered.forEach(work => {
-        const opt = document.createElement('option');
-        opt.value = work.title;
-        opt.textContent = work.title;
-        workSelect.appendChild(opt);
-    });
-}
-
-function initAiAssessment() {
-    // Анги сонгогчийг reset
-    const gradeEl = document.getElementById('assessGrade');
-    if (gradeEl) gradeEl.value = '';
-    const workEl = document.getElementById('assessLitWork');
-    if (workEl) workEl.innerHTML = '<option value="">Эхлээд анги сонгоно уу</option>';
-}
-
-function switchAssessTab(tab) {
-    assessTab = tab;
-    document.getElementById('tabLit').classList.toggle('active', tab==='lit');
-    document.getElementById('tabText').classList.toggle('active', tab==='text');
-    document.getElementById('assessLitPanel').classList.toggle('hidden', tab!=='lit');
-    document.getElementById('assessTextPanel').classList.toggle('hidden', tab==='lit');
-}
-
-function selectTime(t) {
-    selectedTime = t;
-    ['20','40','60'].forEach(v => {
-        const el = document.getElementById('tp'+v);
-        if (el) el.classList.toggle('active', parseInt(v)===t);
-    });
-}
-
-function selectTime2(t) {
-    selectedTime2 = t;
-    ['40','60','80'].forEach(v => {
-        const el = document.getElementById('tp'+v+'b');
-        if (el) el.classList.toggle('active', parseInt(v)===t);
-    });
-}
-
-function toggleBloom(el) {
-    el.classList.toggle('selected');
-    const level = el.dataset.level;
-    const chk = el.querySelector('.bloom-check');
-    if (el.classList.contains('selected')) {
-        if (!selectedBloomLevels.includes(level)) selectedBloomLevels.push(level);
-        chk.innerHTML = '<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round"><path d="M5 13l4 4L19 7"/></svg>';
-    } else {
-        selectedBloomLevels = selectedBloomLevels.filter(l=>l!==level);
-        chk.innerHTML = '';
-    }
-}
-
-/* ── AI ШАЛГАЛТ: Anthropic API ашиглан үүсгэх ── */
-async function generateAssessment(mode) {
-    hideEl('assessPlaceholder'); hideEl('assessResult');
-    showEl('assessGenerating');
-
-    let sourceTitle = '', sourceContent = '', timeLimit = 0;
-    let prompt = '';
-
-    if (mode === 'lit') {
-        const grade = document.getElementById('assessGrade').value;
-        const workVal = document.getElementById('assessLitWork').value;
-        if (!grade) { showToast('Анги сонгоно уу!','error'); hideEl('assessGenerating'); showEl('assessPlaceholder'); return; }
-        if (!workVal) { showToast('Зохиолоо сонгоно уу!','error'); hideEl('assessGenerating'); showEl('assessPlaceholder'); return; }
-        timeLimit = selectedTime;
-        const workData = literatureDatabase.find(w => w.title === workVal);
-        sourceTitle = workVal;
-        sourceContent = workData ? workData.content : workVal;
-        const qCount = timeLimit === 20 ? 4 : timeLimit === 40 ? 8 : 12;
-        prompt = `Та Монгол хэл, Уран зохиолын мэргэжлийн багш. "${sourceTitle}" зохиолын доорх хэсгийг ашиглан ${grade}-р ангийн сурагчдад зориулсан ${timeLimit} минутын шалгалт зохио.
-
-Эх: "${sourceContent}"
-
-Яг ${qCount} асуулт хийж өг. Формат:
-- Тест асуулт: {"q":"асуулт","opts":["А хариулт","Б хариулт","В хариулт","Г хариулт"],"ans":"А","isOpen":false}
-- Задгай асуулт: {"q":"асуулт","isOpen":true}
-
-Зөвхөн JSON массив буцаа, өөр текст нэмэхгүй:
-[{...},{...}]`;
-    } else {
-        const text = document.getElementById('assessOwnText').value.trim();
-        if (!text) { showToast('Эх текстийг оруулна уу!','error'); hideEl('assessGenerating'); showEl('assessPlaceholder'); return; }
-        timeLimit = selectedTime2;
-        sourceTitle = 'Өгөгдсөн эх';
-        sourceContent = text;
-        const levelNames = { remember:'Санах', understand:'Ойлгох', apply:'Хэрэглэх', analyze:'Шинжлэх' };
-        const levelsStr = selectedBloomLevels.map(l => levelNames[l]||l).join(', ');
-        const qCount = timeLimit === 40 ? 4 : timeLimit === 60 ? 6 : 8;
-        prompt = `Та Монгол хэл, Уран зохиолын мэргэжлийн багш. Доорх эхийн дагуу ${timeLimit} минутын шалгалт зохио.
-
-Эх: "${sourceContent.substring(0, 500)}"
-
-Блүүмийн таксономийн түвшин: ${levelsStr}
-Нийт ${qCount} асуулт хийж өг — тус бүр сонгосон түвшнүүдтэй тохирно.
-
-Зөвхөн JSON массив буцаа:
-- Тест: {"q":"...","opts":["А","Б","В","Г"],"ans":"А","isOpen":false}
-- Задгай: {"q":"...","isOpen":true}
-
-[{...},{...}]`;
-    }
-
-    // Anthropic API дуудах
-    let questions = null;
-    try {
-        const resp = await fetch('https://api.anthropic.com/v1/messages', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                model: 'claude-sonnet-4-20250514',
-                max_tokens: 1000,
-                messages: [{ role: 'user', content: prompt }]
-            })
-        });
-        const data = await resp.json();
-        const raw = data.content?.map(b => b.text||'').join('') || '';
-        const match = raw.match(/\[[\s\S]*\]/);
-        if (match) questions = JSON.parse(match[0]);
-    } catch(e) {
-        console.warn('AI API алдаа:', e);
-    }
-
-    // AI амжилтгүй бол fallback ашиглах
-    if (!questions || !questions.length) {
-        if (mode === 'lit') {
-            questions = buildLitQuestions(sourceTitle, timeLimit);
-        } else {
-            questions = buildBloomQuestions(sourceContent, selectedBloomLevels, timeLimit);
-        }
-    }
-
-    hideEl('assessGenerating');
-    showEl('assessResult');
-    const grade = mode === 'lit' ? document.getElementById('assessGrade').value : '';
-    renderAssessPreview(sourceTitle, grade, timeLimit+'мин', questions);
-}
-
-/* ── Fallback: AI ажиллаагүй үед ашиглах ── */
-function buildLitQuestions(work, time) {
-    const qCount = time === 20 ? 4 : time === 40 ? 8 : 12;
-    const pool = [
-        { q:`"${work}" зохиолын гол сэдэв юу вэ?`, opts:['Нутаг орноо хайрлах','Баялаг хайх','Гадаадад явах','Дайн байлдаан'], ans:'А', isOpen:false },
-        { q:`Зохиолын жанрыг тодорхойлно уу.`, opts:['Яруу найраг','Үлгэр','Роман','Өгүүллэг'], ans:'А', isOpen:false },
-        { q:`Зохиолд ашигласан уран зохиолын гол арга юу вэ?`, opts:['Дүрслэл','Харьцуулалт','Давталт','Метафор'], ans:'А', isOpen:false },
-        { q:`Зохиолын гол дүрийн онцлог шинжийг тайлбарлана уу.`, isOpen:true },
-        { q:`Зохиолын үндсэн санааг өөрийн үгээр илэрхийлнэ үү.`, isOpen:true },
-    ];
-    return pool.slice(0, Math.min(qCount, pool.length));
-}
-
-function buildBloomQuestions(text, levels, time) {
-    const questions = [];
-    const shortText = text.substring(0, 80) + (text.length > 80 ? '...' : '');
-    const bloomMap = {
-        remember:  [{ q:`Эхэд дурдсан гол үйл явдлуудыг жагсаана уу.`, isOpen:true }],
-        understand:[{ q:`"${shortText}" — энэ мөрийн утгыг тайлбарлана уу.`, isOpen:true }],
-        apply:     [{ q:`Эхийн гол санааг өөрийн амьдралд хэрхэн ашиглах вэ?`, isOpen:true }],
-        analyze:   [{ q:`Зохиогчийн ашигласан аргыг шинжлэн тайлбарлана уу.`, isOpen:true }],
-    };
-    levels.forEach(l => { if (bloomMap[l]) questions.push(...bloomMap[l]); });
-    if (!questions.length) questions.push({ q:'Эхийн гол санааг дэлгэрүүлж бичнэ үү.', isOpen:true });
-    return questions;
-}
-
-function renderAssessPreview(subject, grade, time, questions) {
-    const box = document.getElementById('assessPreviewBox');
-    let html = `<div class="print-preview-header">
-        <div class="print-preview-school">Монгол хэл, Уран зохиол · ${grade ? grade+'-р анги' : 'Ерөнхий'}</div>
-        <div class="print-preview-subject">${subject}</div>
-        <div class="print-preview-meta"><span>Хугацаа: ${time}</span><span>Огноо: ___________</span><span>Нэр: ___________</span></div>
-    </div>`;
-    questions.forEach((q, i) => {
-        html += `<div class="print-question"><div class="print-q-num">${i+1}-р асуулт</div><div class="print-q-text">${q.q}</div>`;
-        if (!q.isOpen && q.opts) {
-            html += `<div class="print-q-options">${q.opts.map((o,j)=>`<div class="print-q-option">${String.fromCharCode(65+j)}) ${o}</div>`).join('')}</div>`;
-        } else {
-            html += `<div class="print-q-open"></div><div class="print-q-open"></div>`;
-        }
-        html += `</div>`;
-    });
-    box.innerHTML = html;
-}
-
-function printAssessment() {
-    const box = document.getElementById('assessPreviewBox');
-    if (!box || !box.innerHTML) return showToast('Эхлээд даалгавар үүсгэнэ үү!','error');
-    const pa = document.getElementById('printArea');
-    pa.innerHTML = `<style>@page{size:A5 portrait;margin:8mm;}body{font-family:'Lexend',sans-serif;font-size:10pt;}.print-preview-header{text-align:center;border-bottom:2px solid #dbc2b2;padding-bottom:10px;margin-bottom:14px;}.print-preview-school{font-size:8pt;color:#887365;text-transform:uppercase;letter-spacing:0.04em;}.print-preview-subject{font-size:13pt;font-weight:700;color:#1c1b1b;margin-top:4px;}.print-preview-meta{display:flex;justify-content:space-between;font-size:8pt;color:#887365;margin-top:6px;}.print-question{margin-bottom:12px;}.print-q-num{font-size:8pt;font-weight:700;color:#944a00;text-transform:uppercase;}.print-q-text{font-size:10pt;font-weight:600;margin:3px 0 5px;line-height:1.4;}.print-q-options{display:grid;grid-template-columns:1fr 1fr;gap:2px;font-size:9pt;}.print-q-open{height:18px;border-bottom:1px solid #dbc2b2;margin-top:3px;}</style>${box.innerHTML}`;
-    pa.style.display = 'block';
-    const after = () => { pa.style.display='none'; pa.innerHTML=''; window.removeEventListener('afterprint',after); };
-    window.addEventListener('afterprint', after);
-    setTimeout(() => window.print(), 200);
-}
-
-/* ══════════════════════════════════════
-   ── PRODUCTS ──
-══════════════════════════════════════ */
+/* ─── ЗАСВАР 2: loadProducts — fetchJSON ашиглана ─── */
 async function loadProducts() {
     const grid = document.getElementById('materialGrid');
     const shop = document.getElementById('fullShopGrid');
-    const setLoading = el => { if (el) el.innerHTML='<div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--on-surface-variant);font-size:13px;">Ачаалж байна...</div>'; };
+
+    const setLoading = (el) => {
+        if (el) el.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--on-surface-variant);font-size:13px;">Ачаалж байна...</div>';
+    };
     setLoading(grid); setLoading(shop);
+
     try {
         const data = await fetchJSON(`${ORDER_URL}?action=getProducts`);
-        if (data && Array.isArray(data) && data.length>0) {
+        if (data && Array.isArray(data) && data.length > 0) {
             productsData = data;
             const html = productsData.map(p => buildProductCard(p)).join('');
             if (grid) grid.innerHTML = html;
             if (shop) shop.innerHTML = html;
         } else {
-            const msg='<div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--on-surface-variant);font-size:13px;">Материал олдсонгүй.</div>';
-            if (grid) grid.innerHTML=msg;
-            if (shop) shop.innerHTML=msg;
+            const msg = '<div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--on-surface-variant);font-size:13px;">Материал олдсонгүй.</div>';
+            if (grid) grid.innerHTML = msg;
+            if (shop) shop.innerHTML = msg;
         }
         loadCart();
     } catch(e) {
-        const msg='<div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--error);font-size:13px;">Холболтын алдаа. Дахин оролдоно уу.</div>';
-        if (grid) grid.innerHTML=msg;
-        if (shop) shop.innerHTML=msg;
+        console.error('loadProducts алдаа:', e);
+        const msg = '<div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--error);font-size:13px;">Холболтын алдаа гарлаа. Дахин оролдоно уу.</div>';
+        if (grid) grid.innerHTML = msg;
+        if (shop) shop.innerHTML = msg;
     }
 }
 
 function buildProductCard(p) {
-    const safeTitle = p.Title.replace(/'/g,"\\'");
+    const safeTitle = p.Title.replace(/'/g, "\\'");
     const price = Number(p.Price);
     const imgFiles = p.Images ? p.Images.split(',').map(s=>s.trim()).filter(s=>/\.(png|jpg|jpeg|gif|webp)$/i.test(s)) : [];
-    const cardId = 'c'+Math.random().toString(36).substr(2,9);
+    const cardId = 'c' + Math.random().toString(36).substr(2,9);
     let imgHtml = '';
-    if (!imgFiles.length) {
-        imgHtml=`<div class="product-img"><div class="product-img-placeholder">Зураг байхгүй</div></div>`;
-    } else if (imgFiles.length===1) {
-        const src=GITHUB_BASE+imgFiles[0];
-        imgHtml=`<div class="product-img" onclick="openLightbox(['${src}'],0)" style="cursor:zoom-in;"><img src="${src}" onerror="this.parentElement.innerHTML='<div class=\\'product-img-placeholder\\'>Зураг байхгүй</div>'"></div>`;
+    if (imgFiles.length === 0) {
+        imgHtml = `<div class="product-img"><div class="product-img-placeholder">Зураг байхгүй</div></div>`;
+    } else if (imgFiles.length === 1) {
+        const src = GITHUB_BASE + imgFiles[0];
+        imgHtml = `<div class="product-img" onclick="openLightbox(['${src}'],0)" style="cursor:zoom-in;"><img src="${src}" onerror="this.parentElement.innerHTML='<div class=\\'product-img-placeholder\\'>Зураг байхгүй</div>'"></div>`;
     } else {
-        const allSrcs=JSON.stringify(imgFiles.map(f=>GITHUB_BASE+f));
-        const slides=imgFiles.map((f,i)=>`<img src="${GITHUB_BASE}${f}" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:opacity 0.3s;opacity:${i===0?1:0};" data-idx="${i}" onclick="openLightbox(${allSrcs.replace(/"/g,"'")},${i})">`).join('');
-        imgHtml=`<div class="product-img" id="${cardId}" data-cur="0" data-total="${imgFiles.length}" style="position:relative;">${slides}<button style="position:absolute;left:6px;top:50%;transform:translateY(-50%);width:24px;height:24px;border-radius:50%;background:rgba(0,0,0,0.35);border:none;color:white;font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;" onclick="event.stopPropagation();slideDir('${cardId}',-1)">‹</button><button style="position:absolute;right:6px;top:50%;transform:translateY(-50%);width:24px;height:24px;border-radius:50%;background:rgba(0,0,0,0.35);border:none;color:white;font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;" onclick="event.stopPropagation();slideDir('${cardId}',1)">›</button></div>`;
+        const allSrcs = JSON.stringify(imgFiles.map(f => GITHUB_BASE+f));
+        const slides = imgFiles.map((f,i) => `<img src="${GITHUB_BASE}${f}" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:opacity 0.3s;opacity:${i===0?1:0};" data-idx="${i}" onclick="openLightbox(${allSrcs.replace(/"/g,"'")},${i})">`).join('');
+        imgHtml = `<div class="product-img" id="${cardId}" data-cur="0" data-total="${imgFiles.length}" style="position:relative;">${slides}<button style="position:absolute;left:6px;top:50%;transform:translateY(-50%);width:24px;height:24px;border-radius:50%;background:rgba(0,0,0,0.35);border:none;color:white;font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;" onclick="event.stopPropagation();slideDir('${cardId}',-1)">‹</button><button style="position:absolute;right:6px;top:50%;transform:translateY(-50%);width:24px;height:24px;border-radius:50%;background:rgba(0,0,0,0.35);border:none;color:white;font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;" onclick="event.stopPropagation();slideDir('${cardId}',1)">›</button></div>`;
     }
     return `<div class="product-card"><div>${imgHtml}</div><div class="product-body"><div class="product-tag">Материал</div><div class="product-title">${p.Title}</div><div class="product-price">${price.toLocaleString()}₮</div><div class="product-actions"><button class="btn-add" onclick="addToCart('${safeTitle}',${price})">+ Сагс</button><button class="btn-buy" onclick="buyNow('${safeTitle}',${price})">Авах</button></div></div></div>`;
 }
 
-function slideTo(cId,idx) { const w=document.getElementById(cId);if(!w)return;const total=parseInt(w.dataset.total);const i=(idx+total)%total;w.querySelectorAll('img[data-idx]').forEach(img=>{img.style.opacity=parseInt(img.dataset.idx)===i?'1':'0';});w.dataset.cur=i; }
-function slideDir(cId,dir) { const w=document.getElementById(cId);if(w)slideTo(cId,parseInt(w.dataset.cur||'0')+dir); }
+function slideTo(cId, idx) {
+    const w = document.getElementById(cId); if (!w) return;
+    const total = parseInt(w.dataset.total);
+    const i = (idx+total)%total;
+    w.querySelectorAll('img[data-idx]').forEach(img => { img.style.opacity = parseInt(img.dataset.idx)===i ? '1' : '0'; });
+    w.dataset.cur = i;
+}
+function slideDir(cId, dir) {
+    const w = document.getElementById(cId); if (w) slideTo(cId, parseInt(w.dataset.cur||'0')+dir);
+}
 
-/* ── LIGHTBOX ── */
-function openLightbox(imgs,start){lbImages=imgs;lbIndex=start;renderLB();document.getElementById('lightboxModal').classList.add('active');document.body.style.overflow='hidden';}
-function closeLightbox(){document.getElementById('lightboxModal').classList.remove('active');document.body.style.overflow='';}
-function renderLB(){const img=document.getElementById('lbImg');img.style.opacity='0';img.onload=()=>{img.style.opacity='1';};img.src=lbImages[lbIndex];document.getElementById('lbCounter').innerText=lbImages.length>1?`${lbIndex+1} / ${lbImages.length}`:'';document.getElementById('lbPrev').style.display=lbImages.length>1?'flex':'none';document.getElementById('lbNext').style.display=lbImages.length>1?'flex':'none';renderLbDots();}
-function lbPrev(){lbIndex=(lbIndex-1+lbImages.length)%lbImages.length;renderLB();}
-function lbNext(){lbIndex=(lbIndex+1)%lbImages.length;renderLB();}
-function renderLbDots(){const c=document.getElementById('lbDots');if(lbImages.length<=1){c.innerHTML='';return;}c.innerHTML=lbImages.map((_,i)=>`<button onclick="lbIndex=${i};renderLB()" style="width:8px;height:8px;border-radius:50%;border:none;cursor:pointer;background:${i===lbIndex?'#fff':'rgba(255,255,255,0.4)'};padding:0;"></button>`).join('');}
-document.addEventListener('keydown',e=>{const lb=document.getElementById('lightboxModal');if(!lb||!lb.classList.contains('active'))return;if(e.key==='ArrowLeft')lbPrev();if(e.key==='ArrowRight')lbNext();if(e.key==='Escape')closeLightbox();});
+/* ─── LIGHTBOX ─── */
+function openLightbox(imgs, start) { lbImages=imgs; lbIndex=start; renderLB(); document.getElementById('lightboxModal').classList.add('active'); document.body.style.overflow='hidden'; }
+function closeLightbox() { document.getElementById('lightboxModal').classList.remove('active'); document.body.style.overflow=''; }
+function renderLB() {
+    const img = document.getElementById('lbImg');
+    img.style.opacity='0'; img.onload=()=>{img.style.opacity='1';};
+    img.src = lbImages[lbIndex];
+    document.getElementById('lbCounter').innerText = lbImages.length>1 ? `${lbIndex+1} / ${lbImages.length}` : '';
+    document.getElementById('lbPrev').style.display = lbImages.length>1 ? 'flex' : 'none';
+    document.getElementById('lbNext').style.display = lbImages.length>1 ? 'flex' : 'none';
+    renderLbDots();
+}
+function lbPrev() { lbIndex=(lbIndex-1+lbImages.length)%lbImages.length; renderLB(); }
+function lbNext() { lbIndex=(lbIndex+1)%lbImages.length; renderLB(); }
+function renderLbDots() {
+    const c = document.getElementById('lbDots');
+    if (lbImages.length<=1) { c.innerHTML=''; return; }
+    c.innerHTML = lbImages.map((_,i) => `<button onclick="lbIndex=${i};renderLB()" style="width:8px;height:8px;border-radius:50%;border:none;cursor:pointer;background:${i===lbIndex?'#fff':'rgba(255,255,255,0.4)'};padding:0;"></button>`).join('');
+}
+document.addEventListener('keydown', e => {
+    const lb = document.getElementById('lightboxModal');
+    if (!lb || !lb.classList.contains('active')) return;
+    if (e.key==='ArrowLeft') lbPrev();
+    if (e.key==='ArrowRight') lbNext();
+    if (e.key==='Escape') closeLightbox();
+});
 
-/* ── CART ── */
-function loadCart(){const key=currentUserEmail?'cart_'+currentUserEmail:'cart_guest';const s=localStorage.getItem(key);cartItems=s?JSON.parse(s):[];updateCartDisplay();}
-function saveCart(){const key=currentUserEmail?'cart_'+currentUserEmail:'cart_guest';localStorage.setItem(key,JSON.stringify(cartItems));updateCartDisplay();}
-function addToCart(title,price){const e=cartItems.find(i=>i.title===title);if(e){e.quantity+=1;}else{cartItems.push({title,price:Number(price),quantity:1});}saveCart();showToast('Сагсанд нэмэгдлээ!','success');}
-function removeFromCart(title){cartItems=cartItems.filter(i=>i.title!==title);saveCart();renderCartItems();}
-function updateQuantity(title,change){const item=cartItems.find(i=>i.title===title);if(!item)return;item.quantity+=change;if(item.quantity<=0)removeFromCart(title);else{saveCart();renderCartItems();}}
-function clearCart(){cartItems=[];saveCart();renderCartItems();}
-function updateCartDisplay(){const count=cartItems.reduce((s,i)=>s+i.quantity,0);const el=document.getElementById('cartCount');if(!el)return;el.textContent=count;el.style.display=count>0?'flex':'none';}
-function openCart(){renderCartItems();document.getElementById('cartModal').classList.add('active');}
-function closeCart(){document.getElementById('cartModal').classList.remove('active');}
-function renderCartItems(){const c=document.getElementById('cartItems');const tEl=document.getElementById('cartTotal');const btn=document.getElementById('checkoutBtn');if(!cartItems.length){c.innerHTML=`<div style="text-align:center;color:var(--on-surface-variant);padding:32px 0;font-size:13px;">Сагс хоосон байна</div>`;tEl.textContent='0';btn.disabled=true;btn.style.opacity='0.5';return;}btn.disabled=false;btn.style.opacity='1';c.innerHTML=cartItems.map(item=>`<div class="cart-item"><div style="flex:1;"><div style="font-size:12px;font-weight:600;color:var(--on-surface);margin-bottom:2px;">${item.title}</div><div style="font-size:13px;font-weight:700;color:var(--primary);">${item.price.toLocaleString()}₮</div></div><div style="display:flex;align-items:center;gap:8px;"><button class="qty-btn" style="background:var(--surface-container-high);" onclick="updateQuantity('${item.title.replace(/'/g,"\\'")}', -1)">−</button><span style="font-size:13px;font-weight:700;min-width:20px;text-align:center;">${item.quantity}</span><button class="qty-btn" style="background:rgba(148,74,0,0.1);color:var(--primary);" onclick="updateQuantity('${item.title.replace(/'/g,"\\'")}', 1)">+</button></div><button onclick="removeFromCart('${item.title.replace(/'/g,"\\'")}') " style="background:none;border:none;color:var(--error);font-size:16px;cursor:pointer;padding:4px;">✕</button></div>`).join('');tEl.textContent=cartItems.reduce((s,i)=>s+i.price*i.quantity,0).toLocaleString()+' ₮';}
-
-function proceedToPayment(){if(!cartItems.length)return showToast('Сагс хоосон байна!','error');requireEmail(()=>{const summary=cartItems.map(i=>`${i.title} x${i.quantity}`).join(', ');const total=cartItems.reduce((s,i)=>s+i.price*i.quantity,0);pendingProduct=summary;pendingTotal=total;pendingPassPages=0;closeCart();document.getElementById('paymentNote').innerText=currentUserEmail+' | '+summary+' | '+total.toLocaleString()+'₮';document.getElementById('paymentModal').classList.add('active');});}
-function buyNow(title,price){requireEmail(()=>{pendingProduct=title;pendingTotal=price;pendingPassPages=0;document.getElementById('paymentNote').innerText=currentUserEmail+' | '+title+' | '+Number(price).toLocaleString()+'₮';document.getElementById('paymentModal').classList.add('active');});}
-function closePayment(){document.getElementById('paymentModal').classList.remove('active');}
-async function confirmOrder(){
-    const btn=document.getElementById('confirmBtn');
-    const note=document.getElementById('paymentNote').innerText;
-    btn.disabled=true;btn.innerText='Илгээж байна...';
-    const p=new URLSearchParams();
-    p.append('action','order');p.append('email',currentUserEmail);p.append('product',pendingProduct);p.append('note',note);
-    if(pendingPassPages>0){p.append('printPages',pendingPassPages);p.append('type','printPass');}
-    try{
-        await fetch(ORDER_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:p.toString()});
-        // Курс авсан бол localStorage-д тэмдэглэ
-        if(pendingProduct.includes('Онлайн сургалт')){localStorage.setItem('courseEnrolled','true');}
+/* ─── CART ─── */
+function loadCart() {
+    const key = currentUserEmail ? 'cart_'+currentUserEmail : 'cart_guest';
+    const s = localStorage.getItem(key);
+    cartItems = s ? JSON.parse(s) : [];
+    updateCartDisplay();
+}
+function saveCart() {
+    const key = currentUserEmail ? 'cart_'+currentUserEmail : 'cart_guest';
+    localStorage.setItem(key, JSON.stringify(cartItems));
+    updateCartDisplay();
+}
+function addToCart(title, price) {
+    const e = cartItems.find(i => i.title===title);
+    if (e) { e.quantity+=1; } else { cartItems.push({title, price:Number(price), quantity:1}); }
+    saveCart(); showToast('Сагсанд нэмэгдлээ!','success');
+}
+function removeFromCart(title) { cartItems=cartItems.filter(i=>i.title!==title); saveCart(); renderCartItems(); }
+function updateQuantity(title, change) {
+    const item = cartItems.find(i=>i.title===title); if (!item) return;
+    item.quantity+=change;
+    if (item.quantity<=0) removeFromCart(title); else { saveCart(); renderCartItems(); }
+}
+function clearCart() { cartItems=[]; saveCart(); renderCartItems(); }
+function updateCartDisplay() {
+    const count = cartItems.reduce((s,i)=>s+i.quantity,0);
+    const el = document.getElementById('cartCount'); if (!el) return;
+    el.textContent=count; el.style.display=count>0?'flex':'none';
+}
+function openCart() { renderCartItems(); document.getElementById('cartModal').classList.add('active'); }
+function closeCart() { document.getElementById('cartModal').classList.remove('active'); }
+function renderCartItems() {
+    const c = document.getElementById('cartItems');
+    const tEl = document.getElementById('cartTotal');
+    const btn = document.getElementById('checkoutBtn');
+    if (!cartItems.length) {
+        c.innerHTML=`<div style="text-align:center;color:var(--on-surface-variant);padding:32px 0;font-size:13px;">Сагс хоосон байна</div>`;
+        tEl.textContent='0'; btn.disabled=true; btn.style.opacity='0.5'; return;
+    }
+    btn.disabled=false; btn.style.opacity='1';
+    c.innerHTML = cartItems.map(item => `<div class="cart-item"><div style="flex:1;"><div style="font-size:12px;font-weight:600;color:var(--on-surface);margin-bottom:2px;">${item.title}</div><div style="font-size:13px;font-weight:700;color:var(--primary);">${item.price.toLocaleString()}₮</div></div><div style="display:flex;align-items:center;gap:8px;"><button class="qty-btn" style="background:var(--surface-container-high);" onclick="updateQuantity('${item.title.replace(/'/g,"\\'")}', -1)">−</button><span style="font-size:13px;font-weight:700;min-width:20px;text-align:center;">${item.quantity}</span><button class="qty-btn" style="background:rgba(148,74,0,0.1);color:var(--primary);" onclick="updateQuantity('${item.title.replace(/'/g,"\\'")}', 1)">+</button></div><button onclick="removeFromCart('${item.title.replace(/'/g,"\\'")}') " style="background:none;border:none;color:var(--error);font-size:16px;cursor:pointer;padding:4px;">✕</button></div>`).join('');
+    tEl.textContent = cartItems.reduce((s,i)=>s+i.price*i.quantity,0).toLocaleString()+' ₮';
+}
+function proceedToPayment() {
+    if (!cartItems.length) return showToast('Сагс хоосон байна!','error');
+    requireEmail(() => {
+        const summary = cartItems.map(i=>`${i.title} x${i.quantity}`).join(', ');
+        const total = cartItems.reduce((s,i)=>s+i.price*i.quantity,0);
+        pendingProduct=summary; pendingTotal=total; pendingPassPages=0;
+        closeCart();
+        document.getElementById('paymentNote').innerText = currentUserEmail+' | '+summary+' | '+total.toLocaleString()+'₮';
+        document.getElementById('paymentModal').classList.add('active');
+    });
+}
+function buyNow(title, price) {
+    requireEmail(() => {
+        pendingProduct=title; pendingTotal=price; pendingPassPages=0;
+        document.getElementById('paymentNote').innerText = currentUserEmail+' | '+title+' | '+Number(price).toLocaleString()+'₮';
+        document.getElementById('paymentModal').classList.add('active');
+    });
+}
+function closePayment() { document.getElementById('paymentModal').classList.remove('active'); }
+async function confirmOrder() {
+    const btn = document.getElementById('confirmBtn');
+    const note = document.getElementById('paymentNote').innerText;
+    btn.disabled=true; btn.innerText='Илгээж байна...';
+    const p = new URLSearchParams();
+    p.append('action','order'); p.append('email',currentUserEmail);
+    p.append('product',pendingProduct); p.append('note',note);
+    if (pendingPassPages>0) { p.append('printPages',pendingPassPages); p.append('type','printPass'); }
+    try {
+        await fetch(ORDER_URL, {method:'POST',mode:'no-cors',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:p.toString()});
         showToast('Хүсэлт илгээгдлээ! Туул багш шалгаад эрхийг идэвхжүүлнэ.','success');
-        closePayment();clearCart();pendingPassPages=0;
-    }catch(e){showToast('Холболтын алдаа гарлаа!','error');}
-    finally{btn.disabled=false;btn.innerText='Төлсөн, хүсэлт илгээх';}
+        closePayment(); clearCart(); pendingPassPages=0;
+    } catch(e) {
+        showToast('Холболтын алдаа гарлаа!','error');
+    } finally {
+        btn.disabled=false; btn.innerText='Төлсөн, хүсэлт илгээх';
+    }
 }
 
-/* ── LIBRARY ── */
-function detectItemType(f){const t=(f.type||f.Type||'').toLowerCase();const ti=(f.productName||f.title||f.Title||'').toLowerCase();if(t.includes('print')||t.includes('судоку')||ti.includes('судоку хэвлэх')||ti.includes('print pass'))return'printPass';return'file';}
-
-async function loadMyLibrary(){
-    const g=document.getElementById('libraryGrid');if(!g)return;
-    g.innerHTML="<p style='grid-column:1/-1;text-align:center;padding:32px;color:var(--on-surface-variant);font-size:12px;'>Ачаалж байна...</p>";
-    try{
-        const res=await fetch(`${ORDER_URL}?action=getMyLibrary&email=${encodeURIComponent(currentUserEmail)}`,{method:'GET',redirect:'follow',cache:'no-cache'});
-        const raw=await res.text();
-        let files=[];
-        try{const jsonMatch=raw.match(/(\[[\s\S]*\]|\{[\s\S]*\})/);if(jsonMatch)files=JSON.parse(jsonMatch[1]);if(!Array.isArray(files))files=[];}catch(e){files=[];}
-        if(!files.length){g.innerHTML=`<div style="grid-column:1/-1;text-align:center;padding:60px 0;"><p style="color:var(--on-surface-variant);font-size:13px;font-weight:600;text-transform:uppercase;letter-spacing:0.04em;">Одоогоор файл байхгүй байна</p><p style="font-size:12px;color:var(--outline);margin-top:8px;">Төлбөр баталгаажсаны дараа энд харагдана</p></div>`;return;}
-        window._libFiles=files;
-        g.innerHTML=files.map((f,i)=>{const title=f.productName||f.title||f.Title||'Материал';const url=f.downloadUrl||f.url||f.link||'';const dateStr=f.date?new Date(f.date).toLocaleDateString('mn-MN'):'';const itemType=detectItemType(f);
-        if(itemType==='printPass'){const pages=parseInt(f.printPages||f.pages||f.remaining||0);return`<div class="library-card"><div class="lib-icon" style="background:rgba(0,109,66,0.1);">🖨</div><div style="font-size:12px;font-weight:700;color:var(--on-surface);">${escHtml(title)}</div><div style="font-size:11px;color:var(--on-surface-variant);">${dateStr}</div>${pages>0?`<div style="background:rgba(0,109,66,0.08);border:1px solid rgba(0,109,66,0.2);border-radius:9999px;padding:4px 14px;font-size:12px;font-weight:700;color:var(--tertiary);">${pages} хуудас үлдсэн</div>`:`<div style="background:var(--surface-container);border-radius:9999px;padding:4px 14px;font-size:11px;color:var(--on-surface-variant);">Эрх дууссан</div>`}<button onclick="goToSudokuPrint()" style="width:100%;background:var(--tertiary);border:none;color:#fff;font-family:'Lexend',sans-serif;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.04em;padding:10px;border-radius:10px;cursor:pointer;">Судоку хэвлэх</button></div>`;}
-        const hasUrl=url&&url!=='undefined'&&url.trim()!=='';
-        return`<div class="library-card"><div class="lib-icon" style="background:rgba(148,74,0,0.08);">📂</div><div style="font-size:12px;font-weight:700;color:var(--on-surface);">${escHtml(title)}</div><div style="font-size:11px;color:var(--on-surface-variant);">${dateStr}</div>${hasUrl?`<button onclick="openLibraryFile(${i})" style="width:100%;background:var(--primary);border:none;color:#fff;font-family:'Lexend',sans-serif;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.04em;padding:10px;border-radius:10px;cursor:pointer;">Үзэх / Татах</button>`:`<div style="width:100%;background:var(--surface-container);border-radius:10px;padding:10px;text-align:center;font-size:11px;color:var(--on-surface-variant);font-weight:600;">Линк бэлэн болоогүй</div>`}</div>`;}).join('');
-    }catch(e){g.innerHTML=`<div style="grid-column:1/-1;text-align:center;padding:40px;"><p style="color:var(--error);font-size:13px;font-weight:600;margin-bottom:8px;">Холболтын алдаа гарлаа</p><button onclick="loadMyLibrary()" style="background:var(--primary);border:none;color:#fff;font-family:'Lexend',sans-serif;font-size:11px;font-weight:600;padding:10px 20px;border-radius:9999px;cursor:pointer;text-transform:uppercase;">Дахин оролдох</button></div>`;}
+/* ─── ЗАСВАР 3: loadMyLibrary — CORS болон error засав ─── */
+function detectItemType(f) {
+    const t = (f.type||f.Type||'').toLowerCase();
+    const ti = (f.productName||f.title||f.Title||'').toLowerCase();
+    if (t.includes('print')||t.includes('судоку')||ti.includes('судоку хэвлэх')||ti.includes('print pass')) return 'printPass';
+    return 'file';
 }
 
-function goToSudokuPrint(){showSection('games');setTimeout(()=>{const el=document.getElementById('printPassSection');if(el)el.scrollIntoView({behavior:'smooth',block:'center'});},300);}
-function openLibraryFile(idx){const files=window._libFiles||[];const f=files[idx];if(!f)return showToast('Файл олдсонгүй','error');const url=(f.downloadUrl||f.url||f.link||'').trim();if(!url||url==='undefined')return showToast('Линк бэлэн болоогүй байна.','error');const a=document.getElementById('hiddenFileLink');a.href=url;a.click();}
-function escHtml(str){return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+async function loadMyLibrary() {
+    const g = document.getElementById('libraryGrid'); if (!g) return;
+    g.innerHTML = "<p style='grid-column:1/-1;text-align:center;padding:32px;color:var(--on-surface-variant);font-size:12px;'>Ачаалж байна...</p>";
+    try {
+        // ЗАСВАР: redirect:'follow' нэмж, text()-р унших
+        const res = await fetch(`${ORDER_URL}?action=getMyLibrary&email=${encodeURIComponent(currentUserEmail)}`, {
+            method: 'GET',
+            redirect: 'follow',
+            cache: 'no-cache'
+        });
+        const raw = await res.text();
+        let files = [];
+        try {
+            // JSON хэсгийг гарган авах
+            const jsonMatch = raw.match(/(\[[\s\S]*\]|\{[\s\S]*\})/);
+            if (jsonMatch) files = JSON.parse(jsonMatch[1]);
+            if (!Array.isArray(files)) files = [];
+        } catch(e) {
+            files = [];
+        }
 
-/* ── PRINT PASS ── */
-function getLocalPass(){return parseInt(localStorage.getItem('printPassPages_'+currentUserEmail)||'0');}
-function setLocalPass(pages){localStorage.setItem('printPassPages_'+currentUserEmail,String(Math.max(0,pages)));}
-function getFreeUsed(){return localStorage.getItem('freePrintUsed_'+currentUserEmail)==='true';}
-function setFreeUsed(){localStorage.setItem('freePrintUsed_'+currentUserEmail,'true');}
+        if (!files.length) {
+            g.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:60px 0;">
+                <p style="color:var(--on-surface-variant);font-size:13px;font-weight:600;text-transform:uppercase;letter-spacing:0.04em;">Одоогоор файл байхгүй байна</p>
+                <p style="font-size:12px;color:var(--outline);margin-top:8px;">Төлбөр баталгаажсаны дараа энд харагдана</p>
+            </div>`;
+            return;
+        }
 
-async function checkPrintPassFromServer(showMsg=false){
-    const chk=document.getElementById('passCheckingInfo');if(chk)chk.classList.remove('hidden');
-    try{const data=await fetchJSON(`${ORDER_URL}?action=getPrintPass&email=${encodeURIComponent(currentUserEmail)}`);if(data&&typeof data.remaining==='number'){setLocalPass(data.remaining);if(showMsg)showToast(`Эрх шинэчлэгдлээ: ${data.remaining} хуудас үлдсэн`,'success');}}
-    catch(e){if(showMsg)showToast('Серверт холбогдож чадсангүй','info');}
-    finally{if(chk)chk.classList.add('hidden');renderPassSection();}
+        window._libFiles = files;
+        g.innerHTML = files.map((f,i) => {
+            const title = f.productName||f.title||f.Title||'Материал';
+            const url = f.downloadUrl||f.url||f.link||'';
+            const dateStr = f.date ? new Date(f.date).toLocaleDateString('mn-MN') : '';
+            const itemType = detectItemType(f);
+
+            if (itemType === 'printPass') {
+                const pages = parseInt(f.printPages||f.pages||f.remaining||0);
+                return `<div class="library-card">
+                    <div class="lib-icon" style="background:rgba(0,109,66,0.1);">🖨</div>
+                    <div style="font-size:12px;font-weight:700;color:var(--on-surface);">${escHtml(title)}</div>
+                    <div style="font-size:11px;color:var(--on-surface-variant);">${dateStr}</div>
+                    ${pages>0
+                        ? `<div style="background:rgba(0,109,66,0.08);border:1px solid rgba(0,109,66,0.2);border-radius:9999px;padding:4px 14px;font-size:12px;font-weight:700;color:var(--tertiary);">${pages} хуудас үлдсэн</div>`
+                        : `<div style="background:var(--surface-container);border-radius:9999px;padding:4px 14px;font-size:11px;color:var(--on-surface-variant);">Эрх дууссан</div>`
+                    }
+                    <button onclick="goToSudokuPrint()" style="width:100%;background:var(--tertiary);border:none;color:#fff;font-family:'Lexend',sans-serif;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.04em;padding:10px;border-radius:10px;cursor:pointer;">Судоку хэвлэх</button>
+                </div>`;
+            }
+
+            const hasUrl = url && url!=='undefined' && url.trim()!=='';
+            return `<div class="library-card">
+                <div class="lib-icon" style="background:rgba(148,74,0,0.08);">📂</div>
+                <div style="font-size:12px;font-weight:700;color:var(--on-surface);">${escHtml(title)}</div>
+                <div style="font-size:11px;color:var(--on-surface-variant);">${dateStr}</div>
+                ${hasUrl
+                    ? `<button onclick="openLibraryFile(${i})" style="width:100%;background:var(--primary);border:none;color:#fff;font-family:'Lexend',sans-serif;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.04em;padding:10px;border-radius:10px;cursor:pointer;">Үзэх / Татах</button>`
+                    : `<div style="width:100%;background:var(--surface-container);border-radius:10px;padding:10px;text-align:center;font-size:11px;color:var(--on-surface-variant);font-weight:600;">Линк бэлэн болоогүй</div>`
+                }
+            </div>`;
+        }).join('');
+    } catch(e) {
+        console.error('loadMyLibrary алдаа:', e);
+        g.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:40px;">
+            <p style="color:var(--error);font-size:13px;font-weight:600;margin-bottom:8px;">Холболтын алдаа гарлаа</p>
+            <button onclick="loadMyLibrary()" style="background:var(--primary);border:none;color:#fff;font-family:'Lexend',sans-serif;font-size:11px;font-weight:600;padding:10px 20px;border-radius:9999px;cursor:pointer;text-transform:uppercase;">Дахин оролдох</button>
+        </div>`;
+    }
 }
 
-function initGamesSection(){initSudoku();renderPassSection();if(currentUserEmail)checkPrintPassFromServer(false);}
-function renderPassSection(){const remaining=getLocalPass();const freeUsed=getFreeUsed();const activeEl=document.getElementById('passActiveInfo');const freeEl=document.getElementById('freePrintInfo');const dispEl=document.getElementById('passRemainingDisplay');if(remaining>0){if(activeEl)activeEl.classList.remove('hidden');if(dispEl)dispEl.innerText=remaining;if(freeEl)freeEl.classList.add('hidden');}else{if(activeEl)activeEl.classList.add('hidden');if(freeEl)freeEl.classList.toggle('hidden',freeUsed);}}
-function openPrintPassSection(){const r=getLocalPass();const fu=getFreeUsed();if(r>0){showPrintModal();}else if(!fu){showToast('1 хуудас үнэгүй хэвлэх боломжтой!','info');const el=document.getElementById('printPassSection');if(el)el.scrollIntoView({behavior:'smooth',block:'center'});}else{showToast('Хэвлэх эрх байхгүй. Эрх авна уу!','error');const el=document.getElementById('printPassSection');if(el)el.scrollIntoView({behavior:'smooth',block:'center'});}}
-function useFreeOnePage(){if(getFreeUsed())return showToast('Үнэгүй 1 хуудасны боломж аль хэдийн ашиглагдсан!','error');printPageCount=1;setFreeUsed();renderPassSection();closePrintModal();doPrint();showToast('Үнэгүй 1 хуудас хэвлэж байна!','success');}
-function buyPrintPass(pages,price){requireEmail(()=>{pendingProduct=`Судоку хэвлэх эрх — ${pages} хуудас`;pendingTotal=price;pendingPassPages=pages;document.getElementById('paymentNote').innerText=`${currentUserEmail} | Судоку хэвлэх эрх ${pages} хуудас | ${price.toLocaleString()}₮`;document.getElementById('paymentModal').classList.add('active');});}
-function showPrintModal(){const r=getLocalPass();printPageCount=1;document.getElementById('modalRemainingPages').innerText=r;updatePrintModalUI();document.getElementById('printModal').classList.add('active');}
-function closePrintModal(){document.getElementById('printModal').classList.remove('active');}
-function adjustPrintPages(delta){const r=getLocalPass();printPageCount=Math.max(1,Math.min(r,printPageCount+delta));updatePrintModalUI();}
-function updatePrintModalUI(){const r=getLocalPass();document.getElementById('printPageCountDisplay').innerText=printPageCount;document.getElementById('printSudokuCount').innerText=printPageCount*4;const notEnough=document.getElementById('printNotEnough');const btn=document.getElementById('doPrintBtn');if(printPageCount>r){notEnough.classList.remove('hidden');btn.disabled=true;btn.style.opacity='0.5';}else{notEnough.classList.add('hidden');btn.disabled=false;btn.style.opacity='1';}}
-function executePrint(){const r=getLocalPass();if(printPageCount>r)return showToast('Эрх хүрэхгүй байна!','error');setLocalPass(r-printPageCount);const p=new URLSearchParams();p.append('action','usePrintPass');p.append('email',currentUserEmail);p.append('usedPages',printPageCount);fetch(ORDER_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:p.toString()}).catch(()=>{});closePrintModal();renderPassSection();doPrint();showToast(`${printPageCount} хуудас хэвлэж байна! Үлдсэн: ${r-printPageCount} хуудас`,'success');}
+function goToSudokuPrint() {
+    showSection('games');
+    setTimeout(() => {
+        const el = document.getElementById('printPassSection');
+        if (el) el.scrollIntoView({behavior:'smooth',block:'center'});
+    }, 300);
+}
+function openLibraryFile(idx) {
+    const files = window._libFiles || [];
+    const f = files[idx];
+    if (!f) return showToast('Файл олдсонгүй','error');
+    const url = (f.downloadUrl||f.url||f.link||'').trim();
+    if (!url || url==='undefined') return showToast('Линк бэлэн болоогүй байна.','error');
+    const a = document.getElementById('hiddenFileLink');
+    a.href = url; a.click();
+}
+function escHtml(str) {
+    return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
 
-/* ── SUDOKU ── */
-function generateSudokuBoard(){const base=[[1,2,3,4,5,6,7,8,9],[4,5,6,7,8,9,1,2,3],[7,8,9,1,2,3,4,5,6],[2,3,1,5,6,4,8,9,7],[5,6,4,8,9,7,2,3,1],[8,9,7,2,3,1,5,6,4],[3,1,2,6,4,5,9,7,8],[6,4,5,9,7,8,3,1,2],[9,7,8,3,1,2,6,4,5]];for(let b=0;b<3;b++)for(let s=0;s<3;s++){const r1=b*3+Math.floor(Math.random()*3);const r2=b*3+Math.floor(Math.random()*3);[base[r1],base[r2]]=[base[r2],base[r1]];}const co=shuffle([0,1,2]);return base.map(row=>{const nr=[];co.forEach(b=>{for(let c=0;c<3;c++)nr.push(row[b*3+c]);});return nr;});}
-function initSudoku(){sudokuBoard=generateSudokuBoard();const c=document.getElementById('sudokuContainer');c.innerHTML='';for(let r=0;r<9;r++)for(let col=0;col<9;col++){const val=sudokuBoard[r][col];const cell=document.createElement('input');cell.type='text';cell.maxLength=2;cell.className='sudoku-cell';cell.dataset.answer=String(val);if(Math.random()<0.45){cell.value=MONG_NUMS[String(val)];cell.readOnly=true;cell.classList.add('cell-fixed');}else{cell.classList.add('cell-user');cell.addEventListener('keydown',onSudokuKeyDown);cell.addEventListener('input',onSudokuInput);}c.appendChild(cell);}}
-function onSudokuKeyDown(e){const a=['Backspace','Delete','Tab','ArrowLeft','ArrowRight','ArrowUp','ArrowDown'];if(a.includes(e.key)||(e.key>='1'&&e.key<='9')||Object.values(MONG_NUMS).includes(e.key))return;e.preventDefault();}
-function onSudokuInput(e){const cell=e.target;const raw=cell.value;if(!raw)return;let last=raw[raw.length-1];if(last>='1'&&last<='9')last=MONG_NUMS[last];if(!Object.values(MONG_NUMS).includes(last)){requestAnimationFrame(()=>{cell.value='';});return;}requestAnimationFrame(()=>{cell.value=last;const ascii=MONG_TO_ASCII[last];if(ascii&&ascii===cell.dataset.answer){cell.classList.add('cell-correct');cell.classList.remove('cell-wrong');}else{cell.classList.remove('cell-correct','cell-wrong');}});}
-function checkSudoku(){const cells=document.querySelectorAll('#sudokuContainer .sudoku-cell');let correct=0,wrong=0,empty=0;cells.forEach(cell=>{if(cell.readOnly)return;const val=cell.value.trim();const ascii=MONG_TO_ASCII[val]||val;if(!val){empty++;return;}if(ascii===cell.dataset.answer){cell.classList.add('cell-correct');cell.classList.remove('cell-wrong');correct++;}else{cell.classList.add('cell-wrong');cell.classList.remove('cell-correct');wrong++;}});if(empty>0)showToast(`${empty} хоосон нүд байна!`,'error');else if(wrong>0)showToast(`${wrong} нүд буруу байна!`,'error');else showToast('Баяр хүргэе! Бүгд зөв!','success');}
+/* ─── PRINT PASS ─── */
+function getLocalPass() { return parseInt(localStorage.getItem('printPassPages_'+currentUserEmail)||'0'); }
+function setLocalPass(pages) { localStorage.setItem('printPassPages_'+currentUserEmail, String(Math.max(0,pages))); }
+function getFreeUsed() { return localStorage.getItem('freePrintUsed_'+currentUserEmail)==='true'; }
+function setFreeUsed() { localStorage.setItem('freePrintUsed_'+currentUserEmail,'true'); }
 
-/* ── PRINT SUDOKU ── */
-function buildPrintPuzzle(board){let html='<table style="border-collapse:collapse;width:100%;table-layout:fixed;">';for(let r=0;r<9;r++){html+='<tr>';for(let c=0;c<9;c++){const val=board[r][c];const mong=MONG_NUMS[String(val)];const show=((r*9+c)%5!==0)&&((r*3+c)%7!==2);const bR=(c===2||c===5)?'border-right:2.5px solid #000;':'border-right:1px solid #ccc;';const bB=(r===2||r===5)?'border-bottom:2.5px solid #000;':'border-bottom:1px solid #ccc;';const bL=c===0?'border-left:1px solid #ccc;':'';const bT=r===0?'border-top:1px solid #ccc;':'';const bg=show?'background:#f0edec;':'background:#fff;';html+=`<td style="width:11.1%;aspect-ratio:1/1;height:8mm;text-align:center;vertical-align:middle;font-size:10pt;font-weight:700;${bR}${bB}${bL}${bT}${bg}padding:0;">${show?mong:'&nbsp;'}</td>`;}html+='</tr>';}html+='</table>';return html;}
-function doPrint(){const printArea=document.getElementById('printArea');let pagesHtml='';for(let page=0;page<printPageCount;page++){pagesHtml+=`<div style="width:194mm;min-height:277mm;padding:0;margin:0 auto;background:white;box-sizing:border-box;${page<printPageCount-1?'page-break-after:always;':''}"><div style="text-align:center;padding:6mm 0 4mm 0;border-bottom:1.5px solid #dbc2b2;margin-bottom:5mm;"><img src="logo.png" alt="logo" style="height:12mm;object-fit:contain;display:inline-block;vertical-align:middle;margin-right:3mm;"><span style="font-family:'Lexend',sans-serif;font-size:14pt;font-weight:700;text-transform:uppercase;color:#944a00;letter-spacing:2px;vertical-align:middle;">Сонирхолтой Хэл Бичиг</span><div style="font-size:8pt;color:#887365;margin-top:1mm;font-family:'Lexend',sans-serif;">Монгол бичиг судоку — ${page+1}-р хуудас</div></div><div style="display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;gap:6mm;padding:0 4mm 4mm 4mm;height:248mm;box-sizing:border-box;">`;for(let q=0;q<4;q++){const nb=generateSudokuBoard();pagesHtml+=`<div style="border:1px solid #dbc2b2;border-radius:3mm;padding:3mm 3mm 2mm 3mm;background:#fff;display:flex;flex-direction:column;align-items:center;"><div style="font-size:7pt;font-weight:700;color:#944a00;text-transform:uppercase;margin-bottom:2mm;font-family:'Lexend',sans-serif;">${page*4+q+1}-р судоку</div><div style="width:100%;">${buildPrintPuzzle(nb)}</div><div style="margin-top:2mm;text-align:right;width:100%;font-size:6pt;color:#887365;font-family:'Lexend',sans-serif;">Нэр: _______________</div></div>`;}pagesHtml+=`</div></div>`;}const fullHtml=`<style>@import url('https://fonts.googleapis.com/css2?family=Lexend:wght@700&display=swap');*{box-sizing:border-box;margin:0;padding:0;}body{background:white!important;}</style>${pagesHtml}`;printArea.innerHTML=fullHtml;printArea.style.display='block';const after=()=>{printArea.style.display='none';printArea.innerHTML='';window.removeEventListener('afterprint',after);};window.addEventListener('afterprint',after);setTimeout(()=>window.print(),200);}
+async function checkPrintPassFromServer(showMsg=false) {
+    const chk = document.getElementById('passCheckingInfo');
+    if (chk) chk.classList.remove('hidden');
+    try {
+        const data = await fetchJSON(`${ORDER_URL}?action=getPrintPass&email=${encodeURIComponent(currentUserEmail)}`);
+        if (data && typeof data.remaining==='number') {
+            setLocalPass(data.remaining);
+            if (showMsg) showToast(`Эрх шинэчлэгдлээ: ${data.remaining} хуудас үлдсэн`,'success');
+        }
+    } catch(e) {
+        if (showMsg) showToast('Серверт холбогдож чадсангүй','info');
+    } finally {
+        if (chk) chk.classList.add('hidden');
+        renderPassSection();
+    }
+}
 
-/* ── PLANNER ── */
+function initGamesSection() {
+    initSudoku();
+    renderPassSection();
+    if (currentUserEmail) checkPrintPassFromServer(false);
+}
+function renderPassSection() {
+    const remaining = getLocalPass();
+    const freeUsed = getFreeUsed();
+    const activeEl = document.getElementById('passActiveInfo');
+    const freeEl = document.getElementById('freePrintInfo');
+    const dispEl = document.getElementById('passRemainingDisplay');
+    if (remaining>0) {
+        if (activeEl) activeEl.classList.remove('hidden');
+        if (dispEl) dispEl.innerText = remaining;
+        if (freeEl) freeEl.classList.add('hidden');
+    } else {
+        if (activeEl) activeEl.classList.add('hidden');
+        if (freeEl) freeEl.classList.toggle('hidden', freeUsed);
+    }
+}
+function openPrintPassSection() {
+    const r = getLocalPass(); const fu = getFreeUsed();
+    if (r>0) { showPrintModal(); }
+    else if (!fu) {
+        showToast('1 хуудас үнэгүй хэвлэх боломжтой!','info');
+        const el = document.getElementById('printPassSection');
+        if (el) el.scrollIntoView({behavior:'smooth',block:'center'});
+    } else {
+        showToast('Хэвлэх эрх байхгүй. Эрх авна уу!','error');
+        const el = document.getElementById('printPassSection');
+        if (el) el.scrollIntoView({behavior:'smooth',block:'center'});
+    }
+}
+function useFreeOnePage() {
+    if (getFreeUsed()) return showToast('Үнэгүй 1 хуудасны боломж аль хэдийн ашиглагдсан!','error');
+    printPageCount=1; setFreeUsed(); renderPassSection(); closePrintModal(); doPrint();
+    showToast('Үнэгүй 1 хуудас хэвлэж байна!','success');
+}
+function buyPrintPass(pages, price) {
+    requireEmail(() => {
+        pendingProduct=`Судоку хэвлэх эрх — ${pages} хуудас`;
+        pendingTotal=price; pendingPassPages=pages;
+        document.getElementById('paymentNote').innerText = `${currentUserEmail} | Судоку хэвлэх эрх ${pages} хуудас | ${price.toLocaleString()}₮`;
+        document.getElementById('paymentModal').classList.add('active');
+    });
+}
+function showPrintModal() {
+    const r = getLocalPass(); printPageCount=1;
+    document.getElementById('modalRemainingPages').innerText = r;
+    updatePrintModalUI();
+    document.getElementById('printModal').classList.add('active');
+}
+function closePrintModal() { document.getElementById('printModal').classList.remove('active'); }
+function adjustPrintPages(delta) {
+    const r = getLocalPass();
+    printPageCount = Math.max(1, Math.min(r, printPageCount+delta));
+    updatePrintModalUI();
+}
+function updatePrintModalUI() {
+    const r = getLocalPass();
+    document.getElementById('printPageCountDisplay').innerText = printPageCount;
+    document.getElementById('printSudokuCount').innerText = printPageCount*4;
+    const notEnough = document.getElementById('printNotEnough');
+    const btn = document.getElementById('doPrintBtn');
+    if (printPageCount>r) { notEnough.classList.remove('hidden'); btn.disabled=true; btn.style.opacity='0.5'; }
+    else { notEnough.classList.add('hidden'); btn.disabled=false; btn.style.opacity='1'; }
+}
+function executePrint() {
+    const r = getLocalPass();
+    if (printPageCount>r) return showToast('Эрх хүрэхгүй байна!','error');
+    setLocalPass(r-printPageCount);
+    const p = new URLSearchParams();
+    p.append('action','usePrintPass'); p.append('email',currentUserEmail); p.append('usedPages',printPageCount);
+    fetch(ORDER_URL, {method:'POST',mode:'no-cors',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:p.toString()}).catch(()=>{});
+    closePrintModal(); renderPassSection(); doPrint();
+    showToast(`${printPageCount} хуудас хэвлэж байна! Үлдсэн: ${r-printPageCount} хуудас`,'success');
+}
+
+/* ─── SUDOKU ─── */
+function generateSudokuBoard() {
+    const base = [[1,2,3,4,5,6,7,8,9],[4,5,6,7,8,9,1,2,3],[7,8,9,1,2,3,4,5,6],[2,3,1,5,6,4,8,9,7],[5,6,4,8,9,7,2,3,1],[8,9,7,2,3,1,5,6,4],[3,1,2,6,4,5,9,7,8],[6,4,5,9,7,8,3,1,2],[9,7,8,3,1,2,6,4,5]];
+    for (let b=0;b<3;b++) for (let s=0;s<3;s++) {
+        const r1=b*3+Math.floor(Math.random()*3); const r2=b*3+Math.floor(Math.random()*3);
+        [base[r1],base[r2]]=[base[r2],base[r1]];
+    }
+    const co = shuffle([0,1,2]);
+    return base.map(row => { const nr=[]; co.forEach(b=>{for(let c=0;c<3;c++) nr.push(row[b*3+c]);}); return nr; });
+}
+function initSudoku() {
+    sudokuBoard = generateSudokuBoard();
+    const c = document.getElementById('sudokuContainer'); c.innerHTML='';
+    for (let r=0;r<9;r++) for (let col=0;col<9;col++) {
+        const val = sudokuBoard[r][col];
+        const cell = document.createElement('input');
+        cell.type='text'; cell.maxLength=2; cell.className='sudoku-cell';
+        cell.dataset.answer = String(val);
+        if (Math.random()<0.45) {
+            cell.value = MONG_NUMS[String(val)]; cell.readOnly=true; cell.classList.add('cell-fixed');
+        } else {
+            cell.classList.add('cell-user');
+            cell.addEventListener('keydown', onSudokuKeyDown);
+            cell.addEventListener('input', onSudokuInput);
+        }
+        c.appendChild(cell);
+    }
+}
+function onSudokuKeyDown(e) {
+    const a = ['Backspace','Delete','Tab','ArrowLeft','ArrowRight','ArrowUp','ArrowDown'];
+    if (a.includes(e.key)||(e.key>='1'&&e.key<='9')||Object.values(MONG_NUMS).includes(e.key)) return;
+    e.preventDefault();
+}
+function onSudokuInput(e) {
+    const cell=e.target; const raw=cell.value; if(!raw)return;
+    let last=raw[raw.length-1];
+    if (last>='1'&&last<='9') last=MONG_NUMS[last];
+    if (!Object.values(MONG_NUMS).includes(last)) { requestAnimationFrame(()=>{cell.value='';}); return; }
+    requestAnimationFrame(()=>{
+        cell.value=last;
+        const ascii=MONG_TO_ASCII[last];
+        if (ascii&&ascii===cell.dataset.answer) { cell.classList.add('cell-correct'); cell.classList.remove('cell-wrong'); }
+        else { cell.classList.remove('cell-correct','cell-wrong'); }
+    });
+}
+function checkSudoku() {
+    const cells=document.querySelectorAll('#sudokuContainer .sudoku-cell');
+    let correct=0,wrong=0,empty=0;
+    cells.forEach(cell=>{
+        if(cell.readOnly)return;
+        const val=cell.value.trim(); const ascii=MONG_TO_ASCII[val]||val;
+        if(!val){empty++;return;}
+        if(ascii===cell.dataset.answer){cell.classList.add('cell-correct');cell.classList.remove('cell-wrong');correct++;}
+        else{cell.classList.add('cell-wrong');cell.classList.remove('cell-correct');wrong++;}
+    });
+    if(empty>0) showToast(`${empty} хоосон нүд байна!`,'error');
+    else if(wrong>0) showToast(`${wrong} нүд буруу байна!`,'error');
+    else showToast('Баяр хүргэе! Бүгд зөв!','success');
+}
+
+/* ─── PRINT ─── */
+function buildPrintPuzzle(board) {
+    let html='<table style="border-collapse:collapse;width:100%;table-layout:fixed;">';
+    for(let r=0;r<9;r++){
+        html+='<tr>';
+        for(let c=0;c<9;c++){
+            const val=board[r][c]; const mong=MONG_NUMS[String(val)];
+            const show=((r*9+c)%5!==0)&&((r*3+c)%7!==2);
+            const bR=(c===2||c===5)?'border-right:2.5px solid #000;':'border-right:1px solid #ccc;';
+            const bB=(r===2||r===5)?'border-bottom:2.5px solid #000;':'border-bottom:1px solid #ccc;';
+            const bL=c===0?'border-left:1px solid #ccc;':''; const bT=r===0?'border-top:1px solid #ccc;':'';
+            const bg=show?'background:#f0edec;':'background:#fff;';
+            html+=`<td style="width:11.1%;aspect-ratio:1/1;height:8mm;text-align:center;vertical-align:middle;font-size:10pt;font-weight:700;${bR}${bB}${bL}${bT}${bg}padding:0;">${show?mong:'&nbsp;'}</td>`;
+        }
+        html+='</tr>';
+    }
+    html+='</table>'; return html;
+}
+function doPrint() {
+    const printArea=document.getElementById('printArea');
+    let pagesHtml='';
+    for(let page=0;page<printPageCount;page++){
+        pagesHtml+=`<div style="width:194mm;min-height:277mm;padding:0;margin:0 auto;background:white;box-sizing:border-box;${page<printPageCount-1?'page-break-after:always;':''}"><div style="text-align:center;padding:6mm 0 4mm 0;border-bottom:1.5px solid #dbc2b2;margin-bottom:5mm;"><img src="logo.png" alt="logo" style="height:12mm;object-fit:contain;display:inline-block;vertical-align:middle;margin-right:3mm;"><span style="font-family:'Lexend',sans-serif;font-size:14pt;font-weight:700;text-transform:uppercase;color:#944a00;letter-spacing:2px;vertical-align:middle;">Сонирхолтой Хэл Бичиг</span><div style="font-size:8pt;color:#887365;margin-top:1mm;font-family:'Lexend',sans-serif;">Монгол бичиг судоку — ${page+1}-р хуудас</div></div><div style="display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;gap:6mm;padding:0 4mm 4mm 4mm;height:248mm;box-sizing:border-box;">`;
+        for(let q=0;q<4;q++){
+            const nb=generateSudokuBoard();
+            pagesHtml+=`<div style="border:1px solid #dbc2b2;border-radius:3mm;padding:3mm 3mm 2mm 3mm;background:#fff;display:flex;flex-direction:column;align-items:center;"><div style="font-size:7pt;font-weight:700;color:#944a00;text-transform:uppercase;margin-bottom:2mm;font-family:'Lexend',sans-serif;">${page*4+q+1}-р судоку</div><div style="width:100%;">${buildPrintPuzzle(nb)}</div><div style="margin-top:2mm;text-align:right;width:100%;font-size:6pt;color:#887365;font-family:'Lexend',sans-serif;">Нэр: _______________</div></div>`;
+        }
+        pagesHtml+=`</div></div>`;
+    }
+    const fullHtml=`<style>@import url('https://fonts.googleapis.com/css2?family=Lexend:wght@700&display=swap');*{box-sizing:border-box;margin:0;padding:0;}body{background:white!important;}</style>${pagesHtml}`;
+    printArea.innerHTML=fullHtml; printArea.style.display='block';
+    const after=()=>{printArea.style.display='none';printArea.innerHTML='';window.removeEventListener('afterprint',after);};
+    window.addEventListener('afterprint',after);
+    setTimeout(()=>window.print(),200);
+}
+
+/* ─── PLANNER ─── */
 let personalTasks=[];
-function initPlanner(){loadPersonalTasks();loadPlannerSchedule();renderPersonalTasks();updatePlannerStats();}
-async function loadPlannerSchedule(){const list=document.getElementById('scheduleList');list.innerHTML=`<div style="text-align:center;color:var(--on-surface-variant);font-size:12px;padding:24px;">Уншиж байна...</div>`;try{const data=await fetchJSON(`${ORDER_URL}?action=getSchedule`);if(!data||!Array.isArray(data)||!data.length)throw new Error('empty');renderScheduleList(data);}catch(e){renderScheduleList([{Week:'1-р долоо хоног',Title:'Монгол бичгийн үсэг таних-1',Description:'Үндсэн зурлага, эгшиг үсэг'},{Week:'2-р долоо хоног',Title:'Гийгүүлэгч үсэг таних - 2',Description:'На,Ма,Ла,Ба,Нг,Га/Ха,Ра'},{Week:'3-р долоо хоног',Title:'Гийгүүлэгч үсэг таних - 3',Description:'Да/Та,Са,Ша,За/Жа,Ца/Ча,Йа'},{Week:'4-р долоо хоног',Title:'Богино үг, өгүүлбэр уншиж',Description:'үе холбон үг унших'}]);}}
-function renderScheduleList(data){const list=document.getElementById('scheduleList');list.innerHTML=data.map((item,i)=>{const week=item.Week||item.week||'';const title=item.Title||item.title||'Хичээл';const desc=item.Description||item.description||'';const done=isPlannerItemDone('schedule_'+i);return`<div class="task-item ${done?'done':''}" onclick="toggleScheduleItem(${i},this)"><div class="task-check">${done?`<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round"><path d="M5 13l4 4L19 7"/></svg>`:''}</div><div><div class="task-week">${week}</div><div class="task-title">${title}</div>${desc?`<div class="task-desc">${desc}</div>`:''}</div></div>`;}).join('');updatePlannerStats();}
-function toggleScheduleItem(i,el){const key='schedule_'+i;const done=!isPlannerItemDone(key);setItemDone(key,done);el.classList.toggle('done',done);const c=el.querySelector('.task-check');if(done){c.innerHTML=`<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round"><path d="M5 13l4 4L19 7"/></svg>`;}else{c.innerHTML='';}updatePlannerStats();}
-function isPlannerItemDone(key){const d=JSON.parse(localStorage.getItem('plannerDone_'+currentUserEmail)||'{}');return !!d[key];}
-function setItemDone(key,val){const d=JSON.parse(localStorage.getItem('plannerDone_'+currentUserEmail)||'{}');d[key]=val;localStorage.setItem('plannerDone_'+currentUserEmail,JSON.stringify(d));}
-function updatePlannerStats(){const all=document.querySelectorAll('#scheduleList .task-item');const done=document.querySelectorAll('#scheduleList .task-item.done');const tp=personalTasks.length;const dp=personalTasks.filter(t=>t.done).length;const total=all.length+tp;const doneCount=done.length+dp;const pct=total>0?Math.round((doneCount/total)*100):0;document.getElementById('plannerTotalTasks').innerText=total;document.getElementById('plannerDoneTasks').innerText=doneCount;document.getElementById('plannerPercent').innerText=pct+'%';document.getElementById('progressLabel').innerText=`${doneCount} / ${total}`;document.getElementById('progressBar').style.width=pct+'%';}
-function loadPersonalTasks(){personalTasks=JSON.parse(localStorage.getItem('personalTasks_'+currentUserEmail)||'[]');}
-function savePersonalTasks(){localStorage.setItem('personalTasks_'+currentUserEmail,JSON.stringify(personalTasks));}
-function addPersonalTask(){const input=document.getElementById('newTaskInput');const title=input.value.trim();if(!title)return showToast('Даалгавар бичнэ үү!','error');const priority=document.getElementById('newTaskPriority').value;personalTasks.push({id:Date.now(),title,priority,done:false});savePersonalTasks();input.value='';renderPersonalTasks();updatePlannerStats();showToast('Даалгавар нэмэгдлээ!','success');}
-function togglePersonalTask(id){const t=personalTasks.find(t=>t.id===id);if(t){t.done=!t.done;savePersonalTasks();renderPersonalTasks();updatePlannerStats();}}
-function deletePersonalTask(id){personalTasks=personalTasks.filter(t=>t.id!==id);savePersonalTasks();renderPersonalTasks();updatePlannerStats();}
-function renderPersonalTasks(){const list=document.getElementById('personalTaskList');if(!personalTasks.length){list.innerHTML=`<div style="text-align:center;color:var(--outline);font-size:12px;padding:16px;">Даалгавар байхгүй</div>`;return;}const pc={high:'rgba(186,26,26,0.1)',mid:'rgba(148,74,0,0.08)',low:'var(--surface-container)'};const tc={high:'var(--error)',mid:'var(--primary)',low:'var(--on-surface-variant)'};const pl={high:'Яаралтай',mid:'Дунд',low:'Энгийн'};list.innerHTML=[...personalTasks].reverse().map(t=>`<div style="display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:10px;border:1px solid ${t.done?'rgba(0,109,66,0.2)':'var(--outline-variant)'};background:${t.done?'rgba(0,109,66,0.06)':'#fff'};" class="task-item ${t.done?'done':''}"><button onclick="togglePersonalTask(${t.id})" style="width:18px;height:18px;border-radius:50%;border:2px solid ${t.done?'var(--tertiary)':'var(--outline)'};background:${t.done?'var(--tertiary)':'transparent'};cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;">${t.done?`<svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round"><path d="M5 13l4 4L19 7"/></svg>`:''}</button><div style="flex:1;"><div style="font-size:12px;font-weight:500;color:${t.done?'var(--on-surface-variant)':'var(--on-surface)'};text-decoration:${t.done?'line-through':'none'};">${t.title}</div><span style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:0.04em;padding:2px 8px;border-radius:9999px;background:${pc[t.priority]};color:${tc[t.priority]};">${pl[t.priority]}</span></div><button onclick="deletePersonalTask(${t.id})" style="background:none;border:none;color:var(--outline);font-size:14px;cursor:pointer;">✕</button></div>`).join('');}
+function initPlanner() { loadPersonalTasks(); loadPlannerSchedule(); renderPersonalTasks(); updatePlannerStats(); }
+async function loadPlannerSchedule() {
+    const list=document.getElementById('scheduleList');
+    list.innerHTML=`<div style="text-align:center;color:var(--on-surface-variant);font-size:12px;padding:24px;">Уншиж байна...</div>`;
+    try {
+        const data = await fetchJSON(`${ORDER_URL}?action=getSchedule`);
+        if (!data||!Array.isArray(data)||!data.length) throw new Error('empty');
+        renderScheduleList(data);
+    } catch(e) {
+        renderScheduleList([
+            {Week:'1-р долоо хоног',Title:'Монгол бичгийн үсэг таних-1',Description:'Үндсэн зурлага, эгшиг үсэг'},
+            {Week:'2-р долоо хоног',Title:'Гийгүүлэгч үсэг таних - 2',Description:'На,Ма,Ла,Ба,Нг,Га/Ха,Ра'},
+            {Week:'3-р долоо хоног',Title:'Гийгүүлэгч үсэг таних - 3',Description:'Да/Та,Са,Ша,За/Жа,Ца/Ча,Йа'},
+            {Week:'4-р долоо хоног',Title:'Богино үг, өгүүлбэр уншиж',Description:'үе холбон үг унших'}
+        ]);
+    }
+}
+function renderScheduleList(data) {
+    const list=document.getElementById('scheduleList');
+    list.innerHTML=data.map((item,i)=>{
+        const week=item.Week||item.week||''; const title=item.Title||item.title||'Хичээл';
+        const desc=item.Description||item.description||''; const done=isPlannerItemDone('schedule_'+i);
+        return `<div class="task-item ${done?'done':''}" onclick="toggleScheduleItem(${i},this)"><div class="task-check">${done?`<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round"><path d="M5 13l4 4L19 7"/></svg>`:''}</div><div><div class="task-week">${week}</div><div class="task-title">${title}</div>${desc?`<div class="task-desc">${desc}</div>`:''}</div></div>`;
+    }).join('');
+    updatePlannerStats();
+}
+function toggleScheduleItem(i, el) {
+    const key='schedule_'+i; const done=!isPlannerItemDone(key); setItemDone(key,done);
+    el.classList.toggle('done',done);
+    const c=el.querySelector('.task-check');
+    if(done){c.innerHTML=`<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round"><path d="M5 13l4 4L19 7"/></svg>`;}
+    else{c.innerHTML='';}
+    updatePlannerStats();
+}
+function isPlannerItemDone(key) { const d=JSON.parse(localStorage.getItem('plannerDone_'+currentUserEmail)||'{}'); return !!d[key]; }
+function setItemDone(key,val) { const d=JSON.parse(localStorage.getItem('plannerDone_'+currentUserEmail)||'{}'); d[key]=val; localStorage.setItem('plannerDone_'+currentUserEmail,JSON.stringify(d)); }
+function updatePlannerStats() {
+    const all=document.querySelectorAll('#scheduleList .task-item'); const done=document.querySelectorAll('#scheduleList .task-item.done');
+    const tp=personalTasks.length; const dp=personalTasks.filter(t=>t.done).length;
+    const total=all.length+tp; const doneCount=done.length+dp;
+    const pct=total>0?Math.round((doneCount/total)*100):0;
+    document.getElementById('plannerTotalTasks').innerText=total;
+    document.getElementById('plannerDoneTasks').innerText=doneCount;
+    document.getElementById('plannerPercent').innerText=pct+'%';
+    document.getElementById('progressLabel').innerText=`${doneCount} / ${total}`;
+    document.getElementById('progressBar').style.width=pct+'%';
+}
+function loadPersonalTasks() { personalTasks=JSON.parse(localStorage.getItem('personalTasks_'+currentUserEmail)||'[]'); }
+function savePersonalTasks() { localStorage.setItem('personalTasks_'+currentUserEmail,JSON.stringify(personalTasks)); }
+function addPersonalTask() {
+    const input=document.getElementById('newTaskInput'); const title=input.value.trim();
+    if(!title) return showToast('Даалгавар бичнэ үү!','error');
+    const priority=document.getElementById('newTaskPriority').value;
+    personalTasks.push({id:Date.now(),title,priority,done:false});
+    savePersonalTasks(); input.value=''; renderPersonalTasks(); updatePlannerStats();
+    showToast('Даалгавар нэмэгдлээ!','success');
+}
+function togglePersonalTask(id) { const t=personalTasks.find(t=>t.id===id); if(t){t.done=!t.done;savePersonalTasks();renderPersonalTasks();updatePlannerStats();} }
+function deletePersonalTask(id) { personalTasks=personalTasks.filter(t=>t.id!==id); savePersonalTasks(); renderPersonalTasks(); updatePlannerStats(); }
+function renderPersonalTasks() {
+    const list=document.getElementById('personalTaskList');
+    if(!personalTasks.length){list.innerHTML=`<div style="text-align:center;color:var(--outline);font-size:12px;padding:16px;">Даалгавар байхгүй</div>`;return;}
+    const pc={high:'rgba(186,26,26,0.1)',mid:'rgba(148,74,0,0.08)',low:'var(--surface-container)'};
+    const tc={high:'var(--error)',mid:'var(--primary)',low:'var(--on-surface-variant)'};
+    const pl={high:'Яаралтай',mid:'Дунд',low:'Энгийн'};
+    list.innerHTML=[...personalTasks].reverse().map(t=>`<div style="display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:10px;border:1px solid ${t.done?'rgba(0,109,66,0.2)':'var(--outline-variant)'};background:${t.done?'rgba(0,109,66,0.06)':'#fff'};" class="task-item ${t.done?'done':''}"><button onclick="togglePersonalTask(${t.id})" style="width:18px;height:18px;border-radius:50%;border:2px solid ${t.done?'var(--tertiary)':'var(--outline)'};background:${t.done?'var(--tertiary)':'transparent'};cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;">${t.done?`<svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round"><path d="M5 13l4 4L19 7"/></svg>`:''}</button><div style="flex:1;"><div style="font-size:12px;font-weight:500;color:${t.done?'var(--on-surface-variant)':'var(--on-surface)'};text-decoration:${t.done?'line-through':'none'};">${t.title}</div><span style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:0.04em;padding:2px 8px;border-radius:9999px;background:${pc[t.priority]};color:${tc[t.priority]};">${pl[t.priority]}</span></div><button onclick="deletePersonalTask(${t.id})" style="background:none;border:none;color:var(--outline);font-size:14px;cursor:pointer;">✕</button></div>`).join('');
+}
 
-/* ── EXAM ── */
+/* ─── EXAM ─── */
 let examQuestions=[],currentExamQs=[],currentQIndex=0,examScoreCount=0,examCorrectCount=0,examWrongCount=0;
 let examTimerInterval=null,examTimeLeft=0,examStartTime=null,currentTopic='',examAnswered=false;
 
-async function initExamLobby(){showEl('examLobby');hideEl('examActive');hideEl('examResult');stopExamTimer();document.getElementById('examTopicList').innerHTML=`<div style="text-align:center;color:var(--on-surface-variant);font-size:12px;padding:24px;">Уншиж байна...</div>`;try{const data=await fetchJSON(`${ORDER_URL}?action=getQuestions`);examQuestions=data&&Array.isArray(data)?data:buildDemoQuestions();}catch(e){examQuestions=buildDemoQuestions();}renderTopics();renderExamHistory();}
-function buildDemoQuestions(){return[{Topic:'Дүрэм',Question:'Монгол бичгийг ямар шугамаар бичдэг вэ?',A:'Хэвтээ',B:'Босоо',C:'Диагональ',D:'Дугуй',Answer:'B',Explanation:'Монгол бичгийг дээрээс доош чиглэлтэй босоо бичдэг.'},{Topic:'Дүрэм',Question:'Монгол бичгийн эгшиг үсэг хэд байдаг вэ?',A:'5',B:'7',C:'9',D:'12',Answer:'B',Explanation:'Монгол бичигт 7 эгшиг үсэг байдэг.'},{Topic:'Үг',Question:'"Титэм + шүд" нийлээд ямар үсэг вэ',A:'А',B:'Э',C:'И',D:'О',Answer:'A',Explanation:'"Үгийн эхэнд ордог А" үсэг юм.'},{Topic:'Дуудлага',Question:'"Титэм+гэдэс+шилбэ" ямар үсэг болох вэ?',A:'О',B:'У',C:'Ө',D:'И',Answer:'C',Explanation:'"Үгийн эхэнд ордог Ө" үсэг.'}];}
-function getTopics(){return[...new Set(examQuestions.map(q=>q.Topic||q.topic||'Ерөнхий'))];}
-function renderTopics(){const topics=getTopics();const el=document.getElementById('examTopicList');if(!topics.length){el.innerHTML=`<div style="text-align:center;color:var(--on-surface-variant);font-size:12px;padding:24px;">Асуулт олдсонгүй.</div>`;return;}el.innerHTML=topics.map(topic=>{const count=examQuestions.filter(q=>(q.Topic||q.topic||'Ерөнхий')===topic).length;return`<button class="exam-topic-btn" onclick="startExam('${topic.replace(/'/g,"\\'")}')"><div><div class="exam-topic-name">${topic}</div><div class="exam-topic-count">${count} асуулт</div></div><div class="exam-start-badge">Эхлэх</div></button>`;}).join('');}
-function startExam(topic){currentTopic=topic;const qs=examQuestions.filter(q=>(q.Topic||q.topic||'Ерөнхий')===topic);currentExamQs=shuffle(qs).slice(0,10);currentQIndex=0;examScoreCount=0;examCorrectCount=0;examWrongCount=0;hideEl('examLobby');hideEl('examResult');showEl('examActive');examTimeLeft=currentExamQs.length*30;startExamTimer();examStartTime=Date.now();renderExamQuestion();}
-function renderExamQuestion(){if(currentQIndex>=currentExamQs.length){finishExam();return;}examAnswered=false;const q=currentExamQs[currentQIndex];document.getElementById('examQuestionCount').innerText=`${currentQIndex+1} / ${currentExamQs.length}`;document.getElementById('examScore').innerText=examScoreCount;document.getElementById('examProgress').style.width=`${(currentQIndex/currentExamQs.length)*100}%`;document.getElementById('examQuestionBadge').innerText=q.Topic||q.topic||'Ерөнхий';document.getElementById('examQuestion').innerText=q.Question||q.question||'';document.getElementById('examOptions').innerHTML=['A','B','C','D'].map(opt=>{const text=q[opt];if(!text)return '';return`<button id="opt_${opt}" onclick="selectAnswer('${opt}')" class="option-btn"><div class="option-letter">${opt}</div><span>${text}</span></button>`;}).join('');document.getElementById('examExplanation').classList.add('hidden');document.getElementById('examNextBtn').classList.add('hidden');}
-function selectAnswer(opt){if(examAnswered)return;examAnswered=true;const q=currentExamQs[currentQIndex];const correct=q.Answer||q.answer||'A';const isOK=opt===correct;const selBtn=document.getElementById('opt_'+opt);if(selBtn)selBtn.classList.add(isOK?'correct':'wrong');if(!isOK){const cb=document.getElementById('opt_'+correct);if(cb)cb.classList.add('correct');}document.querySelectorAll('#examOptions .option-btn').forEach(b=>b.disabled=true);if(isOK){examScoreCount+=10;examCorrectCount++;showToast('Зөв! +10 оноо','success');}else{examWrongCount++;showToast('Буруу!','error');}const expl=q.Explanation||q.explanation||'';if(expl){document.getElementById('examExplanationText').innerText=expl;document.getElementById('examExplanation').classList.remove('hidden');}document.getElementById('examScore').innerText=examScoreCount;document.getElementById('examNextBtn').classList.remove('hidden');document.getElementById('examNextBtn').innerText=currentQIndex+1<currentExamQs.length?'Дараагийн асуулт':'Үр дүн харах';}
-function nextQuestion(){currentQIndex++;if(currentQIndex>=currentExamQs.length)finishExam();else renderExamQuestion();}
-function finishExam(){stopExamTimer();const elapsed=Math.round((Date.now()-examStartTime)/1000);const pct=currentExamQs.length>0?Math.round((examCorrectCount/currentExamQs.length)*100):0;hideEl('examActive');showEl('examResult');document.getElementById('resultScore').innerText=examScoreCount+' оноо';document.getElementById('resultDetail').innerText=`${pct}% зөв — ${currentTopic}`;document.getElementById('resultCorrect').innerText=examCorrectCount;document.getElementById('resultWrong').innerText=examWrongCount;document.getElementById('resultTime').innerText=elapsed+'s';document.getElementById('resultEmoji').innerText=pct>=80?'GREAT!':pct>=50?'GOOD':'TRY AGAIN';document.getElementById('resultReview').innerHTML=currentExamQs.map((q,i)=>{const c=q.Answer||q.answer||'A';return`<div style="background:var(--surface-container-low);border-radius:10px;padding:10px 12px;font-size:11px;"><div style="color:var(--on-surface-variant);margin-bottom:4px;">${i+1}. ${q.Question||''}</div><div style="color:var(--tertiary);font-weight:600;">Зөв: ${q[c]||c}</div></div>`;}).join('');saveExamResult({topic:currentTopic,score:examScoreCount,pct,date:new Date().toLocaleDateString('mn-MN'),elapsed});}
-function retryExam(){startExam(currentTopic);}
-function backToLobby(){stopExamTimer();hideEl('examResult');hideEl('examActive');showEl('examLobby');renderExamHistory();}
-function startExamTimer(){stopExamTimer();updateTimerDisplay();examTimerInterval=setInterval(()=>{examTimeLeft--;updateTimerDisplay();if(examTimeLeft<=0){clearInterval(examTimerInterval);showToast('Цаг дууслаа!','error');finishExam();}},1000);}
-function stopExamTimer(){if(examTimerInterval){clearInterval(examTimerInterval);examTimerInterval=null;}}
-function updateTimerDisplay(){const el=document.getElementById('examTimer');if(!el)return;const m=String(Math.floor(examTimeLeft/60)).padStart(2,'0');const s=String(examTimeLeft%60).padStart(2,'0');el.innerText=`${m}:${s}`;el.classList.toggle('timer-warning',examTimeLeft<=30);}
-function saveExamResult(result){const key='examHistory_'+currentUserEmail;const h=JSON.parse(localStorage.getItem(key)||'[]');h.unshift(result);localStorage.setItem(key,JSON.stringify(h.slice(0,10)));}
-function renderExamHistory(){const key='examHistory_'+currentUserEmail;const h=JSON.parse(localStorage.getItem(key)||'[]');const el=document.getElementById('examHistoryList');if(!h.length){el.innerHTML=`<div style="font-size:11px;color:var(--outline);text-align:center;padding:8px;">Одоохондоо байхгүй</div>`;return;}el.innerHTML=h.map(r=>`<div style="display:flex;justify-content:space-between;align-items:center;background:#fff;border:1px solid var(--outline-variant);border-radius:10px;padding:10px 14px;font-size:12px;"><div><span style="font-weight:600;color:var(--on-surface);">${r.topic}</span><span style="color:var(--on-surface-variant);margin-left:8px;">${r.date}</span></div><div style="font-weight:700;color:${r.pct>=80?'var(--tertiary)':r.pct>=50?'var(--primary)':'var(--error)'};">${r.pct}%</div></div>`).join('');}
+async function initExamLobby() {
+    showEl('examLobby'); hideEl('examActive'); hideEl('examResult'); stopExamTimer();
+    document.getElementById('examTopicList').innerHTML=`<div style="text-align:center;color:var(--on-surface-variant);font-size:12px;padding:24px;">Уншиж байна...</div>`;
+    try {
+        const data = await fetchJSON(`${ORDER_URL}?action=getQuestions`);
+        examQuestions = data && Array.isArray(data) ? data : buildDemoQuestions();
+    } catch(e) {
+        examQuestions = buildDemoQuestions();
+    }
+    renderTopics(); renderExamHistory();
+}
+function buildDemoQuestions() {
+    return [
+        {Topic:'Дүрэм',Question:'Монгол бичгийг ямар шугамаар бичдэг вэ?',A:'Хэвтээ',B:'Босоо',C:'Диагональ',D:'Дугуй',Answer:'B',Explanation:'Монгол бичгийг дээрээс доош чиглэлтэй босоо бичдэг.'},
+        {Topic:'Дүрэм',Question:'Монгол бичгийн эгшиг үсэг хэд байдаг вэ?',A:'5',B:'7',C:'9',D:'12',Answer:'B',Explanation:'Монгол бичигт 7 эгшиг үсэг байдэг.'},
+        {Topic:'Үг',Question:'"Титэм + шүд" нийлээд ямар үсэг вэ',A:'А',B:'Э',C:'И',D:'О',Answer:'A',Explanation:'"Үгийн эхэнд ордог А" үсэг юм.'},
+        {Topic:'Дуудлага',Question:'"Титэм+гэдэс+шилбэ" ямар үсэг болох вэ?',A:'О',B:'У',C:'Ө',D:'И',Answer:'C',Explanation:'"Үгийн эхэнд ордог Ө" үсэг.'}
+    ];
+}
+function getTopics() { return [...new Set(examQuestions.map(q=>q.Topic||q.topic||'Ерөнхий'))]; }
+function renderTopics() {
+    const topics=getTopics(); const el=document.getElementById('examTopicList');
+    if(!topics.length){el.innerHTML=`<div style="text-align:center;color:var(--on-surface-variant);font-size:12px;padding:24px;">Асуулт олдсонгүй.</div>`;return;}
+    el.innerHTML=topics.map(topic=>{
+        const count=examQuestions.filter(q=>(q.Topic||q.topic||'Ерөнхий')===topic).length;
+        return `<button class="exam-topic-btn" onclick="startExam('${topic.replace(/'/g,"\\'")}')"><div><div class="exam-topic-name">${topic}</div><div class="exam-topic-count">${count} асуулт</div></div><div class="exam-start-badge">Эхлэх</div></button>`;
+    }).join('');
+}
+function startExam(topic) {
+    currentTopic=topic;
+    const qs=examQuestions.filter(q=>(q.Topic||q.topic||'Ерөнхий')===topic);
+    currentExamQs=shuffle(qs).slice(0,10); currentQIndex=0; examScoreCount=0; examCorrectCount=0; examWrongCount=0;
+    hideEl('examLobby'); hideEl('examResult'); showEl('examActive');
+    examTimeLeft=currentExamQs.length*30; startExamTimer(); examStartTime=Date.now();
+    renderExamQuestion();
+}
+function renderExamQuestion() {
+    if(currentQIndex>=currentExamQs.length){finishExam();return;}
+    examAnswered=false;
+    const q=currentExamQs[currentQIndex];
+    document.getElementById('examQuestionCount').innerText=`${currentQIndex+1} / ${currentExamQs.length}`;
+    document.getElementById('examScore').innerText=examScoreCount;
+    document.getElementById('examProgress').style.width=`${(currentQIndex/currentExamQs.length)*100}%`;
+    document.getElementById('examQuestionBadge').innerText=q.Topic||q.topic||'Ерөнхий';
+    document.getElementById('examQuestion').innerText=q.Question||q.question||'';
+    document.getElementById('examOptions').innerHTML=['A','B','C','D'].map(opt=>{
+        const text=q[opt]; if(!text)return '';
+        return `<button id="opt_${opt}" onclick="selectAnswer('${opt}')" class="option-btn"><div class="option-letter">${opt}</div><span>${text}</span></button>`;
+    }).join('');
+    document.getElementById('examExplanation').classList.add('hidden');
+    document.getElementById('examNextBtn').classList.add('hidden');
+}
+function selectAnswer(opt) {
+    if(examAnswered)return; examAnswered=true;
+    const q=currentExamQs[currentQIndex]; const correct=q.Answer||q.answer||'A';
+    const isOK=opt===correct;
+    const selBtn=document.getElementById('opt_'+opt); if(selBtn) selBtn.classList.add(isOK?'correct':'wrong');
+    if(!isOK){const cb=document.getElementById('opt_'+correct);if(cb) cb.classList.add('correct');}
+    document.querySelectorAll('#examOptions .option-btn').forEach(b=>b.disabled=true);
+    if(isOK){examScoreCount+=10;examCorrectCount++;showToast('Зөв! +10 оноо','success');}
+    else{examWrongCount++;showToast('Буруу!','error');}
+    const expl=q.Explanation||q.explanation||'';
+    if(expl){document.getElementById('examExplanationText').innerText=expl;document.getElementById('examExplanation').classList.remove('hidden');}
+    document.getElementById('examScore').innerText=examScoreCount;
+    document.getElementById('examNextBtn').classList.remove('hidden');
+    document.getElementById('examNextBtn').innerText=currentQIndex+1<currentExamQs.length?'Дараагийн асуулт':'Үр дүн харах';
+}
+function nextQuestion() { currentQIndex++; if(currentQIndex>=currentExamQs.length)finishExam(); else renderExamQuestion(); }
+function finishExam() {
+    stopExamTimer(); const elapsed=Math.round((Date.now()-examStartTime)/1000);
+    const pct=currentExamQs.length>0?Math.round((examCorrectCount/currentExamQs.length)*100):0;
+    hideEl('examActive'); showEl('examResult');
+    document.getElementById('resultScore').innerText=examScoreCount+' оноо';
+    document.getElementById('resultDetail').innerText=`${pct}% зөв — ${currentTopic}`;
+    document.getElementById('resultCorrect').innerText=examCorrectCount;
+    document.getElementById('resultWrong').innerText=examWrongCount;
+    document.getElementById('resultTime').innerText=elapsed+'s';
+    document.getElementById('resultEmoji').innerText=pct>=80?'GREAT!':pct>=50?'GOOD':'TRY AGAIN';
+    document.getElementById('resultReview').innerHTML=currentExamQs.map((q,i)=>{
+        const c=q.Answer||q.answer||'A';
+        return `<div style="background:var(--surface-container-low);border-radius:10px;padding:10px 12px;font-size:11px;"><div style="color:var(--on-surface-variant);margin-bottom:4px;">${i+1}. ${q.Question||''}</div><div style="color:var(--tertiary);font-weight:600;">Зөв: ${q[c]||c}</div></div>`;
+    }).join('');
+    saveExamResult({topic:currentTopic,score:examScoreCount,pct,date:new Date().toLocaleDateString('mn-MN'),elapsed});
+}
+function retryExam() { startExam(currentTopic); }
+function backToLobby() { stopExamTimer(); hideEl('examResult'); hideEl('examActive'); showEl('examLobby'); renderExamHistory(); }
+function startExamTimer() {
+    stopExamTimer(); updateTimerDisplay();
+    examTimerInterval=setInterval(()=>{
+        examTimeLeft--; updateTimerDisplay();
+        if(examTimeLeft<=0){clearInterval(examTimerInterval);showToast('Цаг дууслаа!','error');finishExam();}
+    },1000);
+}
+function stopExamTimer() { if(examTimerInterval){clearInterval(examTimerInterval);examTimerInterval=null;} }
+function updateTimerDisplay() {
+    const el=document.getElementById('examTimer'); if(!el)return;
+    const m=String(Math.floor(examTimeLeft/60)).padStart(2,'0');
+    const s=String(examTimeLeft%60).padStart(2,'0');
+    el.innerText=`${m}:${s}`; el.classList.toggle('timer-warning',examTimeLeft<=30);
+}
+function saveExamResult(result) {
+    const key='examHistory_'+currentUserEmail;
+    const h=JSON.parse(localStorage.getItem(key)||'[]');
+    h.unshift(result); localStorage.setItem(key,JSON.stringify(h.slice(0,10)));
+}
+function renderExamHistory() {
+    const key='examHistory_'+currentUserEmail;
+    const h=JSON.parse(localStorage.getItem(key)||'[]');
+    const el=document.getElementById('examHistoryList');
+    if(!h.length){el.innerHTML=`<div style="font-size:11px;color:var(--outline);text-align:center;padding:8px;">Одоохондоо байхгүй</div>`;return;}
+    el.innerHTML=h.map(r=>`<div style="display:flex;justify-content:space-between;align-items:center;background:#fff;border:1px solid var(--outline-variant);border-radius:10px;padding:10px 14px;font-size:12px;"><div><span style="font-weight:600;color:var(--on-surface);">${r.topic}</span><span style="color:var(--on-surface-variant);margin-left:8px;">${r.date}</span></div><div style="font-weight:700;color:${r.pct>=80?'var(--tertiary)':r.pct>=50?'var(--primary)':'var(--error)'};">${r.pct}%</div></div>`).join('');
+}
 
-/* ── UTILS ── */
-function shuffle(arr){const a=[...arr];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
-function showEl(id){const el=document.getElementById(id);if(el)el.classList.remove('hidden');}
-function hideEl(id){const el=document.getElementById(id);if(el)el.classList.add('hidden');}
-function showToast(msg,type='info'){const box=document.getElementById('toastBox');const toast=document.createElement('div');toast.className=`toast ${type}`;toast.innerText=msg;box.appendChild(toast);setTimeout(()=>toast.style.opacity='1',10);setTimeout(()=>{toast.style.opacity='0';setTimeout(()=>toast.remove(),300);},2800);}
+/* ─── UTILS ─── */
+function shuffle(arr) { const a=[...arr]; for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];} return a; }
+function showEl(id) { const el=document.getElementById(id); if(el) el.classList.remove('hidden'); }
+function hideEl(id) { const el=document.getElementById(id); if(el) el.classList.add('hidden'); }
+function showToast(msg,type='info') {
+    const box=document.getElementById('toastBox');
+    const toast=document.createElement('div');
+    toast.className=`toast ${type}`; toast.innerText=msg;
+    box.appendChild(toast);
+    setTimeout(()=>toast.style.opacity='1',10);
+    setTimeout(()=>{toast.style.opacity='0';setTimeout(()=>toast.remove(),300);},2800);
+}
 </script>
 </body>
 </html>
