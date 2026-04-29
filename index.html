@@ -1261,22 +1261,21 @@
 <div id="printArea" style="display:none;"></div>
 
 <script>
+    const GITHUB_BASE = 'https://raw.githubusercontent.com/таны-repo/main/';
+const MONG_NUMS = {'1':'᠑','2':'᠒','3':'᠓','4':'᠔','5':'᠕','6':'᠖','7':'᠗','8':'᠘','9':'᠙'};
+const MONG_TO_ASCII = {'᠑':'1','᠒':'2','᠓':'3','᠔':'4','᠕':'5','᠖':'6','᠗':'7','᠘':'8','᠙':'9'};
+let currentUserEmail = '';
+let cartItems = [];
+let productsData = [];
+let lbImages = [], lbIndex = 0, lbTouchStartX = 0;
+let printPageCount = 1;
+let pendingProduct = '', pendingTotal = 0, pendingPassPages = 0;
+let sudokuBoard = [];
 const ORDER_URL = 'https://script.google.com/macros/s/AKfycbzrB_l3VfOcG8Jb3ubVIHxyvOah-6Oh1T6fquXIBQoUREh0kuNE-8p_8HgzadlD4KqdJA/exec'; // одоогийнх
 
 // ── AI PROXY HELPER ── (шинэ)
 async function callAI(messages, maxTokens = 1000) {
-  const resp = await fetch(ORDER_URL, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      action: 'anthropic',
-      payload: {
-        model: 'claude-sonnet-4-20250514',
-        max_tokens: maxTokens,
-        messages
-      }
-    })
-  });
+ headers: { 'Content-Type': 'text/plain' },
   const data = await resp.json();
   if (data.error) throw new Error(data.error);
   return data;
@@ -1345,6 +1344,7 @@ function showSection(name) {
     if (name==='exam')         initExamLobby();
     if (name==='course')       initCourseSection();
     if (name==='aiassessment') initAiAssessment();
+    if (name === 'aiplanner') { /* init хийх зүйл байвал */ }
 }
 function showDashboard() {
     document.getElementById('dashboardHome').classList.remove('hidden');
@@ -1893,6 +1893,7 @@ function updatePrintModalUI(){const r=getLocalPass();document.getElementById('pr
 function executePrint(){const r=getLocalPass();if(printPageCount>r)return showToast('Эрх хүрэхгүй байна!','error');setLocalPass(r-printPageCount);const p=new URLSearchParams();p.append('action','usePrintPass');p.append('email',currentUserEmail);p.append('usedPages',printPageCount);fetch(ORDER_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:p.toString()}).catch(()=>{});closePrintModal();renderPassSection();doPrint();showToast(`${printPageCount} хуудас хэвлэж байна!`,'success');}
 
 /* ── SUDOKU ── */
+function shuffle(arr){const a=[...arr];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
 function generateSudokuBoard(){const base=[[1,2,3,4,5,6,7,8,9],[4,5,6,7,8,9,1,2,3],[7,8,9,1,2,3,4,5,6],[2,3,1,5,6,4,8,9,7],[5,6,4,8,9,7,2,3,1],[8,9,7,2,3,1,5,6,4],[3,1,2,6,4,5,9,7,8],[6,4,5,9,7,8,3,1,2],[9,7,8,3,1,2,6,4,5]];for(let b=0;b<3;b++)for(let s=0;s<3;s++){const r1=b*3+Math.floor(Math.random()*3);const r2=b*3+Math.floor(Math.random()*3);[base[r1],base[r2]]=[base[r2],base[r1]];}const co=shuffle([0,1,2]);return base.map(row=>{const nr=[];co.forEach(b=>{for(let c=0;c<3;c++)nr.push(row[b*3+c]);});return nr;});}
 function initSudoku(){sudokuBoard=generateSudokuBoard();const c=document.getElementById('sudokuContainer');c.innerHTML='';for(let r=0;r<9;r++)for(let col=0;col<9;col++){const val=sudokuBoard[r][col];const cell=document.createElement('input');cell.type='text';cell.maxLength=2;cell.className='sudoku-cell';cell.dataset.answer=String(val);if(Math.random()<0.45){cell.value=MONG_NUMS[String(val)];cell.readOnly=true;cell.classList.add('cell-fixed');}else{cell.classList.add('cell-user');cell.addEventListener('keydown',onSudokuKeyDown);cell.addEventListener('input',onSudokuInput);}c.appendChild(cell);}}
 function onSudokuKeyDown(e){const a=['Backspace','Delete','Tab','ArrowLeft','ArrowRight','ArrowUp','ArrowDown'];if(a.includes(e.key)||(e.key>='1'&&e.key<='9')||Object.values(MONG_NUMS).includes(e.key))return;e.preventDefault();}
@@ -1922,7 +1923,6 @@ function saveExamResult(result){const key='examHistory_'+currentUserEmail;const 
 function renderExamHistory(){const key='examHistory_'+currentUserEmail;const h=JSON.parse(localStorage.getItem(key)||'[]');const el=document.getElementById('examHistoryList');if(!h.length){el.innerHTML=`<div style="font-size:11px;color:var(--outline);text-align:center;padding:8px;">Одоохондоо байхгүй</div>`;return;}el.innerHTML=h.map(r=>`<div style="display:flex;justify-content:space-between;align-items:center;background:#fff;border:1px solid var(--outline-variant);border-radius:10px;padding:10px 14px;font-size:12px;"><div><span style="font-weight:600;color:var(--on-surface);">${r.topic}</span><span style="color:var(--on-surface-variant);margin-left:8px;">${r.date}</span></div><div style="font-weight:700;color:${r.pct>=80?'var(--tertiary)':r.pct>=50?'var(--primary)':'var(--error)'};">${r.pct}%</div></div>`).join('');}
 
 /* ── UTILS ── */
-function shuffle(arr){const a=[...arr];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
 function showEl(id){const el=document.getElementById(id);if(el)el.classList.remove('hidden');}
 function hideEl(id){const el=document.getElementById(id);if(el)el.classList.add('hidden');}
 function showToast(msg,type='info'){const box=document.getElementById('toastBox');const toast=document.createElement('div');toast.className=`toast ${type}`;toast.innerText=msg;box.appendChild(toast);setTimeout(()=>toast.style.opacity='1',10);setTimeout(()=>{toast.style.opacity='0';setTimeout(()=>toast.remove(),300);},2800);}
