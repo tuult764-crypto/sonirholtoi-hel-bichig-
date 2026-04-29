@@ -1275,7 +1275,18 @@ const ORDER_URL = 'https://script.google.com/macros/s/AKfycbzrB_l3VfOcG8Jb3ubVIH
 
 // ── AI PROXY HELPER ── (шинэ)
 async function callAI(messages, maxTokens = 1000) {
- headers: { 'Content-Type': 'text/plain' },
+  const resp = await fetch(ORDER_URL, {
+    method: 'POST',
+    headers: { 'Content-Type': 'text/plain' },
+    body: JSON.stringify({
+      action: 'anthropic',
+      payload: {
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: maxTokens,
+        messages
+      }
+    })
+  });
   const data = await resp.json();
   if (data.error) throw new Error(data.error);
   return data;
