@@ -332,7 +332,8 @@
     </p>
   </div>
 </div>
-    
+
+<div id="mainSystem">
 <!-- ══ FOOTER ══ -->
 <footer style="background:linear-gradient(135deg,#1a1208 0%,#2d1e08 100%);color:rgba(255,255,255,0.85);padding:48px 32px 28px;margin-top:40px;">
   <div style="max-width:1280px;margin:0 auto;">
@@ -398,7 +399,6 @@
 
   </div>
 </footer>
-<div id="mainSystem">
 
   <!-- NAV -->
   <nav class="nav-glass">
@@ -420,135 +420,129 @@
     </div>
   </nav>
 
-  <!-- DASHBOARD -->
-  <div id="dashboardHome">
-    <div class="hero">
-      <div class="fade-up">
-        <div class="hero-label">
-          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
-          Монгол бичгийн цахим систем
-        </div>
-        <h1 class="hero-title">Хэл бичгийг<br><span>сонирхолтойгоор</span><br>сур</h1>
-        <p class="hero-sub">Монгол хэл, уран зохиол, үндэсний бичгийн хичээлд суурилсан төлөвлөгөө, онлайн сургалт, шалгалт, хөгжилтэй тоглоом — бүгд нэг дор.</p>
-<div class="hero-cta">
-  <button class="btn-primary" onclick="showCorner('teacher')">👩‍🏫 Багшийн булан</button>
-  <button class="btn-secondary-outline" onclick="showCorner('student')">🎒 Сурагчийн булан</button>
-</div>
+<!-- DASHBOARD -->
+<div id="dashboardHome">
+  <div class="hero">
+    <div class="fade-up">
+      <div class="hero-label">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+        Монгол бичгийн цахим систем
       </div>
-      <div class="hero-visual fade-up delay-2">
-       <!-- 1-р карт -->
-onclick="showCorner('teacher')"
-<!-- 2-р карт -->
-onclick="showCorner('student')"
-<!-- 3-р карт -->
-onclick="showSection('games')"
-<!-- 4-р карт -->
-onclick="showSection('shop')"
-        </div>
-        <div class="hero-card" onclick="showSection('exam')">
-          <div class="hero-card-icon" style="background:rgba(0,96,172,0.1);"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0060ac" stroke-width="1.8" stroke-linecap="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg></div>
-          <div class="hero-card-label">Шалгалт</div>
-          <div class="hero-card-title">Мэдлэгээ шалгаарай</div>
-        </div>
-        <div class="hero-card" onclick="showSection('games')">
-          <div class="hero-card-icon" style="background:rgba(0,109,66,0.1);"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#006d42" stroke-width="1.8" stroke-linecap="round"><rect x="2" y="2" width="9" height="9"/><rect x="13" y="2" width="9" height="9"/><rect x="2" y="13" width="9" height="9"/><rect x="13" y="13" width="9" height="9"/></svg></div>
-          <div class="hero-card-label">Судоку</div>
-          <div class="hero-card-title">Монгол бичгийн тоонуудтай</div>
-        </div>
-        <div class="hero-card" onclick="showSection('shop')">
-          <div class="hero-card-icon" style="background:rgba(138,5,255,0.08);"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#8A05FF" stroke-width="1.8" stroke-linecap="round"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg></div>
-          <div class="hero-card-label">Дэлгүүр</div>
-          <div class="hero-card-title">Сургалтын материал</div>
-        </div>
+      <h1 class="hero-title">Хэл бичгийг<br><span>сонирхолтойгоор</span><br>сур</h1>
+      <p class="hero-sub">Монгол хэл, уран зохиол, үндэсний бичгийн хичээлд суурилсан төлөвлөгөө, онлайн сургалт, шалгалт, хөгжилтэй тоглоом — бүгд нэг дор.</p>
+      <div class="hero-cta">
+        <button class="btn-primary" onclick="showCorner('teacher')">👩‍🏫 Багшийн булан</button>
+        <button class="btn-secondary-outline" onclick="showCorner('student')">🎒 Сурагчийн булан</button>
       </div>
     </div>
 
-    <div class="section">
-      <div class="feature-strip">
-        <div class="feature-item"><div class="feature-num">6+</div><div class="feature-label">Сургалтын хэсэг</div></div>
-        <div class="feature-item"><div class="feature-num">∞</div><div class="feature-label">Судоку тоглоом</div></div>
-        <div class="feature-item"><div class="feature-num">10+</div><div class="feature-label">Шалгалтын сэдэв</div></div>
-        <div class="feature-item"><div class="feature-num">1</div><div class="feature-label">Туул багш</div></div>
+    <div class="hero-visual fade-up delay-2">
+      <div class="hero-card" onclick="showCorner('teacher')">
+        <div class="hero-card-icon" style="background:rgba(148,74,0,0.1);">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#944a00" stroke-width="1.8" stroke-linecap="round">
+            <path d="M22 10v6M2 10l10-5 10 5-10 5z"/>
+            <path d="M6 12v5c3 3 9 3 12 0v-5"/>
+          </svg>
+        </div>
+        <div class="hero-card-label">Багшийн булан</div>
+        <div class="hero-card-title">AI хөтөлбөр · Ажлын хуудас</div>
       </div>
-      <div class="section-header"><h2 class="section-title">Сургалтын хэсгүүд</h2></div>
-      <div class="module-grid" style="margin-bottom:64px;">
+      <div class="hero-card" onclick="showCorner('student')">
+        <div class="hero-card-icon" style="background:rgba(0,96,172,0.1);">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0060ac" stroke-width="1.8" stroke-linecap="round">
+            <path d="M9 11l3 3L22 4"/>
+            <path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/>
+          </svg>
+        </div>
+        <div class="hero-card-label">Сурагчийн булан</div>
+        <div class="hero-card-title">Онлайн сургалт · Шалгалт</div>
+      </div>
+      <div class="hero-card" onclick="showSection('games')">
+        <div class="hero-card-icon" style="background:rgba(0,109,66,0.1);">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#006d42" stroke-width="1.8" stroke-linecap="round">
+            <rect x="2" y="2" width="9" height="9"/>
+            <rect x="13" y="2" width="9" height="9"/>
+            <rect x="2" y="13" width="9" height="9"/>
+            <rect x="13" y="13" width="9" height="9"/>
+          </svg>
+        </div>
+        <div class="hero-card-label">Тоглоом</div>
+        <div class="hero-card-title">Монгол бичиг судоку</div>
+      </div>
+      <div class="hero-card" onclick="showSection('shop')">
+        <div class="hero-card-icon" style="background:rgba(138,5,255,0.08);">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#8A05FF" stroke-width="1.8" stroke-linecap="round">
+            <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/>
+            <line x1="3" y1="6" x2="21" y2="6"/>
+            <path d="M16 10a4 4 0 01-8 0"/>
+          </svg>
+        </div>
+        <div class="hero-card-label">Дэлгүүр</div>
+        <div class="hero-card-title">Сургалтын материал</div>
+      </div>
+    </div><!-- ✅ hero-visual хаалт -->
 
-  <!-- БАГШИЙН БУЛАН -->
-  <div class="module-card orange" onclick="showCorner('teacher')">
-    <div class="module-icon"><svg viewBox="0 0 24 24"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg></div>
-    <div class="module-content">
-      <div class="module-badge">Багшийн булан</div>
-      <div class="module-title">AI Хөтөлбөр · Ажлын хуудас</div>
-      <div class="module-desc">AI хичээлийн төлөвлөгөө, ажлын хуудас үүсгэх, шалгалтын материал.</div>
+  </div><!-- ✅ hero хаалт -->
+
+  <div class="section">
+    <div class="feature-strip">
+      <div class="feature-item"><div class="feature-num">6+</div><div class="feature-label">Сургалтын хэсэг</div></div>
+      <div class="feature-item"><div class="feature-num">∞</div><div class="feature-label">Судоку тоглоом</div></div>
+      <div class="feature-item"><div class="feature-num">10+</div><div class="feature-label">Шалгалтын сэдэв</div></div>
+      <div class="feature-item"><div class="feature-num">1</div><div class="feature-label">Туул багш</div></div>
     </div>
-  </div>
 
-  <!-- СУРАГЧИЙН БУЛАН -->
-  <div class="module-card blue" onclick="showCorner('student')">
-    <div class="module-icon"><svg viewBox="0 0 24 24"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg></div>
-    <div class="module-content">
-      <div class="module-badge">Сурагчийн булан</div>
-      <div class="module-title">Онлайн сургалт · Шалгалт</div>
-      <div class="module-desc">Үндэсний бичгийн сургалт, 9-р ангийн ЭЕШ, олимпиадын материал.</div>
+    <div class="section-header">
+      <h2 class="section-title">Сургалтын хэсгүүд</h2>
     </div>
-  </div>
 
-  <!-- ТОГЛООМ -->
-  <div class="module-card green" onclick="showSection('games')">
-    <div class="module-icon"><svg viewBox="0 0 24 24"><rect x="2" y="2" width="9" height="9"/><rect x="13" y="2" width="9" height="9"/><rect x="2" y="13" width="9" height="9"/><rect x="13" y="13" width="9" height="9"/></svg></div>
-    <div class="module-content">
-      <div class="module-badge">Тоглоом</div>
-      <div class="module-title">Монгол бичиг судоку</div>
-      <div class="module-desc">Монгол бичгийн тоонуудаар судоку тоглож тархинаа дасгалжуулна.</div>
-    </div>
-  </div>
-
-  <!-- ДЭЛГҮҮР -->
-  <div class="module-card teal" onclick="showSection('shop')">
-    <div class="module-icon"><svg viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg></div>
-    <div class="module-content">
-      <div class="module-badge">Дэлгүүр</div>
-      <div class="module-title">Сургалтын материал</div>
-      <div class="module-desc">Туул багшийн боловсруулсан материалуудыг авч, миний санд хадгалж унших.</div>
-    </div>
-  </div>
-
-</div>
-        <div class="module-card orange" onclick="showSection('course')">
-          <div class="module-icon"><svg viewBox="0 0 24 24"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg></div>
-          <div class="module-content"><div class="module-badge">Онлайн сургалт</div><div class="module-title">Үндэсний бичгийн анхан шат</div><div class="module-desc">Монгол бичгийг эхнээс нь суралцах бүрэн курс. 29,999₮</div></div>
-        </div>
-        <div class="module-card blue" onclick="showSection('exam')">
-          <div class="module-icon"><svg viewBox="0 0 24 24"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg></div>
-          <div class="module-content"><div class="module-badge">Шалгалт</div><div class="module-title">Мэдлэгийн тест</div><div class="module-desc">Дүрэм, үг, дуудлагын сэдвүүдээр олон сонголтын шалгалт өгч, явцаа хянана.</div></div>
-        </div>
-        <div class="module-card purple" onclick="showSection('aiplanner')">
-          <div class="module-icon"><svg viewBox="0 0 24 24"><path d="M12 2a2 2 0 012 2v2a2 2 0 01-2 2 2 2 0 01-2-2V4a2 2 0 012-2z"/><path d="M12 16a2 2 0 012 2v2a2 2 0 01-2 2 2 2 0 01-2-2v-2a2 2 0 012-2z"/><path d="M2 12a2 2 0 012-2h2a2 2 0 012 2 2 2 0 01-2 2H4a2 2 0 01-2-2z"/><path d="M16 12a2 2 0 012-2h2a2 2 0 012 2 2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg></div>
-          <div class="module-content"><div class="module-badge">AI · Багшид</div><div class="module-title">Хичээлийн хөтөлбөр, төлөвлөгөө</div><div class="module-desc">AI-аар ээлжит хичээлийн төлөвлөгөө автоматаар гаргана. Тун удахгүй.</div></div>
-        </div>
-        <div class="module-card rose" onclick="showSection('aiassessment')">
-          <div class="module-icon"><svg viewBox="0 0 24 24"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="2"/><path d="M9 12l2 2 4-4"/></svg></div>
-          <div class="module-content"><div class="module-badge">AI · Багшид</div><div class="module-title">Ажлын хуудас үүсгэх</div><div class="module-desc">Сурах бичгийн файл байршуулж, AI-аар Блүүмийн даалгавар үүсгэнэ. Хэвлэхэд бэлэн.</div></div>
-        </div>
-        <div class="module-card green" onclick="showSection('games')">
-          <div class="module-icon"><svg viewBox="0 0 24 24"><rect x="2" y="2" width="9" height="9"/><rect x="13" y="2" width="9" height="9"/><rect x="2" y="13" width="9" height="9"/><rect x="13" y="13" width="9" height="9"/></svg></div>
-          <div class="module-content"><div class="module-badge">Судоку</div><div class="module-title">Монгол бичиг судоку</div><div class="module-desc">Монгол бичгийн тоонуудаар судоку тоглож тархинаа дасгалжуулна.</div></div>
-        </div>
-        <div class="module-card teal" onclick="showSection('shop')">
-          <div class="module-icon"><svg viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg></div>
-          <div class="module-content"><div class="module-badge">Дэлгүүр</div><div class="module-title">Сургалтын материал</div><div class="module-desc">Туул багшийн боловсруулсан материалуудыг авч, миний санд хадгалж унших.</div></div>
+    <div class="module-grid" style="margin-bottom:64px;">
+      <div class="module-card orange" onclick="showCorner('teacher')">
+        <div class="module-icon"><svg viewBox="0 0 24 24"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg></div>
+        <div class="module-content">
+          <div class="module-badge">Багшийн булан</div>
+          <div class="module-title">AI Хөтөлбөр · Ажлын хуудас</div>
+          <div class="module-desc">AI хичээлийн төлөвлөгөө, ажлын хуудас үүсгэх, шалгалтын материал.</div>
         </div>
       </div>
-      <div class="section-header">
-        <h2 class="section-title">Шинэ материалууд</h2>
-        <a class="section-link" onclick="showSection('shop')">Бүгдийг харах →</a>
+      <div class="module-card blue" onclick="showCorner('student')">
+        <div class="module-icon"><svg viewBox="0 0 24 24"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg></div>
+        <div class="module-content">
+          <div class="module-badge">Сурагчийн булан</div>
+          <div class="module-title">Онлайн сургалт · Шалгалт</div>
+          <div class="module-desc">Үндэсний бичгийн сургалт, 9-р ангийн ЭЕШ, олимпиадын материал.</div>
+        </div>
       </div>
-      <div id="materialGrid" class="product-grid">
-        <div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--on-surface-variant);font-size:13px;">Ачаалж байна...</div>
+      <div class="module-card green" onclick="showSection('games')">
+        <div class="module-icon"><svg viewBox="0 0 24 24"><rect x="2" y="2" width="9" height="9"/><rect x="13" y="2" width="9" height="9"/><rect x="2" y="13" width="9" height="9"/><rect x="13" y="13" width="9" height="9"/></svg></div>
+        <div class="module-content">
+          <div class="module-badge">Тоглоом</div>
+          <div class="module-title">Монгол бичиг судоку</div>
+          <div class="module-desc">Монгол бичгийн тоонуудаар судоку тоглож тархинаа дасгалжуулна.</div>
+        </div>
       </div>
-    </div>
-  </div>
+      <div class="module-card teal" onclick="showSection('shop')">
+        <div class="module-icon"><svg viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg></div>
+        <div class="module-content">
+          <div class="module-badge">Дэлгүүр</div>
+          <div class="module-title">Сургалтын материал</div>
+          <div class="module-desc">Туул багшийн боловсруулсан материалуудыг авч, миний санд хадгалж унших.</div>
+        </div>
+      </div>
+    </div><!-- ✅ module-grid хаалт -->
 
+    <div class="section-header">
+      <h2 class="section-title">Шинэ материалууд</h2>
+      <a class="section-link" onclick="showSection('shop')">Бүгдийг харах →</a>
+    </div>
+    <div id="materialGrid" class="product-grid">
+      <div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--on-surface-variant);font-size:13px;">Ачаалж байна...</div>
+    </div>
+
+  </div><!-- ✅ section хаалт -->
+
+</div><!-- ✅ dashboardHome хаалт -->
+    
   <!-- ══ ОНЛАЙН СУРГАЛТ ══ -->
   <div id="courseSection" class="content-section">
     <div class="section" style="padding-top:40px;max-width:960px;">
