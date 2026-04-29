@@ -1625,17 +1625,25 @@ ${uploadedFileText.substring(0,3000)}
     btn.disabled=false;
 }
 
-function buildFallbackWorksheet(grade,subject,genre,qCount,levels) {
-    const bloomNames={remember:'Санах',understand:'Ойлгох',apply:'Хэрэглэх',analyze:'Шинжлэх',evaluate:'Үнэлэх',create:'Бүтээх'};
-    const pool=[
-        {q:`"${genre}" `Зохиолд ашигласан уран дүрслэлийн хэрэгслийг тодорхойл.`,type:'mc',opts:['А) Харьцуулалт','Б) Давталт','В) Метафор','Г) Бүгд зөв'],ans:'Г',bloom:'Ойлгох',points:2},
-        {q:`Зохиолын сэдэв, гол санааг бусад зохиолтой харьцуулаарай.`,type:'open',lines:4,bloom:'Шинжлэх',points:5},
-        {q:`Зохиолд гарсан уран дүрслэлийн хэрэглэсэн аргыг өөрийн бодлоор үнэл.`,type:'open',lines:3,bloom:'Үнэлэх',points:5},
-        {q:`Энэ зохиолын үргэлжлэлийг өөрийн үгээр зохион бичнэ үү.`,type:'open',lines:5,bloom:'Бүтээх',points:6},
-        {q:`Зохиолын дүрийг өөр нэг зохиолын дүртэй харьцуул.`,type:'compare',items:['Зохиолын дүр А','Зохиолын дүр Б'],bloom:'Шинжлэх',points:4},
-        {q:`"${genre}" жанрын онцлогийг тайлбарла.`,type:'open',lines:3,bloom:'Санах',points:3},
+function buildFallbackWorksheet(grade, subject, genre, qCount, levels) {
+    const bloomNames = { remember: 'Санах', understand: 'Ойлгох', apply: 'Хэрэглэх', analyze: 'Шинжлэх', evaluate: 'Үнэлэх', create: 'Бүтээх' };
+    const pool = [
+        {
+            // ЗАСВАР: ${genre}-ийн ард байсан илүүдэл backtick (`) тэмдгийг устгав
+            q: `"${genre}" зохиолд ашигласан уран дүрслэлийн хэрэгслийг тодорхойл.`, 
+            type: 'mc', 
+            opts: ['А) Харьцуулалт', 'Б) Давталт', 'В) Метафор', 'Г) Бүгд зөв'], 
+            ans: 'Г', 
+            bloom: 'Ойлгох', 
+            points: 2
+        },
+        { q: `Зохиолын сэдэв, гол санааг бусад зохиолтой харьцуулаарай.`, type: 'open', lines: 4, bloom: 'Шинжлэх', points: 5 },
+        { q: `Зохиолд гарсан уран дүрслэлийн хэрэглэсэн аргыг өөрийн бодлоор үнэл.`, type: 'open', lines: 3, bloom: 'Үнэлэх', points: 5 },
+        { q: `Энэ зохиолын үргэлжлэлийг өөрийн үгээр зохион бичнэ үү.`, type: 'open', lines: 5, bloom: 'Бүтээх', points: 6 },
+        { q: `Зохиолын дүрийг өөр нэг зохиолын дүртэй харьцуул.`, type: 'compare', items: ['Зохиолын дүр А', 'Зохиолын дүр Б'], bloom: 'Шинжлэх', points: 4 },
+        { q: `"${genre}" жанрын онцлогийг тайлбарла.`, type: 'open', lines: 3, bloom: 'Санах', points: 3 },
     ];
-    return pool.slice(0,Math.min(qCount,pool.length));
+    return pool.slice(0, Math.min(qCount, pool.length));
 }
 
 /* ── Preview рендэр ── */
