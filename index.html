@@ -1261,14 +1261,26 @@
 <div id="printArea" style="display:none;"></div>
 
 <script>
-const ORDER_URL   = 'https://script.google.com/macros/s/AKfycbyNlKTyvrT5kVWN2WV50gkFgpD2F7_vmzmJTEA2z3EI8QyBwPN5zjJ_Ys_n_Pyzmb_W1A/exec';
-const GITHUB_BASE = 'https://raw.githubusercontent.com/tuult764-crypto/sonirholtoi-hel-bichig-/main/';
+const ORDER_URL = 'https://script.google.com/macros/s/AKfycbzrB_l3VfOcG8Jb3ubVIHxyvOah-6Oh1T6fquXIBQoUREh0kuNE-8p_8HgzadlD4KqdJA/exec'; // одоогийнх
 
-let currentUserEmail='', productsData=[], cartItems=[], pendingProduct='', pendingTotal=0, pendingPassPages=0;
-let sudokuBoard=[], printPageCount=1, lbImages=[], lbIndex=0, lbTouchStartX=0;
-const MONG_NUMS = {'1':'\u1811','2':'\u1812','3':'\u1813','4':'\u1814','5':'\u1815','6':'\u1816','7':'\u1817','8':'\u1818','9':'\u1819'};
-const MONG_TO_ASCII = {};
-for (const [a,m] of Object.entries(MONG_NUMS)) MONG_TO_ASCII[m] = a;
+// ── AI PROXY HELPER ── (шинэ)
+async function callAI(messages, maxTokens = 1000) {
+  const resp = await fetch(ORDER_URL, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      action: 'anthropic',
+      payload: {
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: maxTokens,
+        messages
+      }
+    })
+  });
+  const data = await resp.json();
+  if (data.error) throw new Error(data.error);
+  return data;
+}
 
 /* ── AI ASSESSMENT STATE ── */
 let assessSelectedTime = 20;
@@ -1552,7 +1564,7 @@ async function generateWorksheet() {
     const hasFile  = uploadedFileText && uploadedFileText.length > 10;
     const isImage  = uploadedFileName && uploadedFileName.includes('|IMAGE');
     // Build prompt
-    let prompt = `Та Монгол хэл, Уран зохиолын мэргэжлийн багш бөгөөд Блүүмийн таксономын аргаар сонирхолтой, бүтээлч сэтгэлгээг хөгжүүлэх ажлын хуудас бэлдэж байна.
+    let prompt = `Та Монгол хэл, Уран зохиол, Үндэсний бичиг хичээлийн мэргэжлийн багш бөгөөд Блүүмийн таксономын аргаар сонирхолтой, бүтээлч сэтгэлгээг хөгжүүлэх ажлын хуудас бэлдэж байна.
 
 МЭДЭЭЛЭЛ:
 - Анги: ${grade}-р анги
@@ -1590,12 +1602,7 @@ ${uploadedFileText.substring(0,3000)}
             ];
         }
         statusMsg.textContent='AI асуулт боловсруулж байна...';
-        const resp = await fetch('https://api.anthropic.com/v1/messages',{
-            method:'POST',
-            headers:{'Content-Type':'application/json'},
-            body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:2000,messages})
-        });
-        const data = await resp.json();
+        const data = await callAI(messages, 2000);
         const raw = data.content?.map(b=>b.text||'').join('')||'';
         const match = raw.match(/\[[\s\S]*\]/);
         if (match) questions=JSON.parse(match[0]);
@@ -1621,12 +1628,10 @@ ${uploadedFileText.substring(0,3000)}
 function buildFallbackWorksheet(grade,subject,genre,qCount,levels) {
     const bloomNames={remember:'Санах',understand:'Ойлгох',apply:'Хэрэглэх',analyze:'Шинжлэх',evaluate:'Үнэлэх',create:'Бүтээх'};
     const pool=[
-        {q:`"${genre}" сэдвийн зохиолын гол санааг нэрлэ.`,type:'mc',opts:['А) Нутаг орноо хайрлах','Б) Гэр бүлийн хайр','В) Байгалийн үзэсгэлэн','Г) Хийморийн хүч'],ans:'А',bloom:'Санах',points:2},
-        {q:`Зохиолын гол дүрийн шинжийг тайлбарлана уу.`,type:'open',lines:3,bloom:'Ойлгох',points:4},
-        {q:`Зохиолд ашигласан уран дүрслэлийн хэрэгслийг тодорхойл.`,type:'mc',opts:['А) Харьцуулалт','Б) Давталт','В) Метафор','Г) Бүгд зөв'],ans:'Г',bloom:'Ойлгох',points:2},
-        {q:`Зохиолын гол сэдвийг бусад зохиолтой харьцуулан шинжил.`,type:'open',lines:4,bloom:'Шинжлэх',points:5},
-        {q:`Зохиолд гарсан уран дүрслэлийн аргыг өөрийн бодлоор үнэл.`,type:'open',lines:3,bloom:'Үнэлэх',points:5},
-        {q:`Энэ зохиолын үргэлжлэлийг өөрийн үгээр зохио.`,type:'open',lines:5,bloom:'Бүтээх',points:6},
+        {q:`"${genre}" `Зохиолд ашигласан уран дүрслэлийн хэрэгслийг тодорхойл.`,type:'mc',opts:['А) Харьцуулалт','Б) Давталт','В) Метафор','Г) Бүгд зөв'],ans:'Г',bloom:'Ойлгох',points:2},
+        {q:`Зохиолын сэдэв, гол санааг бусад зохиолтой харьцуулаарай.`,type:'open',lines:4,bloom:'Шинжлэх',points:5},
+        {q:`Зохиолд гарсан уран дүрслэлийн хэрэглэсэн аргыг өөрийн бодлоор үнэл.`,type:'open',lines:3,bloom:'Үнэлэх',points:5},
+        {q:`Энэ зохиолын үргэлжлэлийг өөрийн үгээр зохион бичнэ үү.`,type:'open',lines:5,bloom:'Бүтээх',points:6},
         {q:`Зохиолын дүрийг өөр нэг зохиолын дүртэй харьцуул.`,type:'compare',items:['Зохиолын дүр А','Зохиолын дүр Б'],bloom:'Шинжлэх',points:4},
         {q:`"${genre}" жанрын онцлогийг тайлбарла.`,type:'open',lines:3,bloom:'Санах',points:3},
     ];
@@ -1706,16 +1711,7 @@ ${JSON.stringify(currentWorksheetQuestions,null,1)}
     let newQuestions=null;
     let responseText='';
     try {
-        const resp=await fetch('https://api.anthropic.com/v1/messages',{
-            method:'POST',
-            headers:{'Content-Type':'application/json'},
-            body:JSON.stringify({
-                model:'claude-sonnet-4-20250514',
-                max_tokens:2000,
-                messages:[{role:'user',content:contextMsg}]
-            })
-        });
-        const data=await resp.json();
+const data=await callAI([{role:'user',content:contextMsg}], 2000);
         responseText=data.content?.map(b=>b.text||'').join('')||'';
         const match=responseText.match(/\[[\s\S]*\]/);
         if (match) newQuestions=JSON.parse(match[0]);
@@ -1982,17 +1978,17 @@ function buildStaticTeacherCards(type) {
             { icon:'🏆', title:'Олимпиад 2022 даалгавар', tag:'Олимпиад', color:'purple' },
         ],
         esh: [
-            { icon:'📋', title:'ЭЕШ 2023 — Монгол хэл', tag:'ЭЕШ', color:'blue' },
-            { icon:'📋', title:'ЭЕШ 2022 — Монгол хэл', tag:'ЭЕШ', color:'blue' },
-            { icon:'📋', title:'ЭЕШ 2021 — Монгол хэл', tag:'ЭЕШ', color:'blue' },
+            { icon:'📋', title:'ЭЕШ 2026 — Монгол хэл', tag:'ЭЕШ', color:'blue' },
+            { icon:'📋', title:'ЭЕШ 2025 — Монгол хэл', tag:'ЭЕШ', color:'blue' },
+            { icon:'📋', title:'ЭЕШ 2024 — Монгол хэл', tag:'ЭЕШ', color:'blue' },
         ],
         devshih: [
-            { icon:'📄', title:'Дэвших шалгалт 8→9', tag:'Дэвших', color:'orange' },
-            { icon:'📄', title:'Дэвших шалгалт 11→12', tag:'Дэвших', color:'orange' },
+            { icon:'📄', title:'Дэвших шалгалт 6→8', tag:'Дэвших', color:'orange' },
+            { icon:'📄', title:'Дэвших шалгалт 10→11', tag:'Дэвших', color:'orange' },
         ],
         olimpiad: [
-            { icon:'🏆', title:'Олимпиад 2023', tag:'Олимпиад', color:'purple' },
-            { icon:'🏆', title:'Олимпиад 2022', tag:'Олимпиад', color:'purple' },
+            { icon:'🏆', title:'Олимпиад 2025', tag:'Олимпиад', color:'purple' },
+            { icon:'🏆', title:'Олимпиад 2024', tag:'Олимпиад', color:'purple' },
         ]
     };
     const colorMap = { blue:'rgba(26,110,181,0.1)', orange:'rgba(232,96,10,0.1)', purple:'rgba(124,58,237,0.1)' };
