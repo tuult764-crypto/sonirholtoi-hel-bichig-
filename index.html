@@ -41,64 +41,6 @@
         @keyframes shimmer { 0%{background-position:200% center;} 100%{background-position:-200% center;} }
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body {
-            <!-- Аялагч хэв маягийн туршилтын хэсэг -->
-<section class="relative h-[600px] flex items-center justify-center overflow-hidden font-sans">
-  
-  <!-- 1. Хөдөлгөөнтэй арын фон (Ой мод, байгаль) -->
-  <div class="absolute inset-0 z-0">
-    <div class="absolute inset-0 bg-gradient-to-r from-green-900/40 to-transparent z-10"></div>
-    <img src="https://unsplash.com" 
-         class="w-full h-full object-cover blur-[2px] scale-105 animate-[pulse_8s_infinite]" 
-         alt="Forest Background">
-  </div>
-
-  <div class="container mx-auto px-6 relative z-20 flex flex-col md:flex-row items-center">
-    
-    <!-- 2. Зүүн тал: Аялагч багшийн тайлбар бичвэр -->
-    <div class="md:w-1/2 text-white space-y-6">
-      <div class="inline-block bg-orange-500/80 backdrop-blur-sm px-4 py-1 rounded-full text-sm font-bold uppercase tracking-widest animate-bounce">
-        🗺️ Шинэ аялал эхэллээ
-      </div>
-      <h1 class="text-5xl md:text-7xl font-extrabold leading-tight drop-shadow-2xl">
-        Мэдлэгийн <span class="text-yellow-400">Жимээр...</span>
-      </h1>
-      <p class="text-xl md:text-2xl text-gray-100 max-w-lg drop-shadow-md">
-        "Сайн байна уу, аялагч аа! Хамтдаа эх хэлнийхээ баялаг ой модоор аялж, мэдлэгийн оргилд гарцгаая."
-      </p>
-      <div class="flex gap-4">
-        <button class="bg-yellow-500 hover:bg-yellow-600 text-brown-900 px-8 py-4 rounded-2xl font-black text-lg shadow-2xl transition-all hover:scale-105 active:scale-95">
-          АЯЛЛАА ЭХЛЭХ
-        </button>
-        <button class="border-2 border-white/50 hover:bg-white/10 backdrop-blur-md text-white px-8 py-4 rounded-2xl font-bold transition-all">
-          Замын зураг 🧭
-        </button>
-      </div>
-    </div>
-
-    <!-- 3. Баруун тал: Таны илгээсэн Аялагч багшийн зураг -->
-    <div class="md:w-1/2 mt-12 md:mt-0 flex justify-center relative">
-      <!-- Зургийн ард гэрэлтсэн эффект -->
-      <div class="absolute w-80 h-80 bg-yellow-400/20 rounded-full blur-3xl animate-pulse"></div>
-      
-      <!-- Энд таны илгээсэн зураг байрлана (Одоогоор жишээ зураг) -->
-      <img src="https://ibb.co" 
-           class="relative z-10 h-[500px] drop-shadow-[0_35px_35px_rgba(0,0,0,0.5)] animate-[float_4s_ease-in-out_infinite]" 
-           alt="Traveler Teacher">
-    </div>
-  </div>
-</section>
-
-<style>
-  /* Зургийг зөөлөн хөвж байгаа мэт харагдуулах хөдөлгөөн */
-  @keyframes float {
-    0%, 100% { transform: translateY(0px); }
-    50% { transform: translateY(-20px); }
-  }
-  .animate-float {
-    animation: float 4s ease-in-out infinite;
-  }
-</style>
-
             font-family: 'Nunito', sans-serif;
             background: var(--surface);
             color: var(--on-surface);
