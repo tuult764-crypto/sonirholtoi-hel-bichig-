@@ -8,6 +8,234 @@
     <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Baloo+2:wght@400;600;700;800&display=swap" rel="stylesheet">
     <style>
+        /* ════════════════════════════════════
+   A) <style> дотор нэмэх CSS
+════════════════════════════════════ */
+/*
+.auth-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(10,6,2,0.75);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  z-index: 2000;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+.auth-overlay.active { display: flex; }
+ 
+.auth-box {
+  background: #fff;
+  border-radius: 28px;
+  width: 100%;
+  max-width: 420px;
+  box-shadow: 0 32px 80px rgba(0,0,0,0.22);
+  overflow: hidden;
+  animation: authSlideUp 0.35s cubic-bezier(0.34,1.56,0.64,1) both;
+}
+@keyframes authSlideUp {
+  from { opacity:0; transform:translateY(32px) scale(0.96); }
+  to   { opacity:1; transform:translateY(0) scale(1); }
+}
+ 
+.auth-header {
+  background: linear-gradient(135deg, var(--primary) 0%, #f5821f 100%);
+  padding: 32px 32px 28px;
+  text-align: center;
+  position: relative;
+}
+.auth-header-logo {
+  width: 52px; height: 52px;
+  background: rgba(255,255,255,0.2);
+  border-radius: 16px;
+  display: flex; align-items: center; justify-content: center;
+  margin: 0 auto 14px;
+  font-size: 24px;
+}
+.auth-header-title {
+  font-family: 'Baloo 2', cursive;
+  font-size: 20px; font-weight: 800;
+  color: #fff; margin-bottom: 4px;
+}
+.auth-header-sub {
+  font-size: 12px; color: rgba(255,255,255,0.75); font-weight: 500;
+}
+ 
+.auth-tabs {
+  display: flex;
+  background: var(--surface-container);
+  margin: 0;
+  border-bottom: 2px solid var(--outline-variant);
+}
+.auth-tab {
+  flex: 1; padding: 14px;
+  font-family: 'Nunito', sans-serif;
+  font-size: 12px; font-weight: 800;
+  text-transform: uppercase; letter-spacing: 0.05em;
+  border: none; background: transparent;
+  color: var(--on-surface-variant);
+  cursor: pointer; transition: all 0.2s;
+  border-bottom: 3px solid transparent;
+  margin-bottom: -2px;
+}
+.auth-tab.active {
+  color: var(--primary);
+  border-bottom-color: var(--primary);
+  background: #fff;
+}
+ 
+.auth-body { padding: 28px 32px 32px; }
+ 
+.auth-form { display: none; flex-direction: column; gap: 14px; }
+.auth-form.active { display: flex; }
+ 
+.auth-field { display: flex; flex-direction: column; gap: 6px; }
+.auth-label {
+  font-size: 10px; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 0.06em;
+  color: var(--on-surface-variant);
+}
+.auth-input {
+  width: 100%;
+  border: 1.5px solid var(--outline-variant);
+  border-radius: 12px;
+  padding: 12px 16px;
+  font-family: 'Nunito', sans-serif;
+  font-size: 14px; font-weight: 600;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  background: #fff;
+  color: var(--on-surface);
+}
+.auth-input:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(232,96,10,0.1);
+}
+.auth-input.error { border-color: var(--error); }
+ 
+.auth-input-wrap { position: relative; }
+.auth-input-wrap .auth-input { padding-right: 44px; }
+.auth-eye {
+  position: absolute; right: 14px; top: 50%;
+  transform: translateY(-50%);
+  background: none; border: none;
+  cursor: pointer; padding: 0;
+  color: var(--outline); font-size: 16px;
+}
+ 
+.auth-error {
+  font-size: 11px; font-weight: 600;
+  color: var(--error);
+  background: rgba(192,57,43,0.07);
+  border-radius: 8px; padding: 8px 12px;
+  display: none;
+}
+.auth-error.show { display: block; }
+ 
+.auth-forgot {
+  font-size: 11px; font-weight: 700;
+  color: var(--primary); text-align: right;
+  cursor: pointer; text-decoration: none;
+  background: none; border: none;
+  padding: 0; font-family: inherit;
+}
+.auth-forgot:hover { text-decoration: underline; }
+ 
+.auth-btn {
+  width: 100%;
+  background: linear-gradient(135deg, var(--primary) 0%, #f5821f 100%);
+  color: #fff; border: none;
+  padding: 14px;
+  border-radius: 12px;
+  font-family: 'Nunito', sans-serif;
+  font-size: 13px; font-weight: 800;
+  text-transform: uppercase; letter-spacing: 0.05em;
+  cursor: pointer;
+  transition: all 0.2s;
+  box-shadow: 0 4px 16px rgba(232,96,10,0.3);
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+}
+.auth-btn:hover { transform: translateY(-1px); box-shadow: 0 6px 22px rgba(232,96,10,0.4); }
+.auth-btn:disabled { opacity: 0.55; cursor: not-allowed; transform: none; }
+ 
+.auth-divider {
+  display: flex; align-items: center; gap: 12px;
+  font-size: 11px; color: var(--outline); font-weight: 600;
+}
+.auth-divider::before, .auth-divider::after {
+  content: ''; flex: 1; height: 1px; background: var(--outline-variant);
+}
+ 
+.auth-footer-text {
+  font-size: 11px; color: var(--on-surface-variant);
+  text-align: center; line-height: 1.6;
+}
+.auth-footer-text a {
+  color: var(--primary); font-weight: 700; cursor: pointer; text-decoration: none;
+}
+.auth-footer-text a:hover { text-decoration: underline; }
+ 
+.auth-success-msg {
+  text-align: center; padding: 8px 0;
+  font-size: 13px; font-weight: 600;
+  color: var(--tertiary); display: none;
+}
+.auth-success-msg.show { display: block; }
+ 
+.nav-user-chip {
+  display: flex; align-items: center; gap: 8px;
+  background: var(--surface-container);
+  border: 1.5px solid var(--outline-variant);
+  border-radius: 9999px;
+  padding: 6px 14px 6px 8px;
+  cursor: pointer; transition: all 0.2s;
+}
+.nav-user-chip:hover { border-color: var(--primary); }
+.nav-user-avatar {
+  width: 28px; height: 28px; border-radius: 50%;
+  background: linear-gradient(135deg, var(--primary), #f5821f);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 12px; font-weight: 800; color: #fff;
+}
+.nav-user-email {
+  font-size: 11px; font-weight: 700;
+  color: var(--on-surface); max-width: 120px;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+ 
+.user-dropdown {
+  position: absolute; top: calc(100% + 8px); right: 0;
+  background: #fff;
+  border: 1.5px solid var(--outline-variant);
+  border-radius: 16px;
+  box-shadow: 0 12px 36px rgba(0,0,0,0.12);
+  padding: 8px;
+  min-width: 200px;
+  z-index: 200;
+  display: none;
+  animation: dropDown 0.2s ease both;
+}
+@keyframes dropDown {
+  from { opacity:0; transform:translateY(-8px); }
+  to   { opacity:1; transform:translateY(0); }
+}
+.user-dropdown.open { display: block; }
+.dropdown-item {
+  display: flex; align-items: center; gap: 10px;
+  padding: 10px 12px; border-radius: 10px;
+  font-size: 12px; font-weight: 600;
+  color: var(--on-surface); cursor: pointer;
+  transition: background 0.15s; border: none;
+  background: none; width: 100%; text-align: left;
+  font-family: 'Nunito', sans-serif;
+}
+.dropdown-item:hover { background: var(--surface-container); }
+.dropdown-item.danger { color: var(--error); }
+.dropdown-item.danger:hover { background: rgba(192,57,43,0.07); }
+.dropdown-sep { height: 1px; background: var(--outline-variant); margin: 6px 0; }
+*/
         :root {
             --primary: #e8600a;
             --primary-container: #ffb347;
@@ -315,6 +543,128 @@
 </head>
 <body>
 
+    <!-- AUTH MODAL -->
+<div id="authModal" class="auth-overlay">
+  <div class="auth-box">
+    <div class="auth-header">
+      <div class="auth-header-logo">📚</div>
+      <div class="auth-header-title">Сонирхолтой хэл бичиг</div>
+      <div class="auth-header-sub">Монгол хэл, уран зохиолын цахим систем</div>
+    </div>
+ 
+    <div class="auth-tabs">
+      <button class="auth-tab active" id="tabLogin" onclick="switchAuthTab('login')">Нэвтрэх</button>
+      <button class="auth-tab" id="tabRegister" onclick="switchAuthTab('register')">Бүртгүүлэх</button>
+    </div>
+ 
+    <div class="auth-body">
+ 
+      <!-- НЭВТРЭХ -->
+      <div class="auth-form active" id="formLogin">
+        <div class="auth-field">
+          <label class="auth-label">Мэйл хаяг</label>
+          <input type="email" id="loginEmail" class="auth-input" placeholder="example@gmail.com" autocomplete="email">
+        </div>
+        <div class="auth-field">
+          <label class="auth-label">Нууц үг</label>
+          <div class="auth-input-wrap">
+            <input type="password" id="loginPassword" class="auth-input" placeholder="••••••••" autocomplete="current-password">
+            <button class="auth-eye" onclick="togglePass('loginPassword', this)" type="button">👁</button>
+          </div>
+        </div>
+        <div style="display:flex;justify-content:flex-end;">
+          <button class="auth-forgot" onclick="switchAuthTab('forgot')">Нууц үгээ мартсан уу?</button>
+        </div>
+        <div class="auth-error" id="loginError"></div>
+        <button class="auth-btn" id="loginBtn" onclick="doLogin()">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M15 3h4a2 2 0 012 2v14a2 2 0 01-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
+          Нэвтрэх
+        </button>
+        <div class="auth-divider">эсвэл</div>
+        <div class="auth-footer-text">
+          Бүртгэлгүй бол <a onclick="switchAuthTab('register')">энд бүртгүүлнэ үү</a>
+        </div>
+      </div>
+ 
+      <!-- БҮРТГҮҮЛЭХ -->
+      <div class="auth-form" id="formRegister">
+        <div class="auth-field">
+          <label class="auth-label">Мэйл хаяг</label>
+          <input type="email" id="regEmail" class="auth-input" placeholder="example@gmail.com" autocomplete="email">
+        </div>
+        <div class="auth-field">
+          <label class="auth-label">Нууц үг (доод тал 6 тэмдэгт)</label>
+          <div class="auth-input-wrap">
+            <input type="password" id="regPassword" class="auth-input" placeholder="••••••••" autocomplete="new-password">
+            <button class="auth-eye" onclick="togglePass('regPassword', this)" type="button">👁</button>
+          </div>
+        </div>
+        <div class="auth-field">
+          <label class="auth-label">Нууц үг давтах</label>
+          <div class="auth-input-wrap">
+            <input type="password" id="regPassword2" class="auth-input" placeholder="••••••••" autocomplete="new-password">
+            <button class="auth-eye" onclick="togglePass('regPassword2', this)" type="button">👁</button>
+          </div>
+        </div>
+        <div class="auth-error" id="regError"></div>
+        <button class="auth-btn" id="regBtn" onclick="doRegister()">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M16 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="8.5" cy="7" r="4"/><line x1="20" y1="8" x2="20" y2="14"/><line x1="23" y1="11" x2="17" y2="11"/></svg>
+          Бүртгүүлэх
+        </button>
+        <div class="auth-footer-text">
+          Аль хэдийн бүртгэлтэй бол <a onclick="switchAuthTab('login')">нэвтэрнэ үү</a>
+        </div>
+      </div>
+ 
+      <!-- НУУЦ ҮГ МАРТСАН -->
+      <div class="auth-form" id="formForgot">
+        <div style="text-align:center;font-size:36px;margin-bottom:4px;">🔑</div>
+        <div style="font-size:13px;color:var(--on-surface-variant);text-align:center;line-height:1.6;margin-bottom:4px;">
+          Бүртгэлтэй мэйл хаягаа оруулна уу. Нууц үг сэргээх холбоос илгээнэ.
+        </div>
+        <div class="auth-field">
+          <label class="auth-label">Мэйл хаяг</label>
+          <input type="email" id="forgotEmail" class="auth-input" placeholder="example@gmail.com">
+        </div>
+        <div class="auth-error" id="forgotError"></div>
+        <div class="auth-success-msg" id="forgotSuccess">
+          ✅ Нууц үг сэргээх заавар мэйлээр илгээгдлээ!
+        </div>
+        <button class="auth-btn" id="forgotBtn" onclick="doForgot()">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+          Сэргээх холбоос илгээх
+        </button>
+        <div class="auth-footer-text" style="margin-top:4px;">
+          <a onclick="switchAuthTab('login')">← Нэвтрэх рүү буцах</a>
+        </div>
+      </div>
+ 
+    </div>
+  </div>
+</div>
+ 
+<!-- USER DROPDOWN (nav-actions дотор байрлана) -->
+<div id="navUserArea" style="display:none;position:relative;">
+  <div class="nav-user-chip" onclick="toggleUserDropdown()">
+    <div class="nav-user-avatar" id="navAvatar">?</div>
+    <span class="nav-user-email" id="navUserEmail"></span>
+    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
+  </div>
+  <div class="user-dropdown" id="userDropdown">
+    <button class="dropdown-item" onclick="showSection('library');closeDropdown()">
+      📚 Миний сан
+    </button>
+    <button class="dropdown-item" onclick="openCart();closeDropdown()">
+      🛒 Миний сагс
+    </button>
+    <div class="dropdown-sep"></div>
+    <button class="dropdown-item danger" onclick="doLogout()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+      Гарах
+    </button>
+  </div>
+</div>
+
 <!-- EMAIL MODAL -->
 <div id="emailModal" class="modal-overlay" onclick="if(event.target===this)closeEmailModal()">
   <div class="modal-box">
@@ -343,7 +693,7 @@
         <span class="nav-logo-text">Сонирхолтой хэл бичиг</span>
       </a>
 <div class="nav-actions">
-  <span id="navEmail" style="font-size:11px;color:var(--on-surface-variant);display:none;"></span>
+<div id="navUserArea" style="display:none;position:relative;">
   <button class="btn-ghost" onclick="showCorner('teacher')">👩‍🏫 Багшийн булан</button>
   <button class="btn-ghost" onclick="showCorner('student')">🎒 Сурагчийн булан</button>
   <button class="btn-ghost" onclick="showSection('games')">🎮 Тоглоом</button>
@@ -1266,7 +1616,273 @@ const ORDER_URL = 'https://script.google.com/macros/s/AKfycbwpxVCfJkDgPAnLMjkSWj
 //  index.html-ийн <script> таг доторх ORDER_URL-н
 //  ДАРАА нэн даруй энэ кодыг нэмнэ үү:
 // ═══════════════════════════════════════════════════════
-
+/ ── AUTH STATE ──
+const AUTH_KEY = 'shb_auth_v1'; // localStorage key
+ 
+function getStoredAuth() {
+  try { return JSON.parse(localStorage.getItem(AUTH_KEY) || 'null'); } catch(e) { return null; }
+}
+function setStoredAuth(data) {
+  localStorage.setItem(AUTH_KEY, JSON.stringify(data));
+}
+function clearStoredAuth() {
+  localStorage.removeItem(AUTH_KEY);
+}
+ 
+// ── STARTUP: сайт нээгдэхэд шалгана ──
+document.addEventListener('DOMContentLoaded', () => {
+  const stored = getStoredAuth();
+  if (stored && stored.email) {
+    // Нэвтэрсэн байна
+    currentUserEmail = stored.email;
+    updateNavUser(stored.email);
+    loadProducts();
+    loadCart();
+  } else {
+    // Нэвтрээгүй — auth modal нээнэ
+    openAuthModal();
+    loadProducts(); // бараа харуулна, харин авахад auth шаарддаг
+  }
+});
+ 
+// ── AUTH MODAL ──
+function openAuthModal() {
+  document.getElementById('authModal').classList.add('active');
+  switchAuthTab('login');
+}
+function closeAuthModal() {
+  document.getElementById('authModal').classList.remove('active');
+}
+ 
+function switchAuthTab(tab) {
+  ['login','register','forgot'].forEach(t => {
+    document.getElementById('form' + t.charAt(0).toUpperCase() + t.slice(1))?.classList.remove('active');
+    document.getElementById('tab' + t.charAt(0).toUpperCase() + t.slice(1))?.classList.remove('active');
+  });
+  const formId = 'form' + tab.charAt(0).toUpperCase() + tab.slice(1);
+  const tabId  = 'tab'  + tab.charAt(0).toUpperCase() + tab.slice(1);
+  document.getElementById(formId)?.classList.add('active');
+  document.getElementById(tabId)?.classList.add('active');
+  // Алдааг цэвэрлэнэ
+  ['loginError','regError','forgotError','forgotSuccess'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) { el.classList.remove('show'); el.textContent = ''; }
+  });
+}
+ 
+function togglePass(inputId, btn) {
+  const inp = document.getElementById(inputId);
+  if (!inp) return;
+  inp.type = inp.type === 'password' ? 'text' : 'password';
+  btn.textContent = inp.type === 'password' ? '👁' : '🙈';
+}
+ 
+// ── НЭВТРЭХ ──
+async function doLogin() {
+  const email = document.getElementById('loginEmail').value.trim();
+  const pass  = document.getElementById('loginPassword').value;
+  const errEl = document.getElementById('loginError');
+  const btn   = document.getElementById('loginBtn');
+ 
+  errEl.classList.remove('show');
+  if (!email) return showAuthError('loginError', 'Мэйл хаягаа оруулна уу!');
+  if (!pass)  return showAuthError('loginError', 'Нууц үгээ оруулна уу!');
+ 
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spinner" style="width:18px;height:18px;border-width:2px;border-top-color:#fff;display:inline-block;"></span>';
+ 
+  try {
+    const res = await fetch(`${ORDER_URL}?action=login&email=${encodeURIComponent(email)}&pass=${encodeURIComponent(btoa(pass))}`);
+    const data = await res.json().catch(() => null);
+ 
+    if (data && data.ok) {
+      setStoredAuth({ email, name: data.name || email });
+      currentUserEmail = email;
+      updateNavUser(email);
+      closeAuthModal();
+      loadCart();
+      showToast('Тавтай морил! 👋', 'success');
+    } else {
+      // Apps Script нэвтрэх дэмжихгүй бол localStorage-аар шалгана
+      const localOk = checkLocalAuth(email, pass);
+      if (localOk) {
+        setStoredAuth({ email });
+        currentUserEmail = email;
+        updateNavUser(email);
+        closeAuthModal();
+        loadCart();
+        showToast('Тавтай морил! 👋', 'success');
+      } else {
+        showAuthError('loginError', 'Мэйл эсвэл нууц үг буруу байна!');
+      }
+    }
+  } catch(e) {
+    // Офлайн — localStorage-аар
+    const localOk = checkLocalAuth(email, pass);
+    if (localOk) {
+      setStoredAuth({ email });
+      currentUserEmail = email;
+      updateNavUser(email);
+      closeAuthModal();
+      loadCart();
+      showToast('Тавтай морил! 👋', 'success');
+    } else {
+      showAuthError('loginError', 'Мэйл эсвэл нууц үг буруу байна!');
+    }
+  }
+ 
+  btn.disabled = false;
+  btn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M15 3h4a2 2 0 012 2v14a2 2 0 01-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg> Нэвтрэх';
+}
+ 
+// ── БҮРТГҮҮЛЭХ ──
+async function doRegister() {
+  const email  = document.getElementById('regEmail').value.trim();
+  const pass   = document.getElementById('regPassword').value;
+  const pass2  = document.getElementById('regPassword2').value;
+  const btn    = document.getElementById('regBtn');
+ 
+  if (!email)          return showAuthError('regError', 'Мэйл хаягаа оруулна уу!');
+  if (!email.includes('@')) return showAuthError('regError', 'Зөв мэйл хаяг оруулна уу!');
+  if (pass.length < 6) return showAuthError('regError', 'Нууц үг доод тал нь 6 тэмдэгт байх ёстой!');
+  if (pass !== pass2)  return showAuthError('regError', 'Нууц үг таарахгүй байна!');
+ 
+  // Аль хэдийн бүртгэлтэй эсэх
+  const existing = getLocalUsers();
+  if (existing[email.toLowerCase()]) return showAuthError('regError', 'Энэ мэйл аль хэдийн бүртгэлтэй байна!');
+ 
+  btn.disabled = true;
+ 
+  // localStorage-д хадгалана
+  saveLocalUser(email, pass);
+ 
+  // Apps Script-д бүртгэнэ (серверт)
+  try {
+    const p = new URLSearchParams();
+    p.append('action','register');
+    p.append('email', email);
+    p.append('pass', btoa(pass));
+    await fetch(ORDER_URL, {
+      method:'POST', mode:'no-cors',
+      headers:{'Content-Type':'application/x-www-form-urlencoded'},
+      body: p.toString()
+    });
+  } catch(e) { /* offline бол localStorage л хадгална */ }
+ 
+  setStoredAuth({ email });
+  currentUserEmail = email;
+  updateNavUser(email);
+  closeAuthModal();
+  loadCart();
+  showToast('Амжилттай бүртгүүллээ! 🎉', 'success');
+ 
+  btn.disabled = false;
+}
+ 
+// ── НУУЦ ҮГ МАРТСАН ──
+async function doForgot() {
+  const email  = document.getElementById('forgotEmail').value.trim();
+  const btn    = document.getElementById('forgotBtn');
+  const succEl = document.getElementById('forgotSuccess');
+ 
+  if (!email) return showAuthError('forgotError', 'Мэйл хаягаа оруулна уу!');
+ 
+  btn.disabled = true;
+ 
+  try {
+    const p = new URLSearchParams();
+    p.append('action', 'resetPassword');
+    p.append('email', email);
+    await fetch(ORDER_URL, {
+      method:'POST', mode:'no-cors',
+      headers:{'Content-Type':'application/x-www-form-urlencoded'},
+      body: p.toString()
+    });
+  } catch(e) {}
+ 
+  // Үргэлж амжилттай гэж харуулна (security-д)
+  succEl.classList.add('show');
+  showToast('Сэргээх холбоос илгээгдлээ!', 'success');
+  btn.disabled = false;
+}
+ 
+// ── ГАРАХ ──
+function doLogout() {
+  clearStoredAuth();
+  currentUserEmail = '';
+  cartItems = [];
+  closeDropdown();
+  document.getElementById('navUserArea').style.display = 'none';
+  updateCartDisplay();
+  showDashboard();
+  showToast('Амжилттай гарлаа!', 'info');
+  setTimeout(() => openAuthModal(), 600);
+}
+ 
+// ── NAV USER ──
+function updateNavUser(email) {
+  const area    = document.getElementById('navUserArea');
+  const emailEl = document.getElementById('navUserEmail');
+  const avatar  = document.getElementById('navAvatar');
+  const navEmail = document.getElementById('navEmail'); // хуучин
+  if (navEmail) navEmail.style.display = 'none';
+  if (!area) return;
+  area.style.display = 'block';
+  if (emailEl) emailEl.textContent = email;
+  if (avatar)  avatar.textContent  = email.charAt(0).toUpperCase();
+}
+ 
+function toggleUserDropdown() {
+  document.getElementById('userDropdown')?.classList.toggle('open');
+}
+function closeDropdown() {
+  document.getElementById('userDropdown')?.classList.remove('open');
+}
+ 
+// Dropdown-г гадна дарахад хаана
+document.addEventListener('click', e => {
+  const area = document.getElementById('navUserArea');
+  if (area && !area.contains(e.target)) closeDropdown();
+});
+ 
+// ── LOCAL AUTH helpers ──
+function getLocalUsers() {
+  try { return JSON.parse(localStorage.getItem('shb_users') || '{}'); } catch(e) { return {}; }
+}
+function saveLocalUser(email, pass) {
+  const users = getLocalUsers();
+  users[email.toLowerCase()] = btoa(pass);
+  localStorage.setItem('shb_users', JSON.stringify(users));
+}
+function checkLocalAuth(email, pass) {
+  const users = getLocalUsers();
+  const stored = users[email.toLowerCase()];
+  return stored && stored === btoa(pass);
+}
+ 
+function showAuthError(id, msg) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  el.textContent = msg;
+  el.classList.add('show');
+}
+ 
+// ── requireEmail-г override хийнэ ──
+// Хуучин requireEmail-г энэ функцээр орлуулна
+function requireEmail(cb) {
+  if (currentUserEmail) { cb(); return; }
+  // Нэвтрэх modal нээнэ
+  openAuthModal();
+  // Нэвтэрсний дараа callback ажиллуулна
+  const checkLogin = setInterval(() => {
+    if (currentUserEmail) {
+      clearInterval(checkLogin);
+      setTimeout(cb, 300);
+    }
+  }, 500);
+  // 30 секундын дараа зогсооно
+  setTimeout(() => clearInterval(checkLogin), 30000);
+}
 // ── GitHub raw файлын суурь URL ──
 const GITHUB_BASE = 'https://raw.githubusercontent.com/tuult764-crypto/sonirholtoi-hel-bichig-/main/';
 
