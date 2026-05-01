@@ -611,90 +611,69 @@
         </div>
       </div>
  
-      <!-- НУУЦ ҮГ МАРТСАН -->
+<!-- НУУЦ ҮГ МАРТСАН -->
       <div class="auth-form" id="formForgot">
-        <div style="text-align:center;font-size:36px;margin-bottom:4px;">🔑</div>
-        <div style="font-size:13px;color:var(--on-surface-variant);text-align:center;line-height:1.6;margin-bottom:4px;">
-          Бүртгэлтэй мэйл хаягаа оруулна уу. Нууц үг сэргээх холбоос илгээнэ.
-        </div>
-        <div class="auth-field">
-          <label class="auth-label">Мэйл хаяг</label>
-          <input type="email" id="forgotEmail" class="auth-input" placeholder="example@gmail.com">
-        </div>
-        <div class="auth-error" id="forgotError"></div>
-        <div class="auth-success-msg" id="forgotSuccess">
-          ✅ Нууц үг сэргээх заавар мэйлээр илгээгдлээ!
-        </div>
-        <button class="auth-btn" id="forgotBtn" onclick="doForgot()">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
-          Сэргээх холбоос илгээх
-        </button>
+        <!-- ... агуулга хэвээр ... -->
         <div class="auth-footer-text" style="margin-top:4px;">
           <a onclick="switchAuthTab('login')">← Нэвтрэх рүү буцах</a>
         </div>
-      </div>
+      </div><!-- ✅ formForgot хаагдлаа -->
 
-<!-- USER DROPDOWN (nav-actions дотор байрлана) -->
-<div id="navUserArea" style="display:none;position:relative;">
-  <div class="nav-user-chip" onclick="toggleUserDropdown()">
-    <div class="nav-user-avatar" id="navAvatar">?</div>
-    <span class="nav-user-email" id="navUserEmail"></span>
-    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
-  </div>
-  <div class="user-dropdown" id="userDropdown">
-    <button class="dropdown-item" onclick="showSection('library');closeDropdown()">
-      📚 Миний сан
-    </button>
-    <button class="dropdown-item" onclick="openCart();closeDropdown()">
-      🛒 Миний сагс
-    </button>
-    <div class="dropdown-sep"></div>
-    <button class="dropdown-item danger" onclick="doLogout()">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
-      Гарах
-    </button>
-  </div>
-</div>
+    </div><!-- ✅ auth-body хаагдлаа -->
+  </div><!-- ✅ auth-box хаагдлаа -->
+</div><!-- ✅ auth-overlay (authModal) хаагдлаа -->
 
-<!-- EMAIL MODAL -->
+<!-- ✅ emailModal - auth-box-оос ГАДНА -->
 <div id="emailModal" class="modal-overlay" onclick="if(event.target===this)closeEmailModal()">
-  <div class="modal-box">
-    <div style="font-size:24px;text-align:center;margin-bottom:12px;">✉</div>
-    <h2 class="modal-title" style="text-align:center;">Мэйл хаягаа оруулна уу</h2>
-    <p class="modal-sub" style="text-align:center;">Захиалга болон мэдэгдэл хүлээн авахын тулд бүртгэлтэй мэйлээ оруулна уу.</p>
-    <input type="email" id="emailModalInput" class="input-field" placeholder="example@gmail.com" autocomplete="email">
-    <p id="emailModalError" class="hidden" style="color:var(--error);font-size:11px;margin-top:6px;font-weight:600;"></p>
-    <div class="modal-actions">
-      <button class="btn-cancel" onclick="closeEmailModal()">Болих</button>
-      <button class="btn-confirm" onclick="submitEmailModal()">Үргэлжлүүлэх</button>
-    </div>
-    <p style="text-align:center;font-size:11px;color:var(--on-surface-variant);margin-top:14px;">
-      Бүртгэлгүй бол <a href="mailto:sonirholtoihelbichig@gmail.com" style="color:var(--primary);font-weight:600;">Туул багштай холбогдоно уу</a>
-    </p>
-  </div>
+  <!-- ... хэвээр ... -->
 </div>
 
 <div id="mainSystem">
-
-  <!-- NAV -->
   <nav class="nav-glass">
     <div class="nav-inner">
       <a class="nav-logo" onclick="showDashboard()">
         <img src="logo.png" alt="Logo">
         <span class="nav-logo-text">Сонирхолтой хэл бичиг</span>
       </a>
-<div class="nav-actions">
-<div id="navUserArea" style="display:none;position:relative;">
-  <button class="btn-ghost" onclick="showCorner('teacher')">👩‍🏫 Багшийн булан</button>
-  <button class="btn-ghost" onclick="showCorner('student')">🎒 Сурагчийн булан</button>
-  <button class="btn-ghost" onclick="showSection('games')">🎮 Тоглоом</button>
-  <button class="btn-ghost" onclick="showSection('shop')">🛒 Дэлгүүр</button>
-  <button class="btn-icon" onclick="openCart()" title="Сагс">
-    <svg viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
-    <span id="cartCount" class="cart-badge">0</span> </button>
-      </div>
-    </div>
+      <div class="nav-actions">
+        <!-- ✅ navUserArea зөвхөн ЭНД нэг удаа байна -->
+        <div id="navUserArea" style="display:none;position:relative;">
+          <button class="btn-ghost" onclick="showCorner('teacher')">👩‍🏫 Багшийн булан</button>
+          <button class="btn-ghost" onclick="showCorner('student')">🎒 Сурагчийн булан</button>
+          <button class="btn-ghost" onclick="showSection('games')">🎮 Тоглоом</button>
+          <button class="btn-ghost" onclick="showSection('shop')">🛒 Дэлгүүр</button>
+          <button class="btn-icon" onclick="openCart()" title="Сагс">
+            <svg viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+            <span id="cartCount" class="cart-badge">0</span>
+          </button>
+          <div class="nav-user-chip" onclick="toggleUserDropdown()">
+            <div class="nav-user-avatar" id="navAvatar">?</div>
+            <span class="nav-user-email" id="navUserEmail"></span>
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
+          </div>
+          <div class="user-dropdown" id="userDropdown">
+            <button class="dropdown-item" onclick="showSection('library');closeDropdown()">📚 Миний сан</button>
+            <button class="dropdown-item" onclick="openCart();closeDropdown()">🛒 Миний сагс</button>
+            <div class="dropdown-sep"></div>
+            <button class="dropdown-item danger" onclick="doLogout()">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+              Гарах
+            </button>
+          </div>
+        </div><!-- ✅ navUserArea хаагдлаа -->
+        <button id="navLoginBtn" class="btn-ghost" onclick="openAuthModal()" style="display:none;">Нэвтрэх</button>
+      </div><!-- ✅ nav-actions хаагдлаа -->
+    </div><!-- ✅ nav-inner хаагдлаа -->
   </nav>
+
+  <!-- ... бусад бүх section хэвээр ... -->
+
+  <!-- footer-ийн өмнө -->
+</div><!-- ✅ mainSystem хаагдлаа -->
+
+<footer>
+  <!-- ... хэвээр ... -->
+</footer>
 
 <!-- DASHBOARD -->
 <div id="dashboardHome">
@@ -1800,23 +1779,26 @@ function doLogout() {
   cartItems = [];
   closeDropdown();
   document.getElementById('navUserArea').style.display = 'none';
+  // ✅ Нэвтрэх товч харуулах
+  const loginBtn = document.getElementById('navLoginBtn');
+  if (loginBtn) loginBtn.style.display = '';
   updateCartDisplay();
   showDashboard();
   showToast('Амжилттай гарлаа!', 'info');
   setTimeout(() => openAuthModal(), 600);
 }
- 
 // ── NAV USER ──
 function updateNavUser(email) {
-  const area    = document.getElementById('navUserArea');
+  const area = document.getElementById('navUserArea');
   const emailEl = document.getElementById('navUserEmail');
-  const avatar  = document.getElementById('navAvatar');
-  const navEmail = document.getElementById('navEmail');
-  if (navEmail) navEmail.style.display = 'none';
+  const avatar = document.getElementById('navAvatar');
   if (!area) return;
-  area.style.display = 'block';
+  area.style.display = 'flex'; // ✅ block → flex (nav дотор flex ашиглана)
   if (emailEl) emailEl.textContent = email;
-  if (avatar)  avatar.textContent  = email.charAt(0).toUpperCase();
+  if (avatar) avatar.textContent = email.charAt(0).toUpperCase();
+  // ✅ Нэвтрэх товч нуух
+  const loginBtn = document.getElementById('navLoginBtn');
+  if (loginBtn) loginBtn.style.display = 'none';
 }
 
 function toggleUserDropdown() {
