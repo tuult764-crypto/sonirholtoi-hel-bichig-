@@ -324,9 +324,14 @@
         .product-img img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.35s; }
         .product-card:hover .product-img img { transform: scale(1.06); }
         .product-img-placeholder { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; color: var(--outline); font-size: 11px; font-weight: 700; }
+        /* ── Multi-image thumbnail strip ── */
+        .product-img-strip { width: 100%; height: 100%; display: flex; gap: 2px; overflow: hidden; }
+        .product-img-strip img { flex: 1; min-width: 0; height: 100%; object-fit: cover; cursor: pointer; transition: transform 0.3s; }
+        .product-img-strip img:hover { transform: scale(1.05); z-index: 1; }
         .product-body { padding: 16px; flex: 1; display: flex; flex-direction: column; }
         .product-tag { display: inline-block; background: rgba(232,96,10,0.1); color: var(--primary); font-size: 9px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.07em; padding: 3px 10px; border-radius: 9999px; margin-bottom: 8px; }
         .product-title { font-size: 13px; font-weight: 700; color: var(--on-surface); margin-bottom: 6px; line-height: 1.4; }
+        .product-desc { font-size: 11px; color: var(--on-surface-variant); margin-bottom: 8px; line-height: 1.5; }
         .product-price { font-size: 15px; font-weight: 800; color: var(--primary); margin-bottom: 14px; }
         .product-actions { display: flex; gap: 8px; margin-top: auto; }
         .btn-add { flex: 1; background: var(--surface-container); border: 1.5px solid var(--outline-variant); color: var(--on-surface-variant); padding: 9px; border-radius: 10px; font-family: 'Nunito', sans-serif; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.03em; cursor: pointer; transition: all 0.2s; }
@@ -468,7 +473,6 @@
         .lesson-type.quiz { background: rgba(148,74,0,0.1); color: var(--primary); }
         .lesson-type.practice { background: rgba(0,109,66,0.1); color: var(--tertiary); }
         .lesson-duration { font-size: 10px; color: var(--outline); font-weight: 500; }
-               /* ── AI ASSESSMENT REVAMP ── */
         .assess-step { background: #fff; border: 1.5px solid var(--outline-variant); border-radius: 20px; padding: 28px; margin-bottom: 20px; }
         .assess-step-header { display: flex; align-items: center; gap: 14px; margin-bottom: 20px; }
         .assess-step-num { width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 800; flex-shrink: 0; }
@@ -538,7 +542,7 @@
 </head>
 <body>
 
-    <!-- AUTH MODAL -->
+<!-- AUTH MODAL -->
 <div id="authModal" class="auth-overlay">
   <div class="auth-box">
     <div class="auth-header">
@@ -546,14 +550,11 @@
       <div class="auth-header-title">Сонирхолтой хэл бичиг</div>
       <div class="auth-header-sub">Монгол хэл, уран зохиолын цахим систем</div>
     </div>
- 
     <div class="auth-tabs">
       <button class="auth-tab active" id="tabLogin" onclick="switchAuthTab('login')">Нэвтрэх</button>
       <button class="auth-tab" id="tabRegister" onclick="switchAuthTab('register')">Бүртгүүлэх</button>
     </div>
- 
     <div class="auth-body">
- 
       <!-- НЭВТРЭХ -->
       <div class="auth-form active" id="formLogin">
         <div class="auth-field">
@@ -580,7 +581,6 @@
           Бүртгэлгүй бол <a onclick="switchAuthTab('register')">энд бүртгүүлнэ үү</a>
         </div>
       </div>
- 
       <!-- БҮРТГҮҮЛЭХ -->
       <div class="auth-form" id="formRegister">
         <div class="auth-field">
@@ -610,23 +610,24 @@
           Аль хэдийн бүртгэлтэй бол <a onclick="switchAuthTab('login')">нэвтэрнэ үү</a>
         </div>
       </div>
- 
-<!-- НУУЦ ҮГ МАРТСАН -->
+      <!-- НУУЦ ҮГ МАРТСАН -->
       <div class="auth-form" id="formForgot">
-        <!-- ... агуулга хэвээр ... -->
+        <div class="auth-field">
+          <label class="auth-label">Мэйл хаяг</label>
+          <input type="email" id="forgotEmail" class="auth-input" placeholder="example@gmail.com">
+        </div>
+        <div class="auth-error" id="forgotError"></div>
+        <div class="auth-success-msg" id="forgotSuccess">Сэргээх мэйл илгээгдлээ! Имэйлээ шалгана уу.</div>
+        <button class="auth-btn" id="forgotBtn" onclick="doForgot()">Сэргээх мэйл илгээх</button>
         <div class="auth-footer-text" style="margin-top:4px;">
           <a onclick="switchAuthTab('login')">← Нэвтрэх рүү буцах</a>
         </div>
-      </div><!-- ✅ formForgot хаагдлаа -->
-
-    </div><!-- ✅ auth-body хаагдлаа -->
-  </div><!-- ✅ auth-box хаагдлаа -->
-</div><!-- ✅ auth-overlay (authModal) хаагдлаа -->
-
-<!-- ✅ emailModal - auth-box-оос ГАДНА -->
-<div id="emailModal" class="modal-overlay" onclick="if(event.target===this)closeEmailModal()">
-  <!-- ... хэвээр ... -->
+      </div>
+    </div>
+  </div>
 </div>
+
+<div id="emailModal" class="modal-overlay" onclick="if(event.target===this)closeEmailModal()"></div>
 
 <div id="mainSystem">
   <nav class="nav-glass">
@@ -636,7 +637,6 @@
         <span class="nav-logo-text">Сонирхолтой хэл бичиг</span>
       </a>
       <div class="nav-actions">
-        <!-- ✅ navUserArea зөвхөн ЭНД нэг удаа байна -->
         <div id="navUserArea" style="display:none;position:relative;">
           <button class="btn-ghost" onclick="showCorner('teacher')">👩‍🏫 Багшийн булан</button>
           <button class="btn-ghost" onclick="showCorner('student')">🎒 Сурагчийн булан</button>
@@ -660,20 +660,12 @@
               Гарах
             </button>
           </div>
-        </div><!-- ✅ navUserArea хаагдлаа -->
+        </div>
         <button id="navLoginBtn" class="btn-ghost" onclick="openAuthModal()" style="display:none;">Нэвтрэх</button>
-      </div><!-- ✅ nav-actions хаагдлаа -->
-    </div><!-- ✅ nav-inner хаагдлаа -->
+      </div>
+    </div>
   </nav>
-
-  <!-- ... бусад бүх section хэвээр ... -->
-
-  <!-- footer-ийн өмнө -->
-</div><!-- ✅ mainSystem хаагдлаа -->
-
-<footer>
-  <!-- ... хэвээр ... -->
-</footer>
+</div>
 
 <!-- DASHBOARD -->
 <div id="dashboardHome">
@@ -690,54 +682,37 @@
         <button class="btn-secondary-outline" onclick="showCorner('student')">🎒 Сурагчийн булан</button>
       </div>
     </div>
-
     <div class="hero-visual fade-up delay-2">
       <div class="hero-card" onclick="showCorner('teacher')">
         <div class="hero-card-icon" style="background:rgba(148,74,0,0.1);">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#944a00" stroke-width="1.8" stroke-linecap="round">
-            <path d="M22 10v6M2 10l10-5 10 5-10 5z"/>
-            <path d="M6 12v5c3 3 9 3 12 0v-5"/>
-          </svg>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#944a00" stroke-width="1.8" stroke-linecap="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>
         </div>
         <div class="hero-card-label">Багшийн булан</div>
         <div class="hero-card-title">AI хөтөлбөр · Ажлын хуудас</div>
       </div>
       <div class="hero-card" onclick="showCorner('student')">
         <div class="hero-card-icon" style="background:rgba(0,96,172,0.1);">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0060ac" stroke-width="1.8" stroke-linecap="round">
-            <path d="M9 11l3 3L22 4"/>
-            <path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/>
-          </svg>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0060ac" stroke-width="1.8" stroke-linecap="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
         </div>
         <div class="hero-card-label">Сурагчийн булан</div>
         <div class="hero-card-title">Онлайн сургалт · Шалгалт</div>
       </div>
       <div class="hero-card" onclick="showSection('games')">
         <div class="hero-card-icon" style="background:rgba(0,109,66,0.1);">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#006d42" stroke-width="1.8" stroke-linecap="round">
-            <rect x="2" y="2" width="9" height="9"/>
-            <rect x="13" y="2" width="9" height="9"/>
-            <rect x="2" y="13" width="9" height="9"/>
-            <rect x="13" y="13" width="9" height="9"/>
-          </svg>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#006d42" stroke-width="1.8" stroke-linecap="round"><rect x="2" y="2" width="9" height="9"/><rect x="13" y="2" width="9" height="9"/><rect x="2" y="13" width="9" height="9"/><rect x="13" y="13" width="9" height="9"/></svg>
         </div>
         <div class="hero-card-label">Тоглоом</div>
         <div class="hero-card-title">Монгол бичиг судоку</div>
       </div>
       <div class="hero-card" onclick="showSection('shop')">
         <div class="hero-card-icon" style="background:rgba(138,5,255,0.08);">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#8A05FF" stroke-width="1.8" stroke-linecap="round">
-            <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/>
-            <line x1="3" y1="6" x2="21" y2="6"/>
-            <path d="M16 10a4 4 0 01-8 0"/>
-          </svg>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#8A05FF" stroke-width="1.8" stroke-linecap="round"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
         </div>
         <div class="hero-card-label">Дэлгүүр</div>
         <div class="hero-card-title">Сургалтын материал</div>
       </div>
-    </div><!-- ✅ hero-visual хаалт -->
-
-  </div><!-- ✅ hero хаалт -->
+    </div>
+  </div>
 
   <div class="section">
     <div class="feature-strip">
@@ -784,7 +759,7 @@
           <div class="module-desc">Туул багшийн боловсруулсан материалуудыг авч, миний санд хадгалж унших.</div>
         </div>
       </div>
-    </div><!-- ✅ module-grid хаалт -->
+    </div>
 
     <div class="section-header">
       <h2 class="section-title">Шинэ материалууд</h2>
@@ -793,509 +768,386 @@
     <div id="materialGrid" class="product-grid">
       <div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--on-surface-variant);font-size:13px;">Ачаалж байна...</div>
     </div>
+  </div>
+</div>
 
-  </div><!-- ✅ section хаалт -->
-
-</div><!-- ✅ dashboardHome хаалт -->
-    
-  <!-- ══ ОНЛАЙН СУРГАЛТ ══ -->
-  <div id="courseSection" class="content-section">
-    <div class="section" style="padding-top:40px;max-width:960px;">
-      <button onclick="showDashboard()" style="background:none;border:none;font-family:'Lexend',sans-serif;font-size:12px;font-weight:600;color:var(--primary);cursor:pointer;text-transform:uppercase;letter-spacing:0.04em;margin-bottom:28px;">← Буцах</button>
-      <div class="course-hero">
-        <div class="course-hero-info">
-          <div class="course-badge-row">
-            <span class="course-badge new">Шинэ 2025</span>
-            <span class="course-badge level">Анхан шат</span>
-          </div>
-          <h2 class="course-title">Үндэсний Бичгийн Анхан Шат</h2>
-          <p class="course-desc">Монгол бичгийн үндсэн зурлага, үсэг таних, үг уншихаас эхлэн богино өгүүлбэр уншиж, бичиж сурах хүртэл сурах онлайн курс.</p>
-          <div class="course-meta">
-            <div class="course-meta-item"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>12 цагийн хичээл</div>
-            <div class="course-meta-item"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>340+ суралцагч</div>
-            <div class="course-meta-item"><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>4.9 үнэлгээ</div>
-          </div>
+<!-- ОНЛАЙН СУРГАЛТ -->
+<div id="courseSection" class="content-section">
+  <div class="section" style="padding-top:40px;max-width:960px;">
+    <button onclick="showDashboard()" style="background:none;border:none;font-family:'Lexend',sans-serif;font-size:12px;font-weight:600;color:var(--primary);cursor:pointer;text-transform:uppercase;letter-spacing:0.04em;margin-bottom:28px;">← Буцах</button>
+    <div class="course-hero">
+      <div class="course-hero-info">
+        <div class="course-badge-row">
+          <span class="course-badge new">Шинэ 2025</span>
+          <span class="course-badge level">Анхан шат</span>
         </div>
-        <div class="course-price-box">
-          <div style="font-size:10pt;font-weight:600;text-transform:uppercase;letter-spacing:0.04em;color:var(--outline);margin-bottom:4px;text-decoration:line-through;">49,999₮</div>
-          <div class="course-price-main">29,999₮</div>
-          <div class="course-price-sub">Бүрэн хандалт · Насан туршийн</div>
-          <button id="enrollBtn" class="btn-enroll" onclick="enrollCourse()">Эрх авах</button>
-          <div style="font-size:10px;color:var(--outline);text-align:center;">✓ 7 хоногийн буцаалтын баталгаа</div>
+        <h2 class="course-title">Үндэсний Бичгийн Анхан Шат</h2>
+        <p class="course-desc">Монгол бичгийн үндсэн зурлага, үсэг таних, үг уншихаас эхлэн богино өгүүлбэр уншиж, бичиж сурах хүртэл сурах онлайн курс.</p>
+        <div class="course-meta">
+          <div class="course-meta-item"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>12 цагийн хичээл</div>
+          <div class="course-meta-item"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>340+ суралцагч</div>
+          <div class="course-meta-item"><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>4.9 үнэлгээ</div>
         </div>
       </div>
-      <div class="curriculum-section">
-        <div class="curriculum-header">Сургалтын хөтөлбөр</div>
-        <div id="curriculumList"></div>
+      <div class="course-price-box">
+        <div style="font-size:10pt;font-weight:600;text-transform:uppercase;letter-spacing:0.04em;color:var(--outline);margin-bottom:4px;text-decoration:line-through;">49,999₮</div>
+        <div class="course-price-main">29,999₮</div>
+        <div class="course-price-sub">Бүрэн хандалт · Насан туршийн</div>
+        <button id="enrollBtn" class="btn-enroll" onclick="enrollCourse()">Эрх авах</button>
+        <div style="font-size:10px;color:var(--outline);text-align:center;">✓ 7 хоногийн буцаалтын баталгаа</div>
       </div>
-      <div id="videoModal" class="modal-overlay" onclick="if(event.target===this)closeVideoModal()">
-        <div class="modal-box" style="max-width:600px;padding:24px;">
-          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
-            <h3 id="videoModalTitle" style="font-size:15px;font-weight:700;color:var(--on-surface);"></h3>
-            <button onclick="closeVideoModal()" style="background:none;border:none;font-size:20px;cursor:pointer;color:var(--outline);">✕</button>
-          </div>
-          <div style="background:var(--surface-container);border-radius:12px;aspect-ratio:16/9;display:flex;align-items:center;justify-content:center;margin-bottom:16px;">
-            <div style="text-align:center;"><div style="font-size:48px;margin-bottom:10px;">▶</div><div style="font-size:12px;color:var(--on-surface-variant);">Видео ачаалж байна...</div></div>
-          </div>
-          <div id="videoModalDesc" style="font-size:12px;color:var(--on-surface-variant);line-height:1.6;"></div>
+    </div>
+    <div class="curriculum-section">
+      <div class="curriculum-header">Сургалтын хөтөлбөр</div>
+      <div id="curriculumList"></div>
+    </div>
+    <div id="videoModal" class="modal-overlay" onclick="if(event.target===this)closeVideoModal()">
+      <div class="modal-box" style="max-width:600px;padding:24px;">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
+          <h3 id="videoModalTitle" style="font-size:15px;font-weight:700;color:var(--on-surface);"></h3>
+          <button onclick="closeVideoModal()" style="background:none;border:none;font-size:20px;cursor:pointer;color:var(--outline);">✕</button>
+        </div>
+        <div style="background:var(--surface-container);border-radius:12px;aspect-ratio:16/9;display:flex;align-items:center;justify-content:center;margin-bottom:16px;">
+          <div style="text-align:center;"><div style="font-size:48px;margin-bottom:10px;">▶</div><div style="font-size:12px;color:var(--on-surface-variant);">Видео ачаалж байна...</div></div>
+        </div>
+        <div id="videoModalDesc" style="font-size:12px;color:var(--on-surface-variant);line-height:1.6;"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- AI ХӨТӨЛБӨР -->
+<div id="aiplannerSection" class="content-section">
+  <div class="section" style="padding-top:40px;max-width:760px;">
+    <button onclick="showDashboard()" style="background:none;border:none;font-family:'Lexend',sans-serif;font-size:12px;font-weight:600;color:var(--primary);cursor:pointer;text-transform:uppercase;letter-spacing:0.04em;margin-bottom:32px;">← Буцах</button>
+    <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:520px;text-align:center;padding:40px 20px;">
+      <div style="position:relative;width:100px;height:100px;margin-bottom:28px;">
+        <div style="width:100px;height:100px;border-radius:28px;background:linear-gradient(135deg,rgba(138,5,255,0.1),rgba(124,58,237,0.15));display:flex;align-items:center;justify-content:center;font-size:44px;animation:float 3s ease-in-out infinite;">📋</div>
+        <div style="position:absolute;top:-6px;right:-6px;width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,#8A05FF,#6200cc);display:flex;align-items:center;justify-content:center;">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round"><path d="M12 2a10 10 0 1 0 10 10"/><path d="M12 6v6l4 2"/></svg>
+        </div>
+      </div>
+      <div style="display:inline-flex;align-items:center;gap:8px;background:rgba(138,5,255,0.08);border:1.5px solid rgba(138,5,255,0.2);color:var(--accent-purple);font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;padding:6px 18px;border-radius:9999px;margin-bottom:20px;">
+        <span style="width:7px;height:7px;border-radius:50%;background:var(--accent-purple);animation:pulse 1.8s infinite;display:inline-block;"></span>
+        Хөгжүүлэлт хийгдэж байна
+      </div>
+      <h2 style="font-family:'Baloo 2',cursive;font-size:28px;font-weight:800;color:var(--on-surface);margin-bottom:14px;line-height:1.2;">Хичээлийн Төлөвлөгөө<br>Гаргагч</h2>
+      <p style="font-size:14px;color:var(--on-surface-variant);max-width:480px;line-height:1.75;margin-bottom:36px;">Боловсролын яамны стандартад нийцсэн нэгж болон ээлжит хичээлийн төлөвлөгөөг AI-аар автоматаар гаргах систем одоогоор хөгжүүлэлтийн үе шатанд байна.</p>
+      <div style="max-width:360px;width:100%;margin-bottom:12px;">
+        <div style="display:flex;justify-content:space-between;font-size:11px;font-weight:600;color:var(--on-surface-variant);margin-bottom:8px;">
+          <span>Хөгжүүлэлтийн явц</span>
+          <span style="color:var(--accent-purple);">72%</span>
+        </div>
+        <div style="height:8px;background:var(--surface-container-high);border-radius:9999px;overflow:hidden;">
+          <div style="width:72%;height:100%;background:linear-gradient(90deg,#8A05FF,#b44dff);border-radius:9999px;"></div>
         </div>
       </div>
     </div>
   </div>
+</div>
 
-  <!-- ══ AI ХӨТӨЛБӨР — ХӨГЖҮҮЛЭЛТ ХИЙГДЭЖ БАЙНА ══ -->
-  <div id="aiplannerSection" class="content-section">
-    <div class="section" style="padding-top:40px;max-width:760px;">
-      <button onclick="showDashboard()" style="background:none;border:none;font-family:'Lexend',sans-serif;font-size:12px;font-weight:600;color:var(--primary);cursor:pointer;text-transform:uppercase;letter-spacing:0.04em;margin-bottom:32px;">← Буцах</button>
-
-      <!-- Хөгжүүлэлт хийгдэж байна хэсэг -->
-      <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:520px;text-align:center;padding:40px 20px;">
-        <!-- Animated icon -->
-        <div style="position:relative;width:100px;height:100px;margin-bottom:28px;">
-          <div style="width:100px;height:100px;border-radius:28px;background:linear-gradient(135deg,rgba(138,5,255,0.1),rgba(124,58,237,0.15));display:flex;align-items:center;justify-content:center;font-size:44px;animation:float 3s ease-in-out infinite;">📋</div>
-          <div style="position:absolute;top:-6px;right:-6px;width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,#8A05FF,#6200cc);display:flex;align-items:center;justify-content:center;">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round"><path d="M12 2a10 10 0 1 0 10 10"/><path d="M12 6v6l4 2"/></svg>
-          </div>
+<!-- AI АЖЛЫН ХУУДАС -->
+<div id="aiassessmentSection" class="content-section">
+  <div class="section" style="padding-top:40px;max-width:1100px;">
+    <button onclick="showDashboard()" style="background:none;border:none;font-family:'Lexend',sans-serif;font-size:12px;font-weight:600;color:var(--primary);cursor:pointer;text-transform:uppercase;letter-spacing:0.04em;margin-bottom:24px;">← Буцах</button>
+    <div style="margin-bottom:28px;">
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:8px;">
+        <div style="background:rgba(190,18,60,0.1);border-radius:12px;width:44px;height:44px;display:flex;align-items:center;justify-content:center;font-size:22px;">📝</div>
+        <div>
+          <h2 style="font-size:22px;font-weight:700;color:var(--on-surface);">AI Ажлын Хуудас Үүсгэгч</h2>
+          <p style="font-size:12px;color:var(--on-surface-variant);">Сурах бичгийн файл байршуулж, AI-аар Блүүмийн таксономын даалгавар үүсгэнэ · Хэвлэхэд бэлэн</p>
         </div>
-
-        <!-- Badge -->
-        <div style="display:inline-flex;align-items:center;gap:8px;background:rgba(138,5,255,0.08);border:1.5px solid rgba(138,5,255,0.2);color:var(--accent-purple);font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;padding:6px 18px;border-radius:9999px;margin-bottom:20px;">
-          <span style="width:7px;height:7px;border-radius:50%;background:var(--accent-purple);animation:pulse 1.8s infinite;display:inline-block;"></span>
-          Хөгжүүлэлт хийгдэж байна
-        </div>
-
-        <h2 style="font-family:'Baloo 2',cursive;font-size:28px;font-weight:800;color:var(--on-surface);margin-bottom:14px;line-height:1.2;">Хичээлийн Төлөвлөгөө<br>Гаргагч</h2>
-
-        <p style="font-size:14px;color:var(--on-surface-variant);max-width:480px;line-height:1.75;margin-bottom:36px;">
-          Боловсролын яамны стандартад нийцсэн нэгж болон ээлжит хичээлийн төлөвлөгөөг AI-аар автоматаар гаргах систем одоогоор хөгжүүлэлтийн үе шатанд байна. Тун удахгүй та дараах боломжуудыг эдлэх болно.
-        </p>
-
-        <!-- Feature previews -->
-        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px;max-width:520px;width:100%;margin-bottom:36px;">
-          <div style="background:rgba(138,5,255,0.05);border:1.5px dashed rgba(138,5,255,0.2);border-radius:16px;padding:18px 12px;text-align:center;">
-            <div style="font-size:26px;margin-bottom:8px;">🎓</div>
-            <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.04em;color:var(--accent-purple);">GitHub-аас</div>
-            <div style="font-size:11px;color:var(--on-surface-variant);margin-top:4px;font-weight:500;">Жилийн хөтөлбөр татах</div>
-          </div>
-          <div style="background:rgba(138,5,255,0.05);border:1.5px dashed rgba(138,5,255,0.2);border-radius:16px;padding:18px 12px;text-align:center;">
-            <div style="font-size:26px;margin-bottom:8px;">⚡</div>
-            <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.04em;color:var(--accent-purple);">AI боловсруулалт</div>
-            <div style="font-size:11px;color:var(--on-surface-variant);margin-top:4px;font-weight:500;">Зорилт, цагийн төлөвлөлт</div>
-          </div>
-          <div style="background:rgba(138,5,255,0.05);border:1.5px dashed rgba(138,5,255,0.2);border-radius:16px;padding:18px 12px;text-align:center;">
-            <div style="font-size:26px;margin-bottom:8px;">📄</div>
-            <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.04em;color:var(--accent-purple);">Word татах</div>
-            <div style="font-size:11px;color:var(--on-surface-variant);margin-top:4px;font-weight:500;">A4 хэмжээний баримт</div>
-          </div>
-        </div>
-
-        <!-- Progress bar -->
-        <div style="max-width:360px;width:100%;margin-bottom:12px;">
-          <div style="display:flex;justify-content:space-between;font-size:11px;font-weight:600;color:var(--on-surface-variant);margin-bottom:8px;">
-            <span>Хөгжүүлэлтийн явц</span>
-            <span style="color:var(--accent-purple);">72%</span>
-          </div>
-          <div style="height:8px;background:var(--surface-container-high);border-radius:9999px;overflow:hidden;">
-            <div style="width:72%;height:100%;background:linear-gradient(90deg,#8A05FF,#b44dff);border-radius:9999px;animation:shimmer 2s linear infinite;background-size:200% auto;"></div>
-          </div>
-        </div>
-        <div style="font-size:11px;color:var(--outline);">Тун удахгүй нэвтрэх боломжтой болно</div>
       </div>
     </div>
-  </div>
-
-  <!-- ══ AI АЖЛЫН ХУУДАС — БҮРЭН ШИНЭ ══ -->
-  <div id="aiassessmentSection" class="content-section">
-    <div class="section" style="padding-top:40px;max-width:1100px;">
-      <button onclick="showDashboard()" style="background:none;border:none;font-family:'Lexend',sans-serif;font-size:12px;font-weight:600;color:var(--primary);cursor:pointer;text-transform:uppercase;letter-spacing:0.04em;margin-bottom:24px;">← Буцах</button>
-
-      <!-- Header -->
-      <div style="margin-bottom:28px;">
-        <div style="display:flex;align-items:center;gap:12px;margin-bottom:8px;">
-          <div style="background:rgba(190,18,60,0.1);border-radius:12px;width:44px;height:44px;display:flex;align-items:center;justify-content:center;font-size:22px;">📝</div>
-          <div>
-            <h2 style="font-size:22px;font-weight:700;color:var(--on-surface);">AI Ажлын Хуудас Үүсгэгч</h2>
-            <p style="font-size:12px;color:var(--on-surface-variant);">Сурах бичгийн файл байршуулж, AI-аар Блүүмийн таксономын даалгавар үүсгэнэ · Хэвлэхэд бэлэн</p>
+    <div style="display:grid;grid-template-columns:440px 1fr;gap:24px;align-items:start;">
+      <div style="display:flex;flex-direction:column;gap:16px;">
+        <div class="assess-step">
+          <div class="assess-step-header">
+            <div class="assess-step-num blue">1</div>
+            <div>
+              <div class="assess-step-title">Сурах бичгийн файл байршуулах</div>
+              <div class="assess-step-sub">PDF, DOCX, TXT — 6–12-р ангийн сурах бичиг</div>
+            </div>
+          </div>
+          <div class="file-drop-zone" id="fileDropZone" onclick="document.getElementById('fileInput').click()" 
+               ondrop="handleFileDrop(event)" ondragover="handleDragOver(event)" ondragleave="handleDragLeave(event)">
+            <div id="fileDropContent">
+              <div style="font-size:36px;margin-bottom:10px;">📂</div>
+              <div style="font-size:13px;font-weight:600;color:var(--on-surface-variant);">Файл чирж оруулах эсвэл дарна уу</div>
+              <div style="font-size:11px;color:var(--outline);margin-top:6px;">PDF · DOCX · TXT · PNG · JPG — max 10MB</div>
+            </div>
+          </div>
+          <input type="file" id="fileInput" accept=".pdf,.docx,.txt,.png,.jpg,.jpeg" style="display:none" onchange="handleFileSelect(event)">
+          <div id="fileInfo" class="hidden" style="margin-top:12px;background:rgba(0,109,66,0.06);border:1.5px solid rgba(0,109,66,0.2);border-radius:12px;padding:12px 16px;display:flex;align-items:center;gap:10px;">
+            <span style="font-size:20px;" id="fileIcon">📄</span>
+            <div style="flex:1;min-width:0;">
+              <div style="font-size:12px;font-weight:700;color:var(--on-surface);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;" id="fileName"></div>
+              <div style="font-size:10px;color:var(--on-surface-variant);" id="fileSize"></div>
+            </div>
+            <button onclick="clearFile()" style="background:none;border:none;color:var(--error);cursor:pointer;font-size:16px;padding:2px;">✕</button>
+          </div>
+          <div id="extractedPreview" class="hidden" style="margin-top:10px;">
+            <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.04em;color:var(--on-surface-variant);margin-bottom:6px;">Уншсан агуулга:</div>
+            <div id="extractedText" style="background:var(--surface-container-low);border:1px solid var(--outline-variant);border-radius:10px;padding:12px;font-size:11px;color:var(--on-surface);line-height:1.6;max-height:100px;overflow-y:auto;"></div>
           </div>
         </div>
-      </div>
-
-      <div style="display:grid;grid-template-columns:440px 1fr;gap:24px;align-items:start;">
-
-        <!-- ── LEFT: ТОХИРГОО ── -->
-        <div style="display:flex;flex-direction:column;gap:16px;">
-
-          <!-- Алхам 1: Файл байршуулах -->
-          <div class="assess-step">
-            <div class="assess-step-header">
-              <div class="assess-step-num blue">1</div>
-              <div>
-                <div class="assess-step-title">Сурах бичгийн файл байршуулах</div>
-                <div class="assess-step-sub">PDF, DOCX, TXT — 6–12-р ангийн сурах бичиг</div>
-              </div>
-            </div>
-
-            <!-- Drag & drop zone -->
-            <div class="file-drop-zone" id="fileDropZone" onclick="document.getElementById('fileInput').click()" 
-                 ondrop="handleFileDrop(event)" ondragover="handleDragOver(event)" ondragleave="handleDragLeave(event)">
-              <div id="fileDropContent">
-                <div style="font-size:36px;margin-bottom:10px;">📂</div>
-                <div style="font-size:13px;font-weight:600;color:var(--on-surface-variant);">Файл чирж оруулах эсвэл дарна уу</div>
-                <div style="font-size:11px;color:var(--outline);margin-top:6px;">PDF · DOCX · TXT · PNG · JPG — max 10MB</div>
-              </div>
-            </div>
-            <input type="file" id="fileInput" accept=".pdf,.docx,.txt,.png,.jpg,.jpeg" style="display:none" onchange="handleFileSelect(event)">
-
-            <!-- Uploaded file info -->
-            <div id="fileInfo" class="hidden" style="margin-top:12px;background:rgba(0,109,66,0.06);border:1.5px solid rgba(0,109,66,0.2);border-radius:12px;padding:12px 16px;display:flex;align-items:center;gap:10px;">
-              <span style="font-size:20px;" id="fileIcon">📄</span>
-              <div style="flex:1;min-width:0;">
-                <div style="font-size:12px;font-weight:700;color:var(--on-surface);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;" id="fileName"></div>
-                <div style="font-size:10px;color:var(--on-surface-variant);" id="fileSize"></div>
-              </div>
-              <button onclick="clearFile()" style="background:none;border:none;color:var(--error);cursor:pointer;font-size:16px;padding:2px;">✕</button>
-            </div>
-
-            <!-- Extracted text preview -->
-            <div id="extractedPreview" class="hidden" style="margin-top:10px;">
-              <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.04em;color:var(--on-surface-variant);margin-bottom:6px;">Уншсан агуулга:</div>
-              <div id="extractedText" style="background:var(--surface-container-low);border:1px solid var(--outline-variant);border-radius:10px;padding:12px;font-size:11px;color:var(--on-surface);line-height:1.6;max-height:100px;overflow-y:auto;"></div>
+        <div class="assess-step">
+          <div class="assess-step-header">
+            <div class="assess-step-num orange">2</div>
+            <div>
+              <div class="assess-step-title">Анги, хичээл, зохиолын төрөл</div>
+              <div class="assess-step-sub">Даалгавар ямар ангид зориулагдахыг тодорхойлно</div>
             </div>
           </div>
-
-          <!-- Алхам 2: Мэдээлэл сонгох -->
-          <div class="assess-step">
-            <div class="assess-step-header">
-              <div class="assess-step-num orange">2</div>
-              <div>
-                <div class="assess-step-title">Анги, хичээл, зохиолын төрөл</div>
-                <div class="assess-step-sub">Даалгавар ямар ангид зориулагдахыг тодорхойлно</div>
-              </div>
-            </div>
-
-            <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px;">
-              <div>
-                <label style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;color:var(--on-surface-variant);display:block;margin-bottom:6px;">Анги</label>
-                <select id="assessGrade" class="input-field" style="font-size:12px;padding:10px 12px;">
-                  <option value="">Сонгоно уу</option>
-                  <option value="6">6-р анги</option>
-                  <option value="7">7-р анги</option>
-                  <option value="8">8-р анги</option>
-                  <option value="9">9-р анги</option>
-                  <option value="10">10-р анги</option>
-                  <option value="11">11-р анги</option>
-                  <option value="12">12-р анги</option>
-                </select>
-              </div>
-              <div>
-                <label style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;color:var(--on-surface-variant);display:block;margin-bottom:6px;">Судлагдахуун</label>
-                <select id="assessSubject" class="input-field" style="font-size:12px;padding:10px 12px;">
-                  <option value="">Сонгоно уу</option>
-                  <option value="Монгол хэл">Монгол хэл</option>
-                  <option value="Уран зохиол">Уран зохиол</option>
-                  <option value="Монгол бичиг">Монгол бичиг</option>
-                </select>
-              </div>
-            </div>
-
-            <div style="margin-bottom:12px;">
-              <label style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;color:var(--on-surface-variant);display:block;margin-bottom:6px;">Зохиолын төрөл / Сэдэв</label>
-              <select id="assessGenre" class="input-field" style="font-size:12px;padding:10px 12px;">
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px;">
+            <div>
+              <label style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;color:var(--on-surface-variant);display:block;margin-bottom:6px;">Анги</label>
+              <select id="assessGrade" class="input-field" style="font-size:12px;padding:10px 12px;">
                 <option value="">Сонгоно уу</option>
-                <option value="Яруу найраг">Яруу найраг</option>
-                <option value="Өгүүллэг">Өгүүллэг</option>
-                <option value="Туульс">Туульс</option>
-                <option value="Домог, Үлгэр">Домог, үлгэр</option>
-                <option value="Нийтлэл">Нийтлэл / Зохиол</option>
-                <option value="Ардын аман зохиол">Ардын аман зохиол</option>
-                <option value="Ерөөл, Магтаал">Ерөөл, Магтаал</option>
-                <option value="Тууж">Тууж</option>
-                <option value="Роман">Роман</option>
-                <option value="Жүжиг">Жүжиг</option>
-                <option value="Хүүрнэмж эх">Хүүрнэмж эх</option>
-                <option value="Тоочимж эх">Тоочимж эх</option>
-                <option value="Тайлбарламж эх">Тайлбарламж эх</option>
-                <option value="Эргэцүүлэмж эх">Эргэцүүлэмж эх</option>
-                <option value="Эсээ">Эсээ</option>
-                <option value="Дүрэм">Хэлний дүрэм</option>
-                <option value="Бичих дадлага">Бичих дадлага</option>
+                <option value="6">6-р анги</option>
+                <option value="7">7-р анги</option>
+                <option value="8">8-р анги</option>
+                <option value="9">9-р анги</option>
+                <option value="10">10-р анги</option>
+                <option value="11">11-р анги</option>
+                <option value="12">12-р анги</option>
               </select>
             </div>
-
-            <div style="margin-bottom:12px;">
-              <label style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;color:var(--on-surface-variant);display:block;margin-bottom:6px;">Шалгалтын хугацаа</label>
-              <div style="display:flex;gap:8px;">
-                <button class="time-pill active" id="tp20" onclick="selectAssessTime(20)">20 мин</button>
-                <button class="time-pill" id="tp40" onclick="selectAssessTime(40)">40 мин</button>
-                <button class="time-pill" id="tp60" onclick="selectAssessTime(60)">60 мин</button>
-              </div>
-              <div style="font-size:10px;color:var(--on-surface-variant);margin-top:6px;" id="qCountHint">→ 4–5 асуулт үүсгэнэ (A5 хэмжээ)</div>
-            </div>
-          </div>
-
-          <!-- Алхам 3: Блүүмийн түвшин -->
-          <div class="assess-step">
-            <div class="assess-step-header">
-              <div class="assess-step-num purple">3</div>
-              <div>
-                <div class="assess-step-title">Блүүмийн таксономийн түвшин</div>
-                <div class="assess-step-sub">Бүтээлч сэтгэлгээг хөгжүүлэх түвшнүүд</div>
-              </div>
-            </div>
-
-            <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:4px;">
-              <button class="bloom-tag active" id="bt-remember" onclick="toggleBloomTag('remember')" style="background:rgba(239,68,68,0.08);color:#dc2626;border-color:#dc2626;">
-                🔴 Санах
-              </button>
-              <button class="bloom-tag active" id="bt-understand" onclick="toggleBloomTag('understand')" style="background:rgba(249,115,22,0.08);color:#ea580c;border-color:#ea580c;">
-                🟠 Ойлгох
-              </button>
-              <button class="bloom-tag" id="bt-apply" onclick="toggleBloomTag('apply')" style="background:rgba(234,179,8,0.06);color:#ca8a04;border-color:transparent;">
-                🟡 Хэрэглэх
-              </button>
-              <button class="bloom-tag" id="bt-analyze" onclick="toggleBloomTag('analyze')" style="background:rgba(34,197,94,0.06);color:#16a34a;border-color:transparent;">
-                🟢 Шинжлэх
-              </button>
-              <button class="bloom-tag" id="bt-evaluate" onclick="toggleBloomTag('evaluate')" style="background:rgba(59,130,246,0.06);color:#2563eb;border-color:transparent;">
-                🔵 Үнэлэх
-              </button>
-              <button class="bloom-tag" id="bt-create" onclick="toggleBloomTag('create')" style="background:rgba(139,92,246,0.06);color:#7c3aed;border-color:transparent;">
-                🟣 Бүтээх
-              </button>
-            </div>
-            <div style="font-size:10px;color:var(--outline);margin-top:8px;">Олон түвшин сонгох тусам олон төрлийн асуулт гарна</div>
-          </div>
-
-          <!-- Нэмэлт зааварчилгаа -->
-          <div style="background:#fff;border:1.5px solid var(--outline-variant);border-radius:16px;padding:16px 20px;">
-            <label style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;color:var(--on-surface-variant);display:block;margin-bottom:8px;">Нэмэлт зааварчилгаа (заавал биш)</label>
-            <textarea id="assessExtraNote" class="input-field" rows="2" placeholder="Жишээ: Зохиолын дүр тайлбарлах асуулт оруулна уу, задгай асуултуудыг нэмэгдүүлнэ үү..." style="resize:none;font-size:12px;min-height:56px;"></textarea>
-          </div>
-
-          <!-- Generate button -->
-          <button id="assessGenBtn" class="btn-ai-generate" onclick="generateWorksheet()">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="2"/><path d="M9 12l2 2 4-4"/></svg>
-            Ажлын Хуудас Үүсгэх
-          </button>
-        </div>
-
-        <!-- ── RIGHT: PREVIEW + AI ХӨТӨЧ ── -->
-        <div>
-
-          <!-- Generating spinner -->
-          <div id="assessGenerating" class="hidden" style="background:#fff;border:1px solid var(--outline-variant);border-radius:20px;padding:56px 32px;text-align:center;">
-            <div class="spinner" style="margin:0 auto 16px;border-top-color:var(--accent-purple);"></div>
-            <div style="font-size:14px;font-weight:600;color:var(--on-surface);margin-bottom:8px;" id="genStatusMsg">Файлыг уншиж байна...</div>
-            <div style="font-size:11px;color:var(--outline);" id="genStatusSub">Блүүмийн таксономын дагуу асуулт боловсруулж байна</div>
-          </div>
-
-          <!-- Placeholder -->
-          <div id="assessPlaceholder" style="background:#fff;border:1.5px dashed var(--outline-variant);border-radius:20px;padding:56px 32px;text-align:center;">
-            <div style="font-size:52px;margin-bottom:16px;">🗂️</div>
-            <div style="font-size:14px;font-weight:600;color:var(--on-surface-variant);">Файл байршуулж, тохиргоо хийгээд "Үүсгэх" дарна уу</div>
-            <div style="font-size:12px;color:var(--outline);margin-top:8px;">Хэвлэхэд бэлэн A5 ажлын хуудас гарна</div>
-            <div style="margin-top:24px;display:grid;grid-template-columns:repeat(3,1fr);gap:12px;max-width:340px;margin-left:auto;margin-right:auto;">
-              <div style="background:var(--surface-container);border-radius:12px;padding:14px 8px;text-align:center;">
-                <div style="font-size:22px;margin-bottom:6px;">📤</div>
-                <div style="font-size:10px;font-weight:600;color:var(--on-surface-variant);text-transform:uppercase;letter-spacing:0.04em;">Файл байршуулах</div>
-              </div>
-              <div style="background:var(--surface-container);border-radius:12px;padding:14px 8px;text-align:center;">
-                <div style="font-size:22px;margin-bottom:6px;">⚙️</div>
-                <div style="font-size:10px;font-weight:600;color:var(--on-surface-variant);text-transform:uppercase;letter-spacing:0.04em;">Тохиргоо хийх</div>
-              </div>
-              <div style="background:var(--surface-container);border-radius:12px;padding:14px 8px;text-align:center;">
-                <div style="font-size:22px;margin-bottom:6px;">🖨️</div>
-                <div style="font-size:10px;font-weight:600;color:var(--on-surface-variant);text-transform:uppercase;letter-spacing:0.04em;">Хэвлэх</div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Result: Preview + AI Chat -->
-          <div id="assessResult" class="hidden">
-            <!-- Action buttons -->
-            <div style="display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap;">
-              <button onclick="printWorksheet()" style="background:var(--secondary);border:none;color:#fff;font-family:'Lexend',sans-serif;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.04em;padding:10px 18px;border-radius:10px;cursor:pointer;display:flex;align-items:center;gap:6px;">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M6 9V2h12v7"/><path d="M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
-                Хэвлэх (A5)
-              </button>
-              <button onclick="downloadWorksheet()" style="background:var(--tertiary);border:none;color:#fff;font-family:'Lexend',sans-serif;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.04em;padding:10px 18px;border-radius:10px;cursor:pointer;display:flex;align-items:center;gap:6px;">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-                Word татах
-              </button>
-              <button onclick="regenerateWorksheet()" style="background:rgba(138,5,255,0.08);border:1px solid rgba(138,5,255,0.2);color:var(--accent-purple);font-family:'Lexend',sans-serif;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.04em;padding:10px 18px;border-radius:10px;cursor:pointer;">
-                🔄 Дахин үүсгэх
-              </button>
-            </div>
-
-            <!-- A5 Preview -->
-            <div class="print-preview-box" id="worksheetPreview" style="margin-bottom:20px;">
-              <!-- filled by JS -->
-            </div>
-
-            <!-- ── AI ХӨТӨЧ ЧАТ ── -->
-            <div style="background:#fff;border:1.5px solid rgba(138,5,255,0.2);border-radius:20px;overflow:hidden;">
-              <!-- Header -->
-              <div style="background:linear-gradient(135deg,#1a1a2e,#16213e);padding:18px 22px;display:flex;align-items:center;gap:12px;">
-                <div style="width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#8A05FF,#b44dff);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;">🤖</div>
-                <div>
-                  <div style="font-size:13px;font-weight:700;color:#fff;">AI Засах Хөтөч</div>
-                  <div style="font-size:10px;color:rgba(255,255,255,0.6);">Асуулт нэмэх, өөрчлөх, даалгаврыг тохируулах</div>
-                </div>
-                <div style="margin-left:auto;display:flex;align-items:center;gap:6px;">
-                  <div style="width:7px;height:7px;border-radius:50%;background:#4ade80;animation:pulse 2s infinite;"></div>
-                  <span style="font-size:10px;color:rgba(255,255,255,0.5);">Идэвхтэй</span>
-                </div>
-              </div>
-
-              <!-- Suggestion chips -->
-              <div style="padding:14px 18px 0;display:flex;gap:7px;flex-wrap:wrap;">
-                <button onclick="sendAiSuggestion('Задгай асуулт нэм')" style="background:rgba(138,5,255,0.07);border:1px solid rgba(138,5,255,0.2);color:var(--accent-purple);font-family:'Lexend',sans-serif;font-size:10px;font-weight:600;padding:6px 12px;border-radius:9999px;cursor:pointer;transition:all 0.15s;" onmouseover="this.style.background='rgba(138,5,255,0.14)'" onmouseout="this.style.background='rgba(138,5,255,0.07)'">+ Задгай асуулт нэм</button>
-                <button onclick="sendAiSuggestion('Тест асуулт нэм')" style="background:rgba(138,5,255,0.07);border:1px solid rgba(138,5,255,0.2);color:var(--accent-purple);font-family:'Lexend',sans-serif;font-size:10px;font-weight:600;padding:6px 12px;border-radius:9999px;cursor:pointer;transition:all 0.15s;" onmouseover="this.style.background='rgba(138,5,255,0.14)'" onmouseout="this.style.background='rgba(138,5,255,0.07)'">+ Тест асуулт нэм</button>
-                <button onclick="sendAiSuggestion('Бүтээлч сэтгэлгээний асуулт нэм')" style="background:rgba(138,5,255,0.07);border:1px solid rgba(138,5,255,0.2);color:var(--accent-purple);font-family:'Lexend',sans-serif;font-size:10px;font-weight:600;padding:6px 12px;border-radius:9999px;cursor:pointer;transition:all 0.15s;" onmouseover="this.style.background='rgba(138,5,255,0.14)'" onmouseout="this.style.background='rgba(138,5,255,0.07)'">🧠 Бүтээлч асуулт</button>
-                <button onclick="sendAiSuggestion('1-р асуултыг хялбарчил')" style="background:rgba(138,5,255,0.07);border:1px solid rgba(138,5,255,0.2);color:var(--accent-purple);font-family:'Lexend',sans-serif;font-size:10px;font-weight:600;padding:6px 12px;border-radius:9999px;cursor:pointer;transition:all 0.15s;" onmouseover="this.style.background='rgba(138,5,255,0.14)'" onmouseout="this.style.background='rgba(138,5,255,0.07)'">✏️ Хялбарчил</button>
-                <button onclick="sendAiSuggestion('Асуултуудыг хэцүүлэх')" style="background:rgba(138,5,255,0.07);border:1px solid rgba(138,5,255,0.2);color:var(--accent-purple);font-family:'Lexend',sans-serif;font-size:10px;font-weight:600;padding:6px 12px;border-radius:9999px;cursor:pointer;transition:all 0.15s;" onmouseover="this.style.background='rgba(138,5,255,0.14)'" onmouseout="this.style.background='rgba(138,5,255,0.07)'">💪 Хэцүүлэх</button>
-              </div>
-
-              <!-- Chat messages -->
-              <div id="aiChatMessages" style="padding:14px 18px;max-height:260px;overflow-y:auto;display:flex;flex-direction:column;gap:10px;">
-                <div class="ai-chat-bubble assistant">
-                  <div class="ai-chat-role assistant">🤖 AI Хөтөч</div>
-                  <div style="font-size:12px;color:var(--on-surface);line-height:1.6;">Ажлын хуудас амжилттай үүслээ! Асуулт нэмэх, өөрчлөх, эсвэл хэцүүлэх бол хэлнэ үү. Жишээ нь: <em>"3-р асуултыг Блүүмийн 'Бүтээх' түвшнээр дахин бич"</em> гэж хэлж болно.</div>
-                </div>
-              </div>
-
-              <!-- Chat input -->
-              <div style="padding:12px 18px 16px;border-top:1px solid var(--outline-variant);">
-                <div class="ai-chat-input-row">
-                  <textarea id="aiChatInput" placeholder="Асуулт нэм, өөрчил, тохируул..." style="flex:1;border:1.5px solid var(--outline-variant);border-radius:12px;padding:10px 14px;font-family:'Lexend',sans-serif;font-size:12px;resize:none;min-height:44px;max-height:100px;outline:none;background:#fff;color:var(--on-surface);" onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendAiChat();}" oninput="this.style.height='auto';this.style.height=Math.min(this.scrollHeight,100)+'px'"></textarea>
-                  <button id="aiChatSendBtn" onclick="sendAiChat()" style="background:linear-gradient(135deg,#8A05FF,#6200cc);border:none;color:#fff;width:44px;height:44px;border-radius:12px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all 0.2s;" onmouseover="this.style.opacity='0.85'" onmouseout="this.style.opacity='1'">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
-                  </button>
-                </div>
-                <div style="font-size:9px;color:var(--outline);margin-top:6px;text-align:center;">Enter → илгээх · Shift+Enter → мөр зай</div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- ШАЛГАЛТ (сурагчдад) -->
-  <div id="examSection" class="content-section">
-    <div class="section" style="padding-top:40px;max-width:720px;">
-      <button onclick="showDashboard()" style="background:none;border:none;font-family:'Lexend',sans-serif;font-size:12px;font-weight:600;color:var(--primary);cursor:pointer;text-transform:uppercase;letter-spacing:0.04em;margin-bottom:28px;">← Буцах</button>
-      <div id="examLobby">
-        <h2 style="font-size:24px;font-weight:700;color:var(--on-surface);margin-bottom:6px;">Шалгалт</h2>
-        <p style="font-size:13px;color:var(--on-surface-variant);margin-bottom:24px;">Сэдвийг сонгоод эхлүүлнэ үү</p>
-        <div id="examTopicList" style="display:flex;flex-direction:column;gap:10px;margin-bottom:32px;"><div style="text-align:center;color:var(--on-surface-variant);font-size:12px;padding:32px;">Уншиж байна...</div></div>
-        <div id="examHistory"><h3 style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;color:var(--on-surface-variant);margin-bottom:12px;">Өмнөх үр дүн</h3><div id="examHistoryList" style="display:flex;flex-direction:column;gap:8px;"></div></div>
-      </div>
-      <div id="examActive" class="hidden">
-        <div class="exam-header">
-          <div><div class="exam-stat-lbl">Асуулт</div><div class="exam-stat-val" id="examQuestionCount">1 / 10</div></div>
-          <div style="text-align:center;"><div class="exam-stat-lbl">Цаг</div><div id="examTimer" style="font-size:22px;font-weight:700;color:var(--secondary);">10:00</div></div>
-          <div style="text-align:right;"><div class="exam-stat-lbl">Оноо</div><div class="exam-stat-val" id="examScore" style="color:var(--tertiary);">0</div></div>
-        </div>
-        <div class="progress-track"><div id="examProgress" class="progress-fill" style="width:0%;background:var(--secondary);"></div></div>
-        <div style="background:#fff;border:1px solid var(--outline-variant);border-radius:16px;padding:24px;margin-bottom:16px;">
-          <div style="display:inline-block;background:rgba(0,96,172,0.1);color:var(--secondary);font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;padding:4px 12px;border-radius:9999px;margin-bottom:12px;" id="examQuestionBadge"></div>
-          <p style="font-size:15px;font-weight:600;color:var(--on-surface);line-height:1.6;" id="examQuestion"></p>
-        </div>
-        <div id="examOptions" style="display:flex;flex-direction:column;gap:10px;margin-bottom:16px;"></div>
-        <div id="examExplanation" class="hidden" style="background:rgba(0,96,172,0.06);border:1px solid rgba(0,96,172,0.2);border-radius:14px;padding:16px;margin-bottom:16px;">
-          <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;color:var(--secondary);margin-bottom:6px;">Тайлбар</div>
-          <p style="font-size:13px;color:var(--on-surface);" id="examExplanationText"></p>
-        </div>
-        <button onclick="nextQuestion()" id="examNextBtn" class="hidden btn-primary" style="width:100%;padding:14px;border-radius:14px;font-size:13px;">Дараагийн асуулт</button>
-      </div>
-      <div id="examResult" class="hidden">
-        <div style="background:#fff;border:1px solid var(--outline-variant);border-radius:20px;padding:36px;text-align:center;">
-          <div style="font-size:22px;font-weight:700;color:var(--secondary);margin-bottom:12px;" id="resultEmoji">---</div>
-          <h2 style="font-size:20px;font-weight:700;margin-bottom:6px;">Шалгалт дууслаа</h2>
-          <div style="font-size:44px;font-weight:700;color:var(--primary);margin-bottom:4px;" id="resultScore"></div>
-          <div style="font-size:12px;color:var(--on-surface-variant);margin-bottom:24px;" id="resultDetail"></div>
-          <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:24px;">
-            <div style="background:rgba(0,109,66,0.08);border-radius:12px;padding:14px;"><div style="font-size:22px;font-weight:700;color:var(--tertiary);" id="resultCorrect">0</div><div style="font-size:9px;font-weight:600;text-transform:uppercase;letter-spacing:0.04em;color:var(--on-surface-variant);">Зөв</div></div>
-            <div style="background:rgba(186,26,26,0.08);border-radius:12px;padding:14px;"><div style="font-size:22px;font-weight:700;color:var(--error);" id="resultWrong">0</div><div style="font-size:9px;font-weight:600;text-transform:uppercase;letter-spacing:0.04em;color:var(--on-surface-variant);">Буруу</div></div>
-            <div style="background:rgba(0,96,172,0.08);border-radius:12px;padding:14px;"><div style="font-size:22px;font-weight:700;color:var(--secondary);" id="resultTime">0</div><div style="font-size:9px;font-weight:600;text-transform:uppercase;letter-spacing:0.04em;color:var(--on-surface-variant);">Цаг (с)</div></div>
-          </div>
-          <div id="resultReview" style="text-align:left;margin-bottom:20px;display:flex;flex-direction:column;gap:8px;max-height:200px;overflow-y:auto;"></div>
-          <div style="display:flex;gap:10px;">
-            <button onclick="retryExam()" class="btn-primary" style="flex:1;padding:13px;border-radius:12px;">Дахин өгөх</button>
-            <button onclick="backToLobby()" style="flex:1;background:var(--surface-container);border:none;font-family:'Lexend',sans-serif;font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:0.04em;padding:13px;border-radius:12px;cursor:pointer;">Буцах</button>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- СУДОКУ -->
-  <div id="gamesSection" class="content-section">
-    <div class="section" style="padding-top:40px;max-width:560px;">
-      <button onclick="showDashboard()" style="background:none;border:none;font-family:'Lexend',sans-serif;font-size:12px;font-weight:600;color:var(--primary);cursor:pointer;text-transform:uppercase;letter-spacing:0.04em;margin-bottom:20px;">← Буцах</button>
-      <h2 style="font-size:22px;font-weight:700;color:var(--on-surface);margin-bottom:4px;">Монгол бичиг судоку</h2>
-      <p style="font-size:12px;color:var(--on-surface-variant);margin-bottom:24px;">Тоглох үнэгүй · Хэвлэхэд эрх шаардлагатай</p>
-      <div id="sudokuContainer" class="sudoku-grid" style="margin-bottom:16px;"></div>
-      <div style="background:#fff;border:1px solid var(--outline-variant);border-radius:14px;padding:14px;margin-bottom:16px;">
-        <div style="font-size:10px;font-weight:600;color:var(--on-surface-variant);text-transform:uppercase;letter-spacing:0.04em;text-align:center;margin-bottom:10px;">1–9 дарахад автоматаар монгол тоо болно</div>
-        <div style="display:grid;grid-template-columns:repeat(9,1fr);gap:2px;text-align:center;">
-          <div style="font-size:10px;color:var(--on-surface-variant);">1</div><div style="font-size:10px;color:var(--on-surface-variant);">2</div><div style="font-size:10px;color:var(--on-surface-variant);">3</div><div style="font-size:10px;color:var(--on-surface-variant);">4</div><div style="font-size:10px;color:var(--on-surface-variant);">5</div><div style="font-size:10px;color:var(--on-surface-variant);">6</div><div style="font-size:10px;color:var(--on-surface-variant);">7</div><div style="font-size:10px;color:var(--on-surface-variant);">8</div><div style="font-size:10px;color:var(--on-surface-variant);">9</div>
-          <div style="font-size:13px;font-weight:700;color:var(--tertiary);">&#x1811;</div><div style="font-size:13px;font-weight:700;color:var(--tertiary);">&#x1812;</div><div style="font-size:13px;font-weight:700;color:var(--tertiary);">&#x1813;</div><div style="font-size:13px;font-weight:700;color:var(--tertiary);">&#x1814;</div><div style="font-size:13px;font-weight:700;color:var(--tertiary);">&#x1815;</div><div style="font-size:13px;font-weight:700;color:var(--tertiary);">&#x1816;</div><div style="font-size:13px;font-weight:700;color:var(--tertiary);">&#x1817;</div><div style="font-size:13px;font-weight:700;color:var(--tertiary);">&#x1818;</div><div style="font-size:13px;font-weight:700;color:var(--tertiary);">&#x1819;</div>
-        </div>
-      </div>
-      <div style="display:flex;gap:10px;justify-content:center;margin-bottom:28px;flex-wrap:wrap;">
-        <button onclick="initSudoku()" style="background:var(--surface-container-high);border:none;font-family:'Lexend',sans-serif;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.04em;padding:11px 22px;border-radius:9999px;cursor:pointer;">Шинэ</button>
-        <button onclick="checkSudoku()" class="btn-primary" style="padding:11px 28px;font-size:11px;">Шалгах</button>
-        <button onclick="openPrintPassSection()" style="background:var(--tertiary);border:none;color:#fff;font-family:'Lexend',sans-serif;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.04em;padding:11px 22px;border-radius:9999px;cursor:pointer;">Хэвлэх</button>
-      </div>
-      <div id="printPassSection">
-        <div id="passActiveInfo" class="hidden" style="background:rgba(0,109,66,0.08);border:1.5px solid rgba(0,109,66,0.25);border-radius:14px;padding:16px;margin-bottom:14px;">
-          <div style="display:flex;align-items:center;justify-content:space-between;">
             <div>
-              <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.04em;color:var(--tertiary);margin-bottom:4px;">✓ Хэвлэх эрх идэвхтэй</div>
-              <div style="font-size:14px;font-weight:700;color:var(--on-surface);">Үлдсэн: <span id="passRemainingDisplay" style="color:var(--tertiary);font-size:18px;">0</span> хуудас</div>
+              <label style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;color:var(--on-surface-variant);display:block;margin-bottom:6px;">Судлагдахуун</label>
+              <select id="assessSubject" class="input-field" style="font-size:12px;padding:10px 12px;">
+                <option value="">Сонгоно уу</option>
+                <option value="Монгол хэл">Монгол хэл</option>
+                <option value="Уран зохиол">Уран зохиол</option>
+                <option value="Монгол бичиг">Монгол бичиг</option>
+              </select>
             </div>
-            <button onclick="showPrintModal()" style="background:var(--tertiary);border:none;color:#fff;font-family:'Lexend',sans-serif;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.03em;padding:10px 18px;border-radius:10px;cursor:pointer;">Хэвлэх →</button>
+          </div>
+          <div style="margin-bottom:12px;">
+            <label style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;color:var(--on-surface-variant);display:block;margin-bottom:6px;">Зохиолын төрөл / Сэдэв</label>
+            <select id="assessGenre" class="input-field" style="font-size:12px;padding:10px 12px;">
+              <option value="">Сонгоно уу</option>
+              <option value="Яруу найраг">Яруу найраг</option>
+              <option value="Өгүүллэг">Өгүүллэг</option>
+              <option value="Туульс">Туульс</option>
+              <option value="Домог, Үлгэр">Домог, үлгэр</option>
+              <option value="Нийтлэл">Нийтлэл / Зохиол</option>
+              <option value="Ардын аман зохиол">Ардын аман зохиол</option>
+              <option value="Эсээ">Эсээ</option>
+              <option value="Дүрэм">Хэлний дүрэм</option>
+              <option value="Бичих дадлага">Бичих дадлага</option>
+            </select>
+          </div>
+          <div style="margin-bottom:12px;">
+            <label style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;color:var(--on-surface-variant);display:block;margin-bottom:6px;">Шалгалтын хугацаа</label>
+            <div style="display:flex;gap:8px;">
+              <button class="time-pill active" id="tp20" onclick="selectAssessTime(20)">20 мин</button>
+              <button class="time-pill" id="tp40" onclick="selectAssessTime(40)">40 мин</button>
+              <button class="time-pill" id="tp60" onclick="selectAssessTime(60)">60 мин</button>
+            </div>
+            <div style="font-size:10px;color:var(--on-surface-variant);margin-top:6px;" id="qCountHint">→ 4–5 асуулт үүсгэнэ (A5 хэмжээ)</div>
           </div>
         </div>
-        <div id="passCheckingInfo" class="hidden" style="text-align:center;font-size:11px;font-weight:600;color:var(--secondary);padding:16px;">Эрх шалгаж байна...</div>
-        <div id="passShopArea">
-          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
-            <h3 style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:0.04em;color:var(--on-surface);">Хэвлэх эрх авах</h3>
-            <button onclick="checkPrintPassFromServer(true)" style="background:none;border:none;font-family:'Lexend',sans-serif;font-size:11px;font-weight:600;color:var(--secondary);cursor:pointer;">Эрхийг шинэчлэх</button>
+        <div class="assess-step">
+          <div class="assess-step-header">
+            <div class="assess-step-num purple">3</div>
+            <div>
+              <div class="assess-step-title">Блүүмийн таксономийн түвшин</div>
+              <div class="assess-step-sub">Бүтээлч сэтгэлгээг хөгжүүлэх түвшнүүд</div>
+            </div>
           </div>
-          <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px;">
-            <div onclick="buyPrintPass(5,3000)" class="pass-card"><div style="font-size:22px;font-weight:700;color:var(--tertiary);">5</div><div style="font-size:10px;font-weight:600;text-transform:uppercase;color:var(--on-surface-variant);">хуудас</div><div style="font-size:11px;font-weight:700;color:var(--primary);margin-top:4px;">3,000₮</div></div>
-            <div onclick="buyPrintPass(10,5000)" class="pass-card popular"><span class="pass-badge yellow">Алдартай</span><div style="font-size:22px;font-weight:700;">10</div><div style="font-size:10px;font-weight:600;text-transform:uppercase;opacity:0.8;">хуудас</div><div style="font-size:11px;font-weight:700;margin-top:4px;opacity:0.9;">5,000₮</div></div>
-            <div onclick="buyPrintPass(30,12000)" class="pass-card deal"><span class="pass-badge white">Хямдрал!</span><div style="font-size:22px;font-weight:700;">30</div><div style="font-size:10px;font-weight:600;text-transform:uppercase;opacity:0.8;">хуудас</div><div style="font-size:11px;font-weight:700;margin-top:4px;opacity:0.9;">12,000₮</div></div>
+          <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:4px;">
+            <button class="bloom-tag active" id="bt-remember" onclick="toggleBloomTag('remember')" style="background:rgba(239,68,68,0.08);color:#dc2626;border-color:#dc2626;">🔴 Санах</button>
+            <button class="bloom-tag active" id="bt-understand" onclick="toggleBloomTag('understand')" style="background:rgba(249,115,22,0.08);color:#ea580c;border-color:#ea580c;">🟠 Ойлгох</button>
+            <button class="bloom-tag" id="bt-apply" onclick="toggleBloomTag('apply')" style="background:rgba(234,179,8,0.06);color:#ca8a04;border-color:transparent;">🟡 Хэрэглэх</button>
+            <button class="bloom-tag" id="bt-analyze" onclick="toggleBloomTag('analyze')" style="background:rgba(34,197,94,0.06);color:#16a34a;border-color:transparent;">🟢 Шинжлэх</button>
+            <button class="bloom-tag" id="bt-evaluate" onclick="toggleBloomTag('evaluate')" style="background:rgba(59,130,246,0.06);color:#2563eb;border-color:transparent;">🔵 Үнэлэх</button>
+            <button class="bloom-tag" id="bt-create" onclick="toggleBloomTag('create')" style="background:rgba(139,92,246,0.06);color:#7c3aed;border-color:transparent;">🟣 Бүтээх</button>
           </div>
-          <div id="freePrintInfo" style="background:rgba(148,74,0,0.06);border:1px solid rgba(148,74,0,0.15);border-radius:12px;padding:14px;text-align:center;">
-            <div style="font-size:11px;font-weight:700;color:var(--primary);text-transform:uppercase;letter-spacing:0.04em;">1-р хуудас үнэгүй!</div>
-            <div style="font-size:11px;color:var(--on-surface-variant);margin-top:4px;">Нэг хуудас (4 судоку) үнэгүй хэвлэх боломжтой</div>
-            <button onclick="useFreeOnePage()" style="margin-top:10px;background:var(--primary);border:none;color:#fff;font-family:'Lexend',sans-serif;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.04em;padding:8px 20px;border-radius:9999px;cursor:pointer;">Үнэгүй хэвлэх</button>
+          <div style="font-size:10px;color:var(--outline);margin-top:8px;">Олон түвшин сонгох тусам олон төрлийн асуулт гарна</div>
+        </div>
+        <div style="background:#fff;border:1.5px solid var(--outline-variant);border-radius:16px;padding:16px 20px;">
+          <label style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;color:var(--on-surface-variant);display:block;margin-bottom:8px;">Нэмэлт зааварчилгаа (заавал биш)</label>
+          <textarea id="assessExtraNote" class="input-field" rows="2" placeholder="Жишээ: Зохиолын дүр тайлбарлах асуулт оруулна уу..." style="resize:none;font-size:12px;min-height:56px;"></textarea>
+        </div>
+        <button id="assessGenBtn" class="btn-ai-generate" onclick="generateWorksheet()">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="2"/><path d="M9 12l2 2 4-4"/></svg>
+          Ажлын Хуудас Үүсгэх
+        </button>
+      </div>
+      <div>
+        <div id="assessGenerating" class="hidden" style="background:#fff;border:1px solid var(--outline-variant);border-radius:20px;padding:56px 32px;text-align:center;">
+          <div class="spinner" style="margin:0 auto 16px;border-top-color:var(--accent-purple);"></div>
+          <div style="font-size:14px;font-weight:600;color:var(--on-surface);margin-bottom:8px;" id="genStatusMsg">Файлыг уншиж байна...</div>
+          <div style="font-size:11px;color:var(--outline);" id="genStatusSub">Блүүмийн таксономын дагуу асуулт боловсруулж байна</div>
+        </div>
+        <div id="assessPlaceholder" style="background:#fff;border:1.5px dashed var(--outline-variant);border-radius:20px;padding:56px 32px;text-align:center;">
+          <div style="font-size:52px;margin-bottom:16px;">🗂️</div>
+          <div style="font-size:14px;font-weight:600;color:var(--on-surface-variant);">Файл байршуулж, тохиргоо хийгээд "Үүсгэх" дарна уу</div>
+          <div style="font-size:12px;color:var(--outline);margin-top:8px;">Хэвлэхэд бэлэн A5 ажлын хуудас гарна</div>
+        </div>
+        <div id="assessResult" class="hidden">
+          <div style="display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap;">
+            <button onclick="printWorksheet()" style="background:var(--secondary);border:none;color:#fff;font-family:'Lexend',sans-serif;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.04em;padding:10px 18px;border-radius:10px;cursor:pointer;display:flex;align-items:center;gap:6px;">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M6 9V2h12v7"/><path d="M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+              Хэвлэх (A5)
+            </button>
+            <button onclick="downloadWorksheet()" style="background:var(--tertiary);border:none;color:#fff;font-family:'Lexend',sans-serif;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.04em;padding:10px 18px;border-radius:10px;cursor:pointer;display:flex;align-items:center;gap:6px;">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              Word татах
+            </button>
+            <button onclick="regenerateWorksheet()" style="background:rgba(138,5,255,0.08);border:1px solid rgba(138,5,255,0.2);color:var(--accent-purple);font-family:'Lexend',sans-serif;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.04em;padding:10px 18px;border-radius:10px;cursor:pointer;">🔄 Дахин үүсгэх</button>
+          </div>
+          <div class="print-preview-box" id="worksheetPreview" style="margin-bottom:20px;"></div>
+          <div style="background:#fff;border:1.5px solid rgba(138,5,255,0.2);border-radius:20px;overflow:hidden;">
+            <div style="background:linear-gradient(135deg,#1a1a2e,#16213e);padding:18px 22px;display:flex;align-items:center;gap:12px;">
+              <div style="width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#8A05FF,#b44dff);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;">🤖</div>
+              <div>
+                <div style="font-size:13px;font-weight:700;color:#fff;">AI Засах Хөтөч</div>
+                <div style="font-size:10px;color:rgba(255,255,255,0.6);">Асуулт нэмэх, өөрчлөх, даалгаврыг тохируулах</div>
+              </div>
+            </div>
+            <div style="padding:14px 18px 0;display:flex;gap:7px;flex-wrap:wrap;">
+              <button onclick="sendAiSuggestion('Задгай асуулт нэм')" style="background:rgba(138,5,255,0.07);border:1px solid rgba(138,5,255,0.2);color:var(--accent-purple);font-family:'Lexend',sans-serif;font-size:10px;font-weight:600;padding:6px 12px;border-radius:9999px;cursor:pointer;">+ Задгай асуулт нэм</button>
+              <button onclick="sendAiSuggestion('Тест асуулт нэм')" style="background:rgba(138,5,255,0.07);border:1px solid rgba(138,5,255,0.2);color:var(--accent-purple);font-family:'Lexend',sans-serif;font-size:10px;font-weight:600;padding:6px 12px;border-radius:9999px;cursor:pointer;">+ Тест асуулт нэм</button>
+              <button onclick="sendAiSuggestion('Бүтээлч сэтгэлгээний асуулт нэм')" style="background:rgba(138,5,255,0.07);border:1px solid rgba(138,5,255,0.2);color:var(--accent-purple);font-family:'Lexend',sans-serif;font-size:10px;font-weight:600;padding:6px 12px;border-radius:9999px;cursor:pointer;">🧠 Бүтээлч асуулт</button>
+            </div>
+            <div id="aiChatMessages" style="padding:14px 18px;max-height:260px;overflow-y:auto;display:flex;flex-direction:column;gap:10px;">
+              <div class="ai-chat-bubble assistant">
+                <div class="ai-chat-role assistant">🤖 AI Хөтөч</div>
+                <div style="font-size:12px;color:var(--on-surface);line-height:1.6;">Ажлын хуудас амжилттай үүслээ! Асуулт нэмэх, өөрчлөх бол хэлнэ үү.</div>
+              </div>
+            </div>
+            <div style="padding:12px 18px 16px;border-top:1px solid var(--outline-variant);">
+              <div class="ai-chat-input-row">
+                <textarea id="aiChatInput" placeholder="Асуулт нэм, өөрчил, тохируул..." style="flex:1;border:1.5px solid var(--outline-variant);border-radius:12px;padding:10px 14px;font-family:'Lexend',sans-serif;font-size:12px;resize:none;min-height:44px;max-height:100px;outline:none;background:#fff;color:var(--on-surface);" onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendAiChat();}" oninput="this.style.height='auto';this.style.height=Math.min(this.scrollHeight,100)+'px'"></textarea>
+                <button id="aiChatSendBtn" onclick="sendAiChat()" style="background:linear-gradient(135deg,#8A05FF,#6200cc);border:none;color:#fff;width:44px;height:44px;border-radius:12px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+                </button>
+              </div>
+            </div>
           </div>
         </div>
       </div>
     </div>
   </div>
+</div>
 
-  <!-- ДЭЛГҮҮР -->
-  <div id="shopSection" class="content-section">
-    <div class="section" style="padding-top:40px;">
-      <button onclick="showDashboard()" style="background:none;border:none;font-family:'Lexend',sans-serif;font-size:12px;font-weight:600;color:var(--primary);cursor:pointer;text-transform:uppercase;letter-spacing:0.04em;margin-bottom:28px;">← Буцах</button>
-      <h2 style="font-size:24px;font-weight:700;color:var(--on-surface);margin-bottom:24px;">Материалын дэлгүүр</h2>
-      <div id="fullShopGrid" class="product-grid"><div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--on-surface-variant);font-size:13px;">Ачаалж байна...</div></div>
+<!-- ШАЛГАЛТ -->
+<div id="examSection" class="content-section">
+  <div class="section" style="padding-top:40px;max-width:720px;">
+    <button onclick="showDashboard()" style="background:none;border:none;font-family:'Lexend',sans-serif;font-size:12px;font-weight:600;color:var(--primary);cursor:pointer;text-transform:uppercase;letter-spacing:0.04em;margin-bottom:28px;">← Буцах</button>
+    <div id="examLobby">
+      <h2 style="font-size:24px;font-weight:700;color:var(--on-surface);margin-bottom:6px;">Шалгалт</h2>
+      <p style="font-size:13px;color:var(--on-surface-variant);margin-bottom:24px;">Сэдвийг сонгоод эхлүүлнэ үү</p>
+      <div id="examTopicList" style="display:flex;flex-direction:column;gap:10px;margin-bottom:32px;"></div>
+      <div id="examHistory"><h3 style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;color:var(--on-surface-variant);margin-bottom:12px;">Өмнөх үр дүн</h3><div id="examHistoryList"></div></div>
+    </div>
+    <div id="examActive" class="hidden">
+      <div class="exam-header">
+        <div><div class="exam-stat-lbl">Асуулт</div><div class="exam-stat-val" id="examQuestionCount">1 / 10</div></div>
+        <div style="text-align:center;"><div class="exam-stat-lbl">Цаг</div><div id="examTimer" style="font-size:22px;font-weight:700;color:var(--secondary);">10:00</div></div>
+        <div style="text-align:right;"><div class="exam-stat-lbl">Оноо</div><div class="exam-stat-val" id="examScore" style="color:var(--tertiary);">0</div></div>
+      </div>
+      <div class="progress-track"><div id="examProgress" class="progress-fill" style="width:0%;"></div></div>
+      <div style="background:#fff;border:1px solid var(--outline-variant);border-radius:16px;padding:24px;margin-bottom:16px;">
+        <div style="display:inline-block;background:rgba(0,96,172,0.1);color:var(--secondary);font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;padding:4px 12px;border-radius:9999px;margin-bottom:12px;" id="examQuestionBadge"></div>
+        <p style="font-size:15px;font-weight:600;color:var(--on-surface);line-height:1.6;" id="examQuestion"></p>
+      </div>
+      <div id="examOptions" style="display:flex;flex-direction:column;gap:10px;margin-bottom:16px;"></div>
+      <div id="examExplanation" class="hidden" style="background:rgba(0,96,172,0.06);border:1px solid rgba(0,96,172,0.2);border-radius:14px;padding:16px;margin-bottom:16px;">
+        <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;color:var(--secondary);margin-bottom:6px;">Тайлбар</div>
+        <p style="font-size:13px;color:var(--on-surface);" id="examExplanationText"></p>
+      </div>
+      <button onclick="nextQuestion()" id="examNextBtn" class="hidden btn-primary" style="width:100%;padding:14px;border-radius:14px;font-size:13px;">Дараагийн асуулт</button>
+    </div>
+    <div id="examResult" class="hidden">
+      <div style="background:#fff;border:1px solid var(--outline-variant);border-radius:20px;padding:36px;text-align:center;">
+        <div style="font-size:22px;font-weight:700;color:var(--secondary);margin-bottom:12px;" id="resultEmoji">---</div>
+        <h2 style="font-size:20px;font-weight:700;margin-bottom:6px;">Шалгалт дууслаа</h2>
+        <div style="font-size:44px;font-weight:700;color:var(--primary);margin-bottom:4px;" id="resultScore"></div>
+        <div style="font-size:12px;color:var(--on-surface-variant);margin-bottom:24px;" id="resultDetail"></div>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:24px;">
+          <div style="background:rgba(0,109,66,0.08);border-radius:12px;padding:14px;"><div style="font-size:22px;font-weight:700;color:var(--tertiary);" id="resultCorrect">0</div><div style="font-size:9px;font-weight:600;text-transform:uppercase;letter-spacing:0.04em;color:var(--on-surface-variant);">Зөв</div></div>
+          <div style="background:rgba(186,26,26,0.08);border-radius:12px;padding:14px;"><div style="font-size:22px;font-weight:700;color:var(--error);" id="resultWrong">0</div><div style="font-size:9px;font-weight:600;text-transform:uppercase;letter-spacing:0.04em;color:var(--on-surface-variant);">Буруу</div></div>
+          <div style="background:rgba(0,96,172,0.08);border-radius:12px;padding:14px;"><div style="font-size:22px;font-weight:700;color:var(--secondary);" id="resultTime">0</div><div style="font-size:9px;font-weight:600;text-transform:uppercase;letter-spacing:0.04em;color:var(--on-surface-variant);">Цаг (с)</div></div>
+        </div>
+        <div id="resultReview" style="text-align:left;margin-bottom:20px;display:flex;flex-direction:column;gap:8px;max-height:200px;overflow-y:auto;"></div>
+        <div style="display:flex;gap:10px;">
+          <button onclick="retryExam()" class="btn-primary" style="flex:1;padding:13px;border-radius:12px;">Дахин өгөх</button>
+          <button onclick="backToLobby()" style="flex:1;background:var(--surface-container);border:none;font-family:'Lexend',sans-serif;font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:0.04em;padding:13px;border-radius:12px;cursor:pointer;">Буцах</button>
+        </div>
+      </div>
     </div>
   </div>
-<!-- ══ БАГШИЙН БУЛАН ══ -->
+</div>
+
+<!-- СУДОКУ -->
+<div id="gamesSection" class="content-section">
+  <div class="section" style="padding-top:40px;max-width:560px;">
+    <button onclick="showDashboard()" style="background:none;border:none;font-family:'Lexend',sans-serif;font-size:12px;font-weight:600;color:var(--primary);cursor:pointer;text-transform:uppercase;letter-spacing:0.04em;margin-bottom:20px;">← Буцах</button>
+    <h2 style="font-size:22px;font-weight:700;color:var(--on-surface);margin-bottom:4px;">Монгол бичиг судоку</h2>
+    <p style="font-size:12px;color:var(--on-surface-variant);margin-bottom:24px;">Тоглох үнэгүй · Хэвлэхэд эрх шаардлагатай</p>
+    <div id="sudokuContainer" class="sudoku-grid" style="margin-bottom:16px;"></div>
+    <div style="background:#fff;border:1px solid var(--outline-variant);border-radius:14px;padding:14px;margin-bottom:16px;">
+      <div style="font-size:10px;font-weight:600;color:var(--on-surface-variant);text-transform:uppercase;letter-spacing:0.04em;text-align:center;margin-bottom:10px;">1–9 дарахад автоматаар монгол тоо болно</div>
+      <div style="display:grid;grid-template-columns:repeat(9,1fr);gap:2px;text-align:center;">
+        <div style="font-size:10px;color:var(--on-surface-variant);">1</div><div style="font-size:10px;color:var(--on-surface-variant);">2</div><div style="font-size:10px;color:var(--on-surface-variant);">3</div><div style="font-size:10px;color:var(--on-surface-variant);">4</div><div style="font-size:10px;color:var(--on-surface-variant);">5</div><div style="font-size:10px;color:var(--on-surface-variant);">6</div><div style="font-size:10px;color:var(--on-surface-variant);">7</div><div style="font-size:10px;color:var(--on-surface-variant);">8</div><div style="font-size:10px;color:var(--on-surface-variant);">9</div>
+        <div style="font-size:13px;font-weight:700;color:var(--tertiary);">&#x1811;</div><div style="font-size:13px;font-weight:700;color:var(--tertiary);">&#x1812;</div><div style="font-size:13px;font-weight:700;color:var(--tertiary);">&#x1813;</div><div style="font-size:13px;font-weight:700;color:var(--tertiary);">&#x1814;</div><div style="font-size:13px;font-weight:700;color:var(--tertiary);">&#x1815;</div><div style="font-size:13px;font-weight:700;color:var(--tertiary);">&#x1816;</div><div style="font-size:13px;font-weight:700;color:var(--tertiary);">&#x1817;</div><div style="font-size:13px;font-weight:700;color:var(--tertiary);">&#x1818;</div><div style="font-size:13px;font-weight:700;color:var(--tertiary);">&#x1819;</div>
+      </div>
+    </div>
+    <div style="display:flex;gap:10px;justify-content:center;margin-bottom:28px;flex-wrap:wrap;">
+      <button onclick="initSudoku()" style="background:var(--surface-container-high);border:none;font-family:'Lexend',sans-serif;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.04em;padding:11px 22px;border-radius:9999px;cursor:pointer;">Шинэ</button>
+      <button onclick="checkSudoku()" class="btn-primary" style="padding:11px 28px;font-size:11px;">Шалгах</button>
+      <button onclick="openPrintPassSection()" style="background:var(--tertiary);border:none;color:#fff;font-family:'Lexend',sans-serif;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.04em;padding:11px 22px;border-radius:9999px;cursor:pointer;">Хэвлэх</button>
+    </div>
+    <div id="printPassSection">
+      <div id="passActiveInfo" class="hidden" style="background:rgba(0,109,66,0.08);border:1.5px solid rgba(0,109,66,0.25);border-radius:14px;padding:16px;margin-bottom:14px;">
+        <div style="display:flex;align-items:center;justify-content:space-between;">
+          <div>
+            <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.04em;color:var(--tertiary);margin-bottom:4px;">✓ Хэвлэх эрх идэвхтэй</div>
+            <div style="font-size:14px;font-weight:700;color:var(--on-surface);">Үлдсэн: <span id="passRemainingDisplay" style="color:var(--tertiary);font-size:18px;">0</span> хуудас</div>
+          </div>
+          <button onclick="showPrintModal()" style="background:var(--tertiary);border:none;color:#fff;font-family:'Lexend',sans-serif;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.03em;padding:10px 18px;border-radius:10px;cursor:pointer;">Хэвлэх →</button>
+        </div>
+      </div>
+      <div id="passCheckingInfo" class="hidden" style="text-align:center;font-size:11px;font-weight:600;color:var(--secondary);padding:16px;">Эрх шалгаж байна...</div>
+      <div id="passShopArea">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
+          <h3 style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:0.04em;color:var(--on-surface);">Хэвлэх эрх авах</h3>
+          <button onclick="checkPrintPassFromServer(true)" style="background:none;border:none;font-family:'Lexend',sans-serif;font-size:11px;font-weight:600;color:var(--secondary);cursor:pointer;">Эрхийг шинэчлэх</button>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px;">
+          <div onclick="buyPrintPass(5,3000)" class="pass-card"><div style="font-size:22px;font-weight:700;color:var(--tertiary);">5</div><div style="font-size:10px;font-weight:600;text-transform:uppercase;color:var(--on-surface-variant);">хуудас</div><div style="font-size:11px;font-weight:700;color:var(--primary);margin-top:4px;">3,000₮</div></div>
+          <div onclick="buyPrintPass(10,5000)" class="pass-card popular"><span class="pass-badge yellow">Алдартай</span><div style="font-size:22px;font-weight:700;">10</div><div style="font-size:10px;font-weight:600;text-transform:uppercase;opacity:0.8;">хуудас</div><div style="font-size:11px;font-weight:700;margin-top:4px;opacity:0.9;">5,000₮</div></div>
+          <div onclick="buyPrintPass(30,12000)" class="pass-card deal"><span class="pass-badge white">Хямдрал!</span><div style="font-size:22px;font-weight:700;">30</div><div style="font-size:10px;font-weight:600;text-transform:uppercase;opacity:0.8;">хуудас</div><div style="font-size:11px;font-weight:700;margin-top:4px;opacity:0.9;">12,000₮</div></div>
+        </div>
+        <div id="freePrintInfo" style="background:rgba(148,74,0,0.06);border:1px solid rgba(148,74,0,0.15);border-radius:12px;padding:14px;text-align:center;">
+          <div style="font-size:11px;font-weight:700;color:var(--primary);text-transform:uppercase;letter-spacing:0.04em;">1-р хуудас үнэгүй!</div>
+          <div style="font-size:11px;color:var(--on-surface-variant);margin-top:4px;">Нэг хуудас (4 судоку) үнэгүй хэвлэх боломжтой</div>
+          <button onclick="useFreeOnePage()" style="margin-top:10px;background:var(--primary);border:none;color:#fff;font-family:'Lexend',sans-serif;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.04em;padding:8px 20px;border-radius:9999px;cursor:pointer;">Үнэгүй хэвлэх</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ДЭЛГҮҮР -->
+<div id="shopSection" class="content-section">
+  <div class="section" style="padding-top:40px;">
+    <button onclick="showDashboard()" style="background:none;border:none;font-family:'Lexend',sans-serif;font-size:12px;font-weight:600;color:var(--primary);cursor:pointer;text-transform:uppercase;letter-spacing:0.04em;margin-bottom:28px;">← Буцах</button>
+    <h2 style="font-size:24px;font-weight:700;color:var(--on-surface);margin-bottom:24px;">Материалын дэлгүүр</h2>
+    <div id="fullShopGrid" class="product-grid"></div>
+  </div>
+</div>
+
+<!-- БАГШИЙН БУЛАН -->
 <div id="teacherCorner" class="content-section">
   <div class="section" style="padding-top:40px;max-width:960px;">
     <button onclick="showDashboard()" style="background:none;border:none;font-family:'Lexend',sans-serif;font-size:12px;font-weight:600;color:var(--primary);cursor:pointer;text-transform:uppercase;letter-spacing:0.04em;margin-bottom:28px;">← Буцах</button>
     <h2 style="font-size:26px;font-weight:800;color:var(--on-surface);margin-bottom:6px;">👩‍🏫 Багшийн булан</h2>
     <p style="font-size:13px;color:var(--on-surface-variant);margin-bottom:32px;">Монгол хэл, уран зохиол, үндэсний бичгийн багш нарт зориулсан хэрэгслүүд</p>
     <div class="module-grid">
-
       <div class="module-card purple" onclick="showSection('aiplanner')">
         <div class="module-icon"><svg viewBox="0 0 24 24"><path d="M12 2a2 2 0 012 2v2a2 2 0 01-2 2 2 2 0 01-2-2V4a2 2 0 012-2z"/><path d="M12 16a2 2 0 012 2v2a2 2 0 01-2 2 2 2 0 01-2-2v-2a2 2 0 012-2z"/><path d="M2 12a2 2 0 012-2h2a2 2 0 012 2 2 2 0 01-2 2H4a2 2 0 01-2-2z"/><path d="M16 12a2 2 0 012-2h2a2 2 0 012 2 2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg></div>
         <div class="module-content">
@@ -1304,28 +1156,23 @@
           <div class="module-desc">AI-аар ээлжит хичээлийн төлөвлөгөө автоматаар гаргана. Тун удахгүй.</div>
         </div>
       </div>
-
       <div class="module-card rose" onclick="showSection('aiassessment')">
         <div class="module-icon"><svg viewBox="0 0 24 24"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="2"/><path d="M9 12l2 2 4-4"/></svg></div>
         <div class="module-content">
           <div class="module-badge">AI · Ажлын хуудас</div>
           <div class="module-title">Ажлын хуудас үүсгэх</div>
-          <div class="module-desc">Файл байршуулж Блүүмийн таксономын дагуу даалгавар үүсгэнэ. Хэвлэхэд бэлэн.</div>
+          <div class="module-desc">Файл байршуулж Блүүмийн таксономын дагуу даалгавар үүсгэнэ.</div>
         </div>
       </div>
-
       <div class="module-card blue" onclick="showTeacherMaterials()">
         <div class="module-icon"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div>
         <div class="module-content">
           <div class="module-badge">Шалгалтын материал</div>
           <div class="module-title">ЭЕШ · Дэвших · Олимпиад</div>
-          <div class="module-desc">Дэвших болон төгсөх ангийн улсын шалгалт, олимпиадын материалын архив.</div>
+          <div class="module-desc">Шалгалт, олимпиадын материалын архив.</div>
         </div>
       </div>
-
     </div>
-
-    <!-- Teacher materials sub-section -->
     <div id="teacherMaterialsBox" class="hidden" style="margin-top:32px;">
       <div style="display:flex;align-items:center;gap:12px;margin-bottom:20px;">
         <h3 style="font-size:18px;font-weight:700;color:var(--on-surface);">📁 Шалгалтын материалын архив</h3>
@@ -1337,21 +1184,18 @@
         <button onclick="filterTeacherMat('devshih')" id="tmat-devshih" class="time-pill">Дэвших</button>
         <button onclick="filterTeacherMat('olimpiad')" id="tmat-olimpiad" class="time-pill">Олимпиад</button>
       </div>
-      <div id="teacherMatGrid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px;">
-        <div style="text-align:center;padding:32px;color:var(--on-surface-variant);font-size:12px;grid-column:1/-1;">Ачаалж байна...</div>
-      </div>
+      <div id="teacherMatGrid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px;"></div>
     </div>
   </div>
 </div>
 
-<!-- ══ СУРАГЧИЙН БУЛАН ══ -->
+<!-- СУРАГЧИЙН БУЛАН -->
 <div id="studentCorner" class="content-section">
   <div class="section" style="padding-top:40px;max-width:960px;">
     <button onclick="showDashboard()" style="background:none;border:none;font-family:'Lexend',sans-serif;font-size:12px;font-weight:600;color:var(--primary);cursor:pointer;text-transform:uppercase;letter-spacing:0.04em;margin-bottom:28px;">← Буцах</button>
     <h2 style="font-size:26px;font-weight:800;color:var(--on-surface);margin-bottom:6px;">🎒 Сурагчийн булан</h2>
     <p style="font-size:13px;color:var(--on-surface-variant);margin-bottom:32px;">Сурагч, бие даан суралцагчдад зориулсан сургалт, материалууд</p>
     <div class="module-grid">
-
       <div class="module-card orange" onclick="showSection('course')">
         <div class="module-icon"><svg viewBox="0 0 24 24"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg></div>
         <div class="module-content">
@@ -1360,16 +1204,14 @@
           <div class="module-desc">Монгол бичгийг эхнээс нь суралцах бүрэн курс. 29,999₮</div>
         </div>
       </div>
-
       <div class="module-card blue" onclick="showSection('exam')">
         <div class="module-icon"><svg viewBox="0 0 24 24"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg></div>
         <div class="module-content">
           <div class="module-badge">Сорилго шалгалт</div>
           <div class="module-title">Ахлах анги · Эх хэлний сорилго</div>
-          <div class="module-desc">Дүрэм, үг, дуудлагын сэдвүүдээр олон сонголтын шалгалт өгч, явцаа хянана.</div>
+          <div class="module-desc">Дүрэм, үг, дуудлагын сэдвүүдээр олон сонголтын шалгалт.</div>
         </div>
       </div>
-
       <div class="module-card green" onclick="showStudentMaterials('grade9')">
         <div class="module-icon"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div>
         <div class="module-content">
@@ -1378,67 +1220,49 @@
           <div class="module-desc">9-р ангийн улсын шалгалтын материалууд үнэгүй байршина.</div>
         </div>
       </div>
-
       <div class="module-card purple" onclick="showStudentMaterials('senior')">
         <div class="module-icon"><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></div>
         <div class="module-content">
           <div class="module-badge">Ахлах анги · Зөвлөгөө</div>
           <div class="module-title">Шалгалтад бэлтгэх зөвлөмж</div>
-          <div class="module-desc">Ахлах ангийн эх хэлний сорилго, шалгалтад бэлтгэх үнэгүй зөвлөгөө.</div>
+          <div class="module-desc">Ахлах ангийн шалгалтад бэлтгэх үнэгүй зөвлөгөө.</div>
         </div>
       </div>
-
     </div>
-
-    <!-- Student materials sub-section -->
     <div id="studentMaterialsBox" class="hidden" style="margin-top:32px;">
       <div style="display:flex;align-items:center;gap:12px;margin-bottom:20px;">
         <h3 id="studentMatTitle" style="font-size:18px;font-weight:700;color:var(--on-surface);">📂 Материалууд</h3>
         <button onclick="hideEl('studentMaterialsBox')" style="background:none;border:none;color:var(--outline);font-size:18px;cursor:pointer;margin-left:auto;">✕</button>
       </div>
-
-      <!-- 9-р анги материал -->
       <div id="grade9Materials" class="hidden">
-        <div style="background:rgba(46,158,91,0.06);border:1.5px solid rgba(46,158,91,0.2);border-radius:16px;padding:20px;margin-bottom:16px;">
-          <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;color:var(--tertiary);margin-bottom:8px;">✅ Үнэгүй материалууд</div>
-          <p style="font-size:13px;color:var(--on-surface);line-height:1.7;">9-р ангийн монгол хэл, уран зохиолын улсын шалгалтын материалуудыг доороос татаж авна уу.</p>
-        </div>
-        <div id="grade9MatGrid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px;">
-          <div style="text-align:center;padding:32px;color:var(--on-surface-variant);font-size:12px;grid-column:1/-1;">Ачаалж байна...</div>
-        </div>
+        <div id="grade9MatGrid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px;"></div>
       </div>
-
-      <!-- Ахлах анги зөвлөмж -->
       <div id="seniorMaterials" class="hidden">
         <div style="background:rgba(124,58,237,0.06);border:1.5px solid rgba(124,58,237,0.2);border-radius:16px;padding:24px;margin-bottom:16px;">
           <div style="font-size:13px;font-weight:700;color:var(--accent-purple);margin-bottom:12px;">📌 Шалгалтад бэлтгэх үнэгүй зөвлөгөө</div>
           <ul style="font-size:13px;color:var(--on-surface);line-height:2;list-style:none;padding:0;">
             <li>✦ Эх уншихдаа гарчиг, хэсгүүдийн холбоог анхаарна уу</li>
-            <li>✦ Уран дүрслэлийн хэрэгслийг (метафор, харьцуулалт, давталт) тодорхойлж сура</li>
+            <li>✦ Уран дүрслэлийн хэрэгслийг тодорхойлж сура</li>
             <li>✦ Зохиолын дүрийн шинж, зан чанарыг эхийн баримтаар тайлбарла</li>
             <li>✦ Найруулга бичихдээ: оршил → үндсэн хэсэг → дүгнэлт бүтцийг барь</li>
-            <li>✦ Жил бүрийн шалгалтын даалгавруудыг давтан бодож дадал болго</li>
             <li>✦ Цаг хуваарилалт: 1 эх = 10–12 минут, найруулга = 25–30 минут</li>
           </ul>
         </div>
-        <div id="seniorMatGrid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px;">
-          <div style="text-align:center;padding:32px;color:var(--on-surface-variant);font-size:12px;grid-column:1/-1;">Ачаалж байна...</div>
-        </div>
+        <div id="seniorMatGrid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px;"></div>
       </div>
     </div>
-
   </div>
 </div>
+
 <!-- МИНИЙ САН -->
-  <div id="librarySection" class="content-section">
-    <div class="section" style="padding-top:40px;">
-      <button onclick="showDashboard()" style="background:none;border:none;font-family:'Lexend',sans-serif;font-size:12px;font-weight:600;color:var(--primary);cursor:pointer;text-transform:uppercase;letter-spacing:0.04em;margin-bottom:28px;">← Буцах</button>
-      <h2 style="font-size:24px;font-weight:700;color:var(--on-surface);margin-bottom:24px;">Миний материалууд</h2>
-      <div id="libraryGrid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:16px;"></div>
-    </div>
+<div id="librarySection" class="content-section">
+  <div class="section" style="padding-top:40px;">
+    <button onclick="showDashboard()" style="background:none;border:none;font-family:'Lexend',sans-serif;font-size:12px;font-weight:600;color:var(--primary);cursor:pointer;text-transform:uppercase;letter-spacing:0.04em;margin-bottom:28px;">← Буцах</button>
+    <h2 style="font-size:24px;font-weight:700;color:var(--on-surface);margin-bottom:24px;">Миний материалууд</h2>
+    <div id="libraryGrid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:16px;"></div>
   </div>
-  <!-- ✅ Илүү </div> устгагдлаа -->
-    
+</div>
+
 <!-- LIGHTBOX -->
 <div id="lightboxModal" onclick="if(event.target===this||event.target.id==='lightboxModal') closeLightbox()">
   <div style="position:relative;width:100%;height:100%;display:flex;align-items:center;justify-content:center;" id="lbInner"
@@ -1509,96 +1333,62 @@
     <button onclick="confirmOrder()" id="confirmBtn" class="btn-primary" style="width:100%;padding:14px;border-radius:12px;">Төлсөн, хүсэлт илгээх</button>
   </div>
 </div>
-    
-    <!-- ══ FOOTER ══ -->
+
+<!-- FOOTER -->
 <footer style="background:linear-gradient(135deg,#1a1208 0%,#2d1e08 100%);color:rgba(255,255,255,0.85);padding:48px 32px 28px;margin-top:40px;">
   <div style="max-width:1280px;margin:0 auto;">
     <div style="display:grid;grid-template-columns:1fr auto;gap:40px;align-items:start;margin-bottom:32px;">
-      
-      <!-- Лого + тайлбар -->
       <div>
         <div style="display:flex;align-items:center;gap:12px;margin-bottom:14px;">
           <img src="logo.png" alt="Logo" style="height:36px;object-fit:contain;">
-          <span style="font-family:'Baloo 2',cursive;font-size:16px;font-weight:800;color:#ffb347;letter-spacing:0.02em;">Сонирхолтой хэл бичиг</span>
+          <span style="font-family:'Baloo 2',cursive;font-size:16px;font-weight:800;color:#ffb347;">Сонирхолтой хэл бичиг</span>
         </div>
-        <p style="font-size:12px;color:rgba(255,255,255,0.5);line-height:1.8;max-width:320px;">Монгол хэл, уран зохиол, үндэсний бичгийн хичээлд суурилсан онлайн сургалт, шалгалт, хөгжилтэй тоглоом — бүгд нэг дор.</p>
+        <p style="font-size:12px;color:rgba(255,255,255,0.5);line-height:1.8;max-width:320px;">Монгол хэл, уран зохиол, үндэсний бичгийн хичээлд суурилсан онлайн сургалт — бүгд нэг дор.</p>
       </div>
-
-      <!-- Холбоо барих -->
       <div style="text-align:right;">
         <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:rgba(255,255,255,0.4);margin-bottom:14px;">Холбоо барих</div>
         <div style="display:flex;flex-direction:column;gap:10px;align-items:flex-end;">
-          
-          <!-- Facebook -->
           <a href="https://www.facebook.com/search/top?q=Сонирхолтой хэл бичиг" target="_blank" rel="noopener noreferrer"
-             style="display:flex;align-items:center;gap:10px;text-decoration:none;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);padding:9px 16px;border-radius:10px;transition:all 0.2s;"
-             onmouseover="this.style.background='rgba(24,119,242,0.2)';this.style.borderColor='rgba(24,119,242,0.4)'"
-             onmouseout="this.style.background='rgba(255,255,255,0.06)';this.style.borderColor='rgba(255,255,255,0.1)'">
+             style="display:flex;align-items:center;gap:10px;text-decoration:none;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);padding:9px 16px;border-radius:10px;">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="#1877F2"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
             <span style="font-size:12px;font-weight:600;color:rgba(255,255,255,0.85);">Сонирхолтой хэл бичиг</span>
           </a>
-
-          <!-- Instagram -->
-          <a href="https://www.instagram.com/sonirholtoi_hel" target="_blank" rel="noopener noreferrer"
-             style="display:flex;align-items:center;gap:10px;text-decoration:none;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);padding:9px 16px;border-radius:10px;transition:all 0.2s;"
-             onmouseover="this.style.background='rgba(225,48,108,0.2)';this.style.borderColor='rgba(225,48,108,0.4)'"
-             onmouseout="this.style.background='rgba(255,255,255,0.06)';this.style.borderColor='rgba(255,255,255,0.1)'">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="url(#igGrad)">
-              <defs><linearGradient id="igGrad" x1="0%" y1="100%" x2="100%" y2="0%"><stop offset="0%" style="stop-color:#f09433"/><stop offset="25%" style="stop-color:#e6683c"/><stop offset="50%" style="stop-color:#dc2743"/><stop offset="75%" style="stop-color:#cc2366"/><stop offset="100%" style="stop-color:#bc1888"/></linearGradient></defs>
-              <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
-            </svg>
-            <span style="font-size:12px;font-weight:600;color:rgba(255,255,255,0.85);">@sonirholtoi_hel</span>
-          </a>
-
-          <!-- Email -->
           <a href="mailto:sonirholtoihelbichig@gmail.com"
-             style="display:flex;align-items:center;gap:10px;text-decoration:none;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);padding:9px 16px;border-radius:10px;transition:all 0.2s;"
-             onmouseover="this.style.background='rgba(232,96,10,0.2)';this.style.borderColor='rgba(232,96,10,0.4)'"
-             onmouseout="this.style.background='rgba(255,255,255,0.06)';this.style.borderColor='rgba(255,255,255,0.1)'">
+             style="display:flex;align-items:center;gap:10px;text-decoration:none;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);padding:9px 16px;border-radius:10px;">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#e8600a" stroke-width="2" stroke-linecap="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
             <span style="font-size:12px;font-weight:600;color:rgba(255,255,255,0.85);">sonirholtoihelbichig@gmail.com</span>
           </a>
-
         </div>
       </div>
     </div>
-
-    <!-- Хуваагч шугам -->
     <div style="border-top:1px solid rgba(255,255,255,0.08);padding-top:20px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;">
-      <div style="font-size:11px;color:rgba(255,255,255,0.35);">
-        © 2026 Сонирхолтой хэл бичиг. Бүх эрх хуулиар хамгаалагдсан.
-      </div>
-      <div style="font-size:11px;color:rgba(255,255,255,0.25);font-style:italic;">
-        Туул багшийн боловсруулсан контент хуулбарлахыг хориглоно.
-      </div>
+      <div style="font-size:11px;color:rgba(255,255,255,0.35);">© 2026 Сонирхолтой хэл бичиг. Бүх эрх хуулиар хамгаалагдсан.</div>
+      <div style="font-size:11px;color:rgba(255,255,255,0.25);font-style:italic;">Туул багшийн боловсруулсан контент хуулбарлахыг хориглоно.</div>
     </div>
-
   </div>
 </footer>
+
 <div id="toastBox"></div>
 <a id="hiddenFileLink" href="#" target="_blank" rel="noopener noreferrer" style="display:none;"></a>
 <div id="printArea" style="display:none;"></div>
 
 <script>
-const ORDER_URL = 'https://script.google.com/macros/s/AKfycbwpxVCfJkDgPAnLMjkSWjgFN9DDVparBjjjcODXmmgM6y4MPzd5EpfURLo-AH1G2Q2d_A/exec'; // одоогийнх
-// ═══════════════════════════════════════════════════════
-//  index.html-ийн <script> таг доторх ORDER_URL-н
-//  ДАРАА нэн даруй энэ кодыг нэмнэ үү:
-// ═══════════════════════════════════════════════════════
+// ══════════════════════════════════════════════════════════════════
+//  ЗАСАГДСАН КОД — Дэлгүүрийн зургийн URL-ийг зөв татах
+//  Google Sheets-ийн Products sheet-ийн бүтэц:
+//  Title | Description | Price | Images | Type | Link
+//  Images багана: "1.1.png, 1.2.png, 1.3.png" гэсэн format
+// ══════════════════════════════════════════════════════════════════
+
+const ORDER_URL = 'https://script.google.com/macros/s/AKfycbwpxVCfJkDgPAnLMjkSWjgFN9DDVparBjjjcODXmmgM6y4MPzd5EpfURLo-AH1G2Q2d_A/exec';
+
 // ── AUTH STATE ──
-const AUTH_KEY = 'shb_auth_v1'; // localStorage key
- 
-function getStoredAuth() {
-  try { return JSON.parse(localStorage.getItem(AUTH_KEY) || 'null'); } catch(e) { return null; }
-}
-function setStoredAuth(data) {
-  localStorage.setItem(AUTH_KEY, JSON.stringify(data));
-}
-function clearStoredAuth() {
-  localStorage.removeItem(AUTH_KEY);
-}
- 
-// ── STARTUP: сайт нээгдэхэд шалгана ──
+const AUTH_KEY = 'shb_auth_v1';
+function getStoredAuth() { try { return JSON.parse(localStorage.getItem(AUTH_KEY) || 'null'); } catch(e) { return null; } }
+function setStoredAuth(data) { localStorage.setItem(AUTH_KEY, JSON.stringify(data)); }
+function clearStoredAuth() { localStorage.removeItem(AUTH_KEY); }
+
+// ── STARTUP ──
 document.addEventListener('DOMContentLoaded', () => {
   const stored = getStoredAuth();
   if (stored && stored.email) {
@@ -1610,324 +1400,256 @@ document.addEventListener('DOMContentLoaded', () => {
   }
   loadProducts();
 });
- 
+
 // ── AUTH MODAL ──
-function openAuthModal() {
-  document.getElementById('authModal').classList.add('active');
-  switchAuthTab('login');
-}
-function closeAuthModal() {
-  document.getElementById('authModal').classList.remove('active');
-}
- 
+function openAuthModal() { document.getElementById('authModal').classList.add('active'); switchAuthTab('login'); }
+function closeAuthModal() { document.getElementById('authModal').classList.remove('active'); }
 function switchAuthTab(tab) {
   ['login','register','forgot'].forEach(t => {
-    document.getElementById('form' + t.charAt(0).toUpperCase() + t.slice(1))?.classList.remove('active');
-    document.getElementById('tab' + t.charAt(0).toUpperCase() + t.slice(1))?.classList.remove('active');
+    const fid = 'form'+t.charAt(0).toUpperCase()+t.slice(1);
+    const tid = 'tab'+t.charAt(0).toUpperCase()+t.slice(1);
+    document.getElementById(fid)?.classList.remove('active');
+    document.getElementById(tid)?.classList.remove('active');
   });
-  const formId = 'form' + tab.charAt(0).toUpperCase() + tab.slice(1);
-  const tabId  = 'tab'  + tab.charAt(0).toUpperCase() + tab.slice(1);
-  document.getElementById(formId)?.classList.add('active');
-  document.getElementById(tabId)?.classList.add('active');
-  // Алдааг цэвэрлэнэ
-  ['loginError','regError','forgotError','forgotSuccess'].forEach(id => {
-    const el = document.getElementById(id);
-    if (el) { el.classList.remove('show'); el.textContent = ''; }
+  document.getElementById('form'+tab.charAt(0).toUpperCase()+tab.slice(1))?.classList.add('active');
+  document.getElementById('tab'+tab.charAt(0).toUpperCase()+tab.slice(1))?.classList.add('active');
+  ['loginError','regError','forgotError','forgotSuccess'].forEach(id=>{
+    const el=document.getElementById(id);
+    if(el){el.classList.remove('show');el.textContent='';}
   });
 }
- 
-function togglePass(inputId, btn) {
-  const inp = document.getElementById(inputId);
-  if (!inp) return;
-  inp.type = inp.type === 'password' ? 'text' : 'password';
-  btn.textContent = inp.type === 'password' ? '👁' : '🙈';
-}
- 
-// ── НЭВТРЭХ ──
+function togglePass(inputId, btn) { const inp=document.getElementById(inputId); if(!inp)return; inp.type=inp.type==='password'?'text':'password'; btn.textContent=inp.type==='password'?'👁':'🙈'; }
+
 async function doLogin() {
-  const email = document.getElementById('loginEmail').value.trim();
-  const pass  = document.getElementById('loginPassword').value;
-  const errEl = document.getElementById('loginError');
-  const btn   = document.getElementById('loginBtn');
- 
-  errEl.classList.remove('show');
-  if (!email) return showAuthError('loginError', 'Мэйл хаягаа оруулна уу!');
-  if (!pass)  return showAuthError('loginError', 'Нууц үгээ оруулна уу!');
- 
-  btn.disabled = true;
-  btn.innerHTML = '<span class="spinner" style="width:18px;height:18px;border-width:2px;border-top-color:#fff;display:inline-block;"></span>';
- 
+  const email=document.getElementById('loginEmail').value.trim();
+  const pass=document.getElementById('loginPassword').value;
+  const btn=document.getElementById('loginBtn');
+  document.getElementById('loginError').classList.remove('show');
+  if(!email)return showAuthError('loginError','Мэйл хаягаа оруулна уу!');
+  if(!pass)return showAuthError('loginError','Нууц үгээ оруулна уу!');
+  btn.disabled=true; btn.innerHTML='<span style="width:18px;height:18px;border:2px solid rgba(255,255,255,0.4);border-top-color:#fff;border-radius:50%;display:inline-block;animation:spin 0.8s linear infinite;"></span>';
   try {
-    const res = await fetch(`${ORDER_URL}?action=login&email=${encodeURIComponent(email)}&pass=${encodeURIComponent(btoa(pass))}`);
-    const data = await res.json().catch(() => null);
- 
-    if (data && data.ok) {
-      setStoredAuth({ email, name: data.name || email });
-      currentUserEmail = email;
-      updateNavUser(email);
-      closeAuthModal();
-      loadCart();
-      showToast('Тавтай морил! 👋', 'success');
+    const res=await fetch(`${ORDER_URL}?action=login&email=${encodeURIComponent(email)}&pass=${encodeURIComponent(btoa(pass))}`);
+    const data=await res.json().catch(()=>null);
+    if(data&&data.ok){
+      setStoredAuth({email,name:data.name||email});
+      currentUserEmail=email; updateNavUser(email); closeAuthModal(); loadCart();
+      showToast('Тавтай морил! 👋','success');
     } else {
-      // Apps Script нэвтрэх дэмжихгүй бол localStorage-аар шалгана
-      const localOk = checkLocalAuth(email, pass);
-      if (localOk) {
-        setStoredAuth({ email });
-        currentUserEmail = email;
-        updateNavUser(email);
-        closeAuthModal();
-        loadCart();
-        showToast('Тавтай морил! 👋', 'success');
-      } else {
-        showAuthError('loginError', 'Мэйл эсвэл нууц үг буруу байна!');
-      }
+      const localOk=checkLocalAuth(email,pass);
+      if(localOk){setStoredAuth({email});currentUserEmail=email;updateNavUser(email);closeAuthModal();loadCart();showToast('Тавтай морил! 👋','success');}
+      else{showAuthError('loginError','Мэйл эсвэл нууц үг буруу байна!');}
     }
   } catch(e) {
-    // Офлайн — localStorage-аар
-    const localOk = checkLocalAuth(email, pass);
-    if (localOk) {
-      setStoredAuth({ email });
-      currentUserEmail = email;
-      updateNavUser(email);
-      closeAuthModal();
-      loadCart();
-      showToast('Тавтай морил! 👋', 'success');
-    } else {
-      showAuthError('loginError', 'Мэйл эсвэл нууц үг буруу байна!');
-    }
+    const localOk=checkLocalAuth(email,pass);
+    if(localOk){setStoredAuth({email});currentUserEmail=email;updateNavUser(email);closeAuthModal();loadCart();showToast('Тавтай морил! 👋','success');}
+    else{showAuthError('loginError','Мэйл эсвэл нууц үг буруу байна!');}
   }
- 
-  btn.disabled = false;
-  btn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M15 3h4a2 2 0 012 2v14a2 2 0 01-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg> Нэвтрэх';
+  btn.disabled=false; btn.innerHTML='<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M15 3h4a2 2 0 012 2v14a2 2 0 01-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg> Нэвтрэх';
 }
- 
-// ── БҮРТГҮҮЛЭХ ──
+
 async function doRegister() {
-  const email  = document.getElementById('regEmail').value.trim();
-  const pass   = document.getElementById('regPassword').value;
-  const pass2  = document.getElementById('regPassword2').value;
-  const btn    = document.getElementById('regBtn');
- 
-  if (!email)          return showAuthError('regError', 'Мэйл хаягаа оруулна уу!');
-  if (!email.includes('@')) return showAuthError('regError', 'Зөв мэйл хаяг оруулна уу!');
-  if (pass.length < 6) return showAuthError('regError', 'Нууц үг доод тал нь 6 тэмдэгт байх ёстой!');
-  if (pass !== pass2)  return showAuthError('regError', 'Нууц үг таарахгүй байна!');
- 
-  // Аль хэдийн бүртгэлтэй эсэх
-  const existing = getLocalUsers();
-  if (existing[email.toLowerCase()]) return showAuthError('regError', 'Энэ мэйл аль хэдийн бүртгэлтэй байна!');
- 
-  btn.disabled = true;
- 
-  // localStorage-д хадгалана
-  saveLocalUser(email, pass);
- 
-  // Apps Script-д бүртгэнэ (серверт)
+  const email=document.getElementById('regEmail').value.trim();
+  const pass=document.getElementById('regPassword').value;
+  const pass2=document.getElementById('regPassword2').value;
+  const btn=document.getElementById('regBtn');
+  if(!email)return showAuthError('regError','Мэйл хаягаа оруулна уу!');
+  if(!email.includes('@'))return showAuthError('regError','Зөв мэйл хаяг оруулна уу!');
+  if(pass.length<6)return showAuthError('regError','Нууц үг доод тал нь 6 тэмдэгт байх ёстой!');
+  if(pass!==pass2)return showAuthError('regError','Нууц үг таарахгүй байна!');
+  const existing=getLocalUsers();
+  if(existing[email.toLowerCase()])return showAuthError('regError','Энэ мэйл аль хэдийн бүртгэлтэй байна!');
+  btn.disabled=true;
+  saveLocalUser(email,pass);
   try {
-    const p = new URLSearchParams();
-    p.append('action','register');
-    p.append('email', email);
-    p.append('pass', btoa(pass));
-    await fetch(ORDER_URL, {
-      method:'POST', mode:'no-cors',
-      headers:{'Content-Type':'application/x-www-form-urlencoded'},
-      body: p.toString()
-    });
-  } catch(e) { /* offline бол localStorage л хадгална */ }
- 
-  setStoredAuth({ email });
-  currentUserEmail = email;
-  updateNavUser(email);
-  closeAuthModal();
-  loadCart();
-  showToast('Амжилттай бүртгүүллээ! 🎉', 'success');
- 
-  btn.disabled = false;
+    const p=new URLSearchParams();p.append('action','register');p.append('email',email);p.append('pass',btoa(pass));
+    await fetch(ORDER_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:p.toString()});
+  } catch(e){}
+  setStoredAuth({email}); currentUserEmail=email; updateNavUser(email); closeAuthModal(); loadCart();
+  showToast('Амжилттай бүртгүүллээ! 🎉','success');
+  btn.disabled=false;
 }
- 
-// ── НУУЦ ҮГ МАРТСАН ──
+
 async function doForgot() {
-  const email  = document.getElementById('forgotEmail').value.trim();
-  const btn    = document.getElementById('forgotBtn');
-  const succEl = document.getElementById('forgotSuccess');
- 
-  if (!email) return showAuthError('forgotError', 'Мэйл хаягаа оруулна уу!');
- 
-  btn.disabled = true;
- 
-  try {
-    const p = new URLSearchParams();
-    p.append('action', 'resetPassword');
-    p.append('email', email);
-    await fetch(ORDER_URL, {
-      method:'POST', mode:'no-cors',
-      headers:{'Content-Type':'application/x-www-form-urlencoded'},
-      body: p.toString()
-    });
-  } catch(e) {}
- 
-  // Үргэлж амжилттай гэж харуулна (security-д)
-  succEl.classList.add('show');
-  showToast('Сэргээх холбоос илгээгдлээ!', 'success');
-  btn.disabled = false;
+  const email=document.getElementById('forgotEmail').value.trim();
+  const btn=document.getElementById('forgotBtn');
+  const succEl=document.getElementById('forgotSuccess');
+  if(!email)return showAuthError('forgotError','Мэйл хаягаа оруулна уу!');
+  btn.disabled=true;
+  try{const p=new URLSearchParams();p.append('action','resetPassword');p.append('email',email);await fetch(ORDER_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:p.toString()});}catch(e){}
+  succEl.classList.add('show');showToast('Сэргээх холбоос илгээгдлээ!','success');btn.disabled=false;
 }
- 
-// ── ГАРАХ ──
+
 function doLogout() {
-  clearStoredAuth();
-  currentUserEmail = '';
-  cartItems = [];
+  clearStoredAuth(); currentUserEmail=''; cartItems=[];
   closeDropdown();
-  document.getElementById('navUserArea').style.display = 'none';
-  // ✅ Нэвтрэх товч харуулах
-  const loginBtn = document.getElementById('navLoginBtn');
-  if (loginBtn) loginBtn.style.display = '';
-  updateCartDisplay();
-  showDashboard();
-  showToast('Амжилттай гарлаа!', 'info');
-  setTimeout(() => openAuthModal(), 600);
+  document.getElementById('navUserArea').style.display='none';
+  const loginBtn=document.getElementById('navLoginBtn');
+  if(loginBtn)loginBtn.style.display='';
+  updateCartDisplay(); showDashboard();
+  showToast('Амжилттай гарлаа!','info');
+  setTimeout(()=>openAuthModal(),600);
 }
-// ── NAV USER ──
+
 function updateNavUser(email) {
-  const area = document.getElementById('navUserArea');
-  const emailEl = document.getElementById('navUserEmail');
-  const avatar = document.getElementById('navAvatar');
-  if (!area) return;
-  area.style.display = 'flex'; // ✅ block → flex (nav дотор flex ашиглана)
-  if (emailEl) emailEl.textContent = email;
-  if (avatar) avatar.textContent = email.charAt(0).toUpperCase();
-  // ✅ Нэвтрэх товч нуух
-  const loginBtn = document.getElementById('navLoginBtn');
-  if (loginBtn) loginBtn.style.display = 'none';
+  const area=document.getElementById('navUserArea');
+  const emailEl=document.getElementById('navUserEmail');
+  const avatar=document.getElementById('navAvatar');
+  if(!area)return;
+  area.style.display='flex';
+  if(emailEl)emailEl.textContent=email;
+  if(avatar)avatar.textContent=email.charAt(0).toUpperCase();
+  const loginBtn=document.getElementById('navLoginBtn');
+  if(loginBtn)loginBtn.style.display='none';
 }
+function toggleUserDropdown() { document.getElementById('userDropdown')?.classList.toggle('open'); }
+function closeDropdown() { document.getElementById('userDropdown')?.classList.remove('open'); }
+document.addEventListener('click',e=>{const area=document.getElementById('navUserArea');if(area&&!area.contains(e.target))closeDropdown();});
 
-function toggleUserDropdown() {
-  document.getElementById('userDropdown')?.classList.toggle('open');
-}
-function closeDropdown() {
-  document.getElementById('userDropdown')?.classList.remove('open');
-}
-
-document.addEventListener('click', e => {
-  const area = document.getElementById('navUserArea');
-  if (area && !area.contains(e.target)) closeDropdown();
-});
-
-// ── LOCAL AUTH helpers ──
-function getLocalUsers() {
-  try { return JSON.parse(localStorage.getItem('shb_users') || '{}'); } catch(e) { return {}; }
-}
-function saveLocalUser(email, pass) {
-  const users = getLocalUsers();
-  users[email.toLowerCase()] = btoa(pass);
-  localStorage.setItem('shb_users', JSON.stringify(users));
-}
-function checkLocalAuth(email, pass) {
-  const users = getLocalUsers();
-  const stored = users[email.toLowerCase()];
-  return stored && stored === btoa(pass);
-}
-
-function showAuthError(id, msg) {
-  const el = document.getElementById(id);
-  if (!el) return;
-  el.textContent = msg;
-  el.classList.add('show');
-}
+function getLocalUsers(){try{return JSON.parse(localStorage.getItem('shb_users')||'{}');}catch(e){return{};}}
+function saveLocalUser(email,pass){const users=getLocalUsers();users[email.toLowerCase()]=btoa(pass);localStorage.setItem('shb_users',JSON.stringify(users));}
+function checkLocalAuth(email,pass){const users=getLocalUsers();const stored=users[email.toLowerCase()];return stored&&stored===btoa(pass);}
+function showAuthError(id,msg){const el=document.getElementById(id);if(!el)return;el.textContent=msg;el.classList.add('show');}
 
 function requireEmail(cb) {
-  if (currentUserEmail) { cb(); return; }
+  if(currentUserEmail){cb();return;}
   openAuthModal();
-  const checkLogin = setInterval(() => {
-    if (currentUserEmail) {
-      clearInterval(checkLogin);
-      setTimeout(cb, 300);
-    }
-  }, 500);
-  setTimeout(() => clearInterval(checkLogin), 30000);
+  const check=setInterval(()=>{if(currentUserEmail){clearInterval(check);setTimeout(cb,300);}},500);
+  setTimeout(()=>clearInterval(check),30000);
 }
 
-// ── GitHub raw файлын суурь URL ──
+// ══════════════════════════════════════
+//  ЗАСАГДСАН ХЭСЭГ: buildProductCard
+//  Google Sheets Products sheet:
+//  Images баганад: "1.1.png, 1.2.png" гэж бичигдсэн
+//  Link баганад: Google Drive линк бий
+// ══════════════════════════════════════
+
+// GITHUB_BASE - зурган файлуудыг GitHub raw-аас татна
 const GITHUB_BASE = 'https://raw.githubusercontent.com/tuult764-crypto/sonirholtoi-hel-bichig-/main/';
 
 // ── Global state ──
 let currentUserEmail = '';
-let cartItems        = [];
-let productsData     = [];
-let sudokuBoard      = [];
-let printPageCount   = 1;
-let pendingProduct   = '';
-let pendingTotal     = 0;
+let cartItems = [];
+let productsData = [];
+let sudokuBoard = [];
+let printPageCount = 1;
+let pendingProduct = '';
+let pendingTotal = 0;
 let pendingPassPages = 0;
-let lbImages         = [];
-let lbIndex          = 0;
-let lbTouchStartX    = 0;
+let lbImages = [];
+let lbIndex = 0;
+let lbTouchStartX = 0;
 
-// ── Монгол тоо ──
-const MONG_NUMS = {
-  '1': '\u1811', '2': '\u1812', '3': '\u1813',
-  '4': '\u1814', '5': '\u1815', '6': '\u1816',
-  '7': '\u1817', '8': '\u1818', '9': '\u1819'
-};
-const MONG_TO_ASCII = {
-  '\u1811': '1', '\u1812': '2', '\u1813': '3',
-  '\u1814': '4', '\u1815': '5', '\u1816': '6',
-  '\u1817': '7', '\u1818': '8', '\u1819': '9'
-};
+const MONG_NUMS = {'1':'\u1811','2':'\u1812','3':'\u1813','4':'\u1814','5':'\u1815','6':'\u1816','7':'\u1817','8':'\u1818','9':'\u1819'};
+const MONG_TO_ASCII = {'\u1811':'1','\u1812':'2','\u1813':'3','\u1814':'4','\u1815':'5','\u1816':'6','\u1817':'7','\u1818':'8','\u1819':'9'};
 
+// ══════════════════════════════════════
+//  ЗАСАГДСАН: buildProductCard
+//  - Images баганаас зургийн жагсаалтыг задалж
+//  - Эхний зургийг preview болгон харуулна
+//  - Олон зурагтай бол thumbnail strip харуулна
+//  - Lightbox-оор томруулж харах боломжтой
+// ══════════════════════════════════════
 function buildProductCard(p) {
-  const imgUrl = p.Image ? (p.Image.startsWith('http') ? p.Image : GITHUB_BASE + p.Image) : '';
-  const isFree = Number(p.Price) === 0;
+  const title = p.Title || p.title || '';
+  const price = Number(p.Price || p.price || 0);
+  const desc = p.Description || p.description || '';
+  const category = p.Category || p.category || p.Type || p.type || 'Материал';
+  const isFree = price === 0;
+  const safeTitle = title.replace(/'/g, "\\'").replace(/"/g, '&quot;');
+
+  // ── Images задлах ──
+  // Images багана: "1.1.png, 1.2.png, 1.3.png" гэсэн format
+  const rawImages = p.Images || p.images || '';
+  const imgFiles = rawImages
+    .split(',')
+    .map(s => s.trim())
+    .filter(s => s && /\.(png|jpg|jpeg|gif|webp)$/i.test(s));
+
+  // GitHub raw URL үүсгэх
+  const imgUrls = imgFiles.map(f => GITHUB_BASE + f);
+
+  // ── Зургийн HTML үүсгэх ──
+  let imgHtml = '';
+  if (imgUrls.length === 0) {
+    imgHtml = `<div class="product-img-placeholder">📄 ${category}</div>`;
+  } else if (imgUrls.length === 1) {
+    imgHtml = `<img src="${imgUrls[0]}" alt="${safeTitle}" loading="lazy"
+      onclick="openLightbox(${JSON.stringify(imgUrls).replace(/"/g,"'")},0)"
+      style="width:100%;height:100%;object-fit:cover;cursor:pointer;"
+      onerror="this.parentElement.innerHTML='<div class=\\'product-img-placeholder\\'>📄</div>'">`;
+  } else {
+    // Олон зурагтай: thumbnail strip (дээд тал нь 3 зураг харуулна)
+    const showImgs = imgUrls.slice(0, 3);
+    const allImgsJson = JSON.stringify(imgUrls).replace(/"/g, "'");
+    imgHtml = `<div class="product-img-strip">` +
+      showImgs.map((url, i) =>
+        `<img src="${url}" alt="${safeTitle} ${i+1}" loading="lazy"
+          onclick="openLightbox(${allImgsJson},${i})"
+          onerror="this.style.display='none'">`
+      ).join('') +
+      `</div>`;
+    if (imgUrls.length > 3) {
+      imgHtml += `<div style="position:absolute;bottom:6px;right:8px;background:rgba(0,0,0,0.55);color:#fff;font-size:10px;font-weight:700;padding:3px 8px;border-radius:9999px;">+${imgUrls.length-3}</div>`;
+    }
+  }
+
   return `
     <div class="product-card">
-      <div class="product-img">
-        ${imgUrl
-          ? `<img src="${imgUrl}" alt="${p.Title}" loading="lazy" onerror="this.style.display='none'">`
-          : `<div class="product-img-placeholder">📄 Зураггүй</div>`}
+      <div class="product-img" style="position:relative;">
+        ${imgHtml}
       </div>
       <div class="product-body">
-        <span class="product-tag">${p.Category || 'Материал'}</span>
-        <div class="product-title">${p.Title}</div>
-        <div class="product-price">${isFree ? 'Үнэгүй' : Number(p.Price).toLocaleString() + '₮'}</div>
+        <span class="product-tag">${category}</span>
+        <div class="product-title">${title}</div>
+        ${desc ? `<div class="product-desc">${desc.substring(0, 60)}${desc.length > 60 ? '...' : ''}</div>` : ''}
+        <div class="product-price">${isFree ? 'Үнэгүй' : price.toLocaleString() + '₮'}</div>
         <div class="product-actions">
-          ${!isFree ? `<button class="btn-add" onclick="addToCart('${p.Title}',${p.Price})">🛒 Сагс</button>` : ''}
-          <button class="btn-buy" onclick="buyNow('${p.Title}',${p.Price})">${isFree ? '📥 Татах' : 'Авах'}</button>
+          ${!isFree ? `<button class="btn-add" onclick="addToCart('${safeTitle}',${price})">🛒 Сагс</button>` : ''}
+          <button class="btn-buy" onclick="_buyNow('${safeTitle}',${price},'${p.Link||p.link||''}')">
+            ${isFree ? '📥 Татах' : 'Авах'}
+          </button>
         </div>
       </div>
     </div>`;
-}/* ✅ buildProductCard хаагдлаа */
+}
 
-function buyNow(title, price) {
+// ══════════════════════════════════════
+//  ЗАСАГДСАН: _buyNow — buyNow-оос тусдаа
+//  (давхардлыг арилгасан)
+// ══════════════════════════════════════
+function _buyNow(title, price, link) {
   const isFree = Number(price) === 0;
-  if (isFree) {
-    const prod = (productsData || []).find(p => p.Title === title);
-    if (prod && prod.Link && prod.Link.startsWith('http')) {
-      window.open(prod.Link, '_blank');
-      return;
-    }
+  if (isFree && link && link.startsWith('http')) {
+    window.open(link, '_blank');
+    return;
   }
   requireEmail(() => {
     pendingProduct = title;
-    pendingTotal   = Number(price);
+    pendingTotal = Number(price);
     pendingPassPages = 0;
     document.getElementById('paymentNote').innerText =
-      currentUserEmail + ' | ' + title + ' | ' + Number(price).toLocaleString() + '₮';
+      `${currentUserEmail} | ${title} | ${Number(price).toLocaleString()}₮`;
     document.getElementById('paymentModal').classList.add('active');
   });
 }
 
-// ── AI PROXY HELPER ──
+// buyNow — cart болон бусад газраас дуудагдана
+function buyNow(title, price) {
+  const prod = (productsData || []).find(p => (p.Title||p.title) === title);
+  const link = prod ? (prod.Link || prod.link || '') : '';
+  _buyNow(title, price, link);
+}
+
+// ── AI PROXY ──
 async function callAI(messages, maxTokens = 1000) {
   const resp = await fetch(ORDER_URL, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
       action: 'anthropic',
-      payload: {
-        model: 'claude-sonnet-4-20250514',
-        max_tokens: maxTokens,
-        messages
-      }
+      payload: { model: 'claude-sonnet-4-20250514', max_tokens: maxTokens, messages }
     })
   });
   const data = await resp.json();
@@ -1935,7 +1657,7 @@ async function callAI(messages, maxTokens = 1000) {
   return data;
 }
 
-/* ── AI ASSESSMENT STATE ── */
+// ── AI Assessment state ──
 let assessSelectedTime = 20;
 let assessBloomLevels = new Set(['remember','understand']);
 let uploadedFileText = '';
@@ -1944,753 +1666,9 @@ let currentWorksheetQuestions = [];
 let currentWorksheetMeta = {};
 let aiChatHistory = [];
 
-/* ── FETCH ── */
+// ── fetchJSON ──
 async function fetchJSON(url) {
   try {
     const res = await fetch(url, {method:'GET',redirect:'follow',cache:'no-cache',headers:{'Accept':'application/json'}});
     const text = await res.text();
-    const m = text.match(/(\[[\s\S]*\]|\{[\s\S]*\})/);
-    if (!m) throw new Error('no json');
-    return JSON.parse(m[1]);
-  } catch(e) { console.warn('fetchJSON:', e); return null; }
-}
-
-/* ── NAV ── */
-function showSection(name) {
-  const requireAuth = ['library'];
-  if (requireAuth.includes(name) && !currentUserEmail) { requireEmail(()=>showSection(name)); return; }
-  document.getElementById('dashboardHome').classList.add('hidden');
-  document.querySelectorAll('.content-section').forEach(s=>s.classList.remove('active'));
-  const t = document.getElementById(name+'Section');
-  if (t) t.classList.add('active');
-  if (name==='games')        initGamesSection();
-  if (name==='library')      loadMyLibrary();
-  if (name==='shop')         loadProducts();
-  if (name==='exam')         initExamLobby();
-  if (name==='course')       initCourseSection();
-  if (name==='aiassessment') initAiAssessment();
-}
-
-function showDashboard() {
-  document.getElementById('dashboardHome').classList.remove('hidden');
-  document.querySelectorAll('.content-section').forEach(s=>s.classList.remove('active'));
-  stopExamTimer();
-}
-
-/* ══════════════════════════════════════
-   ── ОНЛАЙН СУРГАЛТ ──
-══════════════════════════════════════ */
-const COURSE_DATA = {
-  enrolled: false,
-  lessons: [
-        {num:1,title:'Танилцуулга — Монгол бичиг гэж юу вэ?',type:'video',duration:'8 мин',free:true,desc:'Монгол бичгийн түүх, ач холбогдол, орчин үеийн хэрэглээ.'},
-        {num:2,title:'Үндсэн зурлагууд',type:'video',duration:'12 мин',free:false,desc:'Тулгуур зурлага: босоо шугам, нуман зурлага, нөгцийн зурлага.'},
-        {num:3,title:'Эгшиг үсэг — А, Э',type:'video',duration:'15 мин',free:false,desc:'А болон Э эгшиг үсгийн бичих дараалал, дасгал.'},
-        {num:4,title:'Эгшиг үсэг — И, О, У, Ө, Ү',type:'video',duration:'18 мин',free:false,desc:'Бусад эгшиг үсгүүдийн дэлгэрэнгүй.'},
-        {num:5,title:'Дасгал — Эгшиг үсэг',type:'quiz',duration:'20 мин',free:false,desc:'А, Э, И, О, У, Ө, Ү үсгийн мэдлэг шалгах тест.'},
-        {num:6,title:'Гийгүүлэгч — На, Ма, Ла',type:'video',duration:'14 мин',free:false,desc:'Эхний гийгүүлэгч бүлэг.'},
-        {num:7,title:'Гийгүүлэгч — Ба, Га/Ха, Ра',type:'video',duration:'14 мин',free:false,desc:'Хоёр дахь гийгүүлэгч бүлэг.'},
-        {num:8,title:'Дасгал — Гийгүүлэгч I',type:'practice',duration:'10 мин',free:false,desc:'Сурсан гийгүүлэгчүүдийн бататгал.'},
-        {num:9,title:'Гийгүүлэгч — Да/Та, Са, Ша',type:'video',duration:'14 мин',free:false,desc:'Гурав дахь гийгүүлэгч бүлэг.'},
-        {num:10,title:'Гийгүүлэгч — За/Жа, Ца/Ча, Йа',type:'video',duration:'12 мин',free:false,desc:'Сүүлийн гийгүүлэгч бүлэг.'},
-        {num:11,title:'Үг унших — Анхан шат',type:'video',duration:'16 мин',free:false,desc:'Богино үгийг үсэгчлэн унших.'},
-        {num:12,title:'Дасгал — Үг унших',type:'practice',duration:'15 мин',free:false,desc:'Үг уншихын бататгал.'},
-        {num:13,title:'Богино өгүүлбэр зохиох',type:'video',duration:'14 мин',free:false,desc:'Энгийн өгүүлбэр бичих дүрэм.'},
-        {num:14,title:'Эцсийн шалгалт',type:'quiz',duration:'20 мин',free:false,desc:'Бүх хичээлийн мэдлэг шалгах.'},
-    ]
-};
-
-function initCourseSection() {
-    const enrolled = localStorage.getItem('courseEnrolled')==='true';
-    COURSE_DATA.enrolled = enrolled;
-    const btn = document.getElementById('enrollBtn');
-    if (enrolled) { btn.textContent='✓ Бүртгэлтэй'; btn.classList.add('enrolled'); }
-    else { btn.textContent='Эрх авах'; btn.classList.remove('enrolled'); }
-    const list = document.getElementById('curriculumList');
-    list.innerHTML = COURSE_DATA.lessons.map(l=>{
-        const unlocked = enrolled || l.free;
-        const tc = {video:'video',quiz:'quiz',practice:'practice'}[l.type]||'video';
-        const tl = {video:'Видео',quiz:'Тест',practice:'Дасгал'}[l.type]||'Хичээл';
-        return `<div class="lesson-item ${unlocked?'unlocked':'locked'}" onclick="${unlocked?`openLesson(${l.num-1})`:'showToast(\'Эрх авсны дараа нээгдэнэ!\',\'info\')'}">
-            <div class="lesson-num">${l.num}</div>
-            <div class="lesson-title">${l.title}</div>
-            <span class="lesson-type ${tc}">${tl}</span>
-            <span class="lesson-duration">${l.duration}</span>
-            <span style="font-size:14px;">${unlocked?'':'🔒'}</span>
-        </div>`;
-    }).join('');
-}
-function openLesson(idx) {
-    const l = COURSE_DATA.lessons[idx];
-    document.getElementById('videoModalTitle').textContent = l.title;
-    document.getElementById('videoModalDesc').textContent = l.desc;
-    document.getElementById('videoModal').classList.add('active');
-}
-function closeVideoModal() { document.getElementById('videoModal').classList.remove('active'); }
-function enrollCourse() {
-    if (COURSE_DATA.enrolled) return;
-    requireEmail(()=>{
-        pendingProduct='Үндэсний бичгийн анхан шат — Онлайн сургалт';
-        pendingTotal=29999; pendingPassPages=0;
-        document.getElementById('paymentNote').innerText=`${currentUserEmail} | Онлайн сургалт | 29,999₮`;
-        document.getElementById('paymentModal').classList.add('active');
-    });
-}
-
-/* ══════════════════════════════════════
-   ── AI АЖЛЫН ХУУДАС — ШИНЭ СИСТЕМ ──
-══════════════════════════════════════ */
-
-function initAiAssessment() {
-    // Reset state
-    uploadedFileText = '';
-    uploadedFileName = '';
-    currentWorksheetQuestions = [];
-    aiChatHistory = [];
-    assessSelectedTime = 20;
-    assessBloomLevels = new Set(['remember','understand']);
-    // Reset UI
-    hideEl('assessGenerating');
-    hideEl('assessResult');
-    showEl('assessPlaceholder');
-    clearFile();
-    ['20','40','60'].forEach(v=>{
-        const el=document.getElementById('tp'+v);
-        if(el)el.classList.toggle('active',v==='20');
-    });
-    document.getElementById('qCountHint').textContent='→ 4–5 асуулт үүсгэнэ (A5 хэмжээ)';
-    // Reset bloom tags
-    ['remember','understand','apply','analyze','evaluate','create'].forEach(l=>{
-        const el=document.getElementById('bt-'+l);
-        if(el){
-            const active=l==='remember'||l==='understand';
-            el.classList.toggle('active',active);
-            el.style.borderColor=active?'currentColor':'transparent';
-        }
-    });
-}
-
-/* ── Цаг сонгох ── */
-function selectAssessTime(t) {
-    assessSelectedTime = t;
-    ['20','40','60'].forEach(v=>{
-        const el=document.getElementById('tp'+v);
-        if(el)el.classList.toggle('active',parseInt(v)===t);
-    });
-    const qMap={20:'4–5 асуулт үүсгэнэ (A5 хэмжээ)',40:'8–10 асуулт үүсгэнэ (A4 хэмжээ)',60:'12–15 асуулт үүсгэнэ (A4 хэмжээ)'};
-    document.getElementById('qCountHint').textContent='→ '+qMap[t];
-}
-
-/* ── Блүүм tag toggle ── */
-function toggleBloomTag(level) {
-    const el = document.getElementById('bt-'+level);
-    if (!el) return;
-    if (assessBloomLevels.has(level)) {
-        if (assessBloomLevels.size <= 1) return; // min 1
-        assessBloomLevels.delete(level);
-        el.classList.remove('active');
-        el.style.borderColor='transparent';
-    } else {
-        assessBloomLevels.add(level);
-        el.classList.add('active');
-        el.style.borderColor='currentColor';
-    }
-}
-
-/* ── File handling ── */
-function handleDragOver(e) { e.preventDefault(); document.getElementById('fileDropZone').classList.add('dragover'); }
-function handleDragLeave(e) { document.getElementById('fileDropZone').classList.remove('dragover'); }
-function handleFileDrop(e) {
-    e.preventDefault();
-    document.getElementById('fileDropZone').classList.remove('dragover');
-    const file = e.dataTransfer.files[0];
-    if (file) processFile(file);
-}
-function handleFileSelect(e) { const file=e.target.files[0]; if(file)processFile(file); }
-
-async function processFile(file) {
-    const maxMB = 10;
-    if (file.size > maxMB*1024*1024) { showToast(`Файлын хэмжээ ${maxMB}MB-аас бага байх хэрэгтэй!`,'error'); return; }
-    uploadedFileName = file.name;
-    const ext = file.name.split('.').pop().toLowerCase();
-    const iconMap = {pdf:'📕',docx:'📘',doc:'📘',txt:'📄',png:'🖼️',jpg:'🖼️',jpeg:'🖼️'};
-    // Show file info
-    document.getElementById('fileIcon').textContent = iconMap[ext]||'📄';
-    document.getElementById('fileName').textContent = file.name;
-    document.getElementById('fileSize').textContent = (file.size/1024).toFixed(1)+' KB';
-    showEl('fileInfo');
-    // Extract text
-    showToast('Файл уншиж байна...','info');
-    try {
-        if (ext==='txt') {
-            uploadedFileText = await file.text();
-        } else if (['png','jpg','jpeg'].includes(ext)) {
-            // Convert to base64 for AI vision
-            uploadedFileText = await fileToBase64(file);
-            uploadedFileName = file.name+'|IMAGE';
-        } else if (ext==='pdf'||ext==='docx'||ext==='doc') {
-            // Read as text (basic extraction)
-            const text = await file.text().catch(()=>'');
-            // Try to extract readable characters
-            uploadedFileText = text.replace(/[^\u0400-\u04FF\u1800-\u18AF\u0020-\u007E\n]/g,' ').replace(/\s+/g,' ').trim().substring(0,4000);
-            if (!uploadedFileText || uploadedFileText.length < 50) {
-                uploadedFileText = `[${file.name} файлаас агуулга гарган авч чадсангүй. AI нь файлын нэр болон байршуулсан сурах бичгийн ангид үндэслэн даалгавар боловсруулна.]`;
-            }
-        } else {
-            uploadedFileText = await file.text();
-        }
-        // Show preview
-        const previewText = uploadedFileText.startsWith('data:') ? '[Зургийн файл — AI харж боловсруулна]' : uploadedFileText.substring(0,200)+(uploadedFileText.length>200?'...':'');
-        document.getElementById('extractedText').textContent = previewText;
-        showEl('extractedPreview');
-        showToast('Файл амжилттай уншигдлаа!','success');
-    } catch(e) {
-        uploadedFileText = `[Файл: ${file.name}]`;
-        showToast('Файл уншихад алдаа гарлаа. Мэдээллийг оруулна уу.','error');
-    }
-}
-
-function fileToBase64(file) {
-    return new Promise((res,rej)=>{
-        const r=new FileReader();
-        r.onload=()=>res(r.result);
-        r.onerror=()=>rej(new Error('Read failed'));
-        r.readAsDataURL(file);
-    });
-}
-
-function clearFile() {
-    uploadedFileText=''; uploadedFileName='';
-    document.getElementById('fileInput').value='';
-    hideEl('fileInfo'); hideEl('extractedPreview');
-    document.getElementById('fileDropContent').innerHTML=`<div style="font-size:36px;margin-bottom:10px;">📂</div><div style="font-size:13px;font-weight:600;color:var(--on-surface-variant);">Файл чирж оруулах эсвэл дарна уу</div><div style="font-size:11px;color:var(--outline);margin-top:6px;">PDF · DOCX · TXT · PNG · JPG — max 10MB</div>`;
-}
-
-/* ── Main worksheet generation ── */
-async function generateWorksheet() {
-    const grade   = document.getElementById('assessGrade').value;
-    const subject = document.getElementById('assessSubject').value;
-    const genre   = document.getElementById('assessGenre').value;
-    const extra   = document.getElementById('assessExtraNote').value.trim();
-    if (!grade)   return showToast('Анги сонгоно уу!','error');
-    if (!subject) return showToast('Судлагдахуун сонгоно уу!','error');
-    if (!genre)   return showToast('Зохиолын төрөл сонгоно уу!','error');
-    const btn = document.getElementById('assessGenBtn');
-    btn.disabled=true;
-    hideEl('assessResult'); hideEl('assessPlaceholder');
-    showEl('assessGenerating');
-    const statusMsg = document.getElementById('genStatusMsg');
-    const statusSub = document.getElementById('genStatusSub');
-    statusMsg.textContent='Файлыг дүн шинжилгээ хийж байна...';
-    statusSub.textContent='Блүүмийн таксономын дагуу асуулт боловсруулж байна';
-    const qCount = assessSelectedTime===20?5:assessSelectedTime===40?10:14;
-    const bloomNames={remember:'Санах',understand:'Ойлгох',apply:'Хэрэглэх',analyze:'Шинжлэх',evaluate:'Үнэлэх',create:'Бүтээх'};
-    const bloomStr = [...assessBloomLevels].map(l=>bloomNames[l]||l).join(', ');
-    const hasFile  = uploadedFileText && uploadedFileText.length > 10;
-    const isImage  = uploadedFileName && uploadedFileName.includes('|IMAGE');
-    // Build prompt
-    let prompt = `Та Монгол хэл, Уран зохиол, Үндэсний бичиг хичээлийн мэргэжлийн багш бөгөөд Блүүмийн таксономын аргаар сонирхолтой, бүтээлч сэтгэлгээг хөгжүүлэх ажлын хуудас бэлдэж байна.
-
-МЭДЭЭЛЭЛ:
-- Анги: ${grade}-р анги
-- Судлагдахуун: ${subject}
-- Зохиолын төрөл / Сэдэв: ${genre}
-- Шалгалтын хугацаа: ${assessSelectedTime} минут
-- Асуултын тоо: ${qCount}
-- Блүүмийн таксономын түвшин: ${bloomStr}
-${extra ? `- Нэмэлт зааварчилгаа: ${extra}` : ''}
-
-${hasFile && !isImage ? `СУРАХ БИЧГИЙН АГУУЛГА (энэ эхэд үндэслэж даалгавар боловсруул):
-"""
-${uploadedFileText.substring(0,3000)}
-"""` : hasFile && isImage ? `[Сурах бичгийн зургийн файл байршуулсан — агуулгыг харж боловсруул]` : `[Файл байршуулаагүй — ${grade}-р ангийн ${subject} хичээлийн ${genre} сэдвийн стандарт агуулгад үндэслэн боловсруул]`}
-
-ШААРДЛАГА:
-Яг ${qCount} асуулт үүсгэ. Асуулт бүр сонирхолтой, бодлого шаардсан, бүтээлч байх ёстой. Блүүмийн түвшин бүрт тохирох асуулт оруул.
-
-Асуулт бүрийн загвар:
-- Тест асуулт: {"q":"асуулт","type":"mc","opts":["А) ...", "Б) ...","В) ...","Г) ..."],"ans":"А","bloom":"Санах","points":2}
-- Задгай асуулт: {"q":"асуулт","type":"open","lines":3,"bloom":"Бүтээх","points":5}
-- Харьцуулах: {"q":"асуулт","type":"compare","items":["зүйл1","зүйл2"],"bloom":"Шинжлэх","points":4}
-
-Зөвхөн JSON массив буцаа, өөр текст нэмэхгүй:
-[{...},{...}]`;
-
-    let questions = null;
-    try {
-        const messages = [{role:'user',content:prompt}];
-        // If image file, add as vision
-        if (isImage && uploadedFileText.startsWith('data:image')) {
-            messages[0].content = [
-                {type:'image',source:{type:'base64',media_type:uploadedFileText.split(';')[0].split(':')[1]||'image/jpeg',data:uploadedFileText.split(',')[1]}},
-                {type:'text',text:prompt}
-            ];
-        }
-        statusMsg.textContent='AI асуулт боловсруулж байна...';
-        const data = await callAI(messages, 2000);
-        const raw = data.content?.map(b=>b.text||'').join('')||'';
-        const match = raw.match(/\[[\s\S]*\]/);
-        if (match) questions=JSON.parse(match[0]);
-    } catch(e) { console.warn('AI err:',e); }
-
-    // Fallback
-    if (!questions||!questions.length) questions=buildFallbackWorksheet(grade,subject,genre,qCount,[...assessBloomLevels]);
-    currentWorksheetQuestions = questions;
-    currentWorksheetMeta = {grade,subject,genre,time:assessSelectedTime,bloomStr};
-    // Init chat
-    aiChatHistory = [
-        {role:'user',content:prompt},
-        {role:'assistant',content:JSON.stringify(questions)}
-    ];
-    hideEl('assessGenerating');
-    showEl('assessResult');
-    renderWorksheetPreview(questions,{grade,subject,genre,time:assessSelectedTime});
-    // Reset AI chat UI
-    document.getElementById('aiChatMessages').innerHTML=`<div class="ai-chat-bubble assistant"><div class="ai-chat-role assistant">🤖 AI Хөтөч</div><div style="font-size:12px;color:var(--on-surface);line-height:1.6;">Ажлын хуудас амжилттай үүслээ! Асуулт нэмэх, өөрчлөх, эсвэл тохируулах бол хэлнэ үү.<br><br>Жишээ нь: <em>"3-р асуултыг 'Бүтээх' түвшнээр дахин бич"</em> эсвэл <em>"Задгай асуулт 2 нэм"</em></div></div>`;
-    btn.disabled=false;
-}
-
-function buildFallbackWorksheet(grade, subject, genre, qCount, levels) {
-    const pool = [
-        {
-            q: genre + ' зохиолд ашигласан уран дүрслэлийн хэрэгслийг тодорхойл.',
-            type: 'mc',
-            opts: ['А) Харьцуулалт', 'Б) Давталт', 'В) Метафор', 'Г) Бүгд зөв'],
-            ans: 'Г',
-            bloom: 'Ойлгох',
-            points: 2
-        },
-        { q: 'Зохиолын сэдэв, гол санааг бусад зохиолтой харьцуулаарай.', type: 'open', lines: 4, bloom: 'Шинжлэх', points: 5 },
-        { q: 'Зохиолд гарсан уран дүрслэлийн хэрэглэсэн аргыг өөрийн бодлоор үнэл.', type: 'open', lines: 3, bloom: 'Үнэлэх', points: 5 },
-        { q: 'Энэ зохиолын үргэлжлэлийг өөрийн үгээр зохион бичнэ үү.', type: 'open', lines: 5, bloom: 'Бүтээх', points: 6 },
-        { q: 'Зохиолын дүрийг өөр нэг зохиолын дүртэй харьцуул.', type: 'compare', items: ['Зохиолын дүр А', 'Зохиолын дүр Б'], bloom: 'Шинжлэх', points: 4 },
-        { q: genre + ' жанрын онцлогийг тайлбарла.', type: 'open', lines: 3, bloom: 'Санах', points: 3 },
-    ];
-    return pool.slice(0, Math.min(qCount, pool.length));
-}
-    
-/* ── Preview рендэр ── */
-function renderWorksheetPreview(questions, meta) {
-    const bloomColors={Санах:'#ef4444',Ойлгох:'#f97316',Хэрэглэх:'#eab308',Шинжлэх:'#22c55e',Үнэлэх:'#3b82f6',Бүтээх:'#8b5cf6'};
-    const totalPts = questions.reduce((s,q)=>s+(q.points||2),0);
-    let html = `<div class="print-preview-header">
-        <div class="print-preview-school">${meta.subject} · ${meta.grade}-р анги · ${meta.genre}</div>
-        <div class="print-preview-subject">Ажлын хуудас — ${meta.time} минут</div>
-        <div class="print-preview-meta">
-            <span>Нийт оноо: ${totalPts}</span>
-            <span>Огноо: ___________</span>
-            <span>Нэр: ___________</span>
-        </div>
-    </div>`;
-    questions.forEach((q,i)=>{
-        const bColor=bloomColors[q.bloom]||'#888';
-        html+=`<div class="print-question">
-            <div class="print-q-num">
-                ${i+1}-р даалгавар
-                <span class="print-q-bloom" style="background:${bColor}20;color:${bColor};">${q.bloom||''}</span>
-                <span style="font-size:9px;color:var(--outline);margin-left:auto;">${q.points||2} оноо</span>
-            </div>
-            <div class="print-q-text">${q.q}</div>`;
-        if (q.type==='mc'&&q.opts) {
-            html+=`<div class="print-q-options">${q.opts.map(o=>`<div class="print-q-option">◯ ${o}</div>`).join('')}</div>`;
-        } else if (q.type==='compare'&&q.items) {
-            html+=`<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:4px;">`;
-            q.items.forEach(item=>{ html+=`<div style="font-size:11px;font-weight:600;color:var(--on-surface-variant);border-bottom:1px solid var(--outline-variant);padding-bottom:4px;margin-bottom:4px;">${item}</div>`; });
-            html+=`</div>`;
-            for(let l=0;l<3;l++) html+=`<div class="print-q-open"></div>`;
-        } else {
-            const lines=q.lines||3;
-            for(let l=0;l<lines;l++) html+=`<div class="print-q-open"></div>`;
-        }
-        html+=`</div>`;
-    });
-    document.getElementById('worksheetPreview').innerHTML=html;
-}
-
-function regenerateWorksheet() { generateWorksheet(); }
-
-/* ── AI Хөтөч чат ── */
-function sendAiSuggestion(text) {
-    document.getElementById('aiChatInput').value=text;
-    sendAiChat();
-}
-
-async function sendAiChat() {
-    const input=document.getElementById('aiChatInput');
-    const msg=input.value.trim();
-    if (!msg) return;
-    input.value=''; input.style.height='44px';
-    const btn=document.getElementById('aiChatSendBtn');
-    btn.disabled=true;
-    // Add user bubble
-    addChatBubble('user',msg);
-    // Add typing indicator
-    const typingId='typing_'+Date.now();
-    addChatBubble('assistant','<span class="ai-typing">Боловсруулж байна</span>',typingId);
-    // Build AI request
-    aiChatHistory.push({role:'user',content:msg});
-    // Include current worksheet context in system-like message
-    const contextMsg = `Та одоогийн ажлын хуудасны асуултуудыг өөрчлөх/нэмэх хүсэлтийг биелүүлнэ.
-
-Одоогийн асуулт (${currentWorksheetQuestions.length} ш):
-${JSON.stringify(currentWorksheetQuestions,null,1)}
-
-Хүсэлт: ${msg}
-
-Шинэчлэгдсэн бүрэн асуултын массивыг JSON-оор буцаа. Зөвхөн JSON массив, тайлбар нэмэхгүй:
-[{...},{...}]`;
-    let newQuestions=null;
-    let responseText='';
-try {
-        const data = await callAI([{role:'user',content:contextMsg}], 2000);
-        responseText = data.content?.map(b=>b.text||'').join('')||'';
-        const match = responseText.match(/\[[\s\S]*\]/);
-        if (match) newQuestions = JSON.parse(match[0]);
-    } catch(e){ console.warn('chat err:',e); }
-    // Remove typing
-    const typingEl=document.getElementById(typingId);
-    if (typingEl) typingEl.remove();
-    if (newQuestions&&newQuestions.length) {
-        currentWorksheetQuestions=newQuestions;
-        aiChatHistory.push({role:'assistant',content:JSON.stringify(newQuestions)});
-        renderWorksheetPreview(newQuestions,currentWorksheetMeta);
-        addChatBubble('assistant',`✅ Ажлын хуудас шинэчлэгдлээ! ${newQuestions.length} асуулт болов.`);
-        showToast('Ажлын хуудас шинэчлэгдлээ!','success');
-    } else {
-        // Fallback: friendly message
-        const friendly=responseText.replace(/\[[\s\S]*\]/,'').trim()||'Уучлаарай, хүсэлтийг биелүүлж чадсангүй. Дахин оролдоно уу.';
-        addChatBubble('assistant',friendly.substring(0,300));
-    }
-    btn.disabled=false;
-}
-
-function addChatBubble(role,text,id='') {
-    const msgs=document.getElementById('aiChatMessages');
-    const div=document.createElement('div');
-    div.className=`ai-chat-bubble ${role}`;
-    if (id) div.id=id;
-    div.innerHTML=`<div class="ai-chat-role ${role}">${role==='user'?'👤 Та':'🤖 AI Хөтөч'}</div><div style="font-size:12px;color:var(--on-surface);line-height:1.6;">${text}</div>`;
-    msgs.appendChild(div);
-    msgs.scrollTop=msgs.scrollHeight;
-}
-
-/* ── Print / Download ── */
-function printWorksheet() {
-    const box=document.getElementById('worksheetPreview');
-    if (!box||!box.innerHTML) return showToast('Эхлээд ажлын хуудас үүсгэнэ үү!','error');
-    const pa=document.getElementById('printArea');
-    pa.innerHTML=`<style>@page{size:A5 portrait;margin:8mm;}body{font-family:'Lexend',sans-serif;font-size:10pt;line-height:1.5;}.print-preview-header{text-align:center;border-bottom:2px solid #dbc2b2;padding-bottom:10px;margin-bottom:14px;}.print-preview-school{font-size:8pt;color:#666;text-transform:uppercase;letter-spacing:0.04em;}.print-preview-subject{font-size:13pt;font-weight:700;color:#1a1208;margin-top:4px;}.print-preview-meta{display:flex;justify-content:space-between;font-size:8pt;color:#888;margin-top:6px;}.print-question{margin-bottom:14px;padding-bottom:10px;border-bottom:1px solid #eee;}.print-q-num{font-size:8pt;font-weight:700;color:#944a00;text-transform:uppercase;display:flex;align-items:center;gap:6px;margin-bottom:4px;}.print-q-bloom{font-size:8pt;padding:1px 6px;border-radius:9999px;}.print-q-text{font-size:10pt;font-weight:600;margin:3px 0 6px;line-height:1.4;}.print-q-options{display:grid;grid-template-columns:1fr 1fr;gap:2px;font-size:9pt;}.print-q-option{padding:2px 0;}.print-q-open{height:20px;border-bottom:1px solid #ccc;margin-top:3px;}</style>${box.innerHTML}`;
-    pa.style.display='block';
-    const after=()=>{ pa.style.display='none'; pa.innerHTML=''; window.removeEventListener('afterprint',after); };
-    window.addEventListener('afterprint',after);
-    setTimeout(()=>window.print(),200);
-}
-
-function downloadWorksheet() {
-    const box=document.getElementById('worksheetPreview');
-    if (!box||!box.innerHTML) return showToast('Эхлээд ажлын хуудас үүсгэнэ үү!','error');
-    const meta=currentWorksheetMeta;
-    const wordHtml=`<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word"><head><meta charset="utf-8"><title>Ажлын хуудас</title><style>@page{size:A5 portrait;margin:15mm;}body{font-family:'Times New Roman',serif;font-size:11pt;}.print-preview-header{text-align:center;border-bottom:2px solid #ccc;padding-bottom:8px;margin-bottom:14px;}.print-question{margin-bottom:14px;}</style></head><body>${box.innerHTML}</body></html>`;
-    const blob=new Blob([wordHtml],{type:'application/msword'});
-    const url=URL.createObjectURL(blob);
-    const a=document.createElement('a');
-    a.href=url; a.download=`Ажлын_хуудас_${meta.grade}р_анги_${meta.genre||''}.doc`; a.click();
-    URL.revokeObjectURL(url);
-    showToast('Word файл татагдаж байна!','success');
-}
-
-/* ══════════════════════════════════════
-   ── PRODUCTS ──
-══════════════════════════════════════ */
-async function loadProducts() {
-    const grid=document.getElementById('materialGrid');
-    const shop=document.getElementById('fullShopGrid');
-    const loading='<div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--on-surface-variant);font-size:13px;">Ачаалж байна...</div>';
-    if(grid)grid.innerHTML=loading; if(shop)shop.innerHTML=loading;
-    try {
-        const data=await fetchJSON(`${ORDER_URL}?action=getProducts`);
-        if (data&&Array.isArray(data)&&data.length>0) {
-            productsData=data;
-            const html=productsData.map(p=>buildProductCard(p)).join('');
-            if(grid)grid.innerHTML=html; if(shop)shop.innerHTML=html;
-        } else {
-            const msg='<div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--on-surface-variant);font-size:13px;">Материал олдсонгүй.</div>';
-            if(grid)grid.innerHTML=msg; if(shop)shop.innerHTML=msg;
-        }
-        loadCart();
-    } catch(e) {
-        const msg='<div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--error);font-size:13px;">Холболтын алдаа. Дахин оролдоно уу.</div>';
-        if(grid)grid.innerHTML=msg; if(shop)shop.innerHTML=msg;
-    }
-}
-
-/* ── LIGHTBOX ── */
-function openLightbox(imgs,start){lbImages=imgs;lbIndex=start;renderLB();document.getElementById('lightboxModal').classList.add('active');document.body.style.overflow='hidden';}
-function closeLightbox(){document.getElementById('lightboxModal').classList.remove('active');document.body.style.overflow='';}
-function renderLB(){const img=document.getElementById('lbImg');img.style.opacity='0';img.onload=()=>{img.style.opacity='1';};img.src=lbImages[lbIndex];document.getElementById('lbCounter').innerText=lbImages.length>1?`${lbIndex+1} / ${lbImages.length}`:'';document.getElementById('lbPrev').style.display=lbImages.length>1?'flex':'none';document.getElementById('lbNext').style.display=lbImages.length>1?'flex':'none';renderLbDots();}
-function lbPrev(){lbIndex=(lbIndex-1+lbImages.length)%lbImages.length;renderLB();}
-function lbNext(){lbIndex=(lbIndex+1)%lbImages.length;renderLB();}
-function renderLbDots(){const c=document.getElementById('lbDots');if(lbImages.length<=1){c.innerHTML='';return;}c.innerHTML=lbImages.map((_,i)=>`<button onclick="lbIndex=${i};renderLB()" style="width:8px;height:8px;border-radius:50%;border:none;cursor:pointer;background:${i===lbIndex?'#fff':'rgba(255,255,255,0.4)'};padding:0;"></button>`).join('');}
-document.addEventListener('keydown',e=>{const lb=document.getElementById('lightboxModal');if(!lb||!lb.classList.contains('active'))return;if(e.key==='ArrowLeft')lbPrev();if(e.key==='ArrowRight')lbNext();if(e.key==='Escape')closeLightbox();});
-
-/* ── CART ── */
-function loadCart(){const key=currentUserEmail?'cart_'+currentUserEmail:'cart_guest';const s=localStorage.getItem(key);cartItems=s?JSON.parse(s):[];updateCartDisplay();}
-function saveCart(){const key=currentUserEmail?'cart_'+currentUserEmail:'cart_guest';localStorage.setItem(key,JSON.stringify(cartItems));updateCartDisplay();}
-function addToCart(title,price){const e=cartItems.find(i=>i.title===title);if(e){e.quantity+=1;}else{cartItems.push({title,price:Number(price),quantity:1});}saveCart();showToast('Сагсанд нэмэгдлээ!','success');}
-function removeFromCart(title){cartItems=cartItems.filter(i=>i.title!==title);saveCart();renderCartItems();}
-function updateQuantity(title,change){const item=cartItems.find(i=>i.title===title);if(!item)return;item.quantity+=change;if(item.quantity<=0)removeFromCart(title);else{saveCart();renderCartItems();}}
-function clearCart(){cartItems=[];saveCart();renderCartItems();}
-function updateCartDisplay(){const count=cartItems.reduce((s,i)=>s+i.quantity,0);const el=document.getElementById('cartCount');if(!el)return;el.textContent=count;el.style.display=count>0?'flex':'none';}
-function openCart(){renderCartItems();document.getElementById('cartModal').classList.add('active');}
-function closeCart(){document.getElementById('cartModal').classList.remove('active');}
-function renderCartItems(){const c=document.getElementById('cartItems');const tEl=document.getElementById('cartTotal');const btn=document.getElementById('checkoutBtn');if(!cartItems.length){c.innerHTML=`<div style="text-align:center;color:var(--on-surface-variant);padding:32px 0;font-size:13px;">Сагс хоосон байна</div>`;tEl.textContent='0';btn.disabled=true;btn.style.opacity='0.5';return;}btn.disabled=false;btn.style.opacity='1';c.innerHTML=cartItems.map(item=>`<div class="cart-item"><div style="flex:1;"><div style="font-size:12px;font-weight:600;color:var(--on-surface);margin-bottom:2px;">${item.title}</div><div style="font-size:13px;font-weight:700;color:var(--primary);">${item.price.toLocaleString()}₮</div></div><div style="display:flex;align-items:center;gap:8px;"><button class="qty-btn" style="background:var(--surface-container-high);" onclick="updateQuantity('${item.title.replace(/'/g,"\\'")}', -1)">−</button><span style="font-size:13px;font-weight:700;min-width:20px;text-align:center;">${item.quantity}</span><button class="qty-btn" style="background:rgba(148,74,0,0.1);color:var(--primary);" onclick="updateQuantity('${item.title.replace(/'/g,"\\'")}', 1)">+</button></div><button onclick="removeFromCart('${item.title.replace(/'/g,"\\'")}') " style="background:none;border:none;color:var(--error);font-size:16px;cursor:pointer;padding:4px;">✕</button></div>`).join('');tEl.textContent=cartItems.reduce((s,i)=>s+i.price*i.quantity,0).toLocaleString()+' ₮';}
-function proceedToPayment(){if(!cartItems.length)return showToast('Сагс хоосон байна!','error');requireEmail(()=>{const summary=cartItems.map(i=>`${i.title} x${i.quantity}`).join(', ');const total=cartItems.reduce((s,i)=>s+i.price*i.quantity,0);pendingProduct=summary;pendingTotal=total;pendingPassPages=0;closeCart();document.getElementById('paymentNote').innerText=currentUserEmail+' | '+summary+' | '+total.toLocaleString()+'₮';document.getElementById('paymentModal').classList.add('active');});}
-function buyNow(title,price){requireEmail(()=>{pendingProduct=title;pendingTotal=price;pendingPassPages=0;document.getElementById('paymentNote').innerText=currentUserEmail+' | '+title+' | '+Number(price).toLocaleString()+'₮';document.getElementById('paymentModal').classList.add('active');});}
-function closePayment(){document.getElementById('paymentModal').classList.remove('active');}
-async function confirmOrder(){
-    const btn=document.getElementById('confirmBtn');
-    const note=document.getElementById('paymentNote').innerText;
-    btn.disabled=true;btn.innerText='Илгээж байна...';
-    const p=new URLSearchParams();
-    p.append('action','order');p.append('email',currentUserEmail);p.append('product',pendingProduct);p.append('note',note);
-    if(pendingPassPages>0){p.append('printPages',pendingPassPages);p.append('type','printPass');}
-    try{
-        await fetch(ORDER_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:p.toString()});
-        if(pendingProduct.includes('Онлайн сургалт')){localStorage.setItem('courseEnrolled','true');}
-        showToast('Хүсэлт илгээгдлээ! Туул багш шалгаад эрхийг идэвхжүүлнэ.','success');
-        closePayment();clearCart();pendingPassPages=0;
-    }catch(e){showToast('Холболтын алдаа гарлаа!','error');}
-    finally{btn.disabled=false;btn.innerText='Төлсөн, хүсэлт илгээх';}
-}
-
-/* ── LIBRARY ── */
-function escHtml(str){return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
-function detectItemType(f){const t=(f.type||f.Type||'').toLowerCase();const ti=(f.productName||f.title||f.Title||'').toLowerCase();if(t.includes('print')||ti.includes('судоку')||ti.includes('print pass'))return'printPass';return'file';}
-async function loadMyLibrary(){
-    const g=document.getElementById('libraryGrid');if(!g)return;
-    g.innerHTML="<p style='grid-column:1/-1;text-align:center;padding:32px;color:var(--on-surface-variant);font-size:12px;'>Ачаалж байна...</p>";
-    try{
-        const res=await fetch(`${ORDER_URL}?action=getMyLibrary&email=${encodeURIComponent(currentUserEmail)}`,{method:'GET',redirect:'follow',cache:'no-cache'});
-        const raw=await res.text();
-        let files=[];
-        try{const m=raw.match(/(\[[\s\S]*\]|\{[\s\S]*\})/);if(m)files=JSON.parse(m[1]);if(!Array.isArray(files))files=[];}catch(e){files=[];}
-        if(!files.length){g.innerHTML=`<div style="grid-column:1/-1;text-align:center;padding:60px 0;"><p style="color:var(--on-surface-variant);font-size:13px;font-weight:600;">Одоогоор материал байхгүй байна</p><p style="font-size:12px;color:var(--outline);margin-top:8px;">Төлбөр баталгаажсаны дараа энд харагдана</p></div>`;return;}
-        window._libFiles=files;
-        g.innerHTML=files.map((f,i)=>{const title=f.productName||f.title||f.Title||'Материал';const url=f.downloadUrl||f.url||f.link||'';const dateStr=f.date?new Date(f.date).toLocaleDateString('mn-MN'):'';const itemType=detectItemType(f);
-        if(itemType==='printPass'){const pages=parseInt(f.printPages||f.pages||f.remaining||0);return`<div class="library-card"><div class="lib-icon" style="background:rgba(0,109,66,0.1);">🖨</div><div style="font-size:12px;font-weight:700;color:var(--on-surface);">${escHtml(title)}</div><div style="font-size:11px;color:var(--on-surface-variant);">${dateStr}</div>${pages>0?`<div style="background:rgba(0,109,66,0.08);border:1px solid rgba(0,109,66,0.2);border-radius:9999px;padding:4px 14px;font-size:12px;font-weight:700;color:var(--tertiary);">${pages} хуудас үлдсэн</div>`:`<div style="background:var(--surface-container);border-radius:9999px;padding:4px 14px;font-size:11px;color:var(--on-surface-variant);">Эрх дууссан</div>`}<button onclick="goToSudokuPrint()" style="width:100%;background:var(--tertiary);border:none;color:#fff;font-family:'Lexend',sans-serif;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.04em;padding:10px;border-radius:10px;cursor:pointer;">Судоку хэвлэх</button></div>`;}
-        const hasUrl=url&&url!=='undefined'&&url.trim()!=='';
-        return`<div class="library-card"><div class="lib-icon" style="background:rgba(148,74,0,0.08);">📂</div><div style="font-size:12px;font-weight:700;color:var(--on-surface);">${escHtml(title)}</div><div style="font-size:11px;color:var(--on-surface-variant);">${dateStr}</div>${hasUrl?`<button onclick="openLibraryFile(${i})" style="width:100%;background:var(--primary);border:none;color:#fff;font-family:'Lexend',sans-serif;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.04em;padding:10px;border-radius:10px;cursor:pointer;">Үзэх / Татах</button>`:`<div style="width:100%;background:var(--surface-container);border-radius:10px;padding:10px;text-align:center;font-size:11px;color:var(--on-surface-variant);font-weight:600;">Линк бэлэн болоогүй</div>`}</div>`;}).join('');
-    }catch(e){g.innerHTML=`<div style="grid-column:1/-1;text-align:center;padding:40px;"><p style="color:var(--error);font-size:13px;font-weight:600;margin-bottom:8px;">Холболтын алдаа</p><button onclick="loadMyLibrary()" style="background:var(--primary);border:none;color:#fff;font-family:'Lexend',sans-serif;font-size:11px;font-weight:600;padding:10px 20px;border-radius:9999px;cursor:pointer;text-transform:uppercase;">Дахин оролдох</button></div>`;}
-}
-function goToSudokuPrint(){showSection('games');setTimeout(()=>{const el=document.getElementById('printPassSection');if(el)el.scrollIntoView({behavior:'smooth',block:'center'});},300);}
-function openLibraryFile(idx){const files=window._libFiles||[];const f=files[idx];if(!f)return showToast('Файл олдсонгүй','error');const url=(f.downloadUrl||f.url||f.link||'').trim();if(!url||url==='undefined')return showToast('Линк бэлэн болоогүй байна.','error');const a=document.getElementById('hiddenFileLink');a.href=url;a.click();}
-
-/* ── PRINT PASS ── */
-function getLocalPass(){return parseInt(localStorage.getItem('printPassPages_'+currentUserEmail)||'0');}
-function setLocalPass(pages){localStorage.setItem('printPassPages_'+currentUserEmail,String(Math.max(0,pages)));}
-function getFreeUsed(){return localStorage.getItem('freePrintUsed_'+currentUserEmail)==='true';}
-function setFreeUsed(){localStorage.setItem('freePrintUsed_'+currentUserEmail,'true');}
-async function checkPrintPassFromServer(showMsg=false){const chk=document.getElementById('passCheckingInfo');if(chk)chk.classList.remove('hidden');try{const data=await fetchJSON(`${ORDER_URL}?action=getPrintPass&email=${encodeURIComponent(currentUserEmail)}`);if(data&&typeof data.remaining==='number'){setLocalPass(data.remaining);if(showMsg)showToast(`Эрх шинэчлэгдлээ: ${data.remaining} хуудас үлдсэн`,'success');}}catch(e){if(showMsg)showToast('Серверт холбогдож чадсангүй','info');}finally{if(chk)chk.classList.add('hidden');renderPassSection();}}
-function initGamesSection(){initSudoku();renderPassSection();if(currentUserEmail)checkPrintPassFromServer(false);}
-function renderPassSection(){const remaining=getLocalPass();const freeUsed=getFreeUsed();const activeEl=document.getElementById('passActiveInfo');const freeEl=document.getElementById('freePrintInfo');const dispEl=document.getElementById('passRemainingDisplay');if(remaining>0){if(activeEl)activeEl.classList.remove('hidden');if(dispEl)dispEl.innerText=remaining;if(freeEl)freeEl.classList.add('hidden');}else{if(activeEl)activeEl.classList.add('hidden');if(freeEl)freeEl.classList.toggle('hidden',freeUsed);}}
-function openPrintPassSection(){const r=getLocalPass();const fu=getFreeUsed();if(r>0){showPrintModal();}else if(!fu){showToast('1 хуудас үнэгүй хэвлэх боломжтой!','info');const el=document.getElementById('printPassSection');if(el)el.scrollIntoView({behavior:'smooth',block:'center'});}else{showToast('Хэвлэх эрх байхгүй. Эрх авна уу!','error');const el=document.getElementById('printPassSection');if(el)el.scrollIntoView({behavior:'smooth',block:'center'});}}
-function useFreeOnePage(){if(getFreeUsed())return showToast('Үнэгүй 1 хуудасны боломж аль хэдийн ашиглагдсан!','error');printPageCount=1;setFreeUsed();renderPassSection();closePrintModal();doPrint();showToast('Үнэгүй 1 хуудас хэвлэж байна!','success');}
-function buyPrintPass(pages,price){requireEmail(()=>{pendingProduct=`Судоку хэвлэх эрх — ${pages} хуудас`;pendingTotal=price;pendingPassPages=pages;document.getElementById('paymentNote').innerText=`${currentUserEmail} | Судоку хэвлэх эрх ${pages} хуудас | ${price.toLocaleString()}₮`;document.getElementById('paymentModal').classList.add('active');});}
-function showPrintModal(){const r=getLocalPass();printPageCount=1;document.getElementById('modalRemainingPages').innerText=r;updatePrintModalUI();document.getElementById('printModal').classList.add('active');}
-function closePrintModal(){document.getElementById('printModal').classList.remove('active');}
-function adjustPrintPages(delta){const r=getLocalPass();printPageCount=Math.max(1,Math.min(r,printPageCount+delta));updatePrintModalUI();}
-function updatePrintModalUI(){const r=getLocalPass();document.getElementById('printPageCountDisplay').innerText=printPageCount;document.getElementById('printSudokuCount').innerText=printPageCount*4;const notEnough=document.getElementById('printNotEnough');const btn=document.getElementById('doPrintBtn');if(printPageCount>r){notEnough.classList.remove('hidden');btn.disabled=true;btn.style.opacity='0.5';}else{notEnough.classList.add('hidden');btn.disabled=false;btn.style.opacity='1';}}
-function executePrint(){const r=getLocalPass();if(printPageCount>r)return showToast('Эрх хүрэхгүй байна!','error');setLocalPass(r-printPageCount);const p=new URLSearchParams();p.append('action','usePrintPass');p.append('email',currentUserEmail);p.append('usedPages',printPageCount);fetch(ORDER_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:p.toString()}).catch(()=>{});closePrintModal();renderPassSection();doPrint();showToast(`${printPageCount} хуудас хэвлэж байна!`,'success');}
-
-/* ── SUDOKU ── */
-function generateSudokuBoard(){const base=[[1,2,3,4,5,6,7,8,9],[4,5,6,7,8,9,1,2,3],[7,8,9,1,2,3,4,5,6],[2,3,1,5,6,4,8,9,7],[5,6,4,8,9,7,2,3,1],[8,9,7,2,3,1,5,6,4],[3,1,2,6,4,5,9,7,8],[6,4,5,9,7,8,3,1,2],[9,7,8,3,1,2,6,4,5]];for(let b=0;b<3;b++)for(let s=0;s<3;s++){const r1=b*3+Math.floor(Math.random()*3);const r2=b*3+Math.floor(Math.random()*3);[base[r1],base[r2]]=[base[r2],base[r1]];}const co=shuffle([0,1,2]);return base.map(row=>{const nr=[];co.forEach(b=>{for(let c=0;c<3;c++)nr.push(row[b*3+c]);});return nr;});}
-function initSudoku(){sudokuBoard=generateSudokuBoard();const c=document.getElementById('sudokuContainer');c.innerHTML='';for(let r=0;r<9;r++)for(let col=0;col<9;col++){const val=sudokuBoard[r][col];const cell=document.createElement('input');cell.type='text';cell.maxLength=2;cell.className='sudoku-cell';cell.dataset.answer=String(val);if(Math.random()<0.45){cell.value=MONG_NUMS[String(val)];cell.readOnly=true;cell.classList.add('cell-fixed');}else{cell.classList.add('cell-user');cell.addEventListener('keydown',onSudokuKeyDown);cell.addEventListener('input',onSudokuInput);}c.appendChild(cell);}}
-function onSudokuKeyDown(e){const a=['Backspace','Delete','Tab','ArrowLeft','ArrowRight','ArrowUp','ArrowDown'];if(a.includes(e.key)||(e.key>='1'&&e.key<='9')||Object.values(MONG_NUMS).includes(e.key))return;e.preventDefault();}
-function onSudokuInput(e){const cell=e.target;const raw=cell.value;if(!raw)return;let last=raw[raw.length-1];if(last>='1'&&last<='9')last=MONG_NUMS[last];if(!Object.values(MONG_NUMS).includes(last)){requestAnimationFrame(()=>{cell.value='';});return;}requestAnimationFrame(()=>{cell.value=last;const ascii=MONG_TO_ASCII[last];if(ascii&&ascii===cell.dataset.answer){cell.classList.add('cell-correct');cell.classList.remove('cell-wrong');}else{cell.classList.remove('cell-correct','cell-wrong');}});}
-function checkSudoku(){const cells=document.querySelectorAll('#sudokuContainer .sudoku-cell');let correct=0,wrong=0,empty=0;cells.forEach(cell=>{if(cell.readOnly)return;const val=cell.value.trim();const ascii=MONG_TO_ASCII[val]||val;if(!val){empty++;return;}if(ascii===cell.dataset.answer){cell.classList.add('cell-correct');cell.classList.remove('cell-wrong');correct++;}else{cell.classList.add('cell-wrong');cell.classList.remove('cell-correct');wrong++;}});if(empty>0)showToast(`${empty} хоосон нүд байна!`,'error');else if(wrong>0)showToast(`${wrong} нүд буруу байна!`,'error');else showToast('Баяр хүргэе! Бүгд зөв!','success');}
-function buildPrintPuzzle(board){let html='<table style="border-collapse:collapse;width:100%;table-layout:fixed;">';for(let r=0;r<9;r++){html+='<tr>';for(let c=0;c<9;c++){const val=board[r][c];const mong=MONG_NUMS[String(val)];const show=((r*9+c)%5!==0)&&((r*3+c)%7!==2);const bR=(c===2||c===5)?'border-right:2.5px solid #000;':'border-right:1px solid #ccc;';const bB=(r===2||r===5)?'border-bottom:2.5px solid #000;':'border-bottom:1px solid #ccc;';const bL=c===0?'border-left:1px solid #ccc;':'';const bT=r===0?'border-top:1px solid #ccc;':'';const bg=show?'background:#f0edec;':'background:#fff;';html+=`<td style="width:11.1%;aspect-ratio:1/1;height:8mm;text-align:center;vertical-align:middle;font-size:10pt;font-weight:700;${bR}${bB}${bL}${bT}${bg}padding:0;">${show?mong:'&nbsp;'}</td>`;}html+='</tr>';}html+='</table>';return html;}
-function doPrint(){const printArea=document.getElementById('printArea');let pagesHtml='';for(let page=0;page<printPageCount;page++){pagesHtml+=`<div style="width:194mm;min-height:277mm;padding:0;margin:0 auto;background:white;box-sizing:border-box;${page<printPageCount-1?'page-break-after:always;':''}"><div style="text-align:center;padding:6mm 0 4mm 0;border-bottom:1.5px solid #dbc2b2;margin-bottom:5mm;"><img src="logo.png" alt="logo" style="height:12mm;object-fit:contain;display:inline-block;vertical-align:middle;margin-right:3mm;"><span style="font-family:'Lexend',sans-serif;font-size:14pt;font-weight:700;text-transform:uppercase;color:#944a00;letter-spacing:2px;vertical-align:middle;">Сонирхолтой Хэл Бичиг</span><div style="font-size:8pt;color:#887365;margin-top:1mm;font-family:'Lexend',sans-serif;">Монгол бичиг судоку — ${page+1}-р хуудас</div></div><div style="display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;gap:6mm;padding:0 4mm 4mm 4mm;height:248mm;box-sizing:border-box;">`;for(let q=0;q<4;q++){const nb=generateSudokuBoard();pagesHtml+=`<div style="border:1px solid #dbc2b2;border-radius:3mm;padding:3mm 3mm 2mm 3mm;background:#fff;display:flex;flex-direction:column;align-items:center;"><div style="font-size:7pt;font-weight:700;color:#944a00;text-transform:uppercase;margin-bottom:2mm;font-family:'Lexend',sans-serif;">${page*4+q+1}-р судоку</div><div style="width:100%;">${buildPrintPuzzle(nb)}</div><div style="margin-top:2mm;text-align:right;width:100%;font-size:6pt;color:#887365;font-family:'Lexend',sans-serif;">Нэр: _______________</div></div>`;}pagesHtml+=`</div></div>`;}const fullHtml=`<style>@import url('https://fonts.googleapis.com/css2?family=Lexend:wght@700&display=swap');*{box-sizing:border-box;margin:0;padding:0;}body{background:white!important;}</style>${pagesHtml}`;printArea.innerHTML=fullHtml;printArea.style.display='block';const after=()=>{printArea.style.display='none';printArea.innerHTML='';window.removeEventListener('afterprint',after);};window.addEventListener('afterprint',after);setTimeout(()=>window.print(),200);}
-
-/* ── EXAM ── */
-let examQuestions=[],currentExamQs=[],currentQIndex=0,examScoreCount=0,examCorrectCount=0,examWrongCount=0;
-let examTimerInterval=null,examTimeLeft=0,examStartTime=null,currentTopic='',examAnswered=false;
-async function initExamLobby(){showEl('examLobby');hideEl('examActive');hideEl('examResult');stopExamTimer();document.getElementById('examTopicList').innerHTML=`<div style="text-align:center;color:var(--on-surface-variant);font-size:12px;padding:24px;">Уншиж байна...</div>`;try{const data=await fetchJSON(`${ORDER_URL}?action=getQuestions`);examQuestions=data&&Array.isArray(data)?data:buildDemoQuestions();}catch(e){examQuestions=buildDemoQuestions();}renderTopics();renderExamHistory();}
-function buildDemoQuestions(){return[{Topic:'Дүрэм',Question:'Монгол бичгийг ямар шугамаар бичдэг вэ?',A:'Хэвтээ',B:'Босоо',C:'Диагональ',D:'Дугуй',Answer:'B',Explanation:'Монгол бичгийг дээрээс доош чиглэлтэй босоо бичдэг.'},{Topic:'Дүрэм',Question:'Монгол бичгийн эгшиг үсэг хэд байдаг вэ?',A:'5',B:'7',C:'9',D:'12',Answer:'B',Explanation:'Монгол бичигт 7 эгшиг үсэг байдэг.'},{Topic:'Үг',Question:'"Титэм + шүд" нийлээд ямар үсэг вэ',A:'А',B:'Э',C:'И',D:'О',Answer:'A',Explanation:'"А" үсэг юм.'},{Topic:'Дуудлага',Question:'"Титэм+гэдэс+шилбэ" ямар үсэг болох вэ?',A:'О',B:'У',C:'Ө',D:'И',Answer:'C',Explanation:'"Ө" үсэг.'}];}
-function getTopics(){return[...new Set(examQuestions.map(q=>q.Topic||q.topic||'Ерөнхий'))];}
-function renderTopics(){const topics=getTopics();const el=document.getElementById('examTopicList');if(!topics.length){el.innerHTML=`<div style="text-align:center;color:var(--on-surface-variant);font-size:12px;padding:24px;">Асуулт олдсонгүй.</div>`;return;}el.innerHTML=topics.map(topic=>{const count=examQuestions.filter(q=>(q.Topic||q.topic||'Ерөнхий')===topic).length;return`<button class="exam-topic-btn" onclick="startExam('${topic.replace(/'/g,"\\'")}')"><div><div class="exam-topic-name">${topic}</div><div class="exam-topic-count">${count} асуулт</div></div><div class="exam-start-badge">Эхлэх</div></button>`;}).join('');}
-function startExam(topic){currentTopic=topic;const qs=examQuestions.filter(q=>(q.Topic||q.topic||'Ерөнхий')===topic);currentExamQs=shuffle(qs).slice(0,10);currentQIndex=0;examScoreCount=0;examCorrectCount=0;examWrongCount=0;hideEl('examLobby');hideEl('examResult');showEl('examActive');examTimeLeft=currentExamQs.length*30;startExamTimer();examStartTime=Date.now();renderExamQuestion();}
-function renderExamQuestion(){if(currentQIndex>=currentExamQs.length){finishExam();return;}examAnswered=false;const q=currentExamQs[currentQIndex];document.getElementById('examQuestionCount').innerText=`${currentQIndex+1} / ${currentExamQs.length}`;document.getElementById('examScore').innerText=examScoreCount;document.getElementById('examProgress').style.width=`${(currentQIndex/currentExamQs.length)*100}%`;document.getElementById('examQuestionBadge').innerText=q.Topic||q.topic||'Ерөнхий';document.getElementById('examQuestion').innerText=q.Question||q.question||'';document.getElementById('examOptions').innerHTML=['A','B','C','D'].map(opt=>{const text=q[opt];if(!text)return '';return`<button id="opt_${opt}" onclick="selectAnswer('${opt}')" class="option-btn"><div class="option-letter">${opt}</div><span>${text}</span></button>`;}).join('');document.getElementById('examExplanation').classList.add('hidden');document.getElementById('examNextBtn').classList.add('hidden');}
-function selectAnswer(opt){if(examAnswered)return;examAnswered=true;const q=currentExamQs[currentQIndex];const correct=q.Answer||q.answer||'A';const isOK=opt===correct;const selBtn=document.getElementById('opt_'+opt);if(selBtn)selBtn.classList.add(isOK?'correct':'wrong');if(!isOK){const cb=document.getElementById('opt_'+correct);if(cb)cb.classList.add('correct');}document.querySelectorAll('#examOptions .option-btn').forEach(b=>b.disabled=true);if(isOK){examScoreCount+=10;examCorrectCount++;showToast('Зөв! +10 оноо','success');}else{examWrongCount++;showToast('Буруу!','error');}const expl=q.Explanation||q.explanation||'';if(expl){document.getElementById('examExplanationText').innerText=expl;document.getElementById('examExplanation').classList.remove('hidden');}document.getElementById('examScore').innerText=examScoreCount;document.getElementById('examNextBtn').classList.remove('hidden');document.getElementById('examNextBtn').innerText=currentQIndex+1<currentExamQs.length?'Дараагийн асуулт':'Үр дүн харах';}
-function nextQuestion(){currentQIndex++;if(currentQIndex>=currentExamQs.length)finishExam();else renderExamQuestion();}
-function finishExam(){stopExamTimer();const elapsed=Math.round((Date.now()-examStartTime)/1000);const pct=currentExamQs.length>0?Math.round((examCorrectCount/currentExamQs.length)*100):0;hideEl('examActive');showEl('examResult');document.getElementById('resultScore').innerText=examScoreCount+' оноо';document.getElementById('resultDetail').innerText=`${pct}% зөв — ${currentTopic}`;document.getElementById('resultCorrect').innerText=examCorrectCount;document.getElementById('resultWrong').innerText=examWrongCount;document.getElementById('resultTime').innerText=elapsed+'s';document.getElementById('resultEmoji').innerText=pct>=80?'GREAT!':pct>=50?'GOOD':'TRY AGAIN';document.getElementById('resultReview').innerHTML=currentExamQs.map((q,i)=>{const c=q.Answer||q.answer||'A';return`<div style="background:var(--surface-container-low);border-radius:10px;padding:10px 12px;font-size:11px;"><div style="color:var(--on-surface-variant);margin-bottom:4px;">${i+1}. ${q.Question||''}</div><div style="color:var(--tertiary);font-weight:600;">Зөв: ${q[c]||c}</div></div>`;}).join('');saveExamResult({topic:currentTopic,score:examScoreCount,pct,date:new Date().toLocaleDateString('mn-MN'),elapsed});}
-function retryExam(){startExam(currentTopic);}
-function backToLobby(){stopExamTimer();hideEl('examResult');hideEl('examActive');showEl('examLobby');renderExamHistory();}
-function startExamTimer(){stopExamTimer();updateTimerDisplay();examTimerInterval=setInterval(()=>{examTimeLeft--;updateTimerDisplay();if(examTimeLeft<=0){clearInterval(examTimerInterval);showToast('Цаг дууслаа!','error');finishExam();}},1000);}
-function stopExamTimer(){if(examTimerInterval){clearInterval(examTimerInterval);examTimerInterval=null;}}
-function updateTimerDisplay(){const el=document.getElementById('examTimer');if(!el)return;const m=String(Math.floor(examTimeLeft/60)).padStart(2,'0');const s=String(examTimeLeft%60).padStart(2,'0');el.innerText=`${m}:${s}`;el.classList.toggle('timer-warning',examTimeLeft<=30);}
-function saveExamResult(result){const key='examHistory_'+currentUserEmail;const h=JSON.parse(localStorage.getItem(key)||'[]');h.unshift(result);localStorage.setItem(key,JSON.stringify(h.slice(0,10)));}
-function renderExamHistory(){const key='examHistory_'+currentUserEmail;const h=JSON.parse(localStorage.getItem(key)||'[]');const el=document.getElementById('examHistoryList');if(!h.length){el.innerHTML=`<div style="font-size:11px;color:var(--outline);text-align:center;padding:8px;">Одоохондоо байхгүй</div>`;return;}el.innerHTML=h.map(r=>`<div style="display:flex;justify-content:space-between;align-items:center;background:#fff;border:1px solid var(--outline-variant);border-radius:10px;padding:10px 14px;font-size:12px;"><div><span style="font-weight:600;color:var(--on-surface);">${r.topic}</span><span style="color:var(--on-surface-variant);margin-left:8px;">${r.date}</span></div><div style="font-weight:700;color:${r.pct>=80?'var(--tertiary)':r.pct>=50?'var(--primary)':'var(--error)'};">${r.pct}%</div></div>`).join('');}
-
-/* ── UTILS ── */
-function shuffle(arr){const a=[...arr];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
-function showEl(id){const el=document.getElementById(id);if(el)el.classList.remove('hidden');}
-function hideEl(id){const el=document.getElementById(id);if(el)el.classList.add('hidden');}
-function showToast(msg,type='info'){const box=document.getElementById('toastBox');const toast=document.createElement('div');toast.className=`toast ${type}`;toast.innerText=msg;box.appendChild(toast);setTimeout(()=>toast.style.opacity='1',10);setTimeout(()=>{toast.style.opacity='0';setTimeout(()=>toast.remove(),300);},2800);}
-/* ── БУЛАН НАВИГАЦИ ── */
-function showCorner(name) {
-    document.getElementById('dashboardHome').classList.add('hidden');
-    document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active'));
-    const map = { teacher: 'teacherCorner', student: 'studentCorner' };
-    const t = document.getElementById(map[name]);
-    if (t) t.classList.add('active');
-    hideEl('teacherMaterialsBox');
-    hideEl('studentMaterialsBox');
-}
-
-/* ── БАГШИЙН МАТЕРИАЛ ── */
-function showTeacherMaterials() {
-    showEl('teacherMaterialsBox');
-    document.getElementById('teacherMaterialsBox').scrollIntoView({ behavior: 'smooth', block: 'start' });
-    loadTeacherMaterials('all');
-}
-
-function filterTeacherMat(type) {
-    ['all','esh','devshih','olimpiad'].forEach(t => {
-        const el = document.getElementById('tmat-' + t);
-        if (el) el.classList.toggle('active', t === type);
-    });
-    loadTeacherMaterials(type);
-}
-
-async function loadTeacherMaterials(type) {
-    const grid = document.getElementById('teacherMatGrid');
-    grid.innerHTML = '<div style="text-align:center;padding:32px;color:var(--on-surface-variant);font-size:12px;grid-column:1/-1;">Ачаалж байна...</div>';
-    try {
-        const data = await fetchJSON(`${ORDER_URL}?action=getProducts&category=teacher_${type}`);
-        if (data && data.length) {
-            grid.innerHTML = data.map(p => buildMaterialCard(p)).join('');
-        } else {
-            grid.innerHTML = buildStaticTeacherCards(type);
-        }
-    } catch(e) {
-        grid.innerHTML = buildStaticTeacherCards(type);
-    }
-}
-
-function buildStaticTeacherCards(type) {
-    const cards = {
-        all: [
-            { icon:'📋', title:'ЭЕШ 2023 — Монгол хэл', tag:'ЭЕШ', color:'blue' },
-            { icon:'📋', title:'ЭЕШ 2022 — Монгол хэл', tag:'ЭЕШ', color:'blue' },
-            { icon:'📄', title:'Дэвших шалгалт — 8→9', tag:'Дэвших', color:'orange' },
-            { icon:'📄', title:'Дэвших шалгалт — 11→12', tag:'Дэвших', color:'orange' },
-            { icon:'🏆', title:'Олимпиад 2023 даалгавар', tag:'Олимпиад', color:'purple' },
-            { icon:'🏆', title:'Олимпиад 2022 даалгавар', tag:'Олимпиад', color:'purple' },
-        ],
-        esh: [
-            { icon:'📋', title:'ЭЕШ 2026 — Монгол хэл', tag:'ЭЕШ', color:'blue' },
-            { icon:'📋', title:'ЭЕШ 2025 — Монгол хэл', tag:'ЭЕШ', color:'blue' },
-            { icon:'📋', title:'ЭЕШ 2024 — Монгол хэл', tag:'ЭЕШ', color:'blue' },
-        ],
-        devshih: [
-            { icon:'📄', title:'Дэвших шалгалт 6→8', tag:'Дэвших', color:'orange' },
-            { icon:'📄', title:'Дэвших шалгалт 10→11', tag:'Дэвших', color:'orange' },
-        ],
-        olimpiad: [
-            { icon:'🏆', title:'Олимпиад 2025', tag:'Олимпиад', color:'purple' },
-            { icon:'🏆', title:'Олимпиад 2024', tag:'Олимпиад', color:'purple' },
-        ]
-    };
-    const colorMap = { blue:'rgba(26,110,181,0.1)', orange:'rgba(232,96,10,0.1)', purple:'rgba(124,58,237,0.1)' };
-    const textMap  = { blue:'var(--secondary)', orange:'var(--primary)', purple:'var(--accent-purple)' };
-    return (cards[type]||cards.all).map(c =>
-        `<div style="background:#fff;border:1.5px solid var(--outline-variant);border-radius:14px;padding:18px;text-align:center;transition:all 0.2s;" onmouseover="this.style.boxShadow='0 6px 20px rgba(0,0,0,0.08)'" onmouseout="this.style.boxShadow=''">
-            <div style="width:48px;height:48px;border-radius:14px;background:${colorMap[c.color]};display:flex;align-items:center;justify-content:center;font-size:22px;margin:0 auto 10px;">${c.icon}</div>
-            <div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;color:${textMap[c.color]};margin-bottom:6px;">${c.tag}</div>
-            <div style="font-size:12px;font-weight:700;color:var(--on-surface);margin-bottom:12px;">${c.title}</div>
-            <div style="font-size:10px;color:var(--outline);padding:8px;background:var(--surface-container);border-radius:8px;">Туул багш байршуулах болно</div>
-        </div>`
-    ).join('');
-}
-
-/* ── СУРАГЧИЙН МАТЕРИАЛ ── */
-function showStudentMaterials(type) {
-    showEl('studentMaterialsBox');
-    hideEl('grade9Materials');
-    hideEl('seniorMaterials');
-    document.getElementById('studentMaterialsBox').scrollIntoView({ behavior: 'smooth', block: 'start' });
-    if (type === 'grade9') {
-        document.getElementById('studentMatTitle').textContent = '📂 9-р ангийн ЭЕШ материал — Үнэгүй';
-        showEl('grade9Materials');
-        loadGrade9Materials();
-    } else {
-        document.getElementById('studentMatTitle').textContent = '📂 Ахлах ангийн материал · Зөвлөгөө';
-        showEl('seniorMaterials');
-        loadSeniorMaterials();
-    }
-}
-
-async function loadGrade9Materials() {
-    const grid = document.getElementById('grade9MatGrid');
-    try {
-        const data = await fetchJSON(`${ORDER_URL}?action=getProducts&category=grade9_free`);
-        if (data && data.length) {
-            grid.innerHTML = data.map(p => buildMaterialCard(p)).join('');
-        } else {
-            grid.innerHTML = buildStaticGrade9Cards();
-        }
-    } catch(e) {
-        grid.innerHTML = buildStaticGrade9Cards();
-    }
-}
-
-function buildStaticGrade9Cards() {
-    const items = [
-        { icon:'📗', title:'9-р анги ЭЕШ 2023', sub:'Монгол хэл, уран зохиол' },
-        { icon:'📗', title:'9-р анги ЭЕШ 2022', sub:'Монгол хэл, уран зохиол' },
-        { icon:'📗', title:'9-р анги ЭЕШ 2021', sub:'Монгол хэл, уран зохиол' },
-    ];
-    return items.map(c =>
-        `<div style="background:#fff;border:1.5px solid rgba(46,158,91,0.25);border-radius:14px;padding:18px;text-align:center;">
-            <div style="width:48px;height:48px;border-radius:14px;background:rgba(46,158,91,0.1);display:flex;align-items:center;justify-content:center;font-size:22px;margin:0 auto 10px;">${c.icon}</div>
-            <div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;color:var(--tertiary);margin-bottom:6px;">Үнэгүй</div>
-            <div style="font-size:12px;font-weight:700;color:var(--on-surface);margin-bottom:4px;">${c.title}</div>
-            <div style="font-size:11px;color:var(--on-surface-variant);margin-bottom:12px;">${c.sub}</div>
-            <div style="font-size:10px;color:var(--outline);padding:8px;background:var(--surface-container);border-radius:8px;">Туул багш байршуулах болно</div>
-        </div>`
-    ).join('');
-}
-
-async function loadSeniorMaterials() {
-    const grid = document.getElementById('seniorMatGrid');
-    try {
-        const data = await fetchJSON(`${ORDER_URL}?action=getProducts&category=senior_free`);
-        if (data && data.length) {
-            grid.innerHTML = data.map(p => buildMaterialCard(p)).join('');
-        } else {
-            grid.innerHTML = '<div style="text-align:center;padding:20px;color:var(--on-surface-variant);font-size:12px;grid-column:1/-1;">Туул багш удахгүй материал байршуулна.</div>';
-        }
-    } catch(e) {
-        grid.innerHTML = '<div style="text-align:center;padding:20px;color:var(--on-surface-variant);font-size:12px;grid-column:1/-1;">Туул багш удахгүй материал байршуулна.</div>';
-    }
-}
-
-function buildMaterialCard(p) {
-    const safeTitle = p.Title.replace(/'/g, "\\'");
-    const price = Number(p.Price);
-    const isFree = price === 0;
-    const imgFiles = p.Images ? p.Images.split(',').map(s=>s.trim()).filter(s=>/\.(png|jpg|jpeg|gif|webp)$/i.test(s)) : [];
-    const imgSrc = imgFiles.length ? GITHUB_BASE + imgFiles[0] : '';
-    return `<div style="background:#fff;border:1.5px solid var(--outline-variant);border-radius:14px;padding:18px;text-align:center;transition:all 0.2s;" onmouseover="this.style.transform='translateY(-3px)';this.style.boxShadow='0 8px 24px rgba(0,0,0,0.08)'" onmouseout="this.style.transform='';this.style.boxShadow=''">
-        ${imgSrc ? `<img src="${imgSrc}" style="width:100%;height:120px;object-fit:cover;border-radius:10px;margin-bottom:10px;" onerror="this.style.display='none'">` : `<div style="width:48px;height:48px;border-radius:14px;background:var(--surface-container);display:flex;align-items:center;justify-content:center;font-size:22px;margin:0 auto 10px;">📄</div>`}
-        <div style="font-size:12px;font-weight:700;color:var(--on-surface);margin-bottom:8px;">${p.Title}</div>
-        <div style="font-size:13px;font-weight:800;color:${isFree?'var(--tertiary)':'var(--primary)'};margin-bottom:12px;">${isFree?'Үнэгүй':price.toLocaleString()+'₮'}</div>
-        ${isFree
-            ? `<button onclick="buyNow('${safeTitle}',0)" style="width:100%;background:var(--tertiary);border:none;color:#fff;font-family:'Lexend',sans-serif;font-size:11px;font-weight:700;text-transform:uppercase;padding:9px;border-radius:10px;cursor:pointer;">Татах</button>`
-            : `<button onclick="buyNow('${safeTitle}',${price})" style="width:100%;background:var(--primary);border:none;color:#fff;font-family:'Lexend',sans-serif;font-size:11px;font-weight:700;text-transform:uppercase;padding:9px;border-radius:10px;cursor:pointer;">Авах</button>`
-        }
-    </div>`;
-}
-</script>
-</body>
-</html>
+    const m
