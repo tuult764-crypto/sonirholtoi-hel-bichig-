@@ -1450,7 +1450,7 @@
 
   </div>
 </div>
-  <!-- МИНИЙ САН -->
+<!-- МИНИЙ САН -->
   <div id="librarySection" class="content-section">
     <div class="section" style="padding-top:40px;">
       <button onclick="showDashboard()" style="background:none;border:none;font-family:'Lexend',sans-serif;font-size:12px;font-weight:600;color:var(--primary);cursor:pointer;text-transform:uppercase;letter-spacing:0.04em;margin-bottom:28px;">← Буцах</button>
@@ -1458,9 +1458,8 @@
       <div id="libraryGrid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:16px;"></div>
     </div>
   </div>
-
-</div>
-
+  <!-- ✅ Илүү </div> устгагдлаа -->
+    
 <!-- LIGHTBOX -->
 <div id="lightboxModal" onclick="if(event.target===this||event.target.id==='lightboxModal') closeLightbox()">
   <div style="position:relative;width:100%;height:100%;display:flex;align-items:center;justify-content:center;" id="lbInner"
@@ -1531,7 +1530,7 @@
     <button onclick="confirmOrder()" id="confirmBtn" class="btn-primary" style="width:100%;padding:14px;border-radius:12px;">Төлсөн, хүсэлт илгээх</button>
   </div>
 </div>
-
+    
     <!-- ══ FOOTER ══ -->
 <footer style="background:linear-gradient(135deg,#1a1208 0%,#2d1e08 100%);color:rgba(255,255,255,0.85);padding:48px 32px 28px;margin-top:40px;">
   <div style="max-width:1280px;margin:0 auto;">
@@ -1812,27 +1811,26 @@ function updateNavUser(email) {
   const area    = document.getElementById('navUserArea');
   const emailEl = document.getElementById('navUserEmail');
   const avatar  = document.getElementById('navAvatar');
-  const navEmail = document.getElementById('navEmail'); // хуучин
+  const navEmail = document.getElementById('navEmail');
   if (navEmail) navEmail.style.display = 'none';
   if (!area) return;
   area.style.display = 'block';
   if (emailEl) emailEl.textContent = email;
   if (avatar)  avatar.textContent  = email.charAt(0).toUpperCase();
 }
- 
+
 function toggleUserDropdown() {
   document.getElementById('userDropdown')?.classList.toggle('open');
 }
 function closeDropdown() {
   document.getElementById('userDropdown')?.classList.remove('open');
 }
- 
-// Dropdown-г гадна дарахад хаана
+
 document.addEventListener('click', e => {
   const area = document.getElementById('navUserArea');
   if (area && !area.contains(e.target)) closeDropdown();
 });
- 
+
 // ── LOCAL AUTH helpers ──
 function getLocalUsers() {
   try { return JSON.parse(localStorage.getItem('shb_users') || '{}'); } catch(e) { return {}; }
@@ -1847,30 +1845,26 @@ function checkLocalAuth(email, pass) {
   const stored = users[email.toLowerCase()];
   return stored && stored === btoa(pass);
 }
- 
+
 function showAuthError(id, msg) {
   const el = document.getElementById(id);
   if (!el) return;
   el.textContent = msg;
   el.classList.add('show');
 }
- 
-// ── requireEmail-г override хийнэ ──
-// Хуучин requireEmail-г энэ функцээр орлуулна
+
 function requireEmail(cb) {
   if (currentUserEmail) { cb(); return; }
-  // Нэвтрэх modal нээнэ
   openAuthModal();
-  // Нэвтэрсний дараа callback ажиллуулна
   const checkLogin = setInterval(() => {
     if (currentUserEmail) {
       clearInterval(checkLogin);
       setTimeout(cb, 300);
     }
   }, 500);
-  // 30 секундын дараа зогсооно
   setTimeout(() => clearInterval(checkLogin), 30000);
 }
+
 // ── GitHub raw файлын суурь URL ──
 const GITHUB_BASE = 'https://raw.githubusercontent.com/tuult764-crypto/sonirholtoi-hel-bichig-/main/';
 
@@ -1899,28 +1893,37 @@ const MONG_TO_ASCII = {
   '\u1817': '7', '\u1818': '8', '\u1819': '9'
 };
 
-// ═══════════════════════════════════════════════════════
-//  МӨӨН: buildProductCard функцийг доорхоор солино уу
-//  (зургийн URL-г GITHUB_BASE + filename болгоно)
-// ═══════════════════════════════════════════════════════
-
 function buildProductCard(p) {
+  const imgUrl = p.Image ? (p.Image.startsWith('http') ? p.Image : GITHUB_BASE + p.Image) : '';
+  const isFree = Number(p.Price) === 0;
+  return `
+    <div class="product-card">
+      <div class="product-img">
+        ${imgUrl
+          ? `<img src="${imgUrl}" alt="${p.Title}" loading="lazy" onerror="this.style.display='none'">`
+          : `<div class="product-img-placeholder">📄 Зураггүй</div>`}
+      </div>
+      <div class="product-body">
+        <span class="product-tag">${p.Category || 'Материал'}</span>
+        <div class="product-title">${p.Title}</div>
+        <div class="product-price">${isFree ? 'Үнэгүй' : Number(p.Price).toLocaleString() + '₮'}</div>
+        <div class="product-actions">
+          ${!isFree ? `<button class="btn-add" onclick="addToCart('${p.Title}',${p.Price})">🛒 Сагс</button>` : ''}
+          <button class="btn-buy" onclick="buyNow('${p.Title}',${p.Price})">${isFree ? '📥 Татах' : 'Авах'}</button>
+        </div>
+      </div>
+    </div>`;
+}/* ✅ buildProductCard хаагдлаа */
 
-// ═══════════════════════════════════════════════════════
-//  НЭМЭЛТ: buyNow функц free бараанд Google Drive линк нээнэ
-// ═══════════════════════════════════════════════════════
 function buyNow(title, price) {
   const isFree = Number(price) === 0;
-
   if (isFree) {
-    // Products-аас link хайж шууд нээнэ
     const prod = (productsData || []).find(p => p.Title === title);
     if (prod && prod.Link && prod.Link.startsWith('http')) {
       window.open(prod.Link, '_blank');
       return;
     }
   }
-
   requireEmail(() => {
     pendingProduct = title;
     pendingTotal   = Number(price);
@@ -1930,7 +1933,8 @@ function buyNow(title, price) {
     document.getElementById('paymentModal').classList.add('active');
   });
 }
-// ── AI PROXY HELPER ── (шинэ)
+
+// ── AI PROXY HELPER ──
 async function callAI(messages, maxTokens = 1000) {
   const resp = await fetch(ORDER_URL, {
     method: 'POST',
@@ -1956,48 +1960,47 @@ let uploadedFileText = '';
 let uploadedFileName = '';
 let currentWorksheetQuestions = [];
 let currentWorksheetMeta = {};
-let aiChatHistory = [];  // Full conversation for multi-turn
+let aiChatHistory = [];
 
 /* ── FETCH ── */
 async function fetchJSON(url) {
-    try {
-        const res = await fetch(url, {method:'GET',redirect:'follow',cache:'no-cache',headers:{'Accept':'application/json'}});
-        const text = await res.text();
-        const m = text.match(/(\[[\s\S]*\]|\{[\s\S]*\})/);
-        if (!m) throw new Error('no json');
-        return JSON.parse(m[1]);
-    } catch(e) { console.warn('fetchJSON:', e); return null; }
+  try {
+    const res = await fetch(url, {method:'GET',redirect:'follow',cache:'no-cache',headers:{'Accept':'application/json'}});
+    const text = await res.text();
+    const m = text.match(/(\[[\s\S]*\]|\{[\s\S]*\})/);
+    if (!m) throw new Error('no json');
+    return JSON.parse(m[1]);
+  } catch(e) { console.warn('fetchJSON:', e); return null; }
 }
-
-document.addEventListener('DOMContentLoaded', () => { loadProducts(); });
 
 /* ── NAV ── */
 function showSection(name) {
-    const requireAuth = ['library'];
-    if (requireAuth.includes(name) && !currentUserEmail) { requireEmail(()=>showSection(name)); return; }
-    document.getElementById('dashboardHome').classList.add('hidden');
-    document.querySelectorAll('.content-section').forEach(s=>s.classList.remove('active'));
-    const t = document.getElementById(name+'Section');
-    if (t) t.classList.add('active');
-    if (name==='games')        initGamesSection();
-    if (name==='library')      loadMyLibrary();
-    if (name==='shop')         loadProducts();
-    if (name==='exam')         initExamLobby();
-    if (name==='course')       initCourseSection();
-    if (name==='aiassessment') initAiAssessment();
+  const requireAuth = ['library'];
+  if (requireAuth.includes(name) && !currentUserEmail) { requireEmail(()=>showSection(name)); return; }
+  document.getElementById('dashboardHome').classList.add('hidden');
+  document.querySelectorAll('.content-section').forEach(s=>s.classList.remove('active'));
+  const t = document.getElementById(name+'Section');
+  if (t) t.classList.add('active');
+  if (name==='games')        initGamesSection();
+  if (name==='library')      loadMyLibrary();
+  if (name==='shop')         loadProducts();
+  if (name==='exam')         initExamLobby();
+  if (name==='course')       initCourseSection();
+  if (name==='aiassessment') initAiAssessment();
 }
+
 function showDashboard() {
-    document.getElementById('dashboardHome').classList.remove('hidden');
-    document.querySelectorAll('.content-section').forEach(s=>s.classList.remove('active'));
-    stopExamTimer();
+  document.getElementById('dashboardHome').classList.remove('hidden');
+  document.querySelectorAll('.content-section').forEach(s=>s.classList.remove('active'));
+  stopExamTimer();
 }
 
 /* ══════════════════════════════════════
    ── ОНЛАЙН СУРГАЛТ ──
 ══════════════════════════════════════ */
 const COURSE_DATA = {
-    enrolled: false,
-    lessons: [
+  enrolled: false,
+  lessons: [
         {num:1,title:'Танилцуулга — Монгол бичиг гэж юу вэ?',type:'video',duration:'8 мин',free:true,desc:'Монгол бичгийн түүх, ач холбогдол, орчин үеийн хэрэглээ.'},
         {num:2,title:'Үндсэн зурлагууд',type:'video',duration:'12 мин',free:false,desc:'Тулгуур зурлага: босоо шугам, нуман зурлага, нөгцийн зурлага.'},
         {num:3,title:'Эгшиг үсэг — А, Э',type:'video',duration:'15 мин',free:false,desc:'А болон Э эгшиг үсгийн бичих дараалал, дасгал.'},
@@ -2356,11 +2359,11 @@ ${JSON.stringify(currentWorksheetQuestions,null,1)}
 [{...},{...}]`;
     let newQuestions=null;
     let responseText='';
-    try {
-const data=await callAI([{role:'user',content:contextMsg}], 2000);
-        responseText=data.content?.map(b=>b.text||'').join('')||'';
-        const match=responseText.match(/\[[\s\S]*\]/);
-        if (match) newQuestions=JSON.parse(match[0]);
+try {
+        const data = await callAI([{role:'user',content:contextMsg}], 2000);
+        responseText = data.content?.map(b=>b.text||'').join('')||'';
+        const match = responseText.match(/\[[\s\S]*\]/);
+        if (match) newQuestions = JSON.parse(match[0]);
     } catch(e){ console.warn('chat err:',e); }
     // Remove typing
     const typingEl=document.getElementById(typingId);
