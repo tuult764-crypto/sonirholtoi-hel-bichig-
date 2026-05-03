@@ -596,7 +596,11 @@
 <nav>
   <div class="nav-inner">
     <div class="nav-brand" onclick="showDashboard()">
-      <div class="nav-logo">📖</div>
+      <div class="nav-logo" style="background:none;padding:0;overflow:hidden;display:flex;align-items:center;justify-content:center">
+        <img src="https://raw.githubusercontent.com/tuult764-crypto/sonirholtoi-hel-bichig-/main/logo.png"
+          alt="Лого" style="width:40px;height:40px;object-fit:contain;border-radius:10px"
+          onerror="this.outerHTML='<span style=\'width:40px;height:40px;background:var(--primary);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:22px\'>📖</span>'">
+      </div>
       <span class="desktop-only">Сонирхолтой хэл бичиг</span>
     </div>
 
@@ -868,12 +872,17 @@
   <!-- LIBRARY -->
   <section id="librarySection" class="section">
     <button class="page-back" onclick="showDashboard()">← Буцах</button>
-    <h2 class="section-title">📚 Миний сан</h2>
+    <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:28px">
+      <h2 class="section-title" style="margin-bottom:0">📚 Миний сан</h2>
+      <button class="btn-primary" onclick="loadLibrary()" style="font-size:12px;padding:8px 20px">🔄 Шинэчлэх</button>
+    </div>
+    <!-- Status bar -->
+    <div id="libStatus" style="display:none;background:#fff3e8;border:1px solid #ffd5a8;border-radius:16px;padding:14px 20px;margin-bottom:20px;font-size:13px;color:var(--primary);font-weight:600"></div>
     <div id="libraryGrid" class="product-grid">
       <div style="grid-column:1/-1;text-align:center;padding:60px;color:#bbb">
         <div style="font-size:48px;margin-bottom:14px">📭</div>
-        <p style="font-size:14px;font-weight:600">Таны сан хоосон байна. Дэлгүүрээс материал худалдан авна уу.</p>
-        <button class="btn-primary" style="margin-top:20px" onclick="showSection('shop')">Дэлгүүр руу</button>
+        <p style="font-size:14px;font-weight:600">Нэвтэрсний дараа таны худалдан авсан бүтээгдэхүүн энд харагдана.</p>
+        <button class="btn-primary" style="margin-top:20px" onclick="showSection('shop')">Дэлгүүр рүү очих</button>
       </div>
     </div>
   </section>
@@ -897,7 +906,12 @@
 <footer>
   <div class="footer-inner">
     <div>
-      <div class="footer-brand">Сонирхолтой хэл бичиг</div>
+      <div class="footer-brand" style="display:flex;align-items:center;gap:10px">
+        <img src="https://raw.githubusercontent.com/tuult764-crypto/sonirholtoi-hel-bichig-/main/logo.png"
+          alt="Лого" style="width:36px;height:36px;object-fit:contain;border-radius:8px;background:#fff;padding:2px"
+          onerror="this.style.display='none'">
+        Сонирхолтой хэл бичиг
+      </div>
       <p>Монгол хэл, уран зохиолын хичээлийг хүн бүрт хүртээмжтэй, сонирхолтой байдлаар хүргэх цахим платформ.</p>
     </div>
     <div class="footer-contact">
@@ -929,21 +943,74 @@
 
 <!-- ── PAYMENT MODAL ── -->
 <div id="payModal" class="payment-overlay hidden">
-  <div class="payment-card">
-    <div class="payment-top">
-      <div class="lbl">Нийт дүн</div>
-      <div id="payAmount" class="amount">0₮</div>
-    </div>
-    <div class="payment-body">
-      <div class="qr-box">🔲</div>
-      <div class="bank-info">
-        <div class="bank-num">ХАС БАНК: 5006069631</div>
-        <div class="bank-name">МӨНХДАЛАЙ ТУУЛ</div>
+  <div class="payment-card" style="max-width:420px;max-height:92vh;overflow-y:auto">
+
+    <!-- Step 1: QR харуулах -->
+    <div id="payStep1">
+      <div class="payment-top">
+        <div class="lbl">Нийт дүн</div>
+        <div id="payAmount" class="amount">0₮</div>
+        <div id="payItemList" style="margin-top:10px;font-size:11px;opacity:0.65;line-height:1.8"></div>
       </div>
-      <div class="bank-note">Гүйлгээний утга дээр И-МЭЙЛ хаягаа заавал бичнэ үү!</div>
-      <button class="pay-done-btn" onclick="confirmPayment()">✅ Төлбөр төлсөн</button>
-      <button class="pay-close-btn" onclick="closePayment()">Хаах</button>
+      <div class="payment-body">
+        <div class="qr-box" style="padding:8px">
+          <img src="https://raw.githubusercontent.com/tuult764-crypto/sonirholtoi-hel-bichig-/main/qr.png"
+            alt="QR код" style="width:100%;height:100%;object-fit:contain;border-radius:8px"
+            onerror="this.style.display='none';this.nextSibling.style.display='flex'">
+          <span style="display:none;font-size:56px;width:100%;height:100%;align-items:center;justify-content:center">🔲</span>
+        </div>
+        <div class="bank-info">
+          <div class="bank-num">ХАС БАНК: 5006069631</div>
+          <div class="bank-name">МӨНХДАЛАЙ ТУУЛ</div>
+        </div>
+        <div class="bank-note">
+          ⚠️ Гүйлгээний <strong>утга</strong> дээр и-мэйл хаягаа заавал бичнэ үү!<br>
+          Жишээ: <em>tanii@gmail.com</em>
+        </div>
+        <button class="pay-done-btn" onclick="goToStep2()">✅ Төлбөр төллөө → Дараах</button>
+        <button class="pay-close-btn" onclick="closePayment()">Хаах</button>
+      </div>
     </div>
+
+    <!-- Step 2: И-мэйл баталгаажуулалт -->
+    <div id="payStep2" style="display:none">
+      <div class="payment-top" style="padding:24px 28px">
+        <div style="font-size:28px;margin-bottom:8px">📧</div>
+        <div style="font-size:15px;font-weight:800">И-мэйл хаягаа оруулна уу</div>
+        <div style="font-size:11px;opacity:0.6;margin-top:6px">Худалдан авсан файлыг энэ хаяг руу илгээнэ</div>
+      </div>
+      <div class="payment-body">
+        <input id="payEmail" type="email"
+          style="width:100%;padding:14px 16px;border:1.5px solid var(--outline-variant);border-radius:14px;font-size:14px;font-family:'Lexend',sans-serif;outline:none;margin-bottom:10px;box-sizing:border-box"
+          placeholder="tanii@gmail.com">
+        <input id="payNote" type="text"
+          style="width:100%;padding:12px 16px;border:1.5px solid var(--outline-variant);border-radius:14px;font-size:13px;font-family:'Lexend',sans-serif;outline:none;margin-bottom:16px;box-sizing:border-box"
+          placeholder="Нэмэлт тайлбар (заавал биш)">
+        <div style="background:#f0fdf4;border-radius:12px;padding:12px 14px;margin-bottom:16px;font-size:12px;color:#166534;line-height:1.6">
+          📦 Захиалга баталгаажсаны дараа та <strong>24 цагийн дотор</strong> файлаа и-мэйлээр хүлээн авна.
+        </div>
+        <button id="submitOrderBtn" class="pay-done-btn" onclick="submitOrder()">🚀 Захиалга илгээх</button>
+        <button class="pay-close-btn" onclick="goToStep1()">← Буцах</button>
+      </div>
+    </div>
+
+    <!-- Step 3: Амжилт -->
+    <div id="payStep3" style="display:none;text-align:center;padding:48px 28px">
+      <div style="font-size:56px;margin-bottom:16px">🎉</div>
+      <div style="font-size:20px;font-weight:800;color:var(--tertiary);margin-bottom:10px">Захиалга амжилттай!</div>
+      <div style="font-size:13px;color:var(--on-surface-variant);line-height:1.7;margin-bottom:24px">
+        Таны захиалга бүртгэгдлээ.<br>
+        Төлбөр шалгагдсаны дараа файлыг<br>
+        <strong id="confirmEmail" style="color:var(--primary)"></strong><br>
+        хаяг руу илгээнэ.
+      </div>
+      <div style="background:#f0fdf4;border-radius:14px;padding:14px;font-size:12px;color:#166534;margin-bottom:20px">
+        ⏱ Ихэвчлэн <strong>1-24 цагийн дотор</strong> хүргэгдэнэ.<br>
+        Асуух зүйл байвал: <strong>sonirholtoihelbichig@gmail.com</strong>
+      </div>
+      <button class="pay-done-btn" onclick="closePayment()">✓ Хаах</button>
+    </div>
+
   </div>
 </div>
 
@@ -958,9 +1025,10 @@
 // ════════════════════════════════
 //  CONSTANTS & STATE
 // ════════════════════════════════
-const AUTH_KEY  = 'shb_auth_v2';
-const MONG_NUMS = { '1':'᠑','2':'᠒','3':'᠓','4':'᠔','5':'᠕','6':'᠖','7':'᠗','8':'᠘','9':'᠙' };
-const MONG_REV  = Object.fromEntries(Object.entries(MONG_NUMS).map(([k,v]) => [v,k]));
+const AUTH_KEY   = 'shb_auth_v2';
+const GITHUB_RAW = 'https://raw.githubusercontent.com/tuult764-crypto/sonirholtoi-hel-bichig-/main/';
+const MONG_NUMS  = { '1':'᠑','2':'᠒','3':'᠓','4':'᠔','5':'᠕','6':'᠖','7':'᠗','8':'᠘','9':'᠙' };
+const MONG_REV   = Object.fromEntries(Object.entries(MONG_NUMS).map(([k,v]) => [v,k]));
 
 let currentUser  = '';
 let cartItems    = [];
@@ -999,6 +1067,8 @@ function showSection(name) {
   document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
   const el = document.getElementById(name + 'Section');
   if (el) { el.classList.add('active'); window.scrollTo(0,0); }
+  // Миний сан нээгдэхэд автоматаар захиалга татна
+  if (name === 'library') loadLibrary();
 }
 
 function showDashboard() {
@@ -1223,12 +1293,23 @@ function filterShop(cat, btn) {
 }
 
 // ════════════════════════════════
+//  GOOGLE APPS SCRIPT ENDPOINT
+//  → Энд deploy хийсэн Script URL-ээ тавина
+// ════════════════════════════════
+const GAS_URL = 'YOUR_GOOGLE_APPS_SCRIPT_URL_HERE';
+// Жишээ: 'https://script.google.com/macros/s/AKfycb.../exec'
+
+// ════════════════════════════════
 //  CART
 // ════════════════════════════════
 function addToCart(id) {
   if (!currentUser) { openAuth(); return; }
   const p = allProducts.find(x => x.id === id);
   if (!p) return;
+  // Давхардуулахгүй
+  if (cartItems.find(x => x.id === id)) {
+    showToast('Аль хэдийн сагсанд байна', 'error'); return;
+  }
   cartItems.push(p);
   document.getElementById('cartBadge').textContent = cartItems.length;
   showToast(`"${p.title}" сагсанд нэмэгдлээ`, 'success');
@@ -1239,16 +1320,134 @@ function openCart() {
   if (!cartItems.length) { showToast('Сагс хоосон байна', 'error'); return; }
   const total = cartItems.reduce((s,p) => s + p.price, 0);
   document.getElementById('payAmount').textContent = total.toLocaleString() + '₮';
+  // Бүтээгдэхүүний жагсаалт
+  document.getElementById('payItemList').innerHTML =
+    cartItems.map(p => `• ${p.title} — ${p.price===0?'Үнэгүй':p.price.toLocaleString()+'₮'}`).join('<br>');
+  // И-мэйл урьдчилан оруулах
+  document.getElementById('payEmail').value = currentUser;
+  goToStep1();
   document.getElementById('payModal').classList.remove('hidden');
 }
 
-function closePayment() { document.getElementById('payModal').classList.add('hidden'); }
+function goToStep1() {
+  document.getElementById('payStep1').style.display = '';
+  document.getElementById('payStep2').style.display = 'none';
+  document.getElementById('payStep3').style.display = 'none';
+}
 
-function confirmPayment() {
-  showToast('Захиалга илгээгдлээ. Шалгасны дараа идэвхжинэ.', 'success');
-  cartItems = [];
-  document.getElementById('cartBadge').textContent = '0';
-  closePayment();
+function goToStep2() {
+  document.getElementById('payStep1').style.display = 'none';
+  document.getElementById('payStep2').style.display = '';
+  document.getElementById('payStep3').style.display = 'none';
+}
+
+function closePayment() {
+  document.getElementById('payModal').classList.add('hidden');
+  goToStep1();
+}
+
+async function submitOrder() {
+  const email = document.getElementById('payEmail').value.trim();
+  const note  = document.getElementById('payNote').value.trim();
+  if (!email || !email.includes('@')) {
+    showToast('Зөв и-мэйл хаяг оруулна уу', 'error'); return;
+  }
+
+  const btn = document.getElementById('submitOrderBtn');
+  btn.disabled = true;
+  btn.textContent = '⏳ Илгээж байна...';
+
+  const total = cartItems.reduce((s,p) => s + p.price, 0);
+  const orderData = {
+    action:    'submitOrder',
+    email,
+    note,
+    total,
+    items:     cartItems.map(p => p.title).join(', '),
+    itemLinks: cartItems.map(p => p.link || '').join(', '),
+    date:      new Date().toLocaleString('mn-MN'),
+  };
+
+  try {
+    await fetch(GAS_URL, {
+      method: 'POST',
+      mode:   'no-cors',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(orderData),
+    });
+    // no-cors тул response уншихгүй, амжилттай гэж үзнэ
+    document.getElementById('confirmEmail').textContent = email;
+    document.getElementById('payStep2').style.display = 'none';
+    document.getElementById('payStep3').style.display = '';
+    cartItems = [];
+    document.getElementById('cartBadge').textContent = '0';
+  } catch(e) {
+    showToast('Сүлжээний алдаа. Дахин оролдоно уу.', 'error');
+  }
+  btn.disabled = false;
+  btn.textContent = '🚀 Захиалга илгээх';
+}
+
+// ════════════════════════════════
+//  LIBRARY — Approved захиалга татах
+// ════════════════════════════════
+async function loadLibrary() {
+  if (!currentUser) { openAuth(); return; }
+  const grid   = document.getElementById('libraryGrid');
+  const status = document.getElementById('libStatus');
+
+  grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:48px">
+    <div style="width:36px;height:36px;border:3px solid var(--outline-variant);border-top-color:var(--primary);border-radius:50%;animation:spin 0.8s linear infinite;margin:0 auto 14px"></div>
+    <p style="font-size:13px;font-weight:600;color:#bbb">Таны захиалгуудыг шалгаж байна...</p>
+  </div>`;
+  status.style.display = 'none';
+
+  try {
+    const url = GAS_URL + '?action=getApproved&email=' + encodeURIComponent(currentUser);
+    const resp = await fetch(url);
+    const data = await resp.json();  // [{title, link, date}, ...]
+
+    if (!data || !data.length) {
+      grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:60px;color:#bbb">
+        <div style="font-size:48px;margin-bottom:14px">📭</div>
+        <p style="font-size:14px;font-weight:600">Баталгаажсан захиалга байхгүй байна.</p>
+        <p style="font-size:12px;margin-top:8px">Төлбөр илгээсэн бол 24 цагийн дотор баталгаажна.</p>
+        <button class="btn-primary" style="margin-top:20px" onclick="showSection('shop')">Дэлгүүр рүү очих</button>
+      </div>`;
+      return;
+    }
+
+    status.style.display = 'block';
+    status.textContent = `✅ ${data.length} файл таны санд байна`;
+
+    grid.innerHTML = data.map((item, i) => `
+      <div class="product-card" style="border:2px solid #d1fae5">
+        <div class="product-img" style="background:#f0fdf4">
+          <span style="font-size:48px">📄</span>
+          <span class="product-badge" style="background:#d1fae5;color:#065f46">Баталгаажсан</span>
+        </div>
+        <div class="product-body">
+          <div class="product-title">${item.title}</div>
+          <div style="font-size:11px;color:#999;margin-bottom:12px">📅 ${item.date}</div>
+          <a href="${item.link}" target="_blank" rel="noopener"
+            style="display:block;text-align:center;background:var(--tertiary);color:#fff;
+            padding:10px;border-radius:12px;font-size:13px;font-weight:700;
+            text-decoration:none;transition:all 0.15s"
+            onmouseover="this.style.background='#239a4a'"
+            onmouseout="this.style.background='var(--tertiary)'">
+            ⬇ Татаж авах
+          </a>
+        </div>
+      </div>
+    `).join('');
+
+  } catch(e) {
+    grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:60px;color:#bbb">
+      <div style="font-size:40px;margin-bottom:12px">⚠️</div>
+      <p style="font-size:13px;font-weight:600">Мэдээлэл татахад алдаа гарлаа.<br>Интернэт холболтоо шалгана уу.</p>
+    </div>`;
+    showToast('Алдаа гарлаа', 'error');
+  }
 }
 
 // ════════════════════════════════
