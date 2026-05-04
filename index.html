@@ -900,8 +900,16 @@
       </div>
     </div>
     <div id="shopGrid" class="product-grid"></div>
-  </section>
+</section>
 </main>
+
+<!-- ── PREVIEW MODAL ── -->
+<div id="previewModal" class="modal-overlay hidden" onclick="if(event.target===this)closePreviewModal()">
+  <div style="background:#fff;width:100%;max-width:540px;border-radius:28px 28px 0 0;
+    padding:28px;max-height:92vh;overflow-y:auto;animation:slideUp 0.35s ease-out">
+    <div id="previewModalBody"></div>
+  </div>
+</div>
 
 <!-- ── FOOTER ── -->
 <footer>
@@ -1253,15 +1261,105 @@ function driveThumb(fileId) {
   return `https://drive.google.com/thumbnail?id=${id}&sz=w400`;
 }
 
+// ── Preview Modal ──
+function openPreview(p) {
+  const imgs = (p.img || '').split(',').map(s => s.trim()).filter(Boolean);
+  if (!imgs.length) { showToast('Жишээ зураг байхгүй', 'error'); return; }
+
+  const slides = imgs.map((name, i) => {
+    const url = `https://raw.githubusercontent.com/tuult764-crypto/sonirholtoi-hel-bichig-/main/${encodeURIComponent(name)}`;
+    return `<div class="preview-slide" style="display:${i===0?'flex':'none'};
+      align-items:center;justify-content:center;width:100%;height:100%">
+      <img src="${url}" alt="${name}"
+        style="max-width:100%;max-height:100%;object-fit:contain;border-radius:12px"
+        onerror="this.src='';this.parentElement.innerHTML='<div style=\'color:#aaa;font-size:13px\'>Зураг олдсонгүй: ${name}</div>'">
+    </div>`;
+  }).join('');
+
+  const dots = imgs.length > 1 ? `
+    <div style="display:flex;gap:6px;justify-content:center;margin-top:12px">
+      ${imgs.map((_,i) => `<button onclick="previewGoTo(${i})"
+        id="pdot${i}"
+        style="width:8px;height:8px;border-radius:50%;border:none;cursor:pointer;
+        background:${i===0?'var(--primary)':'#ddd'};padding:0;transition:all 0.2s"></button>`).join('')}
+    </div>` : '';
+
+  const nav = imgs.length > 1 ? `
+    <button onclick="previewNav(-1)"
+      style="position:absolute;left:8px;top:50%;transform:translateY(-50%);
+      background:rgba(0,0,0,0.4);color:#fff;border:none;border-radius:50%;
+      width:36px;height:36px;font-size:18px;cursor:pointer;z-index:2">‹</button>
+    <button onclick="previewNav(1)"
+      style="position:absolute;right:8px;top:50%;transform:translateY(-50%);
+      background:rgba(0,0,0,0.4);color:#fff;border:none;border-radius:50%;
+      width:36px;height:36px;font-size:18px;cursor:pointer;z-index:2">›</button>` : '';
+
+  document.getElementById('previewModalBody').innerHTML = `
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:16px">
+      <div>
+        <div style="font-size:16px;font-weight:800">${p.title}</div>
+        <div style="font-size:12px;color:var(--on-surface-variant);margin-top:4px">${p.desc||''}</div>
+      </div>
+      <button onclick="closePreviewModal()"
+        style="background:#f5f5f5;border:none;border-radius:50%;width:32px;height:32px;
+        font-size:16px;cursor:pointer;flex-shrink:0;margin-left:12px">✕</button>
+    </div>
+    <div style="position:relative;background:#f5ede0;border-radius:16px;
+      height:420px;overflow:hidden;display:flex;align-items:center;justify-content:center">
+      <div id="previewSlides" style="width:100%;height:100%;display:flex;
+        align-items:center;justify-content:center">${slides}</div>
+      ${nav}
+    </div>
+    ${dots}
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-top:16px">
+      <div style="font-size:18px;font-weight:800;color:var(--primary)">
+        ${p.price.toLocaleString()}₮
+      </div>
+      <button onclick="closePreviewModal();addToCart(${p.id})"
+        class="btn-primary" style="padding:10px 24px">
+        🛒 Сагсанд нэмэх
+      </button>
+    </div>`;
+
+  window._previewIdx = 0;
+  window._previewTotal = imgs.length;
+  document.getElementById('previewModal').classList.remove('hidden');
+}
+
+function previewNav(dir) {
+  const total = window._previewTotal || 0;
+  if (total <= 1) return;
+  const slides = document.querySelectorAll('.preview-slide');
+  const dots   = document.querySelectorAll('[id^="pdot"]');
+  slides[window._previewIdx].style.display = 'none';
+  if (dots[window._previewIdx]) dots[window._previewIdx].style.background = '#ddd';
+  window._previewIdx = (window._previewIdx + dir + total) % total;
+  slides[window._previewIdx].style.display = 'flex';
+  if (dots[window._previewIdx]) dots[window._previewIdx].style.background = 'var(--primary)';
+}
+
+function previewGoTo(idx) {
+  const total = window._previewTotal || 0;
+  const slides = document.querySelectorAll('.preview-slide');
+  const dots   = document.querySelectorAll('[id^="pdot"]');
+  slides[window._previewIdx].style.display = 'none';
+  if (dots[window._previewIdx]) dots[window._previewIdx].style.background = '#ddd';
+  window._previewIdx = idx;
+  slides[window._previewIdx].style.display = 'flex';
+  if (dots[window._previewIdx]) dots[window._previewIdx].style.background = 'var(--primary)';
+}
+
+function closePreviewModal() {
+  document.getElementById('previewModal').classList.add('hidden');
+}
+
 function productImgHTML(p) {
-  // Images багананд файлын нэр байвал GitHub-аас татна
-  // Жишээ: "1.1.png, 1.2.png" → эхний зургийг харуулна
   if (p.img) {
     const firstName = p.img.split(',')[0].trim();
     if (firstName) {
-      const githubUrl = `https://raw.githubusercontent.com/tuult764-crypto/sonirholtoi-hel-bichig-/main/${encodeURIComponent(firstName)}`;
+      const url = `https://raw.githubusercontent.com/tuult764-crypto/sonirholtoi-hel-bichig-/main/${encodeURIComponent(firstName)}`;
       return `
-        <img src="${githubUrl}" alt="${p.title}"
+        <img src="${url}" alt="${p.title}"
           style="width:100%;height:100%;object-fit:cover;display:block"
           onerror="this.style.display='none';this.nextSibling.style.display='flex'">
         <span style="display:none;font-size:48px;width:100%;height:100%;
@@ -1295,14 +1393,17 @@ function renderProducts(prods, gridId) {
   grid.innerHTML = prods.map(p => {
     const free  = isFree(p);
     const dlUrl = driveDownloadUrl(p.link);
-    const actionBtn = free
-      ? (dlUrl ? `<a href="${dlUrl}" target="_blank" rel="noopener"
-               style="display:flex;align-items:center;justify-content:center;
-               width:36px;height:36px;border-radius:10px;
-               background:#d1fae5;color:#065f46;font-size:16px;
-               text-decoration:none;transition:all 0.15s;flex-shrink:0"
-               title="Шууд татах" download>⬇</a>` : '')
-      : `<button class="add-cart-btn" onclick="addToCart(${p.id})" title="Сагсанд нэмэх">🛒</button>`;
+const actionBtn = free
+  ? (dlUrl ? `<a href="${dlUrl}" target="_blank" rel="noopener"
+           style="display:flex;align-items:center;justify-content:center;
+           width:36px;height:36px;border-radius:10px;
+           background:#d1fae5;color:#065f46;font-size:16px;
+           text-decoration:none;transition:all 0.15s;flex-shrink:0"
+           title="Шууд татах" download>⬇</a>` : '')
+  : `<button class="add-cart-btn" onclick="openPreview(allProducts.find(x=>x.id===${p.id}))"
+       title="Жишээ харах" style="font-size:14px">👁</button>
+     <button class="add-cart-btn" onclick="addToCart(${p.id})"
+       title="Сагсанд нэмэх">🛒</button>`;
     const badgeStyle = free ? 'background:#d1fae5;color:#065f46' : 'background:rgba(255,255,255,0.92);color:var(--on-surface)';
     const cardBorder = free ? 'border:2px solid #a7f3d0' : 'border:1px solid var(--outline-variant)';
     return `
@@ -1347,7 +1448,7 @@ function filterShop(cat, btn) {
   document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
   const filtered = cat === 'all' ? allProducts : allProducts.filter(p => p.cat === cat);
-  renderProducts(filtered, 'shopGrid');
+  actionBtn(filtered, 'shopGrid');
 }
 
 // ════════════════════════════════
