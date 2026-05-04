@@ -1135,31 +1135,11 @@ function updateNavUser() {
 const SHEET_ID   = '19XbGi1hWULDm2MRjFAG8G0dtlp7tbfN2pJSupKWA6G4';
 const SHEET_NAME = 'Products';
 
-// gviz endpoint — JSON буцаана, CSV-ээс найдвартай
-function sheetJsonUrl() {
-  return `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(SHEET_NAME)}`;
-}
-
-// Sheets баганын дарааллыг header-аас динамикаар олно
-// A=Title, B=Description, C=Price, D=Images, E=Type, F=Link
-// → header нэр ихтэмд өөрчлөгдсөн ч ажиллана
 function parseGvizJson(raw) {
-  // Google өөр prefix ашигладаг тул бүгдийг устгана
   let json = raw
-    .replace(/^[^(]+\(/, '')   // "/*O_o*/\ngoogle.visualization.Query.setResponse(" гэх мэт
+    .replace(/^[^(]+\(/, '')
     .replace(/\);?\s*$/, '');
   return JSON.parse(json);
-}
-
-// Баганы индексийг header label-ээс олох
-function findCol(cols, names) {
-  for (const name of names) {
-    const idx = cols.findIndex(c =>
-      (c.label || c.id || '').toLowerCase().trim() === name.toLowerCase()
-    );
-    if (idx !== -1) return idx;
-  }
-  return -1;
 }
 
 function getCategory(type) {
@@ -1169,16 +1149,27 @@ function getCategory(type) {
   return 'Төлбөртэй';
 }
 
-function cellVal(cell) {
-  if (!cell) return '';
-  if (cell.v === null || cell.v === undefined) return '';
-  return String(cell.f || cell.v).trim();
-}
+async function loadProducts() {
+  ['shopGrid', 'dashGrid'].forEach(id => {
+    const g = document.getElementById(id);
+    if (g) g.innerHTML = `
+      <div style="grid-column:1/-1;text-align:center;padding:48px;color:#bbb">
+        <div style="width:36px;height:36px;border:3px solid var(--outline-variant);
+          border-top-color:var(--primary);border-radius:50%;
+          animation:spin 0.8s linear infinite;margin:0 auto 14px"></div>
+        <p style="font-size:13px;font-weight:600">Бүтээгдэхүүн ачааллаж байна...</p>
+      </div>`;
+  });
 
-function numVal(cell) {
-  if (!cell || cell.v === null || cell.v === undefined) return 0;
-  return Number(cell.v) || 0;
-}
+  try {
+    const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(SHEET_NAME)}`;
+    const resp = await fetch(url);
+    if (!resp.ok) throw new Error('HTTP ' + resp.status);
+
+    const raw = await resp.text();
+    const gviz = parseGvizJson(raw);
+    const cols = gviz.table.cols;
+    const rows = gviz.table.rows;
 
     function findColSafe(...names) {
       const lowerNames = names.map(n => n.toLowerCase().trim());
@@ -1197,9 +1188,7 @@ function numVal(cell) {
       type:  findColSafe('type', 'төрөл'),
       link:  findColSafe('link', 'холбоос', 'url'),
     };
-    console.log('Column indices:', CI);
 
-    // Олдоогүй баганыг A,B,C,D,E,F гэж fallback
     if (CI.title < 0) CI.title = 0;
     if (CI.desc  < 0) CI.desc  = 1;
     if (CI.price < 0) CI.price = 2;
@@ -1207,24 +1196,22 @@ function numVal(cell) {
     if (CI.type  < 0) CI.type  = 4;
     if (CI.link  < 0) CI.link  = 5;
 
+    const safeVal = (cell) => {
+      if (!cell) return '';
+      return String(cell.f !== null && cell.f !== undefined ? cell.f : (cell.v ?? '')).trim();
+    };
+    const safeNum = (cell) => {
+      if (!cell || cell.v === null || cell.v === undefined) return 0;
+      return Number(cell.v) || 0;
+    };
+
     allProducts = rows
       .filter(r => r.c && r.c[CI.title] && (r.c[CI.title].v || r.c[CI.title].f))
       .map((r, i) => {
-        const c = r.c;
-        const safeVal = (cell) => {
-          if (!cell) return '';
-          return String(cell.f !== null && cell.f !== undefined ? cell.f : (cell.v ?? '')).trim();
-        };
-        const safeNum = (cell) => {
-          if (!cell || cell.v === null || cell.v === undefined) return 0;
-          return Number(cell.v) || 0;
-        };
-
+        const c     = r.c;
         const type  = safeVal(c[CI.type]);
         const price = safeNum(c[CI.price]);
         const free  = price === 0 || ['free', 'free-sample'].includes(type.toLowerCase());
-        const icon  = free ? '🎁' : '📝';
-
         return {
           id:    i + 1,
           title: safeVal(c[CI.title]),
@@ -1232,12 +1219,10 @@ function numVal(cell) {
           price,
           type,
           cat:   free ? 'Үнэгүй' : 'Төлбөртэй',
-          icon,
+          icon:  free ? '🎁' : '📝',
           link:  safeVal(c[CI.link]),
         };
       });
-
-    console.log('Products loaded:', allProducts.length, allProducts);
 
     renderProducts(allProducts, 'shopGrid');
     renderProducts(allProducts, 'dashGrid');
@@ -1247,14 +1232,9 @@ function numVal(cell) {
     const errHtml = `
       <div style="grid-column:1/-1;text-align:center;padding:48px;color:#bbb">
         <div style="font-size:40px;margin-bottom:12px">⚠️</div>
-        <p style="font-size:13px;font-weight:600;margin-bottom:8px">
-          Бүтээгдэхүүн ачаалах боломжгүй.
-        </p>
-        <p style="font-size:11px;color:#999">
-          Алдаа: ${e.message}<br>
-          Console-д дэлгэрэнгүй мэдээлэл байна (F12).
-        </p>
-        <button class="btn-primary" style="margin-top:16px;font-size:12px" 
+        <p style="font-size:13px;font-weight:600;margin-bottom:8px">Бүтээгдэхүүн ачаалах боломжгүй.</p>
+        <p style="font-size:11px;color:#999">Алдаа: ${e.message}</p>
+        <button class="btn-primary" style="margin-top:16px;font-size:12px"
           onclick="loadProducts()">🔄 Дахин оролдох</button>
       </div>`;
     ['shopGrid', 'dashGrid'].forEach(id => {
@@ -1264,18 +1244,15 @@ function numVal(cell) {
     showToast('Бүтээгдэхүүн татахад алдаа гарлаа', 'error');
   }
 }
-  
-// Google Drive preview зураг URL үүсгэх
+
 function driveThumb(fileId) {
   if (!fileId) return '';
-  // Drive file ID-г filename-с ялгах
   const match = fileId.match(/\/d\/([a-zA-Z0-9_-]+)/);
   const id = match ? match[1] : fileId;
   return `https://drive.google.com/thumbnail?id=${id}&sz=w400`;
 }
 
 function productImgHTML(p) {
-  // Link дотор Drive file ID байвал thumbnail харуулна
   const linkMatch = p.link.match(/\/d\/([a-zA-Z0-9_-]+)/);
   if (linkMatch) {
     const thumb = `https://drive.google.com/thumbnail?id=${linkMatch[1]}&sz=w400`;
@@ -1287,16 +1264,12 @@ function productImgHTML(p) {
   return `<span style="font-size:48px">${p.icon}</span>`;
 }
 
-// Google Drive share link → шууд татах download link болгоно
 function driveDownloadUrl(link) {
   if (!link) return '';
-  // Хэлбэр 1: /file/d/FILE_ID/view  →  /uc?export=download&id=FILE_ID
   const m1 = link.match(/\/file\/d\/([a-zA-Z0-9_-]+)/);
   if (m1) return `https://drive.google.com/uc?export=download&id=${m1[1]}`;
-  // Хэлбэр 2: id= параметртай
   const m2 = link.match(/[?&]id=([a-zA-Z0-9_-]+)/);
   if (m2) return `https://drive.google.com/uc?export=download&id=${m2[1]}`;
-  // Бусад (шууд URL) → өөрчлөхгүй
   return link;
 }
 
@@ -1313,29 +1286,18 @@ function renderProducts(prods, gridId) {
     return;
   }
   grid.innerHTML = prods.map(p => {
-    const free    = isFree(p);
-    const dlUrl   = driveDownloadUrl(p.link);
-
-    // Үнэгүй → шууд татах товч | Төлбөртэй → сагс товч
+    const free  = isFree(p);
+    const dlUrl = driveDownloadUrl(p.link);
     const actionBtn = free
-      ? (dlUrl
-          ? `<a href="${dlUrl}" target="_blank" rel="noopener"
+      ? (dlUrl ? `<a href="${dlUrl}" target="_blank" rel="noopener"
                style="display:flex;align-items:center;justify-content:center;
                width:36px;height:36px;border-radius:10px;
                background:#d1fae5;color:#065f46;font-size:16px;
                text-decoration:none;transition:all 0.15s;flex-shrink:0"
-               title="Шууд татах" download>⬇</a>`
-          : '')
+               title="Шууд татах" download>⬇</a>` : '')
       : `<button class="add-cart-btn" onclick="addToCart(${p.id})" title="Сагсанд нэмэх">🛒</button>`;
-
-    // Үнэгүй badge өнгө
-    const badgeStyle = free
-      ? 'background:#d1fae5;color:#065f46'
-      : 'background:rgba(255,255,255,0.92);color:var(--on-surface)';
-
-    // Картны хүрээ
+    const badgeStyle = free ? 'background:#d1fae5;color:#065f46' : 'background:rgba(255,255,255,0.92);color:var(--on-surface)';
     const cardBorder = free ? 'border:2px solid #a7f3d0' : 'border:1px solid var(--outline-variant)';
-
     return `
     <div class="product-card" style="${cardBorder}">
       <div class="product-img" style="overflow:hidden;position:relative">
