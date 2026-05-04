@@ -1221,6 +1221,7 @@ async function loadProducts() {
           cat:   free ? 'Үнэгүй' : 'Төлбөртэй',
           icon:  free ? '🎁' : '📝',
           link:  safeVal(c[CI.link]),
+          img:   safeVal(c[CI.img]), // ← энэ мөрийг нэмнэ
         };
       });
 
@@ -1253,13 +1254,19 @@ function driveThumb(fileId) {
 }
 
 function productImgHTML(p) {
-  const linkMatch = p.link.match(/\/d\/([a-zA-Z0-9_-]+)/);
-  if (linkMatch) {
-    const thumb = `https://drive.google.com/thumbnail?id=${linkMatch[1]}&sz=w400`;
-    return `<img src="${thumb}" alt="${p.title}"
-      style="width:100%;height:100%;object-fit:cover;"
-      onerror="this.style.display='none';this.nextSibling.style.display='flex'">
-      <span style="display:none;font-size:48px;width:100%;height:100%;align-items:center;justify-content:center">${p.icon}</span>`;
+  // Images багананд файлын нэр байвал GitHub-аас татна
+  // Жишээ: "1.1.png, 1.2.png" → эхний зургийг харуулна
+  if (p.img) {
+    const firstName = p.img.split(',')[0].trim();
+    if (firstName) {
+      const githubUrl = `https://raw.githubusercontent.com/tuult764-crypto/sonirholtoi-hel-bichig-/main/${encodeURIComponent(firstName)}`;
+      return `
+        <img src="${githubUrl}" alt="${p.title}"
+          style="width:100%;height:100%;object-fit:cover;display:block"
+          onerror="this.style.display='none';this.nextSibling.style.display='flex'">
+        <span style="display:none;font-size:48px;width:100%;height:100%;
+          align-items:center;justify-content:center">${p.icon}</span>`;
+    }
   }
   return `<span style="font-size:48px">${p.icon}</span>`;
 }
