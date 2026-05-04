@@ -1382,7 +1382,7 @@ function filterShop(cat, btn) {
 //  GOOGLE APPS SCRIPT ENDPOINT
 //  → Энд deploy хийсэн Script URL-ээ тавина
 // ════════════════════════════════
-const GAS_URL = 'YOUR_GOOGLE_APPS_SCRIPT_URL_HERE';
+const GAS_URL = 'https://script.google.com/macros/s/AKfycbyQnv05GYfVd_bTJ2nwAwwrqyeR4eN6mpOCXiXWQUNINCCPCXdgfUl0BkRPzYzQwulSLA/exec';
 // Жишээ: 'https://script.google.com/macros/s/AKfycb.../exec'
 
 // ════════════════════════════════
@@ -1497,7 +1497,7 @@ async function loadLibrary() {
   status.style.display = 'none';
 
   try {
-    const url = GAS_URL + 'https://script.google.com/macros/s/AKfycbyjWO5CNSHchle4QiWBI3b8Gz23kJOJtQ7HDjbGFLaoJcFccxd0zJoO7_FSpjZSyz-u8A/exec;
+    const url = GAS_URL + '?action=getApproved&email=' + encodeURIComponent(currentUser);
     const resp = await fetch(url);
     const data = await resp.json();  // [{title, link, date}, ...]
 
