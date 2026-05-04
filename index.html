@@ -596,10 +596,11 @@
 <nav>
   <div class="nav-inner">
     <div class="nav-brand" onclick="showDashboard()">
-      <div class="nav-logo" style="background:none;padding:0;overflow:hidden;display:flex;align-items:center;justify-content:center">
+      <div style="width:40px;height:40px;border-radius:12px;background:#1a1208;
+        display:flex;align-items:center;justify-content:center;overflow:hidden;flex-shrink:0">
         <img src="https://raw.githubusercontent.com/tuult764-crypto/sonirholtoi-hel-bichig-/main/logo.png"
-          alt="Лого" style="width:40px;height:40px;object-fit:contain;border-radius:10px"
-          onerror="this.outerHTML='<span style=\'width:40px;height:40px;background:var(--primary);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:22px\'>📖</span>'">
+          alt="Лого" style="width:36px;height:36px;object-fit:contain"
+          onerror="this.parentElement.innerHTML='<span style=\'font-size:22px\'>📖</span>'">
       </div>
       <span class="desktop-only">Сонирхолтой хэл бичиг</span>
     </div>
@@ -894,7 +895,7 @@
       <h2 class="section-title" style="margin-bottom:0">🛒 Цахим дэлгүүр</h2>
       <div class="shop-filter">
         <button class="filter-btn active" onclick="filterShop('all',this)">Бүгд</button>
-        <button class="filter-btn" onclick="filterShop('Paid',this)">Төлбөртэй</button>
+        <button class="filter-btn" onclick="filterShop('Төлбөртэй',this)">Төлбөртэй</button>
         <button class="filter-btn" onclick="filterShop('Үнэгүй',this)">Үнэгүй</button>
       </div>
     </div>
@@ -906,10 +907,14 @@
 <footer>
   <div class="footer-inner">
     <div>
-      <div class="footer-brand" style="display:flex;align-items:center;gap:10px">
-        <img src="https://raw.githubusercontent.com/tuult764-crypto/sonirholtoi-hel-bichig-/main/logo.png"
-          alt="Лого" style="width:36px;height:36px;object-fit:contain;border-radius:8px;background:#fff;padding:2px"
-          onerror="this.style.display='none'">
+      <div class="footer-brand" style="display:flex;align-items:center;gap:12px">
+        <div style="width:44px;height:44px;border-radius:12px;background:#1a1208;
+          border:1px solid rgba(255,255,255,0.1);display:flex;align-items:center;
+          justify-content:center;overflow:hidden;flex-shrink:0">
+          <img src="https://raw.githubusercontent.com/tuult764-crypto/sonirholtoi-hel-bichig-/main/logo.png"
+            alt="Лого" style="width:40px;height:40px;object-fit:contain"
+            onerror="this.parentElement.innerHTML='<span style=\'font-size:20px\'>📖</span>'">
+        </div>
         Сонирхолтой хэл бичиг
       </div>
       <p>Монгол хэл, уран зохиолын хичээлийг хүн бүрт хүртээмжтэй, сонирхолтой байдлаар хүргэх цахим платформ.</p>
@@ -1124,89 +1129,112 @@ function updateNavUser() {
 
 // ════════════════════════════════
 //  PRODUCTS — Google Sheets татах
+//  gviz JSON ашиглана (олон мөрт
+//  description-д найдвартай)
 // ════════════════════════════════
-const SHEET_ID  = '19XbGi1hWULDm2MRjFAG8G0dtlp7tbfN2pJSupKWA6G4';
+const SHEET_ID   = '19XbGi1hWULDm2MRjFAG8G0dtlp7tbfN2pJSupKWA6G4';
 const SHEET_NAME = 'Products';
-const SHEET_CSV  = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent(SHEET_NAME)}`;
 
-// Баганы тохиргоо (0-based): Title, Description, Price, Images, Type, Link
-const COL = { title:0, desc:1, price:2, images:3, type:4, link:5 };
-
-// Type → icon, category харьцуулалт
-const TYPE_META = {
-  'Paid':  { icon:'📝', cat:'Paid' },
-  'free':  { icon:'🎁', cat:'Үнэгүй' },
-  'free-sample': { icon:'🎁', cat:'Үнэгүй' },
-};
-// Type → filter category
-function getCategory(type) {
-  if (!type) return 'Бусад';
-  const t = type.toLowerCase();
-  if (t === 'free' || t === 'free-sample') return 'Үнэгүй';
-  return 'Paid';
+// gviz endpoint — JSON буцаана, CSV-ээс найдвартай
+function sheetJsonUrl() {
+  return `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(SHEET_NAME)}`;
 }
 
-function parseCSV(text) {
-  // Simple CSV parser (handles quoted fields with commas/newlines)
-  const rows = [];
-  let cur = [], field = '', inQ = false;
-  for (let i = 0; i < text.length; i++) {
-    const ch = text[i];
-    if (ch === '"') {
-      if (inQ && text[i+1] === '"') { field += '"'; i++; }
-      else inQ = !inQ;
-    } else if (ch === ',' && !inQ) {
-      cur.push(field); field = '';
-    } else if ((ch === '\n' || (ch === '\r' && text[i+1] === '\n')) && !inQ) {
-      if (ch === '\r') i++;
-      cur.push(field); field = '';
-      rows.push(cur); cur = [];
-    } else {
-      field += ch;
-    }
+// Sheets баганын дарааллыг header-аас динамикаар олно
+// A=Title, B=Description, C=Price, D=Images, E=Type, F=Link
+// → header нэр ихтэмд өөрчлөгдсөн ч ажиллана
+function parseGvizJson(raw) {
+  // Google-н JSONP wrapper-ийг арилгана
+  const json = raw.replace(/^.*?google\.visualization\.Query\.setResponse\(/, '').replace(/\);?\s*$/, '');
+  return JSON.parse(json);
+}
+
+// Баганы индексийг header label-ээс олох
+function findCol(cols, names) {
+  for (const name of names) {
+    const idx = cols.findIndex(c =>
+      (c.label || c.id || '').toLowerCase().trim() === name.toLowerCase()
+    );
+    if (idx !== -1) return idx;
   }
-  if (field || cur.length) { cur.push(field); rows.push(cur); }
-  return rows;
+  return -1;
+}
+
+function getCategory(type) {
+  if (!type) return 'Бусад';
+  const t = type.toLowerCase().trim();
+  if (t === 'free' || t === 'free-sample') return 'Үнэгүй';
+  return 'Төлбөртэй';
+}
+
+function cellVal(cell) {
+  if (!cell) return '';
+  if (cell.v === null || cell.v === undefined) return '';
+  return String(cell.f || cell.v).trim();
+}
+
+function numVal(cell) {
+  if (!cell || cell.v === null || cell.v === undefined) return 0;
+  return Number(cell.v) || 0;
 }
 
 async function loadProducts() {
-  // Loading skeleton
   ['shopGrid','dashGrid'].forEach(id => {
     const g = document.getElementById(id);
     if (g) g.innerHTML = `
       <div style="grid-column:1/-1;text-align:center;padding:48px;color:#bbb">
-        <div style="width:36px;height:36px;border:3px solid var(--outline-variant);border-top-color:var(--primary);border-radius:50%;animation:spin 0.8s linear infinite;margin:0 auto 14px"></div>
+        <div style="width:36px;height:36px;border:3px solid var(--outline-variant);
+          border-top-color:var(--primary);border-radius:50%;
+          animation:spin 0.8s linear infinite;margin:0 auto 14px"></div>
         <p style="font-size:13px;font-weight:600">Бүтээгдэхүүн ачааллаж байна...</p>
       </div>`;
   });
 
   try {
-    const resp = await fetch(SHEET_CSV);
-    if (!resp.ok) throw new Error('Sheet fetch failed');
-    const text = await resp.text();
-    const rows = parseCSV(text);
+    const resp = await fetch(sheetJsonUrl());
+    if (!resp.ok) throw new Error('HTTP ' + resp.status);
+    const raw  = await resp.text();
+    const gviz = parseGvizJson(raw);
+    const table = gviz.table;
+    const cols  = table.cols;   // [{id, label, type}, ...]
+    const rows  = table.rows;   // [{c: [{v,f}, ...]}, ...]
 
-    // Skip header row (row 0)
-    allProducts = rows.slice(1)
-      .filter(r => r[COL.title] && r[COL.title].trim())
+    // ── Баганы индексийг нэрээр олох ──
+    const iTitle = findCol(cols, ['title','гарчиг']);
+    const iDesc  = findCol(cols, ['description','тайлбар']);
+    const iPrice = findCol(cols, ['price','үнэ']);
+    const iImg   = findCol(cols, ['images','зураг','image']);
+    const iType  = findCol(cols, ['type','төрөл']);
+    const iLink  = findCol(cols, ['link','холбоос']);
+
+    // Олдоогүй баганыг 0-based default-оор нөхнө (A,B,C,D,E,F)
+    const CI = {
+      title: iTitle >= 0 ? iTitle : 0,
+      desc:  iDesc  >= 0 ? iDesc  : 1,
+      price: iPrice >= 0 ? iPrice : 2,
+      img:   iImg   >= 0 ? iImg   : 3,
+      type:  iType  >= 0 ? iType  : 4,
+      link:  iLink  >= 0 ? iLink  : 5,
+    };
+
+    allProducts = rows
+      .filter(r => r.c && cellVal(r.c[CI.title]))
       .map((r, i) => {
-        const rawPrice = (r[COL.price] || '0').replace(/[^\d.]/g, '');
-        const price    = parseFloat(rawPrice) || 0;
-        const type     = (r[COL.type] || '').trim();
-        const rawImgs  = (r[COL.images] || '').trim();
-        // First image filename
-        const firstImg = rawImgs ? rawImgs.split(',')[0].trim() : '';
-        const link     = (r[COL.link] || '').trim();
+        const c     = r.c;
+        const type  = cellVal(c[CI.type]);
+        const price = numVal(c[CI.price]);
+        const link  = cellVal(c[CI.link]);
+        const desc  = cellVal(c[CI.desc]);
+        const icon  = getCategory(type) === 'Үнэгүй' ? '🎁' : '📝';
 
         return {
           id:    i + 1,
-          title: r[COL.title].trim(),
-          desc:  (r[COL.desc] || '').trim(),
+          title: cellVal(c[CI.title]),
+          desc,
           price,
           type,
           cat:   getCategory(type),
-          icon:  (TYPE_META[type] || TYPE_META['Paid']).icon,
-          img:   firstImg,
+          icon,
           link,
         };
       });
@@ -1215,14 +1243,16 @@ async function loadProducts() {
     renderProducts(allProducts, 'dashGrid');
 
   } catch(e) {
-    console.warn('Google Sheets татахад алдаа:', e);
-    // Fallback: хоосон grid + мессэж
+    console.warn('Sheets алдаа:', e);
     ['shopGrid','dashGrid'].forEach(id => {
       const g = document.getElementById(id);
       if (g) g.innerHTML = `
         <div style="grid-column:1/-1;text-align:center;padding:48px;color:#bbb">
           <div style="font-size:40px;margin-bottom:12px">⚠️</div>
-          <p style="font-size:13px;font-weight:600">Бүтээгдэхүүн ачаалах боломжгүй байна.<br>Интернэт холболтоо шалгана уу.</p>
+          <p style="font-size:13px;font-weight:600">
+            Бүтээгдэхүүн ачаалах боломжгүй.<br>
+            Sheets нийтэд нээлттэй эсэхийг шалгана уу.
+          </p>
         </div>`;
     });
     showToast('Бүтээгдэхүүн татахад алдаа гарлаа', 'error');
@@ -1251,6 +1281,23 @@ function productImgHTML(p) {
   return `<span style="font-size:48px">${p.icon}</span>`;
 }
 
+// Google Drive share link → шууд татах download link болгоно
+function driveDownloadUrl(link) {
+  if (!link) return '';
+  // Хэлбэр 1: /file/d/FILE_ID/view  →  /uc?export=download&id=FILE_ID
+  const m1 = link.match(/\/file\/d\/([a-zA-Z0-9_-]+)/);
+  if (m1) return `https://drive.google.com/uc?export=download&id=${m1[1]}`;
+  // Хэлбэр 2: id= параметртай
+  const m2 = link.match(/[?&]id=([a-zA-Z0-9_-]+)/);
+  if (m2) return `https://drive.google.com/uc?export=download&id=${m2[1]}`;
+  // Бусад (шууд URL) → өөрчлөхгүй
+  return link;
+}
+
+function isFree(p) {
+  return p.price === 0 || ['free','free-sample'].includes((p.type||'').toLowerCase().trim());
+}
+
 function renderProducts(prods, gridId) {
   const grid = document.getElementById(gridId);
   if (!grid) return;
@@ -1259,25 +1306,64 @@ function renderProducts(prods, gridId) {
       <p style="font-size:13px;font-weight:600">Бүтээгдэхүүн олдсонгүй</p></div>`;
     return;
   }
-  grid.innerHTML = prods.map(p => `
-    <div class="product-card">
+  grid.innerHTML = prods.map(p => {
+    const free    = isFree(p);
+    const dlUrl   = driveDownloadUrl(p.link);
+
+    // Үнэгүй → шууд татах товч | Төлбөртэй → сагс товч
+    const actionBtn = free
+      ? (dlUrl
+          ? `<a href="${dlUrl}" target="_blank" rel="noopener"
+               style="display:flex;align-items:center;justify-content:center;
+               width:36px;height:36px;border-radius:10px;
+               background:#d1fae5;color:#065f46;font-size:16px;
+               text-decoration:none;transition:all 0.15s;flex-shrink:0"
+               title="Шууд татах" download>⬇</a>`
+          : '')
+      : `<button class="add-cart-btn" onclick="addToCart(${p.id})" title="Сагсанд нэмэх">🛒</button>`;
+
+    // Үнэгүй badge өнгө
+    const badgeStyle = free
+      ? 'background:#d1fae5;color:#065f46'
+      : 'background:rgba(255,255,255,0.92);color:var(--on-surface)';
+
+    // Картны хүрээ
+    const cardBorder = free ? 'border:2px solid #a7f3d0' : 'border:1px solid var(--outline-variant)';
+
+    return `
+    <div class="product-card" style="${cardBorder}">
       <div class="product-img" style="overflow:hidden;position:relative">
         ${productImgHTML(p)}
-        <span class="product-badge">${p.cat}</span>
+        <span class="product-badge" style="${badgeStyle}">${free ? '🎁 Үнэгүй' : p.cat}</span>
       </div>
       <div class="product-body">
         <div class="product-title" title="${p.desc || p.title}">${p.title}</div>
-        ${p.desc ? `<div style="font-size:11px;color:var(--on-surface-variant);margin-bottom:10px;line-height:1.5;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden">${p.desc}</div>` : ''}
+        ${p.desc ? `<div style="font-size:11px;color:var(--on-surface-variant);margin-bottom:10px;
+          line-height:1.5;display:-webkit-box;-webkit-line-clamp:2;
+          -webkit-box-orient:vertical;overflow:hidden">${p.desc}</div>` : ''}
         <div class="product-footer">
-          <span class="product-price">${p.price === 0 ? 'ҮНЭГҮЙ' : p.price.toLocaleString() + '₮'}</span>
-          <div style="display:flex;gap:6px">
-            ${p.link ? `<button class="add-cart-btn" onclick="previewProduct('${p.link}')" title="Урдчилж харах" style="font-size:13px">👁</button>` : ''}
-            <button class="add-cart-btn" onclick="addToCart(${p.id})" title="Сагсанд нэмэх">🛒</button>
+          <span class="product-price" style="${free ? 'color:#065f46' : ''}">
+            ${free ? '🆓 ҮНЭГҮЙ' : p.price.toLocaleString() + '₮'}
+          </span>
+          <div style="display:flex;gap:6px;align-items:center">
+            ${p.link && !free ? `<button class="add-cart-btn"
+                onclick="window.open('${p.link}','_blank','noopener')"
+                title="Урдчилж харах" style="font-size:13px">👁</button>` : ''}
+            ${actionBtn}
           </div>
         </div>
+        ${free && dlUrl ? `<a href="${dlUrl}" target="_blank" rel="noopener" download
+          style="display:block;margin-top:10px;text-align:center;
+          background:var(--tertiary);color:#fff;padding:9px;
+          border-radius:12px;font-size:12px;font-weight:700;
+          text-decoration:none;transition:all 0.15s"
+          onmouseover="this.style.background='#239a4a'"
+          onmouseout="this.style.background='var(--tertiary)'">
+          ⬇ Татаж авах
+        </a>` : ''}
       </div>
-    </div>
-  `).join('');
+    </div>`;
+  }).join('');
 }
 
 function previewProduct(link) {
@@ -1306,10 +1392,18 @@ function addToCart(id) {
   if (!currentUser) { openAuth(); return; }
   const p = allProducts.find(x => x.id === id);
   if (!p) return;
+  // Үнэгүй бол шууд татах — сагсанд нэмэхгүй
+  if (isFree(p)) {
+    const dl = driveDownloadUrl(p.link);
+    if (dl) { window.open(dl, '_blank', 'noopener'); }
+    else { showToast('Татах холбоос байхгүй байна', 'error'); }
+    return;
+  }
   // Давхардуулахгүй
   if (cartItems.find(x => x.id === id)) {
     showToast('Аль хэдийн сагсанд байна', 'error'); return;
   }
+  if (!currentUser) { openAuth(); return; }
   cartItems.push(p);
   document.getElementById('cartBadge').textContent = cartItems.length;
   showToast(`"${p.title}" сагсанд нэмэгдлээ`, 'success');
@@ -1403,7 +1497,7 @@ async function loadLibrary() {
   status.style.display = 'none';
 
   try {
-    const url = GAS_URL + '?action=getApproved&email=' + encodeURIComponent(currentUser);
+    const url = GAS_URL + 'https://script.google.com/macros/s/AKfycbyjWO5CNSHchle4QiWBI3b8Gz23kJOJtQ7HDjbGFLaoJcFccxd0zJoO7_FSpjZSyz-u8A/exec;
     const resp = await fetch(url);
     const data = await resp.json();  // [{title, link, date}, ...]
 
