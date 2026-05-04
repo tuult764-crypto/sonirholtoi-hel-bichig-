@@ -1317,16 +1317,13 @@ function renderProducts(prods, gridId) {
           line-height:1.5;display:-webkit-box;-webkit-line-clamp:2;
           -webkit-box-orient:vertical;overflow:hidden">${p.desc}</div>` : ''}
         <div class="product-footer">
-          <span class="product-price" style="${free ? 'color:#065f46' : ''}">
-            ${free ? '🆓 ҮНЭГҮЙ' : p.price.toLocaleString() + '₮'}
-          </span>
-          <div style="display:flex;gap:6px;align-items:center">
-            ${p.link && !free ? `<button class="add-cart-btn"
-                onclick="window.open('${p.link}','_blank','noopener')"
-                title="Урдчилж харах" style="font-size:13px">👁</button>` : ''}
-            ${actionBtn}
-          </div>
-        </div>
+  <span class="product-price" style="${free ? 'color:#065f46' : ''}">
+    ${free ? '🆓 ҮНЭГҮЙ' : p.price.toLocaleString() + '₮'}
+  </span>
+  <div style="display:flex;gap:6px;align-items:center">
+    ${actionBtn}
+  </div>
+</div>
         ${free && dlUrl ? `<a href="${dlUrl}" target="_blank" rel="noopener" download
           style="display:block;margin-top:10px;text-align:center;
           background:var(--tertiary);color:#fff;padding:9px;
