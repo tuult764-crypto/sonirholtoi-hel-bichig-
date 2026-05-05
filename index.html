@@ -1795,190 +1795,238 @@ function selectQCount(q,t) {
   document.querySelectorAll('.qcount-btn').forEach(btn=>btn.classList.toggle('active', btn.id==='qc'+q));
 }
 
+// 1. buildPrompt() — OpenAI prompt-тай яг тохирсон
 function buildPrompt() {
-  const BLOOM_GUIDE={
-    remember:'САНАХ: "Тодорхойл","Нэрлэ","Жагса"',
-    understand:'ОЙЛГОХ: "Тайлбарла","Харьцуул"',
-    apply:'ХЭРЭГЛЭХ: "Хэрэглэ","Зохио"',
-    analyze:'ШИНЖЛЭХ: "Шинжил","Учрыг тодорхойл"',
-    evaluate:'ҮНЭЛЭХ: "Үнэл","Батал"',
-    create:'БҮТЭЭХ: "Зохио","Шинэчил"',
+  const bloomLabels = {
+    remember:   'Санах',
+    understand: 'Ойлгох',
+    apply:      'Хэрэглэх',
+    analyze:    'Шинжлэх',
+    evaluate:   'Үнэлэх',
+    create:     'Бүтээх',
   };
-  const bloomStr=[...selBloom].map(l=>BLOOM_GUIDE[l]).join('\n');
-  const mc=Math.max(1,Math.round(selQCount*0.4));
-  const open=Math.max(1,Math.round(selQCount*0.4));
-  const cr=Math.max(0,selQCount-mc-open);
-  return `Та Монгол хэл, уран зохиолын мэргэжлийн багш.
-
-ЗОХИОЛ: ${selWork.title}
-АНГИ: ${selGrade}-р анги
-ХУГАЦАА: ${selTime} минут
-
-ЭХ:
+  const selectedBloomStr = [...selBloom].map(l => bloomLabels[l]).join(', ');
+ 
+  return `Зохиолын нэр: "${selWork.title}", Анги: ${selGrade}, Асуултын тоо: ${selQCount}
+ 
+Блүүмийн сонгосон түвшнүүд: ${selectedBloomStr}
+Хугацаа: ${selTime} минут
+ 
+Зохиолын эх:
 """
-${selWork.content.substring(0,3000)}
+${selWork.content.substring(0, 3000)}
 """
-
-БЛҮҮМ: ${bloomStr}
-
-ШААРДЛАГА:
-- Нийт ${selQCount} асуулт: тест ${mc}, задгай ${open}, бүтээлч ${cr}
-- Зохиолын эхэд үндэслэсэн байх
-- ${selGrade}-р ангийн түвшинд тохирсон
-
-Зөвхөн JSON array буцаа (өөр юм бичихгүй):
-[
-  {"type":"mc","bloom":"Санах","points":2,"q":"Асуулт?","opts":["А)...","Б)...","В)...","Г)..."],"ans":"А","teacher_note":"Тайлбар"},
-  {"type":"open","bloom":"Ойлгох","points":4,"q":"Асуулт?","lines":4,"sample_ans":"Жишээ"},
-  {"type":"creative","bloom":"Бүтээх","points":6,"q":"Асуулт?","lines":8,"criteria":"Шалгуур"}
-]`;
+ 
+Багш нь Монгол хэл, уран зохиолын мэргэжлийн арга зүйчийн үүргээр, Блүүмийн таксономын түвшин бүрийг (${selectedBloomStr}) тусгасан, сурагчийн сэтгэхүйг хөгжүүлэх, сонирхолтой ${selQCount} асуултыг боловсруулж өгнө.
+ 
+Зорилт:
+- Эхлээд эх зохиолуудаа уншина.
+- Уншсан агуулгаасаа асуултуудаа Блүүмийн түвшин бүрт ангилж товч тодорхойлж бичнэ.
+- Асуулт бүрийг сурагчдад сонирхолтой, бодож тунгаахыг шаардсан байдлаар боловсруул.
+- Асуулт тус бүрийн хариуг (оноо) хаалтанд бичнэ.
+- Асуултын хариултын хуудсыг <div> болон <ul> HTML таг ашиглан маш цэвэрхэн, ойлгомжтой загварт гарга.
+- Эцсийн хариултаа гаргахын өмнө шаардлагатай бүх асуултыг бүрэн боловсруулсан эсэхээ шалгаж үзнэ.
+ 
+Ажлын шат дараалал:
+1. Зохиолын агуулга болон тухайн ангийн ойлголтын онцлогт нийцүүлэн Блүүмийн түвшин тус бүрээр сэтгэж, асуултын санаагаа гаргана.
+2. Хуулбарлах болон уншсанаа зүгээр л давтат бичихээс зайлсхийнэ.
+3. Асуултын ард оноог хаалтанд (жишээ нь: (2 оноо)) бичнэ.
+4. Бүх асуултыг HTML <div> болон <ul> бүтэцээр форматлаж цэгцтэй гаргана.
+ 
+Гаралтын формат (зөвхөн HTML, өөр юм бичихгүй):
+<div>
+  <ul>
+    <li>Санах түвшний асуулт: ... (оноо)</li>
+    <li>Ойлгох түвшний асуулт: ... (оноо)</li>
+    <li>Хэрэглэх түвшний асуулт: ... (оноо)</li>
+    <li>Шинжлэх түвшний асуулт: ... (оноо)</li>
+    <li>Үнэлэх түвшний асуулт: ... (оноо)</li>
+    <li>Бүтээх түвшний асуулт: ... (оноо)</li>
+  </ul>
+</div>
+ 
+Зөвхөн HTML <div> болон <ul> таг ашиглана. Код блок, тайлбар, нэмэлт текст хэрэглэхгүй.`;
 }
-
+ 
+// 2. buildFallback() — AI ажиллахгүй үед HTML форматаар буцаана
 function buildFallback() {
-  const t=selWork?selWork.title:'Зохиол';
-  return [
-    { type:'mc',bloom:'Санах',points:2,q:`"${t}" зохиолын гол дүрийн нэрийг нэрлэ.`,opts:['А) Дүр 1','Б) Дүр 2','В) Дүр 3','Г) Дүр 4'],ans:'А',teacher_note:'Эхийн эхнээс' },
-    { type:'open',bloom:'Ойлгох',points:4,q:`"${t}" зохиолын гол санааг тайлбарла.`,lines:4,sample_ans:'Сурагч өөрийн үгээр тайлбарлана.' },
-    { type:'creative',bloom:'Бүтээх',points:6,q:`"${t}" зохиолын үргэлжлэлийг 5-7 өгүүлбэрээр зохио.`,lines:8,criteria:'Бүтээлч байдал, хэл найруулга, уялдаа холбоо' },
-  ];
+  const t = selWork ? selWork.title : 'Зохиол';
+  return `<div>
+  <ul>
+    <li>Санах түвшний асуулт: "${t}" зохиолын гол баатрын нэрийг нэрлэ. (1 оноо)</li>
+    <li>Ойлгох түвшний асуулт: Зохиолын гол санааг өөрийн үгээр тайлбарла. (2 оноо)</li>
+    <li>Хэрэглэх түвшний асуулт: Зохиолын гол дүрийн үйлдлийг өөрийн амьдралтай холбон ярь. (2 оноо)</li>
+    <li>Шинжлэх түвшний асуулт: Зохиолд ямар асуудал үүссэн бэ? Үр дагаврыг задлан шинжил. (3 оноо)</li>
+    <li>Үнэлэх түвшний асуулт: Зохиолын үйл явдлыг хэр бодитой гэж үзэж байна вэ? Баримтаар тайлбарла. (2 оноо)</li>
+    <li>Бүтээх түвшний асуулт: Зохиолын үргэлжлэлийг 5-7 өгүүлбэрээр зохио. (3 оноо)</li>
+  </ul>
+</div>`;
 }
-
+ 
+// 3. generateWorksheet() — HTML гаралт хүлээн авна
 async function generateWorksheet() {
-  if (!selWork) { showToast('Зохиол сонгоно уу!','error'); return; }
-  const btn=document.getElementById('genBtn');
-  btn.disabled=true;
-  document.getElementById('wsPlaceholder').style.display='none';
-  document.getElementById('wsResult').style.display='none';
-  document.getElementById('wsGenerating').style.display='flex';
-  const msgs=['Зохиолыг шинжилж байна…','Блүүмийн дагуу асуулт зохиож байна…','Хэл найруулгыг тохируулж байна…','Эцсийн шүүлт хийж байна…'];
-  let mi=0;
-  const rotate=setInterval(()=>{ document.getElementById('genMsg').textContent=msgs[++mi%msgs.length]; },1800);
+  if (!selWork) { showToast('Зохиол сонгоно уу!', 'error'); return; }
+  const btn = document.getElementById('genBtn');
+  btn.disabled = true;
+  document.getElementById('wsPlaceholder').style.display = 'none';
+  document.getElementById('wsResult').style.display = 'none';
+  document.getElementById('wsGenerating').style.display = 'flex';
+ 
+  const msgs = [
+    'Зохиолыг шинжилж байна…',
+    'Блүүмийн дагуу асуулт зохиож байна…',
+    'Хэл найруулгыг тохируулж байна…',
+    'Эцсийн шүүлт хийж байна…'
+  ];
+  let mi = 0;
+  const rotate = setInterval(() => {
+    document.getElementById('genMsg').textContent = msgs[++mi % msgs.length];
+  }, 1800);
+ 
+  let wsHTML = '';
+ 
   try {
-    const resp=await fetch('https://api.anthropic.com/v1/messages',{
-      method:'POST',
-      headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({ model:'claude-sonnet-4-20250514', max_tokens:1000, messages:[{role:'user',content:buildPrompt()}] })
+    const resp = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 1000,
+        messages: [{ role: 'user', content: buildPrompt() }]
+      })
     });
-    const data=await resp.json();
-    const raw=(data.content||[]).map(b=>b.text||'').join('');
-    const m=raw.match(/\[[\s\S]*\]/);
-    wsQuestions=m?JSON.parse(m[0]):buildFallback();
-  } catch(e) {
-    wsQuestions=buildFallback();
-    showToast('AI холболт амжилтгүй. Жишээ хуудас харуулж байна.','error');
+    const data = await resp.json();
+    const raw = (data.content || []).map(b => b.text || '').join('');
+ 
+    // HTML <div>...<ul>...<li> гаралт олох
+    const m = raw.match(/<div[\s\S]*<\/div>/i);
+    wsHTML = m ? m[0] : buildFallback();
+  } catch (e) {
+    wsHTML = buildFallback();
+    showToast('AI холболт амжилтгүй. Жишээ хуудас харуулж байна.', 'error');
   }
+ 
   clearInterval(rotate);
-  chatHistory=[];
-  document.getElementById('wsGenerating').style.display='none';
-  document.getElementById('wsResult').style.display='block';
-  renderPreview();
-  const box=document.getElementById('chatMessages');
-  box.innerHTML='';
-  addChatMsg('assistant',`"${selWork.title}" зохиолд үндэслэсэн ${wsQuestions.length} асуулт амжилттай үүслээ! Засвар хийхийг хүсвэл хэлнэ үү.`);
-  btn.disabled=false;
-  showToast('Ажлын хуудас бэлэн боллоо!','success');
+  chatHistory = [];
+ 
+  document.getElementById('wsGenerating').style.display = 'none';
+  document.getElementById('wsResult').style.display = 'block';
+ 
+  renderPreview(wsHTML);
+ 
+  const box = document.getElementById('chatMessages');
+  box.innerHTML = '';
+  addChatMsg('assistant', `"${selWork.title}" зохиолд үндэслэсэн ${selQCount} асуулт амжилттай үүслээ! Засвар хийхийг хүсвэл хэлнэ үү.`);
+ 
+  btn.disabled = false;
+  showToast('Ажлын хуудас бэлэн боллоо!', 'success');
 }
-
-function renderPreview() {
-  const total=wsQuestions.reduce((s,q)=>s+(q.points||2),0);
-  const bColors={Санах:'#ef4444',Ойлгох:'#f97316',Хэрэглэх:'#ca8a04',Шинжлэх:'#16a34a',Үнэлэх:'#2563eb',Бүтээх:'#7c3aed'};
-  let html=`<div style="text-align:center;border-bottom:2px solid #e8d4b0;padding-bottom:16px;margin-bottom:20px;">
-    <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:#5c4a28;">Монгол хэл · Уран зохиол · ${selGrade}-р анги</div>
-    <div style="font-size:17px;font-weight:800;color:#1a1208;margin:6px 0;">${selWork.title}</div>
-    <div style="display:flex;justify-content:space-between;font-size:11px;color:#9c7c4a;margin-top:8px;">
-      <span>Хугацаа: ${selTime} мин</span><span>Нийт: ${total} оноо</span><span>Нэр: ___________</span>
-    </div>
-  </div>`;
-  wsQuestions.forEach((q,i) => {
-    const bc=bColors[q.bloom]||'#888';
-    html+=`<div style="margin-bottom:18px;padding-bottom:16px;border-bottom:1px solid #e8d4b0;">
-      <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
-        <span style="font-size:11px;font-weight:800;color:var(--primary);">${i+1}.</span>
-        <span style="font-size:10px;padding:2px 10px;border-radius:99px;background:${bc}18;color:${bc};font-weight:800;">${q.bloom}</span>
-        <span style="font-size:10px;color:#aaa;margin-left:auto;">${q.points} оноо</span>
-        <button onclick="editQuestion(${i})" style="font-size:10px;border:1px solid #ddd;border-radius:8px;padding:3px 10px;cursor:pointer;background:#fff;font-family:'Lexend',sans-serif;font-weight:600;color:#666;">✏️</button>
+ 
+// 4. renderPreview() — HTML-г шууд харуулна (JSON биш)
+function renderPreview(wsHTML) {
+  const header = `
+    <div style="text-align:center;border-bottom:2px solid #e8d4b0;padding:0 0 16px;margin-bottom:20px;">
+      <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:#5c4a28;">
+        Монгол хэл · Уран зохиол · ${selGrade}-р анги
       </div>
-      <div style="font-size:13px;font-weight:600;line-height:1.55;margin-bottom:10px;">${q.q}</div>`;
-    if (q.type==='mc'&&q.opts) {
-      html+=`<div style="display:grid;grid-template-columns:1fr 1fr;gap:4px;">${q.opts.map(o=>`<div style="font-size:12px;">◯ ${o}</div>`).join('')}</div>`;
-    } else {
-      const lines=q.lines||4;
-      for (let l=0;l<lines;l++) html+=`<div style="height:22px;border-bottom:1px solid #ccc;margin-top:6px;"></div>`;
-    }
-    html+=`</div>`;
-  });
-  document.getElementById('wsPreview').innerHTML=html;
+      <div style="font-size:17px;font-weight:800;color:#1a1208;margin:6px 0;">${selWork.title}</div>
+      <div style="display:flex;justify-content:space-between;font-size:11px;color:#9c7c4a;margin-top:8px;">
+        <span>Хугацаа: ${selTime} мин</span>
+        <span>Нэр: ___________</span>
+        <span>Анги: ___________</span>
+      </div>
+    </div>`;
+ 
+  // Style нэмэх
+  const styledHTML = (wsHTML || '')
+    .replace(/<ul>/g, '<ul style="list-style:none;padding:0;margin:0;">')
+    .replace(/<li>/g, '<li style="padding:14px 0 14px 12px;border-bottom:1px solid #f0e8d8;font-size:13px;line-height:1.7;color:#1a1208;position:relative;">');
+ 
+  document.getElementById('wsPreview').innerHTML = header + styledHTML;
+  window._wsHTMLForPrint = header + (wsHTML || '');
 }
-
-function editQuestion(idx) {
-  const q=wsQuestions[idx];
-  const newQ=prompt('Асуулт засах:',q.q);
-  if (newQ&&newQ.trim()) { wsQuestions[idx].q=newQ.trim(); renderPreview(); showToast('Асуулт засагдлаа!','success'); }
-}
-
-async function sendChat(suggestion='') {
-  const inp=document.getElementById('chatInput');
-  const msg=suggestion||inp.value.trim();
+ 
+// 5. sendChat() — HTML форматаар засвар хийнэ
+async function sendChat(suggestion = '') {
+  const inp = document.getElementById('chatInput');
+  const msg = suggestion || inp.value.trim();
   if (!msg) return;
-  inp.value='';
-  addChatMsg('user',msg);
-  const typingEl=addChatMsg('assistant','<em style="color:#aaa">Боловсруулж байна…</em>',true);
-  const ctx=`Одоогийн ажлын хуудас (${wsQuestions.length} асуулт):\n${JSON.stringify(wsQuestions)}\n\nЗохиол: ${selWork.title}, ${selGrade}-р анги\nХүсэлт: ${msg}\n\nШинэчлэгдсэн бүрэн JSON array буцаа (өөр юм бичихгүй):`;
+  inp.value = '';
+  addChatMsg('user', msg);
+  const typingEl = addChatMsg('assistant', '<em style="color:#aaa">Боловсруулж байна…</em>', true);
+ 
+  const currentPreview = document.getElementById('wsPreview').innerHTML;
+  const ctx = `Одоогийн ажлын хуудас:\n${currentPreview}\n\nЗохиол: ${selWork ? selWork.title : ''}, ${selGrade}-р анги\nХүсэлт: ${msg}\n\nШинэчлэгдсэн бүрэн HTML <div><ul><li> форматаар буцаа. Зөвхөн HTML, өөр юм бичихгүй.`;
+ 
   try {
-    const resp=await fetch('https://api.anthropic.com/v1/messages',{
-      method:'POST',
-      headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({ model:'claude-sonnet-4-20250514', max_tokens:1000, messages:[{role:'user',content:ctx}] })
+    const resp = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 1000,
+        messages: [{ role: 'user', content: ctx }]
+      })
     });
-    const data=await resp.json();
-    const raw=(data.content||[]).map(b=>b.text||'').join('');
-    const m=raw.match(/\[[\s\S]*\]/);
+    const data = await resp.json();
+    const raw = (data.content || []).map(b => b.text || '').join('');
+    const m = raw.match(/<div[\s\S]*<\/div>/i);
     typingEl.remove();
     if (m) {
-      wsQuestions=JSON.parse(m[0]);
-      renderPreview();
-      addChatMsg('assistant',`✅ ${wsQuestions.length} асуулт шинэчлэгдлээ!`);
-      showToast('Шинэчлэгдлээ!','success');
+      renderPreview(m[0]);
+      addChatMsg('assistant', '✅ Ажлын хуудас шинэчлэгдлээ!');
+      showToast('Шинэчлэгдлээ!', 'success');
     } else {
-      addChatMsg('assistant','Уучлаарай, дахин оролдоно уу.');
+      addChatMsg('assistant', 'Уучлаарай, дахин оролдоно уу.');
     }
-  } catch(e) {
+  } catch (e) {
     typingEl.remove();
-    addChatMsg('assistant','Холболтын алдаа гарлаа.');
+    addChatMsg('assistant', 'Холболтын алдаа гарлаа.');
   }
 }
-
-function addChatMsg(role,text,returnEl=false) {
-  const box=document.getElementById('chatMessages');
-  const el=document.createElement('div');
-  el.className=`chat-msg ${role}`;
-  el.innerHTML=`<div class="chat-msg-label" style="color:${role==='user'?'var(--secondary)':'var(--accent-purple)'}">
-    ${role==='user'?'👤 Та':'🤖 AI Хөтөч'}</div><div>${text}</div>`;
-  box.appendChild(el);
-  box.scrollTop=box.scrollHeight;
-  if (returnEl) return el;
-}
-
+ 
+// 6. printWorksheet() — шинэчлэгдсэн хэвлэх
 function printWorksheet() {
-  const box=document.getElementById('wsPreview');
-  if (!box||!box.innerHTML) { showToast('Эхлээд үүсгэнэ үү!','error'); return; }
-  const pa=document.getElementById('printArea');
-  pa.innerHTML=`<style>@page{size:A5 portrait;margin:10mm;}body{font-family:'Lexend',sans-serif;}</style>${box.innerHTML}`;
-  pa.style.display='block';
-  const cleanup=()=>{ pa.style.display='none'; pa.innerHTML=''; window.removeEventListener('afterprint',cleanup); };
-  window.addEventListener('afterprint',cleanup);
-  setTimeout(()=>window.print(),150);
+  const box = document.getElementById('wsPreview');
+  if (!box || !box.innerHTML) { showToast('Эхлээд үүсгэнэ үү!', 'error'); return; }
+  const pa = document.getElementById('printArea');
+  pa.innerHTML = `<style>
+    @page { size: A4 portrait; margin: 15mm; }
+    body { font-family: 'Lexend', sans-serif; font-size: 12pt; }
+    ul { list-style: none; padding: 0; }
+    li { padding: 10px 0; border-bottom: 1px solid #eee; line-height: 1.8; font-size: 11pt; }
+  </style>${box.innerHTML}`;
+  pa.style.display = 'block';
+  const cleanup = () => {
+    pa.style.display = 'none';
+    pa.innerHTML = '';
+    window.removeEventListener('afterprint', cleanup);
+  };
+  window.addEventListener('afterprint', cleanup);
+  setTimeout(() => window.print(), 150);
 }
-
+ 
+// 7. downloadWorksheet() — Word татах
 function downloadWorksheet() {
-  const box=document.getElementById('wsPreview');
-  if (!box||!box.innerHTML) { showToast('Эхлээд үүсгэнэ үү!','error'); return; }
-  const blob=new Blob([`<html><head><meta charset="utf-8"><style>body{font-family:serif;font-size:11pt;}@page{size:A5;margin:12mm;}</style></head><body>${box.innerHTML}</body></html>`],{type:'application/msword'});
-  const url=URL.createObjectURL(blob);
-  const a=document.createElement('a');
-  a.href=url; a.download=`Ajliin_huudas_${selGrade}r_angi.doc`; a.click();
+  const box = document.getElementById('wsPreview');
+  if (!box || !box.innerHTML) { showToast('Эхлээд үүсгэнэ үү!', 'error'); return; }
+  const fname = selWork
+    ? `Ajliin_huudas_${selGrade}r_${selWork.title.substring(0, 15)}.doc`
+    : `Ajliin_huudas_${selGrade}r_angi.doc`;
+  const blob = new Blob([`<html><head><meta charset="utf-8">
+    <style>
+      body { font-family: serif; font-size: 12pt; margin: 20mm; }
+      ul { list-style: none; padding: 0; }
+      li { padding: 10px 0; border-bottom: 1px solid #eee; line-height: 1.8; }
+    </style></head><body>${box.innerHTML}</body></html>`],
+    { type: 'application/msword' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = fname;
+  a.click();
   URL.revokeObjectURL(url);
-  showToast('Word файл татагдаж байна!','success');
+  showToast('Word файл татагдаж байна!', 'success');
 }
 </script>
 </body>
