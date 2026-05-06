@@ -351,6 +351,21 @@
     .ws-action-btn:hover { border-color: var(--primary); background: var(--primary-light); color: var(--primary); }
     #wsPreview { padding: 24px; }
 
+    /* wsPreview дотор li загвар */
+    #wsPreview ul { list-style: none; padding: 0; margin: 0; }
+    #wsPreview li {
+      padding: 14px 0 14px 16px;
+      border-bottom: 1px solid #f0e8d8;
+      font-size: 13px; line-height: 1.75;
+      color: #1a1208; position: relative;
+    }
+    #wsPreview li::before {
+      content: '📌';
+      position: absolute; left: 0; top: 14px;
+      font-size: 11px;
+    }
+    #wsPreview li:last-child { border-bottom: none; }
+
     .chat-section {
       border-top: 1px solid var(--outline-variant); padding: 20px 24px;
     }
@@ -385,7 +400,7 @@
     }
     .chat-send-btn:hover { background: #6d28d9; }
 
-    /* ── Sudoku ── */
+    /* Sudoku */
     .game-layout { display: flex; flex-direction: column; align-items: center; gap: 32px; }
     @media (min-width: 768px) { .game-layout { flex-direction: row; align-items: flex-start; justify-content: center; } }
     .sudoku-grid {
@@ -550,7 +565,6 @@
     .footer-contact div { margin-bottom: 6px; }
     footer .copyright { color: rgba(255,255,255,0.25); }
 
-    /* ── Print ── */
     #printArea { display: none; }
 
     @media print {
@@ -562,71 +576,35 @@
         font-family: 'Lexend', sans-serif;
         padding: 0;
       }
-      /* Судоку хэвлэхэд A4 дунд байрлуулах */
       .print-sudoku-wrap {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        min-height: 100vh;
-        padding: 20mm;
-        gap: 24px;
+        display: flex; flex-direction: column; align-items: center;
+        justify-content: center; min-height: 100vh; padding: 20mm; gap: 24px;
       }
       .print-sudoku-title {
-        font-family: 'Baloo 2', cursive;
-        font-size: 22pt;
-        font-weight: 800;
-        text-align: center;
-        color: #1a1208;
-        margin-bottom: 4px;
+        font-family: 'Baloo 2', cursive; font-size: 22pt; font-weight: 800;
+        text-align: center; color: #1a1208; margin-bottom: 4px;
       }
-      .print-sudoku-subtitle {
-        font-size: 10pt;
-        text-align: center;
-        color: #5c4a28;
-        margin-bottom: 16px;
-      }
-      .print-sudoku-table {
-        border-collapse: collapse;
-        border: 3px solid #1a1208;
-        margin: 0 auto;
-      }
+      .print-sudoku-subtitle { font-size: 10pt; text-align: center; color: #5c4a28; margin-bottom: 16px; }
+      .print-sudoku-table { border-collapse: collapse; border: 3px solid #1a1208; margin: 0 auto; }
       .print-sudoku-table td {
-        width: 20mm; height: 20mm;
-        text-align: center; vertical-align: middle;
-        font-size: 16pt; font-weight: 700;
-        border: 1px solid #999;
+        width: 20mm; height: 20mm; text-align: center; vertical-align: middle;
+        font-size: 16pt; font-weight: 700; border: 1px solid #999;
       }
       .print-sudoku-table td.br { border-right: 3px solid #1a1208; }
       .print-sudoku-table td.bb { border-bottom: 3px solid #1a1208; }
       .print-sudoku-table td.given { background: #f3e5ab; font-weight: 900; }
-      .print-sudoku-guide {
-        margin-top: 16px;
-        text-align: center;
-        font-size: 9pt;
-        color: #5c4a28;
-      }
-      .print-sudoku-guide table {
-        border-collapse: collapse;
-        margin: 6px auto 0;
-      }
-      .print-sudoku-guide td {
-        padding: 4px 10px;
-        border: 1px solid #e8d4b0;
-        font-size: 10pt;
-        font-weight: 600;
-      }
+      .print-sudoku-guide { margin-top: 16px; text-align: center; font-size: 9pt; color: #5c4a28; }
+      .print-sudoku-guide table { border-collapse: collapse; margin: 6px auto 0; }
+      .print-sudoku-guide td { padding: 4px 10px; border: 1px solid #e8d4b0; font-size: 10pt; font-weight: 600; }
       .print-name-row {
-        display: flex;
-        justify-content: space-between;
-        width: 100%;
-        max-width: 180mm;
-        font-size: 10pt;
-        color: #5c4a28;
-        margin-top: 12px;
-        border-top: 1px solid #e8d4b0;
-        padding-top: 10px;
+        display: flex; justify-content: space-between; width: 100%; max-width: 180mm;
+        font-size: 10pt; color: #5c4a28; margin-top: 12px;
+        border-top: 1px solid #e8d4b0; padding-top: 10px;
       }
+      /* Ажлын хуудас хэвлэх */
+      .print-ws-wrap { padding: 15mm; font-family: 'Lexend', sans-serif; }
+      .print-ws-wrap ul { list-style: none; padding: 0; }
+      .print-ws-wrap li { padding: 10px 0 10px 20px; border-bottom: 1px solid #eee; font-size: 11pt; line-height: 1.8; page-break-inside: avoid; }
     }
 
     ::-webkit-scrollbar { width: 6px; }
@@ -636,7 +614,7 @@
 </head>
 <body>
 
-<!-- ── NAV ── -->
+<!-- NAV -->
 <nav>
   <div class="nav-inner">
     <div class="nav-brand" onclick="showDashboard()">
@@ -677,7 +655,6 @@
   </div>
 </nav>
 
-<!-- ── MAIN ── -->
 <main>
 
   <!-- DASHBOARD -->
@@ -853,7 +830,7 @@
           <div class="chat-section">
             <div class="chat-title">🤖 AI хөтөч — Засах, шинэчлэх</div>
             <div class="chat-suggestions">
-              <button class="chat-suggestion-btn" onclick="sendChat('Тест асуултуудыг хүндрүүл')">Хүндрүүл</button>
+              <button class="chat-suggestion-btn" onclick="sendChat('Асуултуудыг хүндрүүл')">Хүндрүүл</button>
               <button class="chat-suggestion-btn" onclick="sendChat('Асуултуудыг хялбарчил')">Хялбарчил</button>
               <button class="chat-suggestion-btn" onclick="sendChat('Нэмэлт 3 бүтээлч асуулт нэм')">+3 Асуулт</button>
               <button class="chat-suggestion-btn" onclick="sendChat('Оноог тэнцвэртэй болго')">Оноо засах</button>
@@ -878,23 +855,15 @@
       </div>
       <button class="btn-primary" onclick="initSudoku()">🔄 Шинэ тоглоом</button>
     </div>
-
     <div class="game-layout">
       <div id="sudokuGrid" class="sudoku-grid"></div>
-
       <div class="sudoku-sidebar">
         <div class="sudoku-guide">
           <h4>Тооны удирдамж</h4>
           <div class="guide-grid">
-            <div class="guide-cell">1 → ᠑</div>
-            <div class="guide-cell">2 → ᠒</div>
-            <div class="guide-cell">3 → ᠓</div>
-            <div class="guide-cell">4 → ᠔</div>
-            <div class="guide-cell">5 → ᠕</div>
-            <div class="guide-cell">6 → ᠖</div>
-            <div class="guide-cell">7 → ᠗</div>
-            <div class="guide-cell">8 → ᠘</div>
-            <div class="guide-cell">9 → ᠙</div>
+            <div class="guide-cell">1 → ᠑</div><div class="guide-cell">2 → ᠒</div><div class="guide-cell">3 → ᠓</div>
+            <div class="guide-cell">4 → ᠔</div><div class="guide-cell">5 → ᠕</div><div class="guide-cell">6 → ᠖</div>
+            <div class="guide-cell">7 → ᠗</div><div class="guide-cell">8 → ᠘</div><div class="guide-cell">9 → ᠙</div>
           </div>
           <p class="sudoku-hint">Та 1–9 тоо дарахад автоматаар монгол тоонд хөрвөнө.</p>
         </div>
@@ -937,7 +906,7 @@
   </section>
 </main>
 
-<!-- ── PREVIEW MODAL ── -->
+<!-- PREVIEW MODAL -->
 <div id="previewModal" class="modal-overlay hidden" onclick="if(event.target===this)closePreviewModal()">
   <div style="background:#fff;width:100%;max-width:540px;border-radius:28px 28px 0 0;
     padding:28px;max-height:92vh;overflow-y:auto;animation:slideUp 0.35s ease-out">
@@ -945,7 +914,7 @@
   </div>
 </div>
 
-<!-- ── FOOTER ── -->
+<!-- FOOTER -->
 <footer>
   <div class="footer-inner">
     <div>
@@ -973,7 +942,7 @@
   </div>
 </footer>
 
-<!-- ── AUTH MODAL ── -->
+<!-- AUTH MODAL -->
 <div id="authModal" class="modal-overlay hidden">
   <div class="auth-sheet">
     <button class="auth-close" onclick="closeAuth()">✕</button>
@@ -988,10 +957,9 @@
   </div>
 </div>
 
-<!-- ── PAYMENT MODAL ── -->
+<!-- PAYMENT MODAL -->
 <div id="payModal" class="payment-overlay hidden">
   <div class="payment-card" style="max-width:420px;max-height:92vh;overflow-y:auto">
-
     <div id="payStep1">
       <div class="payment-top">
         <div class="lbl">Нийт дүн</div>
@@ -1054,40 +1022,34 @@
       </div>
       <button class="pay-done-btn" onclick="closePayment()">✓ Хаах</button>
     </div>
-
   </div>
 </div>
 
-<!-- ── TOAST ── -->
 <div id="toast"></div>
-
-<!-- ── PRINT AREA ── -->
 <div id="printArea"></div>
 
-<!-- ── SCRIPTS ── -->
 <script>
 // ════════════════════════════════
 //  CONSTANTS & STATE
 // ════════════════════════════════
-const AUTH_KEY   = 'shb_auth_v2';
-const MONG_NUMS  = { '1':'᠑','2':'᠒','3':'᠓','4':'᠔','5':'᠕','6':'᠖','7':'᠗','8':'᠘','9':'᠙' };
-const MONG_REV   = Object.fromEntries(Object.entries(MONG_NUMS).map(([k,v]) => [v,k]));
+const AUTH_KEY  = 'shb_auth_v2';
+const MONG_NUMS = { '1':'᠑','2':'᠒','3':'᠓','4':'᠔','5':'᠕','6':'᠖','7':'᠗','8':'᠘','9':'᠙' };
+const MONG_REV  = Object.fromEntries(Object.entries(MONG_NUMS).map(([k,v]) => [v,k]));
 
-let currentUser  = '';
-let cartItems    = [];
-let authTab      = 'login';
-let allProducts  = [];
+let currentUser    = '';
+let cartItems      = [];
+let authTab        = 'login';
+let allProducts    = [];
 let sudokuSolution = [];
-let sudokuPuzzle   = [];   // FIX: puzzle state ажлаасаа хадгалах
+let sudokuPuzzle   = [];
 
 // AI worksheet state
-let selGrade     = 6;
-let selWork      = null;
-let selBloom     = new Set(['remember','understand']);
-let selQCount    = 5;
-let selTime      = 15;
-let wsQuestions  = [];
-let chatHistory  = [];
+let selGrade   = 6;
+let selWork    = null;
+let selBloom   = new Set(['remember','understand']);
+let selQCount  = 5;
+let selTime    = 15;
+let chatHistory = [];
 
 // ════════════════════════════════
 //  INIT
@@ -1096,7 +1058,6 @@ document.addEventListener('DOMContentLoaded', () => {
   const saved = localStorage.getItem(AUTH_KEY);
   if (saved) { currentUser = saved; updateNavUser(); }
   else { openAuth(); }
-
   buildGradeGrid();
   loadProducts();
   initSudoku();
@@ -1112,13 +1073,11 @@ function showSection(name) {
   if (el) { el.classList.add('active'); window.scrollTo(0,0); }
   if (name === 'library') loadLibrary();
 }
-
 function showDashboard() {
   document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
   document.getElementById('dashboardSection').classList.add('active');
   window.scrollTo(0,0);
 }
-
 function showCorner(type) {
   if (!currentUser) { openAuth(); return; }
   showSection(type === 'teacher' ? 'teacher' : 'student');
@@ -1129,13 +1088,11 @@ function showCorner(type) {
 // ════════════════════════════════
 function openAuth()  { document.getElementById('authModal').classList.remove('hidden'); }
 function closeAuth() { document.getElementById('authModal').classList.add('hidden'); }
-
 function switchTab(tab) {
   authTab = tab;
   document.getElementById('tabLogin').classList.toggle('active', tab === 'login');
   document.getElementById('tabReg').classList.toggle('active',   tab === 'reg');
 }
-
 function handleAuth() {
   const email = document.getElementById('authEmail').value.trim();
   const pass  = document.getElementById('authPass').value;
@@ -1146,25 +1103,17 @@ function handleAuth() {
   closeAuth();
   showToast('Амжилттай нэвтэрлээ!', 'success');
 }
-
-function handleForgot() {
-  showToast('Имэйл хаяг руу холбоос илгээгдэх болно.', 'success');
-}
-
-function logout() {
-  localStorage.removeItem(AUTH_KEY);
-  location.reload();
-}
-
+function handleForgot() { showToast('Имэйл хаяг руу холбоос илгээгдэх болно.', 'success'); }
+function logout() { localStorage.removeItem(AUTH_KEY); location.reload(); }
 function updateNavUser() {
   document.getElementById('navLoginBtn').style.display = 'none';
-  document.getElementById('navLinks').style.display = 'flex';
-  document.getElementById('navUser').style.display  = 'flex';
-  document.getElementById('userLabel').textContent = currentUser.split('@')[0].substring(0, 12);
+  document.getElementById('navLinks').style.display    = 'flex';
+  document.getElementById('navUser').style.display     = 'flex';
+  document.getElementById('userLabel').textContent     = currentUser.split('@')[0].substring(0, 12);
 }
 
 // ════════════════════════════════
-//  PRODUCTS — Google Sheets
+//  PRODUCTS
 // ════════════════════════════════
 const SHEET_ID   = '19XbGi1hWULDm2MRjFAG8G0dtlp7tbfN2pJSupKWA6G4';
 const SHEET_NAME = 'Products';
@@ -1178,10 +1127,8 @@ async function loadProducts() {
     const g = document.getElementById(id);
     if (g) g.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:48px;color:#bbb">
       <div style="width:36px;height:36px;border:3px solid var(--outline-variant);border-top-color:var(--primary);border-radius:50%;animation:spin 0.8s linear infinite;margin:0 auto 14px"></div>
-      <p style="font-size:13px;font-weight:600">Бүтээгдэхүүн ачааллаж байна...</p>
-    </div>`;
+      <p style="font-size:13px;font-weight:600">Бүтээгдэхүүн ачааллаж байна...</p></div>`;
   });
-
   try {
     const url  = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(SHEET_NAME)}`;
     const resp = await fetch(url);
@@ -1189,7 +1136,6 @@ async function loadProducts() {
     const gviz = parseGvizJson(await resp.text());
     const cols = gviz.table.cols;
     const rows = gviz.table.rows;
-
     function findCol(...names) {
       const lc = names.map(n => n.toLowerCase().trim());
       for (let i = 0; i < cols.length; i++) {
@@ -1198,57 +1144,41 @@ async function loadProducts() {
       }
       return -1;
     }
-
     const CI = {
-      title: findCol('title','гарчиг','нэр')     < 0 ? 0 : findCol('title','гарчиг','нэр'),
-      desc:  findCol('description','тайлбар')    < 0 ? 1 : findCol('description','тайлбар'),
-      price: findCol('price','үнэ','дүн')        < 0 ? 2 : findCol('price','үнэ','дүн'),
-      img:   findCol('images','зураг','image')   < 0 ? 3 : findCol('images','зураг','image'),
-      type:  findCol('type','төрөл')             < 0 ? 4 : findCol('type','төрөл'),
-      link:  findCol('link','холбоос','url')     < 0 ? 5 : findCol('link','холбоос','url'),
+      title: findCol('title','гарчиг','нэр')    < 0 ? 0 : findCol('title','гарчиг','нэр'),
+      desc:  findCol('description','тайлбар')   < 0 ? 1 : findCol('description','тайлбар'),
+      price: findCol('price','үнэ','дүн')       < 0 ? 2 : findCol('price','үнэ','дүн'),
+      img:   findCol('images','зураг','image')  < 0 ? 3 : findCol('images','зураг','image'),
+      type:  findCol('type','төрөл')            < 0 ? 4 : findCol('type','төрөл'),
+      link:  findCol('link','холбоос','url')    < 0 ? 5 : findCol('link','холбоос','url'),
     };
-
     const safeVal = c => !c ? '' : String(c.f != null ? c.f : (c.v ?? '')).trim();
     const safeNum = c => (!c || c.v == null) ? 0 : Number(c.v) || 0;
-
     allProducts = rows
       .filter(r => r.c && r.c[CI.title] && (r.c[CI.title].v || r.c[CI.title].f))
       .map((r, i) => {
-        const c    = r.c;
-        const type = safeVal(c[CI.type]);
-        const price= safeNum(c[CI.price]);
-        const free = price === 0 || ['free','free-sample'].includes(type.toLowerCase());
-        return {
-          id: i+1,
-          title: safeVal(c[CI.title]),
-          desc:  safeVal(c[CI.desc]),
-          price, type,
-          cat:  free ? 'Үнэгүй' : 'Төлбөртэй',
-          icon: free ? '🎁' : '📝',
-          link: safeVal(c[CI.link]),
-          img:  safeVal(c[CI.img]),
-        };
+        const c = r.c;
+        const type  = safeVal(c[CI.type]);
+        const price = safeNum(c[CI.price]);
+        const free  = price === 0 || ['free','free-sample'].includes(type.toLowerCase());
+        return { id:i+1, title:safeVal(c[CI.title]), desc:safeVal(c[CI.desc]), price, type,
+          cat: free?'Үнэгүй':'Төлбөртэй', icon: free?'🎁':'📝',
+          link:safeVal(c[CI.link]), img:safeVal(c[CI.img]) };
       });
-
     renderProducts(allProducts, 'shopGrid');
     renderProducts(allProducts, 'dashGrid');
-
   } catch(e) {
     const errHtml = `<div style="grid-column:1/-1;text-align:center;padding:48px;color:#bbb">
       <div style="font-size:40px;margin-bottom:12px">⚠️</div>
       <p style="font-size:13px;font-weight:600;margin-bottom:8px">Бүтээгдэхүүн ачаалах боломжгүй.</p>
       <p style="font-size:11px;color:#999">Алдаа: ${e.message}</p>
-      <button class="btn-primary" style="margin-top:16px;font-size:12px" onclick="loadProducts()">🔄 Дахин оролдох</button>
-    </div>`;
+      <button class="btn-primary" style="margin-top:16px;font-size:12px" onclick="loadProducts()">🔄 Дахин оролдох</button></div>`;
     ['shopGrid','dashGrid'].forEach(id => { const g=document.getElementById(id); if(g) g.innerHTML=errHtml; });
     showToast('Бүтээгдэхүүн татахад алдаа гарлаа','error');
   }
 }
 
-function isFree(p) {
-  return p.price === 0 || ['free','free-sample'].includes((p.type||'').toLowerCase().trim());
-}
-
+function isFree(p) { return p.price===0 || ['free','free-sample'].includes((p.type||'').toLowerCase().trim()); }
 function driveDownloadUrl(link) {
   if (!link) return '';
   const m1 = link.match(/\/file\/d\/([a-zA-Z0-9_-]+)/);
@@ -1257,7 +1187,6 @@ function driveDownloadUrl(link) {
   if (m2) return `https://drive.google.com/uc?export=download&id=${m2[1]}`;
   return link;
 }
-
 function productImgHTML(p) {
   if (p.img) {
     const firstName = p.img.split(',')[0].trim();
@@ -1271,7 +1200,6 @@ function productImgHTML(p) {
   }
   return `<span style="font-size:48px">${p.icon}</span>`;
 }
-
 function renderProducts(prods, gridId) {
   const grid = document.getElementById(gridId);
   if (!grid) return;
@@ -1285,18 +1213,14 @@ function renderProducts(prods, gridId) {
     const dlUrl = driveDownloadUrl(p.link);
     const actionBtn = free
       ? (dlUrl ? `<a href="${dlUrl}" target="_blank" rel="noopener"
-           style="display:flex;align-items:center;justify-content:center;
-           width:36px;height:36px;border-radius:10px;
-           background:#d1fae5;color:#065f46;font-size:16px;
-           text-decoration:none;transition:all 0.15s;flex-shrink:0"
-           title="Шууд татах" download>⬇</a>` : '')
+           style="display:flex;align-items:center;justify-content:center;width:36px;height:36px;
+           border-radius:10px;background:#d1fae5;color:#065f46;font-size:16px;
+           text-decoration:none;transition:all 0.15s;flex-shrink:0" title="Шууд татах" download>⬇</a>` : '')
       : `<button class="add-cart-btn" onclick="openPreview(allProducts.find(x=>x.id===${p.id}))"
            title="Жишээ харах" style="font-size:14px">👁</button>
-         <button class="add-cart-btn" onclick="addToCart(${p.id})"
-           title="Сагсанд нэмэх">🛒</button>`;
+         <button class="add-cart-btn" onclick="addToCart(${p.id})" title="Сагсанд нэмэх">🛒</button>`;
     const badgeStyle = free ? 'background:#d1fae5;color:#065f46' : 'background:rgba(255,255,255,0.92);color:var(--on-surface)';
     const cardBorder = free ? 'border:2px solid #a7f3d0' : 'border:1px solid var(--outline-variant)';
-
     return `<div class="product-card" style="${cardBorder}">
       <div class="product-img" style="overflow:hidden;position:relative">
         ${productImgHTML(p)}
@@ -1305,27 +1229,18 @@ function renderProducts(prods, gridId) {
       <div class="product-body">
         <div class="product-title" title="${p.desc||p.title}">${p.title}</div>
         ${p.desc ? `<div style="font-size:11px;color:var(--on-surface-variant);margin-bottom:10px;
-          line-height:1.5;display:-webkit-box;-webkit-line-clamp:2;
-          -webkit-box-orient:vertical;overflow:hidden">${p.desc}</div>` : ''}
+          line-height:1.5;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden">${p.desc}</div>` : ''}
         <div class="product-footer">
-          <span class="product-price" style="${free?'color:#065f46':''}">
-            ${free ? '🆓 ҮНЭГҮЙ' : p.price.toLocaleString()+'₮'}
-          </span>
+          <span class="product-price" style="${free?'color:#065f46':''}">${free ? '🆓 ҮНЭГҮЙ' : p.price.toLocaleString()+'₮'}</span>
           <div style="display:flex;gap:6px;align-items:center">${actionBtn}</div>
         </div>
         ${free && dlUrl ? `<a href="${dlUrl}" target="_blank" rel="noopener" download
-          style="display:block;margin-top:10px;text-align:center;
-          background:var(--tertiary);color:#fff;padding:9px;
-          border-radius:12px;font-size:12px;font-weight:700;
-          text-decoration:none;transition:all 0.15s"
-          onmouseover="this.style.background='#239a4a'"
-          onmouseout="this.style.background='var(--tertiary)'">⬇ Татаж авах</a>` : ''}
-      </div>
-    </div>`;
+          style="display:block;margin-top:10px;text-align:center;background:var(--tertiary);color:#fff;
+          padding:9px;border-radius:12px;font-size:12px;font-weight:700;text-decoration:none;transition:all 0.15s"
+          onmouseover="this.style.background='#239a4a'" onmouseout="this.style.background='var(--tertiary)'">⬇ Татаж авах</a>` : ''}
+      </div></div>`;
   }).join('');
 }
-
-// ── FIX: filterShop → renderProducts (actionBtn биш)
 function filterShop(cat, btn) {
   document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
@@ -1333,34 +1248,25 @@ function filterShop(cat, btn) {
   renderProducts(filtered, 'shopGrid');
 }
 
-// ── Preview modal ──
+// Preview modal
 function openPreview(p) {
   if (!p) return;
   const imgs = (p.img || '').split(',').map(s=>s.trim()).filter(Boolean);
   if (!imgs.length) { showToast('Жишээ зураг байхгүй','error'); return; }
-
   const slides = imgs.map((name,i) => {
     const url = `https://raw.githubusercontent.com/tuult764-crypto/sonirholtoi-hel-bichig-/main/${encodeURIComponent(name)}`;
     return `<div class="preview-slide" style="display:${i===0?'flex':'none'};align-items:center;justify-content:center;width:100%;height:100%">
-      <img src="${url}" alt="${name}" style="max-width:100%;max-height:100%;object-fit:contain;border-radius:12px"
-        onerror="this.innerHTML='<div style=\'color:#aaa;font-size:13px\'>Зураг олдсонгүй</div>'">
-    </div>`;
+      <img src="${url}" alt="${name}" style="max-width:100%;max-height:100%;object-fit:contain;border-radius:12px"></div>`;
   }).join('');
-
   const dots = imgs.length > 1 ? `<div style="display:flex;gap:6px;justify-content:center;margin-top:12px">
     ${imgs.map((_,i)=>`<button onclick="previewGoTo(${i})" id="pdot${i}"
       style="width:8px;height:8px;border-radius:50%;border:none;cursor:pointer;
-      background:${i===0?'var(--primary)':'#ddd'};padding:0;transition:all 0.2s"></button>`).join('')}
-  </div>` : '';
-
+      background:${i===0?'var(--primary)':'#ddd'};padding:0;transition:all 0.2s"></button>`).join('')}</div>` : '';
   const nav = imgs.length > 1 ? `
     <button onclick="previewNav(-1)" style="position:absolute;left:8px;top:50%;transform:translateY(-50%);
-      background:rgba(0,0,0,0.4);color:#fff;border:none;border-radius:50%;
-      width:36px;height:36px;font-size:18px;cursor:pointer;z-index:2">‹</button>
-    <button onclick="previewNav(1)"  style="position:absolute;right:8px;top:50%;transform:translateY(-50%);
-      background:rgba(0,0,0,0.4);color:#fff;border:none;border-radius:50%;
-      width:36px;height:36px;font-size:18px;cursor:pointer;z-index:2">›</button>` : '';
-
+      background:rgba(0,0,0,0.4);color:#fff;border:none;border-radius:50%;width:36px;height:36px;font-size:18px;cursor:pointer;z-index:2">‹</button>
+    <button onclick="previewNav(1)" style="position:absolute;right:8px;top:50%;transform:translateY(-50%);
+      background:rgba(0,0,0,0.4);color:#fff;border:none;border-radius:50%;width:36px;height:36px;font-size:18px;cursor:pointer;z-index:2">›</button>` : '';
   document.getElementById('previewModalBody').innerHTML = `
     <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:16px">
       <div>
@@ -1370,23 +1276,17 @@ function openPreview(p) {
       <button onclick="closePreviewModal()" style="background:#f5f5f5;border:none;border-radius:50%;width:32px;height:32px;font-size:16px;cursor:pointer;flex-shrink:0;margin-left:12px">✕</button>
     </div>
     <div style="position:relative;background:#f5ede0;border-radius:16px;height:420px;overflow:hidden;display:flex;align-items:center;justify-content:center">
-      <div id="previewSlides" style="width:100%;height:100%;display:flex;align-items:center;justify-content:center">${slides}</div>
-      ${nav}
-    </div>
+      <div id="previewSlides" style="width:100%;height:100%;display:flex;align-items:center;justify-content:center">${slides}</div>${nav}</div>
     ${dots}
     <div style="display:flex;justify-content:space-between;align-items:center;margin-top:16px">
       <div style="font-size:18px;font-weight:800;color:var(--primary)">${p.price.toLocaleString()}₮</div>
       <button onclick="closePreviewModal();addToCart(${p.id})" class="btn-primary" style="padding:10px 24px">🛒 Сагсанд нэмэх</button>
     </div>`;
-
-  window._previewIdx   = 0;
-  window._previewTotal = imgs.length;
+  window._previewIdx = 0; window._previewTotal = imgs.length;
   document.getElementById('previewModal').classList.remove('hidden');
 }
-
 function previewNav(dir) {
-  const total = window._previewTotal || 0;
-  if (total <= 1) return;
+  const total = window._previewTotal || 0; if (total<=1) return;
   const slides = document.querySelectorAll('.preview-slide');
   const dots   = document.querySelectorAll('[id^="pdot"]');
   slides[window._previewIdx].style.display = 'none';
@@ -1395,7 +1295,6 @@ function previewNav(dir) {
   slides[window._previewIdx].style.display = 'flex';
   if (dots[window._previewIdx]) dots[window._previewIdx].style.background = 'var(--primary)';
 }
-
 function previewGoTo(idx) {
   const slides = document.querySelectorAll('.preview-slide');
   const dots   = document.querySelectorAll('[id^="pdot"]');
@@ -1405,10 +1304,7 @@ function previewGoTo(idx) {
   slides[window._previewIdx].style.display = 'flex';
   if (dots[window._previewIdx]) dots[window._previewIdx].style.background = 'var(--primary)';
 }
-
-function closePreviewModal() {
-  document.getElementById('previewModal').classList.add('hidden');
-}
+function closePreviewModal() { document.getElementById('previewModal').classList.add('hidden'); }
 
 // ════════════════════════════════
 //  GOOGLE APPS SCRIPT
@@ -1433,18 +1329,16 @@ function addToCart(id) {
   document.getElementById('cartBadge').textContent = cartItems.length;
   showToast(`"${p.title}" сагсанд нэмэгдлээ`,'success');
 }
-
 function openCart() {
   if (!currentUser) { openAuth(); return; }
   if (!cartItems.length) { showToast('Сагс хоосон байна','error'); return; }
   const total = cartItems.reduce((s,p) => s+p.price, 0);
-  document.getElementById('payAmount').textContent   = total.toLocaleString()+'₮';
-  document.getElementById('payItemList').innerHTML   = cartItems.map(p=>`• ${p.title} — ${p.price===0?'Үнэгүй':p.price.toLocaleString()+'₮'}`).join('<br>');
-  document.getElementById('payEmail').value          = currentUser;
+  document.getElementById('payAmount').textContent = total.toLocaleString()+'₮';
+  document.getElementById('payItemList').innerHTML = cartItems.map(p=>`• ${p.title} — ${p.price===0?'Үнэгүй':p.price.toLocaleString()+'₮'}`).join('<br>');
+  document.getElementById('payEmail').value = currentUser;
   goToStep1();
   document.getElementById('payModal').classList.remove('hidden');
 }
-
 function goToStep1() {
   document.getElementById('payStep1').style.display='';
   document.getElementById('payStep2').style.display='none';
@@ -1455,11 +1349,7 @@ function goToStep2() {
   document.getElementById('payStep2').style.display='';
   document.getElementById('payStep3').style.display='none';
 }
-function closePayment() {
-  document.getElementById('payModal').classList.add('hidden');
-  goToStep1();
-}
-
+function closePayment() { document.getElementById('payModal').classList.add('hidden'); goToStep1(); }
 async function submitOrder() {
   const email = document.getElementById('payEmail').value.trim();
   const note  = document.getElementById('payNote').value.trim();
@@ -1471,21 +1361,17 @@ async function submitOrder() {
     await fetch(GAS_URL,{
       method:'POST', mode:'no-cors',
       headers:{'Content-Type':'application/json'},
-      body: JSON.stringify({
-        action:'submitOrder', email, note, total,
-        items:     cartItems.map(p=>p.title).join(', '),
+      body: JSON.stringify({ action:'submitOrder', email, note, total,
+        items: cartItems.map(p=>p.title).join(', '),
         itemLinks: cartItems.map(p=>p.link||'').join(', '),
-        date:      new Date().toLocaleString('mn-MN'),
-      })
+        date: new Date().toLocaleString('mn-MN') })
     });
     document.getElementById('confirmEmail').textContent=email;
     document.getElementById('payStep2').style.display='none';
     document.getElementById('payStep3').style.display='';
     cartItems=[];
     document.getElementById('cartBadge').textContent='0';
-  } catch(e) {
-    showToast('Сүлжээний алдаа. Дахин оролдоно уу.','error');
-  }
+  } catch(e) { showToast('Сүлжээний алдаа. Дахин оролдоно уу.','error'); }
   btn.disabled=false; btn.textContent='🚀 Захиалга илгээх';
 }
 
@@ -1498,8 +1384,7 @@ async function loadLibrary() {
   const status = document.getElementById('libStatus');
   grid.innerHTML=`<div style="grid-column:1/-1;text-align:center;padding:48px">
     <div style="width:36px;height:36px;border:3px solid var(--outline-variant);border-top-color:var(--primary);border-radius:50%;animation:spin 0.8s linear infinite;margin:0 auto 14px"></div>
-    <p style="font-size:13px;font-weight:600;color:#bbb">Таны захиалгуудыг шалгаж байна...</p>
-  </div>`;
+    <p style="font-size:13px;font-weight:600;color:#bbb">Таны захиалгуудыг шалгаж байна...</p></div>`;
   status.style.display='none';
   try {
     const resp = await fetch(GAS_URL+'?action=getApproved&email='+encodeURIComponent(currentUser));
@@ -1509,8 +1394,7 @@ async function loadLibrary() {
         <div style="font-size:48px;margin-bottom:14px">📭</div>
         <p style="font-size:14px;font-weight:600">Баталгаажсан захиалга байхгүй байна.</p>
         <p style="font-size:12px;margin-top:8px">Төлбөр илгээсэн бол 24 цагийн дотор баталгаажна.</p>
-        <button class="btn-primary" style="margin-top:20px" onclick="showSection('shop')">Дэлгүүр рүү очих</button>
-      </div>`; return;
+        <button class="btn-primary" style="margin-top:20px" onclick="showSection('shop')">Дэлгүүр рүү очих</button></div>`; return;
     }
     status.style.display='block';
     status.textContent=`✅ ${data.length} файл таны санд байна`;
@@ -1526,13 +1410,11 @@ async function loadLibrary() {
           <a href="${item.link}" target="_blank" rel="noopener"
             style="display:block;text-align:center;background:var(--tertiary);color:#fff;
             padding:10px;border-radius:12px;font-size:13px;font-weight:700;text-decoration:none">⬇ Татаж авах</a>
-        </div>
-      </div>`).join('');
+        </div></div>`).join('');
   } catch(e) {
     grid.innerHTML=`<div style="grid-column:1/-1;text-align:center;padding:60px;color:#bbb">
       <div style="font-size:40px;margin-bottom:12px">⚠️</div>
-      <p style="font-size:13px;font-weight:600">Мэдээлэл татахад алдаа гарлаа.</p>
-    </div>`;
+      <p style="font-size:13px;font-weight:600">Мэдээлэл татахад алдаа гарлаа.</p></div>`;
     showToast('Алдаа гарлаа','error');
   }
 }
@@ -1554,11 +1436,9 @@ function showToast(msg, type='success') {
 function initSudoku() {
   const { puzzle, solution } = generateSudoku();
   sudokuSolution = solution;
-  sudokuPuzzle   = puzzle;   // FIX: хадгалах
-
+  sudokuPuzzle   = puzzle;
   const grid = document.getElementById('sudokuGrid');
   grid.innerHTML='';
-
   for (let row=0; row<9; row++) {
     for (let col=0; col<9; col++) {
       const idx = row*9+col;
@@ -1587,7 +1467,6 @@ function initSudoku() {
     }
   }
 }
-
 function generateSudoku() {
   const base=Array(81).fill(0);
   fillSudoku(base);
@@ -1595,16 +1474,11 @@ function generateSudoku() {
   const puzzle=[...solution];
   const positions=[...Array(81).keys()].sort(()=>Math.random()-0.5);
   let removed=0;
-  for (const pos of positions) {
-    if (removed>=45) break;
-    puzzle[pos]=0; removed++;
-  }
+  for (const pos of positions) { if (removed>=45) break; puzzle[pos]=0; removed++; }
   return { puzzle, solution };
 }
-
 function fillSudoku(board) {
-  const empty=board.indexOf(0);
-  if (empty===-1) return true;
+  const empty=board.indexOf(0); if (empty===-1) return true;
   const nums=shuffle([1,2,3,4,5,6,7,8,9]);
   for (const n of nums) {
     if (isValidPlacement(board,empty,n)) {
@@ -1615,7 +1489,6 @@ function fillSudoku(board) {
   }
   return false;
 }
-
 function isValidPlacement(board,idx,num) {
   const row=Math.floor(idx/9), col=idx%9;
   for (let i=0;i<9;i++) {
@@ -1626,12 +1499,10 @@ function isValidPlacement(board,idx,num) {
   for (let r=0;r<3;r++) for (let c=0;c<3;c++) if (board[(br+r)*9+(bc+c)]===num) return false;
   return true;
 }
-
 function shuffle(arr) {
   for (let i=arr.length-1;i>0;i--) { const j=Math.floor(Math.random()*(i+1)); [arr[i],arr[j]]=[arr[j],arr[i]]; }
   return arr;
 }
-
 function checkSudoku() {
   const cells=document.querySelectorAll('.sudoku-cell');
   let hasError=false, hasEmpty=false;
@@ -1647,7 +1518,6 @@ function checkSudoku() {
   else if (hasError) showToast('Буруу нүд бий. Улаанаар тэмдэглэгдлээ','error');
   else showToast('Маш сайн! Судоку зөв боллоо! 🎉','success');
 }
-
 function solveSudoku() {
   const cells=document.querySelectorAll('.sudoku-cell');
   cells.forEach((cell,idx) => {
@@ -1655,11 +1525,8 @@ function solveSudoku() {
   });
   showToast('Шийдэл харуулагдлаа','success');
 }
-
-// ── FIX: А4 судоку хэвлэх — table-ийн хэлбэрээр, зөв хэмжээтэй
 function printSudoku() {
   const cells = document.querySelectorAll('.sudoku-cell');
-
   let rows = '';
   for (let r=0; r<9; r++) {
     rows += '<tr>';
@@ -1675,19 +1542,15 @@ function printSudoku() {
     }
     rows += '</tr>';
   }
-
   const guideRows = `
     <tr><td>1 → ᠑</td><td>2 → ᠒</td><td>3 → ᠓</td><td>4 → ᠔</td><td>5 → ᠕</td></tr>
     <tr><td>6 → ᠖</td><td>7 → ᠗</td><td>8 → ᠘</td><td>9 → ᠙</td><td></td></tr>`;
-
   const pa = document.getElementById('printArea');
   pa.innerHTML = `
     <div class="print-sudoku-wrap">
       <div class="print-sudoku-title">🎮 Монгол бичгийн Судоку</div>
       <div class="print-sudoku-subtitle">Монгол тоог бичиж хоосон нүдийг бөглөнө үү</div>
-      <table class="print-sudoku-table">
-        <tbody>${rows}</tbody>
-      </table>
+      <table class="print-sudoku-table"><tbody>${rows}</tbody></table>
       <div class="print-sudoku-guide">
         <div style="margin-bottom:4px;font-weight:700">Тооны лавлах:</div>
         <table><tbody>${guideRows}</tbody></table>
@@ -1722,20 +1585,20 @@ function buildGradeGrid() {
 
 const DEMO_LIT_DB = {
   '6': [
-    { title: '"ДЭЛХИЙ АНХ ТОГТСОН НЬ" — Домог',    content: 'Эрт урьд цагт гэнэ. Шагжамуни анхны хүсэл сэтгэлчлэн бүтсэнд туйлын их баярлаж байжээ. Хурмаст тэнгэр: "Доод газар дээр юу болж байна?" гэж асуусанд "Эзэн минь, тэнд газар гэх юмгүй, уснаас өөр юу ч үгүй" гэжээ.' },
-    { title: '"ХУУР ХӨГЖИМ ҮҮССЭН НЬ" — Домог',    content: 'Бурхан багш ээжийгээ алдаад уй гашуу болж суухдаа гуньж гутсан сэтгэлээ сэргээх нэг юм гаргах сан гэж бодоод хуур гэдэг юмыг хийх болжээ.' },
-    { title: '"АРГАТ УЛААН ҮНЭГ" — Үлгэр',         content: 'Эрт урьд цагт нэг хоосон ядуу хүү оготно, зурманд урхи, тор зүүж, түүгээрээ амьдардаг байжээ.' },
+    { title: '"ДЭЛХИЙ АНХ ТОГТСОН НЬ" — Домог', content: 'Эрт урьд цагт гэнэ. Шагжамуни анхны хүсэл сэтгэлчлэн бүтсэнд туйлын их баярлаж байжээ. Хурмаст тэнгэр: "Доод газар дээр юу болж байна?" гэж асуусанд "Эзэн минь, тэнд газар гэх юмгүй, уснаас өөр юу ч үгүй" гэжээ.' },
+    { title: '"ХУУР ХӨГЖИМ ҮҮССЭН НЬ" — Домог', content: 'Бурхан багш ээжийгээ алдаад уй гашуу болж суухдаа гуньж гутсан сэтгэлээ сэргээх нэг юм гаргах сан гэж бодоод хуур гэдэг юмыг хийх болжээ.' },
+    { title: '"АРГАТ УЛААН ҮНЭГ" — Үлгэр', content: 'Эрт урьд цагт нэг хоосон ядуу хүү оготно, зурманд урхи, тор зүүж, түүгээрээ амьдардаг байжээ.' },
     { title: '"ХААНЫ ХҮҮ ГОМБО, ХАРЦЫН ХҮҮ ГОНГОР" — Үлгэр', content: 'Эрт урьд цагт нэг хааны хүү, харцын хүү хоёр их дотно үерхэж байжээ. Хааны хүүг Гомбо гэдэг, харцын хүүг Гонгор гэдэг байжээ.' },
-    { title: '"АРСЛАНДАЙ МЭРГЭН ХААН" — Үлгэр',    content: 'Эрт урьд цагт Арсландай мэргэн хаан гэж байжээ. Araараа дүүрэн ай түмэн арван живаа адуутай, өврөөрөө дүүрэн үй түмэн хорин живаа хонгор алаг адуутай юм гэнэ.' },
-    { title: '"АЛТ, МӨНГӨ ХОЁР" — П.Хорлоо',      content: 'Эрт цагт нэгэн эцгийн хоёр хүүхэд холын уулнаас мод түүж ирэхээр явах болжээ. Явахад нь эх нь хоёр хүүхдэдээ нэг нэг боодолтой ааруул ээзгий өгөөд "Хоорондоо эвтэй яв" хэмээн захижээ.' },
-    { title: '"ШИДЭТ БИЙР" — Үлгэр',               content: 'Урьд Ма Лянь гэдэг өнчин хүү байжээ. Өвс зулгааж, гишүү түүсэн шиг амь зууна. Багаасаа л зурах дуртай ч ядмаг түүнд бийр авах мөнгө яаж олдох билээ.' },
-    { title: '"ШУДАРГА ШҮҮГЧ" — Л.Н.Толстой',      content: 'Алжирын хаан Бауакас өөрийнх нь нэгэн хотод маш шударга шүүгч байдаг, түүнээс нэг ч зальт этгээд бултан гарч чаддаггүй гэж сонсоод үнэн худлыг нь нүдээр үзэхээр явжээ.' },
-    { title: '"ТОСГОНЫ ОВГОР" — Оскар Уайлд',      content: 'Түүнийг хэн нь ч Овгор гэж нэрлэсэн юм бэ, бүү мэд. Лав л маш сайхан цэцэрлэгтэй юм даг. Хүүхдүүд тэнд очиж тоглох дуртай.' },
+    { title: '"АРСЛАНДАЙ МЭРГЭН ХААН" — Үлгэр', content: 'Эрт урьд цагт Арсландай мэргэн хаан гэж байжээ. Арааараа дүүрэн ай түмэн арван живаа адуутай, өврөөрөө дүүрэн үй түмэн хорин живаа хонгор алаг адуутай юм гэнэ.' },
+    { title: '"АЛТ, МӨНГӨ ХОЁР" — П.Хорлоо', content: 'Эрт цагт нэгэн эцгийн хоёр хүүхэд холын уулнаас мод түүж ирэхээр явах болжээ. Явахад нь эх нь хоёр хүүхдэдээ нэг нэг боодолтой ааруул ээзгий өгөөд "Хоорондоо эвтэй яв" хэмээн захижээ.' },
+    { title: '"ШИДЭТ БИЙР" — Үлгэр', content: 'Урьд Ма Лянь гэдэг өнчин хүү байжээ. Өвс зулгааж, гишүү түүсэн шиг амь зууна. Багаасаа л зурах дуртай ч ядмаг түүнд бийр авах мөнгө яаж олдох билээ.' },
+    { title: '"ШУДАРГА ШҮҮГЧ" — Л.Н.Толстой', content: 'Алжирын хаан Бауакас өөрийнх нь нэгэн хотод маш шударга шүүгч байдаг, түүнээс нэг ч зальт этгээд бултан гарч чаддаггүй гэж сонсоод үнэн худлыг нь нүдээр үзэхээр явжээ.' },
+    { title: '"ТОСГОНЫ ОВГОР" — Оскар Уайлд', content: 'Түүнийг хэн нь ч Овгор гэж нэрлэсэн юм бэ, бүү мэд. Лав л маш сайхан цэцэрлэгтэй юм даг. Хүүхдүүд тэнд очиж тоглох дуртай.' },
   ],
   '7': [
     { title: '"ХОРЬ ТҮМЭД, ХОРИДАЙ МЭРГЭНИЙ ТҮҮХЭН ДОМОГ"', content: 'Эрт нэгэн цагт Байгал нуурын урд биеэр нутагладаг нэгэн айлд Хори, Хоридай гэж хоёр хөвүүн байжээ.' },
-    { title: '"АРВАЙХЭЭРИЙН ТҮҮХЭН ДОМОГ"',                  content: 'Агь Үйзэн гүний хошууны ард Гомбо үзэсгэлэнт нэгэн охинтой байжээ. Гэтэл охиныг нь нутгийн баян Балбар гэгч ганц хүүдээ гэргий болгон богтлон сүйлж аваад, өргөн их найр хурим хийжээ.' },
-    { title: '"ШҮХЭРЧ БУНИЯА" — Б.Ринчен',                  content: 'Манж Дайчин улсын Тэнгэрийг тэтгэсэн хааны аравдугаар он билээ. Улиастайд суугаа зарлигийн манж сайд Автай сайн хааны байгуулсан Эрдэнэ Зуугийн хийдийг сонирхон үзэх гэж зуны дэлгэр сайхан цагаар очсон байжээ.' },
+    { title: '"АРВАЙХЭЭРИЙН ТҮҮХЭН ДОМОГ"', content: 'Агь Үйзэн гүний хошууны ард Гомбо үзэсгэлэнт нэгэн охинтой байжээ. Гэтэл охиныг нь нутгийн баян Балбар гэгч ганц хүүдээ гэргий болгон богтлон сүйлж аваад, өргөн их найр хурим хийжээ.' },
+    { title: '"ШҮХЭРЧ БУНИЯА" — Б.Ринчен', content: 'Манж Дайчин улсын Тэнгэрийг тэтгэсэн хааны аравдугаар он билээ. Улиастайд суугаа зарлигийн манж сайд Автай сайн хааны байгуулсан Эрдэнэ Зуугийн хийдийг сонирхон үзэх гэж зуны дэлгэр сайхан цагаар очсон байжээ.' },
   ],
   '8': [
     { title: '"ҮРЭГДСЭНИЙГ ХҮЛЭЭГЧ" — Д.Намдаг', content: '1939 оны намар говь нутагт суудлын задгай ногоон машинтай цэргийн нэг дарга Нямаа өвгөн гэгчийнхийг эрэн сурсаар очив. Тэрээр Халх голын байлдаанд баатарлах байлдсан нэг бага даргын тухай яваа боловч очсон тэр айлдаа баяр баясгаланг өгч даанч чадсангүй.' },
@@ -1745,13 +1608,11 @@ const DEMO_LIT_DB = {
 async function selectGrade(g) {
   selGrade=g; selWork=null;
   document.querySelectorAll('.grade-btn').forEach(btn => btn.classList.toggle('active', btn.id==='gb'+g));
-
   const loadEl=document.getElementById('litLoading');
   const selEl =document.getElementById('workSelect');
   const prevEl=document.getElementById('workPreview');
   loadEl.style.display='block'; selEl.style.display='none'; prevEl.style.display='none';
   await new Promise(r=>setTimeout(r,400));
-
   const works=DEMO_LIT_DB[String(g)]||[];
   loadEl.style.display='none'; selEl.style.display='block';
   selEl.innerHTML='<option value="">Зохиол сонгоно уу</option>'+
@@ -1773,7 +1634,6 @@ const BLOOM_STYLE = {
   evaluate:  { on:'#2563eb', bg:'rgba(59,130,246,0.10)' },
   create:    { on:'#7c3aed', bg:'rgba(139,92,246,0.10)' },
 };
-
 function toggleBloom(level) {
   const btn=document.getElementById('bl-'+level);
   if (!btn) return;
@@ -1789,36 +1649,29 @@ function toggleBloom(level) {
     btn.style.background=s.bg; btn.style.color=s.on;
   }
 }
-
 function selectQCount(q,t) {
   selQCount=q; selTime=t;
   document.querySelectorAll('.qcount-btn').forEach(btn=>btn.classList.toggle('active', btn.id==='qc'+q));
 }
 
-// 1. buildPrompt() — OpenAI prompt-тай яг тохирсон
+// ════════════════════════════════
+//  ★ buildPrompt() — OpenAI промтын яг загвар
+// ════════════════════════════════
 function buildPrompt() {
   const bloomLabels = {
-    remember:   'Санах',
-    understand: 'Ойлгох',
-    apply:      'Хэрэглэх',
-    analyze:    'Шинжлэх',
-    evaluate:   'Үнэлэх',
-    create:     'Бүтээх',
+    remember:'Санах', understand:'Ойлгох', apply:'Хэрэглэх',
+    analyze:'Шинжлэх', evaluate:'Үнэлэх', create:'Бүтээх'
   };
-  const selectedBloomStr = [...selBloom].map(l => bloomLabels[l]).join(', ');
- 
-  return `Зохиолын нэр: "${selWork.title}", Анги: ${selGrade}, Асуултын тоо: ${selQCount}
- 
-Блүүмийн сонгосон түвшнүүд: ${selectedBloomStr}
-Хугацаа: ${selTime} минут
- 
+  const selectedBloom = [...selBloom].map(l => bloomLabels[l]).join(', ');
+
+  return `Зохиолын нэр: ${selWork.title}, Анги: ${selGrade}.
+Багш нь Монгол хэл, уран зохиолын мэргэжлийн арга зүйчийн үүргээр, Блүүмийн таксономын түвшин бүрийг (${selectedBloom}) тусгасан, сурагчийн сэтгэхүйг хөгжүүлэх, сонирхолтой ${selQCount} асуултыг боловсруулж өгнө.
+
 Зохиолын эх:
 """
 ${selWork.content.substring(0, 3000)}
 """
- 
-Багш нь Монгол хэл, уран зохиолын мэргэжлийн арга зүйчийн үүргээр, Блүүмийн таксономын түвшин бүрийг (${selectedBloomStr}) тусгасан, сурагчийн сэтгэхүйг хөгжүүлэх, сонирхолтой ${selQCount} асуултыг боловсруулж өгнө.
- 
+
 Зорилт:
 - Эхлээд эх зохиолуудаа уншина.
 - Уншсан агуулгаасаа асуултуудаа Блүүмийн түвшин бүрт ангилж товч тодорхойлж бичнэ.
@@ -1826,14 +1679,15 @@ ${selWork.content.substring(0, 3000)}
 - Асуулт тус бүрийн хариуг (оноо) хаалтанд бичнэ.
 - Асуултын хариултын хуудсыг <div> болон <ul> HTML таг ашиглан маш цэвэрхэн, ойлгомжтой загварт гарга.
 - Эцсийн хариултаа гаргахын өмнө шаардлагатай бүх асуултыг бүрэн боловсруулсан эсэхээ шалгаж үзнэ.
- 
+
 Ажлын шат дараалал:
 1. Зохиолын агуулга болон тухайн ангийн ойлголтын онцлогт нийцүүлэн Блүүмийн түвшин тус бүрээр сэтгэж, асуултын санаагаа гаргана.
-2. Хуулбарлах болон уншсанаа зүгээр л давтат бичихээс зайлсхийнэ.
+2. Хуулбарлах болон уншсанаа зүгээр л давтат бичихээс зайлсхийнэ; оронд нь танин мэдэх, логик задлан шинжлэх, бүтээлчээр бодох боломжийг олгоно.
 3. Асуултын ард оноог хаалтанд (жишээ нь: (2 оноо)) бичнэ.
 4. Бүх асуултыг HTML <div> болон <ul> бүтэцээр форматлаж цэгцтэй гаргана.
- 
-Гаралтын формат (зөвхөн HTML, өөр юм бичихгүй):
+5. Цааш нэмэлт чиглэл (анги, зохиолын нэр, асуултын тоо, түвшин) ирвэл хэв маягийг хадгалж, агуулгыг тааруулан өөрчилнө.
+
+Гаралтын формат (зөвхөн HTML, өөр ямар ч текст бичихгүй):
 <div>
   <ul>
     <li>Санах түвшний асуулт: ... (оноо)</li>
@@ -1844,34 +1698,38 @@ ${selWork.content.substring(0, 3000)}
     <li>Бүтээх түвшний асуулт: ... (оноо)</li>
   </ul>
 </div>
- 
-Зөвхөн HTML <div> болон <ul> таг ашиглана. Код блок, тайлбар, нэмэлт текст хэрэглэхгүй.`;
+
+Зөвхөн HTML <div> болон <ul> таг ашиглана (код блок, тайлбар, нэмэлт текст хэрэглэхгүй).`;
 }
- 
-// 2. buildFallback() — AI ажиллахгүй үед HTML форматаар буцаана
+
+// ════════════════════════════════
+//  ★ buildFallback() — AI ажиллахгүй үед
+// ════════════════════════════════
 function buildFallback() {
   const t = selWork ? selWork.title : 'Зохиол';
   return `<div>
   <ul>
     <li>Санах түвшний асуулт: "${t}" зохиолын гол баатрын нэрийг нэрлэ. (1 оноо)</li>
     <li>Ойлгох түвшний асуулт: Зохиолын гол санааг өөрийн үгээр тайлбарла. (2 оноо)</li>
-    <li>Хэрэглэх түвшний асуулт: Зохиолын гол дүрийн үйлдлийг өөрийн амьдралтай холбон ярь. (2 оноо)</li>
+    <li>Хэрэглэх түвшний асуулт: Гол дүрийн үйлдлийг өөрийн амьдралтай холбон ярь. (2 оноо)</li>
     <li>Шинжлэх түвшний асуулт: Зохиолд ямар асуудал үүссэн бэ? Үр дагаврыг задлан шинжил. (3 оноо)</li>
     <li>Үнэлэх түвшний асуулт: Зохиолын үйл явдлыг хэр бодитой гэж үзэж байна вэ? Баримтаар тайлбарла. (2 оноо)</li>
     <li>Бүтээх түвшний асуулт: Зохиолын үргэлжлэлийг 5-7 өгүүлбэрээр зохио. (3 оноо)</li>
   </ul>
 </div>`;
 }
- 
-// 3. generateWorksheet() — HTML гаралт хүлээн авна
+
+// ════════════════════════════════
+//  ★ generateWorksheet() — HTML гаралт хүлээн авна
+// ════════════════════════════════
 async function generateWorksheet() {
   if (!selWork) { showToast('Зохиол сонгоно уу!', 'error'); return; }
   const btn = document.getElementById('genBtn');
   btn.disabled = true;
   document.getElementById('wsPlaceholder').style.display = 'none';
-  document.getElementById('wsResult').style.display = 'none';
-  document.getElementById('wsGenerating').style.display = 'flex';
- 
+  document.getElementById('wsResult').style.display      = 'none';
+  document.getElementById('wsGenerating').style.display  = 'flex';
+
   const msgs = [
     'Зохиолыг шинжилж байна…',
     'Блүүмийн дагуу асуулт зохиож байна…',
@@ -1882,9 +1740,9 @@ async function generateWorksheet() {
   const rotate = setInterval(() => {
     document.getElementById('genMsg').textContent = msgs[++mi % msgs.length];
   }, 1800);
- 
+
   let wsHTML = '';
- 
+
   try {
     const resp = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
@@ -1896,36 +1754,34 @@ async function generateWorksheet() {
       })
     });
     const data = await resp.json();
-    const raw = (data.content || []).map(b => b.text || '').join('');
- 
-    // HTML <div>...<ul>...<li> гаралт олох
-    const m = raw.match(/<div[\s\S]*<\/div>/i);
-    wsHTML = m ? m[0] : buildFallback();
+    const raw  = (data.content || []).map(b => b.text || '').join('');
+    // <div>...</div> гаралт авна
+    const m = raw.match(/<div[\s\S]*?<\/div>/i);
+    wsHTML  = m ? m[0] : buildFallback();
   } catch (e) {
     wsHTML = buildFallback();
     showToast('AI холболт амжилтгүй. Жишээ хуудас харуулж байна.', 'error');
   }
- 
+
   clearInterval(rotate);
   chatHistory = [];
- 
   document.getElementById('wsGenerating').style.display = 'none';
-  document.getElementById('wsResult').style.display = 'block';
- 
+  document.getElementById('wsResult').style.display     = 'block';
   renderPreview(wsHTML);
- 
+
   const box = document.getElementById('chatMessages');
   box.innerHTML = '';
   addChatMsg('assistant', `"${selWork.title}" зохиолд үндэслэсэн ${selQCount} асуулт амжилттай үүслээ! Засвар хийхийг хүсвэл хэлнэ үү.`);
- 
   btn.disabled = false;
   showToast('Ажлын хуудас бэлэн боллоо!', 'success');
 }
- 
-// 4. renderPreview() — HTML-г шууд харуулна (JSON биш)
+
+// ════════════════════════════════
+//  ★ renderPreview() — HTML шууд харуулна
+// ════════════════════════════════
 function renderPreview(wsHTML) {
   const header = `
-    <div style="text-align:center;border-bottom:2px solid #e8d4b0;padding:0 0 16px;margin-bottom:20px;">
+    <div style="text-align:center;border-bottom:2px solid #e8d4b0;padding-bottom:16px;margin-bottom:20px;">
       <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:#5c4a28;">
         Монгол хэл · Уран зохиол · ${selGrade}-р анги
       </div>
@@ -1936,17 +1792,12 @@ function renderPreview(wsHTML) {
         <span>Анги: ___________</span>
       </div>
     </div>`;
- 
-  // Style нэмэх
-  const styledHTML = (wsHTML || '')
-    .replace(/<ul>/g, '<ul style="list-style:none;padding:0;margin:0;">')
-    .replace(/<li>/g, '<li style="padding:14px 0 14px 12px;border-bottom:1px solid #f0e8d8;font-size:13px;line-height:1.7;color:#1a1208;position:relative;">');
- 
-  document.getElementById('wsPreview').innerHTML = header + styledHTML;
-  window._wsHTMLForPrint = header + (wsHTML || '');
+  document.getElementById('wsPreview').innerHTML = header + (wsHTML || '');
 }
- 
-// 5. sendChat() — HTML форматаар засвар хийнэ
+
+// ════════════════════════════════
+//  ★ sendChat() — HTML форматаар засвар
+// ════════════════════════════════
 async function sendChat(suggestion = '') {
   const inp = document.getElementById('chatInput');
   const msg = suggestion || inp.value.trim();
@@ -1954,10 +1805,10 @@ async function sendChat(suggestion = '') {
   inp.value = '';
   addChatMsg('user', msg);
   const typingEl = addChatMsg('assistant', '<em style="color:#aaa">Боловсруулж байна…</em>', true);
- 
-  const currentPreview = document.getElementById('wsPreview').innerHTML;
-  const ctx = `Одоогийн ажлын хуудас:\n${currentPreview}\n\nЗохиол: ${selWork ? selWork.title : ''}, ${selGrade}-р анги\nХүсэлт: ${msg}\n\nШинэчлэгдсэн бүрэн HTML <div><ul><li> форматаар буцаа. Зөвхөн HTML, өөр юм бичихгүй.`;
- 
+
+  const currentHTML = document.getElementById('wsPreview').innerHTML;
+  const ctx = `Одоогийн ажлын хуудас (HTML):\n${currentHTML}\n\nЗохиол: ${selWork ? selWork.title : ''}, ${selGrade}-р анги\nХүсэлт: ${msg}\n\nШинэчлэгдсэн бүрэн HTML <div><ul><li> форматаар буцаа. Зөвхөн HTML, өөр текст бичихгүй.`;
+
   try {
     const resp = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
@@ -1969,8 +1820,8 @@ async function sendChat(suggestion = '') {
       })
     });
     const data = await resp.json();
-    const raw = (data.content || []).map(b => b.text || '').join('');
-    const m = raw.match(/<div[\s\S]*<\/div>/i);
+    const raw  = (data.content || []).map(b => b.text || '').join('');
+    const m    = raw.match(/<div[\s\S]*?<\/div>/i);
     typingEl.remove();
     if (m) {
       renderPreview(m[0]);
@@ -1984,47 +1835,60 @@ async function sendChat(suggestion = '') {
     addChatMsg('assistant', 'Холболтын алдаа гарлаа.');
   }
 }
- 
-// 6. printWorksheet() — шинэчлэгдсэн хэвлэх
+
+function addChatMsg(role, text, returnEl=false) {
+  const box = document.getElementById('chatMessages');
+  const el  = document.createElement('div');
+  el.className = `chat-msg ${role}`;
+  el.innerHTML = `<div class="chat-msg-label" style="color:${role==='user'?'var(--secondary)':'var(--accent-purple)'}">
+    ${role==='user'?'👤 Та':'🤖 AI Хөтөч'}</div><div>${text}</div>`;
+  box.appendChild(el);
+  box.scrollTop = box.scrollHeight;
+  if (returnEl) return el;
+}
+
+// ════════════════════════════════
+//  ★ printWorksheet() — хэвлэх
+// ════════════════════════════════
 function printWorksheet() {
   const box = document.getElementById('wsPreview');
   if (!box || !box.innerHTML) { showToast('Эхлээд үүсгэнэ үү!', 'error'); return; }
   const pa = document.getElementById('printArea');
-  pa.innerHTML = `<style>
-    @page { size: A4 portrait; margin: 15mm; }
-    body { font-family: 'Lexend', sans-serif; font-size: 12pt; }
-    ul { list-style: none; padding: 0; }
-    li { padding: 10px 0; border-bottom: 1px solid #eee; line-height: 1.8; font-size: 11pt; }
-  </style>${box.innerHTML}`;
+  pa.innerHTML = `
+    <div class="print-ws-wrap">
+      <style>
+        @page { size: A4 portrait; margin: 15mm; }
+        body  { font-family: 'Lexend', sans-serif; }
+        ul    { list-style: none; padding: 0; }
+        li    { padding: 12px 0 12px 24px; border-bottom: 1px solid #eee; font-size: 11pt; line-height: 1.8; page-break-inside: avoid; }
+      </style>
+      ${box.innerHTML}
+    </div>`;
   pa.style.display = 'block';
-  const cleanup = () => {
-    pa.style.display = 'none';
-    pa.innerHTML = '';
-    window.removeEventListener('afterprint', cleanup);
-  };
+  const cleanup = () => { pa.style.display='none'; pa.innerHTML=''; window.removeEventListener('afterprint',cleanup); };
   window.addEventListener('afterprint', cleanup);
   setTimeout(() => window.print(), 150);
 }
- 
-// 7. downloadWorksheet() — Word татах
+
+// ════════════════════════════════
+//  ★ downloadWorksheet() — Word татах
+// ════════════════════════════════
 function downloadWorksheet() {
   const box = document.getElementById('wsPreview');
   if (!box || !box.innerHTML) { showToast('Эхлээд үүсгэнэ үү!', 'error'); return; }
   const fname = selWork
-    ? `Ajliin_huudas_${selGrade}r_${selWork.title.substring(0, 15)}.doc`
+    ? `Ajliin_huudas_${selGrade}r_${selWork.title.replace(/[^\w]/g,'_').substring(0,15)}.doc`
     : `Ajliin_huudas_${selGrade}r_angi.doc`;
   const blob = new Blob([`<html><head><meta charset="utf-8">
     <style>
       body { font-family: serif; font-size: 12pt; margin: 20mm; }
-      ul { list-style: none; padding: 0; }
-      li { padding: 10px 0; border-bottom: 1px solid #eee; line-height: 1.8; }
+      ul   { list-style: none; padding: 0; }
+      li   { padding: 10px 0; border-bottom: 1px solid #eee; line-height: 1.8; }
     </style></head><body>${box.innerHTML}</body></html>`],
     { type: 'application/msword' });
   const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = fname;
-  a.click();
+  const a   = document.createElement('a');
+  a.href = url; a.download = fname; a.click();
   URL.revokeObjectURL(url);
   showToast('Word файл татагдаж байна!', 'success');
 }
