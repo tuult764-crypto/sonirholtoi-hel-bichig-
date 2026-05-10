@@ -1817,37 +1817,82 @@ function clearPcBtns() {
 }
 
 function updatePcPreview(n) {
-  const prev = document.getElementById('pcPreview');
-  const btn  = document.getElementById('pcConfirmBtn');
-  if (!prev || !btn) return;
+  const preview = document.getElementById('pcPreview');
+  const btn = document.getElementById('pcConfirmBtn');
   if (n > 0) {
-    prev.style.display      = 'block';
-    prev.textContent        = `${n} хуудас · ${n * 4} судоку хэвлэгдэнэ`;
-    btn.style.opacity       = '1';
+    preview.style.display = 'block';
+    preview.innerText = `Нийт ${n * 4} ширхэг судоку хэвлэгдэнэ.`;
+    btn.style.opacity = '1';
     btn.style.pointerEvents = 'auto';
   } else {
-    prev.style.display      = 'none';
-    btn.style.opacity       = '0.4';
+    preview.style.display = 'none';
+    btn.style.opacity = '0.4';
     btn.style.pointerEvents = 'none';
   }
 }
-
+  
 function confirmPrintCount() {
-  const ci = document.getElementById('pcCustom');
-  if (ci && ci.value) window._selectedPrintCount = parseInt(ci.value) || 0;
+  const count = window._selectedPrintCount;
+  if (!count || count <= 0) return;
 
-  const n  = window._selectedPrintCount;
-  const cr = getCredits();
-
-  if (!n || n < 1) { showToast('Хуудасны тоо сонгоно уу!', 'error'); return; }
-  if (isFreeUsed() && n > cr) {
-    showToast(`Эрх хүрэлцэхгүй байна. Таны эрх: ${cr} хуудас`, 'error');
-    return;
+  // Хэрэв үнэгүй биш бол эрх хасах (энэ функцийг өөрийнхөөрөө тааруулаарай)
+  if (getCredits() > 0) {
+    // subtractCredits(count); 
   }
 
   closePrintCountModal();
-  if (isFreeUsed()) setCredits(cr - n);
-  doPrint(n);
+  executePrint(count);
+}
+
+function executePrint(pageCount) {
+  const pa = document.getElementById('printArea');
+  if (!pa) return;
+
+  let html = `<div class="print-container">`;
+  
+  for (let i = 0; i < pageCount; i++) {
+    html += `<div style="page-break-after: always; padding: 20px;">`;
+    html += `<h2 style="text-align:center; font-family:Lexend;">Судоку Багц - Хуудас ${i+1}</h2>`;
+    html += `<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 40px; margin-top: 30px;">`;
+    
+    // 1 хуудсанд 4 судоку үүсгэж хийх (Жишээ)
+    for (let j = 0; j < 4; j++) {
+      html += `
+        <div style="border: 2px solid #000; padding: 10px; text-align: center;">
+          <div style="font-weight: bold; margin-bottom: 5px;">№${(i * 4) + j + 1}</div>
+          <div style="width: 250px; height: 250px; border: 1px solid #ccc; margin: 0 auto;">
+            [Судоку хүснэгт энд харагдана]
+          </div>
+        </div>`;
+    }
+    
+    html += `</div></div>`;
+  }
+  html += `</div>`;
+
+  pa.innerHTML = html;
+  pa.style.display = 'block';
+
+  // Хэвлэх үеийн CSS
+  const style = document.createElement('style');
+  style.id = 'print-style';
+  style.innerHTML = `
+    @media print {
+      body > *:not(#printArea) { display: none !important; }
+      #printArea { display: block !important; position: absolute; left: 0; top: 0; width: 100%; }
+      .print-container { width: 100%; }
+    }
+  `;
+  document.head.appendChild(style);
+
+  setTimeout(() => {
+    window.print();
+    // Хэвлэсний дараа цэвэрлэх
+    pa.style.display = 'none';
+    pa.innerHTML = '';
+    const st = document.getElementById('print-style');
+    if (st) st.remove();
+  }, 500);
 }
 
 function closePrintCountModal() {
