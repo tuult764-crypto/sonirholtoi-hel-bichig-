@@ -1672,13 +1672,13 @@ function solveSudoku() {
   showToast('Шийдэл харуулагдлаа','success');
 }
 
-// ════════════════════════════════
-//  PRINT — ЗАСВАРЛАСАН
-// ════════════════════════════════
 // ════════════════════════════════════════════════════════════
-//  БҮРЭН ЗАСВАРЛАСАН ХЭВЛЭХ КОД
-//  handlePrint, printFree, doPrint, buildPrintHTML
-//  дөрвийг бүгдийг нь энэ кодоор солино уу
+//  БҮРЭН ЗАСВАРЛАСАН ХЭВЛЭХ КОД v4
+//  Хуучин handlePrint, printFree, askPrintCount,
+//  selectPrintCount, clearPcBtns, updatePcPreview,
+//  confirmPrintCount, closePrintCountModal,
+//  doPrint, buildPrintHTML функцүүдийг
+//  ЭНЭ БҮХЭН КОДООР СОЛИНО УУ
 // ════════════════════════════════════════════════════════════
 
 function handlePrint() {
@@ -1708,92 +1708,72 @@ function printFree() {
   );
 }
 
-// ── Хэдэн хуудас хэвлэх вэ гэж асуух modal ──
 function askPrintCount() {
-  // Хэрэв modal аль хэдийн байвал устгана
   const old = document.getElementById('printCountModal');
   if (old) old.remove();
 
   const cr = getCredits();
-  const maxPages = cr > 0 ? cr : 1; // үнэгүй бол 1 л боломжтой
+  const isFreeMode = !isFreeUsed() || cr === 0;
+  const maxPages = isFreeMode ? 1 : cr;
 
   const modal = document.createElement('div');
   modal.id = 'printCountModal';
-  modal.style.cssText = `
-    position:fixed; inset:0; z-index:9999;
-    background:rgba(0,0,0,0.6);
-    display:flex; align-items:center; justify-content:center;
-    padding:20px;
-  `;
+  modal.style.cssText = [
+    'position:fixed', 'inset:0', 'z-index:99999',
+    'background:rgba(0,0,0,0.65)',
+    'display:flex', 'align-items:center', 'justify-content:center',
+    'padding:20px', 'font-family:Lexend,sans-serif'
+  ].join(';');
+
+  const btns = [1,2,3,4,5]
+    .filter(n => n <= Math.max(maxPages, 1))
+    .map(n => `
+      <button
+        id="pcBtn${n}"
+        onclick="selectPrintCount(${n})"
+        style="width:52px;height:52px;border-radius:14px;border:2px solid #e8d4b0;
+          background:#fff;font-size:16px;font-weight:800;cursor:pointer;
+          font-family:Lexend,sans-serif;color:#5c4a28;transition:all 0.15s"
+      >${n}</button>`)
+    .join('');
+
+  const customInput = maxPages > 5
+    ? `<input id="pcCustom" type="number" min="1" max="${maxPages}"
+        placeholder="Тоо" oninput="clearPcBtns()"
+        style="width:72px;height:52px;border-radius:14px;border:2px solid #e8d4b0;
+          text-align:center;font-size:15px;font-weight:800;
+          font-family:Lexend,sans-serif;outline:none;color:#5c4a28">`
+    : '';
 
   modal.innerHTML = `
-    <div style="
-      background:#fff; border-radius:24px; padding:32px 28px;
-      width:100%; max-width:340px; text-align:center;
-      box-shadow:0 20px 60px rgba(0,0,0,0.3);
-      font-family:'Lexend',sans-serif;
-    ">
-      <div style="font-size:40px; margin-bottom:12px">🖨️</div>
-      <h3 style="font-size:17px; font-weight:800; margin-bottom:8px; color:#1a1208">
+    <div style="background:#fff;border-radius:24px;padding:32px 28px;
+      width:100%;max-width:340px;text-align:center;
+      box-shadow:0 20px 60px rgba(0,0,0,0.3)">
+      <div style="font-size:40px;margin-bottom:12px">🖨️</div>
+      <h3 style="font-size:17px;font-weight:800;margin-bottom:8px;color:#1a1208">
         Хэдэн хуудас хэвлэх вэ?
       </h3>
-      <p style="font-size:12px; color:#5c4a28; margin-bottom:20px; line-height:1.6">
+      <p style="font-size:12px;color:#5c4a28;margin-bottom:20px;line-height:1.6">
         1 хуудас = 4 судоку агуулна.<br>
         ${cr > 0 ? `Таны эрх: <strong>${cr} хуудас</strong>` : 'Үнэгүй: <strong>1 хуудас</strong>'}
       </p>
-
-      <div style="display:flex; gap:8px; justify-content:center; margin-bottom:24px; flex-wrap:wrap">
-        ${[1,2,3,4,5].filter(n => n <= Math.max(maxPages, 1)).map(n => `
-          <button onclick="selectPrintCount(${n})" id="pcBtn${n}"
-            style="
-              width:52px; height:52px; border-radius:14px;
-              border:2px solid #e8d4b0; background:#fff;
-              font-size:16px; font-weight:800; cursor:pointer;
-              font-family:'Lexend',sans-serif; color:#5c4a28;
-              transition:all 0.15s;
-            "
-            onmouseover="this.style.borderColor='#e8600a';this.style.background='rgba(232,96,10,0.08)';this.style.color='#e8600a'"
-            onmouseout="if(!this.classList.contains('selected')){this.style.borderColor='#e8d4b0';this.style.background='#fff';this.style.color='#5c4a28'}"
-          >${n}</button>
-        `).join('')}
-        ${maxPages > 5 ? `
-          <input id="pcCustom" type="number" min="1" max="${maxPages}" placeholder="Тоо"
-            style="
-              width:72px; height:52px; border-radius:14px;
-              border:2px solid #e8d4b0; text-align:center;
-              font-size:15px; font-weight:800; font-family:'Lexend',sans-serif;
-              outline:none; color:#5c4a28;
-            "
-            oninput="clearPcBtns()"
-          >
-        ` : ''}
+      <div style="display:flex;gap:8px;justify-content:center;margin-bottom:24px;flex-wrap:wrap">
+        ${btns}${customInput}
       </div>
-
-      <div id="pcPreview" style="
-        background:#fff3e8; border-radius:12px; padding:10px;
-        font-size:12px; color:#e8600a; font-weight:700;
-        margin-bottom:18px; display:none;
-      "></div>
-
-      <div style="display:flex; gap:10px">
+      <div id="pcPreview" style="background:#fff3e8;border-radius:12px;padding:10px;
+        font-size:12px;color:#e8600a;font-weight:700;margin-bottom:18px;display:none"></div>
+      <div style="display:flex;gap:10px">
         <button onclick="closePrintCountModal()"
-          style="
-            flex:1; padding:13px; border-radius:13px;
-            border:none; background:#f5f5f5; color:#555;
-            font-family:'Lexend',sans-serif; font-size:13px;
-            font-weight:700; cursor:pointer;
-          ">Болих</button>
+          style="flex:1;padding:13px;border-radius:13px;border:none;
+            background:#f5f5f5;color:#555;font-family:Lexend,sans-serif;
+            font-size:13px;font-weight:700;cursor:pointer">Болих</button>
         <button id="pcConfirmBtn" onclick="confirmPrintCount()"
-          style="
-            flex:2; padding:13px; border-radius:13px;
-            border:none; background:#1a1208; color:#fff;
-            font-family:'Lexend',sans-serif; font-size:13px;
-            font-weight:800; cursor:pointer;
-            opacity:0.4; pointer-events:none;
-          ">🖨️ Хэвлэх</button>
+          style="flex:2;padding:13px;border-radius:13px;border:none;
+            background:#1a1208;color:#fff;font-family:Lexend,sans-serif;
+            font-size:13px;font-weight:800;cursor:pointer;
+            opacity:0.4;pointer-events:none">🖨️ Хэвлэх</button>
       </div>
-    </div>
-  `;
+    </div>`;
 
   document.body.appendChild(modal);
   window._selectedPrintCount = 0;
@@ -1801,7 +1781,6 @@ function askPrintCount() {
 
 function selectPrintCount(n) {
   window._selectedPrintCount = n;
-  // Бүх товчны стилийг reset
   [1,2,3,4,5].forEach(i => {
     const b = document.getElementById('pcBtn' + i);
     if (!b) return;
@@ -1810,18 +1789,15 @@ function selectPrintCount(n) {
     b.style.background  = '#fff';
     b.style.color       = '#5c4a28';
   });
-  // Сонгосон товчийг highlight
   const sel = document.getElementById('pcBtn' + n);
   if (sel) {
     sel.classList.add('selected');
     sel.style.borderColor = '#e8600a';
     sel.style.background  = 'rgba(232,96,10,0.12)';
-    sel.style.color       = '#e8600a';
+    sel.style.color        = '#e8600a';
   }
-  // Custom input цэвэрлэх
   const ci = document.getElementById('pcCustom');
   if (ci) ci.value = '';
-  // Preview шинэчлэх
   updatePcPreview(n);
 }
 
@@ -1844,43 +1820,32 @@ function updatePcPreview(n) {
   const btn  = document.getElementById('pcConfirmBtn');
   if (!prev || !btn) return;
   if (n > 0) {
-    prev.style.display = 'block';
-    prev.textContent   = `${n} хуудас · ${n * 4} судоку хэвлэгдэнэ`;
-    btn.style.opacity        = '1';
-    btn.style.pointerEvents  = 'auto';
+    prev.style.display      = 'block';
+    prev.textContent        = `${n} хуудас · ${n * 4} судоку хэвлэгдэнэ`;
+    btn.style.opacity       = '1';
+    btn.style.pointerEvents = 'auto';
   } else {
-    prev.style.display = 'none';
-    btn.style.opacity        = '0.4';
-    btn.style.pointerEvents  = 'none';
+    prev.style.display      = 'none';
+    btn.style.opacity       = '0.4';
+    btn.style.pointerEvents = 'none';
   }
 }
 
 function confirmPrintCount() {
-  // Custom input шалгах
   const ci = document.getElementById('pcCustom');
-  if (ci && ci.value) {
-    window._selectedPrintCount = parseInt(ci.value) || 0;
-  }
-  const n = window._selectedPrintCount;
-  if (!n || n < 1) {
-    showToast('Хуудасны тоо сонгоно уу!', 'error');
-    return;
-  }
+  if (ci && ci.value) window._selectedPrintCount = parseInt(ci.value) || 0;
 
+  const n  = window._selectedPrintCount;
   const cr = getCredits();
-  // Эрх шалгах (үнэгүй хэвлэсэн бол эрх шаардлагатай)
+
+  if (!n || n < 1) { showToast('Хуудасны тоо сонгоно уу!', 'error'); return; }
   if (isFreeUsed() && n > cr) {
     showToast(`Эрх хүрэлцэхгүй байна. Таны эрх: ${cr} хуудас`, 'error');
     return;
   }
 
   closePrintCountModal();
-
-  // Эрх хасах
-  if (isFreeUsed()) {
-    setCredits(cr - n);
-  }
-
+  if (isFreeUsed()) setCredits(cr - n);
   doPrint(n);
 }
 
@@ -1889,46 +1854,59 @@ function closePrintCountModal() {
   if (m) m.remove();
 }
 
-// ── Хэвлэлтийн үндсэн функц — printArea ашиглана ──
+// ── IFRAME ашиглан хэвлэх (pop-up блокер нөлөөлөхгүй) ──
 function doPrint(pageCount) {
+  // Судоку үүсгэх
   const pages = [];
   for (let p = 0; p < pageCount; p++) {
     const puzzles = [];
-    for (let q = 0; q < 4; q++) {
-      puzzles.push(generateNewPuzzle());
-    }
+    for (let q = 0; q < 4; q++) puzzles.push(generateNewPuzzle());
     pages.push(puzzles);
   }
 
-  const pa = document.getElementById('printArea');
-  pa.innerHTML = buildPrintHTML(pages);
+  const html = buildPrintHTML(pages);
 
-  // Бусад элементийг нуух
-  document.querySelectorAll('body > *:not(#printArea)').forEach(el => {
-    el.setAttribute('data-print-hide', el.style.display || '');
-    el.style.setProperty('display', 'none', 'important');
-  });
-  pa.style.cssText = 'display:block !important; position:fixed; inset:0; background:#fff; z-index:99999; overflow:auto;';
+  // Хуучин iframe устгах
+  const oldFrame = document.getElementById('printFrame');
+  if (oldFrame) oldFrame.remove();
 
-  setTimeout(() => {
-    window.print();
-    // Хэвлэсний дараа буцаана
+  // Шинэ iframe үүсгэх
+  const iframe = document.createElement('iframe');
+  iframe.id = 'printFrame';
+  iframe.style.cssText = [
+    'position:fixed', 'top:0', 'left:0',
+    'width:100%', 'height:100%',
+    'border:none', 'z-index:999999',
+    'background:#fff'
+  ].join(';');
+
+  document.body.appendChild(iframe);
+
+  // iframe-д HTML бичих
+  const doc = iframe.contentDocument || iframe.contentWindow.document;
+  doc.open();
+  doc.write(html);
+  doc.close();
+
+  // Ачааллаад хэвлэх
+  iframe.onload = function () {
     setTimeout(() => {
-      pa.style.cssText = 'display:none;';
-      pa.innerHTML = '';
-      document.querySelectorAll('[data-print-hide]').forEach(el => {
-        el.style.display = el.getAttribute('data-print-hide') || '';
-        el.removeAttribute('data-print-hide');
-      });
-    }, 1000);
-  }, 300);
+      iframe.contentWindow.focus();
+      iframe.contentWindow.print();
+      // Хэвлэлтийн харагдац хаагдсаны дараа iframe устгах
+      setTimeout(() => iframe.remove(), 1500);
+    }, 400);
+  };
 
   showToast(`${pageCount} хуудас (${pageCount * 4} судоку) хэвлэж байна...`, 'success');
 }
 
-// ── Хэвлэх HTML үүсгэх ──
+// ── Хэвлэх бүрэн HTML ──
 function buildPrintHTML(pages) {
-  const MN = {'1':'᠑','2':'᠒','3':'᠓','4':'᠔','5':'᠕','6':'᠖','7':'᠗','8':'᠘','9':'᠙'};
+  const MN = {
+    '1':'᠑','2':'᠒','3':'᠓','4':'᠔','5':'᠕',
+    '6':'᠖','7':'᠗','8':'᠘','9':'᠙'
+  };
 
   const pageHTMLs = pages.map((puzzles, pi) => {
     const puzzleHTMLs = puzzles.map((p, qi) => {
@@ -1936,8 +1914,8 @@ function buildPrintHTML(pages) {
       for (let r = 0; r < 9; r++) {
         rows += '<tr>';
         for (let c = 0; c < 9; c++) {
-          const idx = r * 9 + c;
-          const val = p.puzzle[idx];
+          const idx     = r * 9 + c;
+          const val     = p.puzzle[idx];
           const isGiven = val !== 0;
           let cls = '';
           if (c === 2 || c === 5) cls += ' br';
@@ -1950,46 +1928,86 @@ function buildPrintHTML(pages) {
       }
       return `
         <div class="pp">
-          <div class="pp-title">Судоку ${pi * 4 + qi + 1} &nbsp;·&nbsp; Нэр:________________________ &nbsp;·&nbsp; Анги:________</div>
+          <div class="pp-title">
+            Судоку ${pi * 4 + qi + 1}
+            &nbsp;·&nbsp; Нэр:______________________
+            &nbsp;·&nbsp; Анги:_______
+          </div>
           <table class="pt"><tbody>${rows}</tbody></table>
-          <div class="pp-guide">᠑=1 ᠒=2 ᠓=3 ᠔=4 ᠕=5 ᠖=6 ᠗=7 ᠘=8 ᠙=9</div>
+          <div class="pp-guide">᠑=1 &nbsp; ᠒=2 &nbsp; ᠓=3 &nbsp; ᠔=4 &nbsp; ᠕=5 &nbsp; ᠖=6 &nbsp; ᠗=7 &nbsp; ᠘=8 &nbsp; ᠙=9</div>
         </div>`;
     }).join('');
+
     return `<div class="pg">${puzzleHTMLs}</div>`;
   }).join('');
 
-  return `
-    <style>
-      * { box-sizing:border-box; margin:0; padding:0; }
-      @page { size:A4 portrait; margin:8mm; }
-      body { font-family:sans-serif; background:#fff; }
-      .pg {
-        display:grid;
-        grid-template-columns:1fr 1fr;
-        grid-template-rows:1fr 1fr;
-        gap:5mm;
-        width:194mm;
-        height:279mm;
-        padding:2mm;
-        page-break-after:always;
-      }
-      .pg:last-child { page-break-after:avoid; }
-      .pp { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:2mm; }
-      .pp-title { font-size:7pt; font-weight:700; text-align:center; color:#1a1208; line-height:1.6; }
-      .pt { border-collapse:collapse; border:2.5px solid #1a1208; }
-      .pt td {
-        width:8.5mm; height:8.5mm;
-        text-align:center; vertical-align:middle;
-        font-size:11pt; font-weight:700;
-        border:0.5px solid #aaa; color:#1a1208;
-      }
-      .pt td.br { border-right:2.5px solid #1a1208; }
-      .pt td.bb { border-bottom:2.5px solid #1a1208; }
-      .pt td.given { background:#f3e5ab; font-weight:900; }
-      .pp-guide { font-size:7pt; text-align:center; color:#5c4a28; margin-top:1mm; }
-    </style>
-    ${pageHTMLs}
-  `;
+  return `<!DOCTYPE html>
+<html lang="mn">
+<head>
+  <meta charset="UTF-8">
+  <title>Монгол Судоку</title>
+  <style>
+    * { box-sizing:border-box; margin:0; padding:0; }
+    @page { size:A4 portrait; margin:8mm; }
+    html, body { width:210mm; background:#fff; font-family:sans-serif; }
+
+    .pg {
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      grid-template-rows:1fr 1fr;
+      gap:5mm;
+      width:194mm;
+      height:279mm;
+      padding:2mm;
+      page-break-after:always;
+    }
+    .pg:last-child { page-break-after:avoid; }
+
+    .pp {
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      justify-content:center;
+      gap:2mm;
+    }
+
+    .pp-title {
+      font-size:7pt;
+      font-weight:700;
+      text-align:center;
+      color:#1a1208;
+      line-height:1.6;
+    }
+
+    .pt {
+      border-collapse:collapse;
+      border:2.5px solid #1a1208;
+    }
+    .pt td {
+      width:8.5mm;
+      height:8.5mm;
+      text-align:center;
+      vertical-align:middle;
+      font-size:11pt;
+      font-weight:700;
+      font-family:sans-serif;
+      border:0.5px solid #aaa;
+      color:#1a1208;
+    }
+    .pt td.br { border-right:2.5px solid #1a1208; }
+    .pt td.bb { border-bottom:2.5px solid #1a1208; }
+    .pt td.given { background:#f3e5ab; font-weight:900; }
+
+    .pp-guide {
+      font-size:7pt;
+      text-align:center;
+      color:#5c4a28;
+      margin-top:1mm;
+    }
+  </style>
+</head>
+<body>${pageHTMLs}</body>
+</html>`;
 }
  
 // Buy package
