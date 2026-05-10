@@ -687,7 +687,7 @@
 .btn-warn-ok { background:var(--primary); color:#fff; }
 @media print {
   body > *:not(#printArea) { display:none !important; }
-  #printArea { display:block !important; position:fixed; inset:0; background:#fff; font-family:'Lexend',sans-serif; }
+  #printArea { display:block !important; position:fixed; inset:0; z-index:9999; background:#fff; font-family:'Lexend',sans-serif; }
   @page { size:A4 portrait; margin:8mm; }
   .print-page { page-break-after:always; display:grid; grid-template-columns:1fr 1fr; grid-template-rows:1fr 1fr; gap:6mm; width:194mm; height:271mm; padding:1mm; }
   .print-page:last-child { page-break-after:avoid; }
@@ -1770,12 +1770,23 @@ function printFree() {
     ()=>{ markFreeUsed(); doPrint(1); });
 }
 function doPrint(pageCount) {
-  const pages=[];
-  for(let p=0;p<pageCount;p++){
-    const puzzles=[];
-    for(let q=0;q<4;q++) puzzles.push(generateNewPuzzle());
+  const pages = [];
+  for (let p = 0; p < pageCount; p++) {
+    const puzzles = [];
+    for (let q = 0; q < 4; q++) puzzles.push(generateNewPuzzle());
     pages.push(puzzles);
   }
+  buildPrintHTML(pages);
+  const pa = document.getElementById('printArea');
+  pa.style.cssText = 'display:block !important; position:fixed; inset:0; z-index:9999; background:#fff;';
+  setTimeout(() => {
+    window.print();
+    setTimeout(() => {
+      pa.style.cssText = 'display:none;';
+      pa.innerHTML = '';
+    }, 1000);
+  }, 300);
+}
   buildPrintHTML(pages);
   const pa=document.getElementById('printArea');
   pa.style.display='block';
@@ -1817,6 +1828,7 @@ function buildPrintHTML(pages) {
   pa.innerHTML = `
     <style>
       @page { size: A4 portrait; margin: 8mm; }
+      html, body { margin: 0; padding: 0; width: 100%; height: 100%; }
       * { box-sizing: border-box; margin: 0; padding: 0; }
       .pg {
         display: grid;
