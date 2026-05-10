@@ -610,6 +610,98 @@
     ::-webkit-scrollbar { width: 6px; }
     ::-webkit-scrollbar-track { background: transparent; }
     ::-webkit-scrollbar-thumb { background: var(--outline-variant); border-radius: 99px; }
+    /* ── SUDOKU NEW STYLES ── */
+.game-section { max-width: 960px; margin: 0 auto; }
+.game-header { display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; margin-bottom:28px; }
+.game-title { font-size:22px; font-weight:800; font-family:'Baloo 2',cursive; }
+.subtitle { font-size:12px; color:var(--on-surface-variant); margin-top:2px; }
+.credit-pill { display:flex; align-items:center; gap:8px; background:#fff3e8; border:1.5px solid #ffd5a8; border-radius:99px; padding:6px 16px; font-size:13px; font-weight:700; color:var(--primary); }
+.refresh-btn { font-size:11px; color:var(--secondary); text-decoration:underline; background:none; border:none; cursor:pointer; font-family:'Lexend',sans-serif; font-weight:600; }
+.game-layout { display:grid; grid-template-columns:1fr 300px; gap:24px; align-items:start; }
+@media(max-width:700px){ .game-layout{ grid-template-columns:1fr; } }
+.sudoku-wrap { display:flex; justify-content:center; }
+.sudoku-grid { display:grid; grid-template-columns:repeat(9,1fr); border:2.5px solid #1a1208; background:#1a1208; gap:0; width:min(calc(100vw - 48px),396px); aspect-ratio:1; }
+.sudoku-cell { width:100%; aspect-ratio:1; text-align:center; font-size:clamp(14px,3vw,20px); font-weight:700; font-family:'Lexend',sans-serif; border:0; outline:none; cursor:text; background:#fff; color:var(--on-surface); border-right:1px solid #ccc; border-bottom:1px solid #ccc; transition:background 0.1s; }
+.sudoku-cell:focus { background:#fff3e8; }
+.sudoku-cell.readonly { background:#f3e5ab; cursor:default; font-weight:900; }
+.sudoku-cell.error { background:#fee2e2 !important; }
+.sudoku-cell.border-right { border-right:2.5px solid #1a1208; }
+.sudoku-cell.border-bottom { border-bottom:2.5px solid #1a1208; }
+.sidebar { display:flex; flex-direction:column; gap:14px; }
+.panel { background:#fff; border:1px solid var(--outline-variant); border-radius:20px; padding:18px; }
+.panel h4 { font-weight:800; font-size:13px; margin-bottom:12px; }
+.guide-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:6px; }
+.guide-cell { background:var(--surface-container); border-radius:8px; padding:7px 4px; text-align:center; font-size:12px; font-weight:700; color:var(--tertiary); }
+.guide-hint { font-size:10px; color:#999; margin-top:10px; font-style:italic; line-height:1.5; }
+.action-btns { display:flex; flex-direction:column; gap:8px; }
+.action-btn { display:flex; align-items:center; gap:8px; padding:12px 16px; border:none; border-radius:14px; cursor:pointer; font-family:'Lexend',sans-serif; font-size:13px; font-weight:700; transition:all 0.15s; width:100%; }
+.action-btn:hover { transform:translateY(-1px); }
+.btn-new { background:#f0fdf4; color:var(--tertiary); border:1.5px solid #a7f3d0; }
+.btn-check { background:var(--tertiary); color:#fff; }
+.btn-solve { background:var(--primary); color:#fff; }
+.btn-print { background:#1a1208; color:#fff; }
+.print-section { margin-top:8px; }
+.print-section-title { font-size:14px; font-weight:800; margin-bottom:12px; display:flex; justify-content:space-between; align-items:center; }
+.print-section-title a { font-size:11px; color:var(--secondary); text-decoration:none; font-weight:700; }
+.free-banner { background:var(--surface-container); border:1.5px solid #ffd5a8; border-radius:18px; padding:16px; text-align:center; margin-bottom:12px; }
+.free-title { font-size:13px; font-weight:800; color:var(--primary); margin-bottom:4px; }
+.free-desc { font-size:11px; color:var(--on-surface-variant); margin-bottom:10px; line-height:1.5; }
+.btn-free-print { background:#1a1208; color:#fff; border:none; border-radius:12px; padding:10px 20px; font-family:'Lexend',sans-serif; font-size:12px; font-weight:800; cursor:pointer; width:100%; transition:all 0.15s; }
+.btn-free-print:hover { background:#2d2010; }
+.packages-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; }
+.pkg-card { border:2px solid var(--outline-variant); border-radius:14px; padding:12px 6px; text-align:center; cursor:pointer; transition:all 0.18s; position:relative; background:#fff; }
+.pkg-card:hover { border-color:var(--tertiary); transform:translateY(-2px); box-shadow:0 4px 16px rgba(46,158,91,0.15); }
+.pkg-card.featured { border-color:var(--tertiary); background:var(--tertiary); color:#fff; }
+.pkg-card.deal { border-color:#92400e; background:#92400e; color:#fff; }
+.pkg-badge { position:absolute; top:-9px; left:50%; transform:translateX(-50%); background:#fbbf24; color:#1a1208; font-size:8px; font-weight:800; padding:2px 8px; border-radius:99px; white-space:nowrap; }
+.pkg-pages { font-size:26px; font-weight:800; font-family:'Baloo 2',cursive; color:var(--tertiary); line-height:1; }
+.pkg-card.featured .pkg-pages, .pkg-card.deal .pkg-pages { color:#fff; }
+.pkg-label { font-size:8px; font-weight:700; text-transform:uppercase; letter-spacing:0.08em; opacity:0.65; margin:2px 0 5px; }
+.pkg-price { font-size:12px; font-weight:800; color:var(--primary); }
+.pkg-card.featured .pkg-price { color:#d1fae5; }
+.pkg-card.deal .pkg-price { color:#fde68a; }
+.pay-modal-card { background:#fff; border-radius:24px; width:100%; max-width:400px; max-height:90vh; overflow-y:auto; }
+.modal-top { background:#1a1208; padding:24px; border-radius:24px 24px 0 0; text-align:center; color:#fff; }
+.modal-top .m-icon { font-size:32px; margin-bottom:8px; }
+.modal-top h3 { font-size:17px; font-weight:800; }
+.modal-top p { font-size:11px; opacity:0.6; margin-top:4px; }
+.modal-body2 { padding:22px; }
+.pay-amount2 { text-align:center; font-size:30px; font-weight:800; font-family:'Baloo 2',cursive; color:var(--primary); margin-bottom:18px; }
+.qr-box2 { width:150px; height:150px; margin:0 auto 14px; border:2px solid var(--outline-variant); border-radius:14px; display:flex; align-items:center; justify-content:center; font-size:48px; background:#f8f8f8; overflow:hidden; }
+.bank-info2 { text-align:center; margin-bottom:12px; }
+.bank-num2 { font-size:15px; font-weight:800; }
+.bank-name2 { font-size:11px; color:var(--on-surface-variant); }
+.bank-note2 { background:#fff3e8; color:var(--primary); font-size:11px; font-weight:700; padding:10px 14px; border-radius:12px; text-align:center; margin-bottom:14px; line-height:1.5; }
+.modal-field2 { width:100%; padding:12px 14px; border:1.5px solid var(--outline-variant); border-radius:12px; font-size:13px; font-family:'Lexend',sans-serif; outline:none; margin-bottom:10px; transition:border-color 0.12s; }
+.modal-field2:focus { border-color:var(--primary); }
+.btn-pay-submit { width:100%; padding:14px; background:var(--tertiary); color:#fff; border:none; border-radius:13px; font-size:13px; font-weight:800; cursor:pointer; font-family:'Lexend',sans-serif; transition:all 0.15s; margin-bottom:8px; }
+.btn-pay-submit:hover { background:#239a4a; }
+.btn-pay-cancel { width:100%; padding:9px; background:none; border:none; font-size:12px; color:#aaa; cursor:pointer; font-family:'Lexend',sans-serif; }
+.warn-card { background:#fff; border-radius:24px; width:100%; max-width:340px; padding:28px; text-align:center; }
+.warn-card .w-icon { font-size:46px; margin-bottom:12px; }
+.warn-card h3 { font-size:16px; font-weight:800; margin-bottom:8px; }
+.warn-card p { font-size:12px; color:var(--on-surface-variant); line-height:1.7; margin-bottom:18px; white-space:pre-line; }
+.warn-btns { display:flex; gap:10px; }
+.warn-btns button { flex:1; padding:12px; border-radius:12px; font-family:'Lexend',sans-serif; font-size:13px; font-weight:700; cursor:pointer; border:none; }
+.btn-warn-cancel { background:#f5f5f5; color:#555; }
+.btn-warn-ok { background:var(--primary); color:#fff; }
+@media print {
+  body > *:not(#printArea) { display:none !important; }
+  #printArea { display:block !important; position:fixed; inset:0; background:#fff; font-family:'Lexend',sans-serif; }
+  @page { size:A4 portrait; margin:8mm; }
+  .print-page { page-break-after:always; display:grid; grid-template-columns:1fr 1fr; grid-template-rows:1fr 1fr; gap:6mm; width:194mm; height:271mm; padding:1mm; }
+  .print-page:last-child { page-break-after:avoid; }
+  .print-puzzle { display:flex; flex-direction:column; align-items:center; justify-content:center; }
+  .print-puzzle-title { font-size:8pt; font-weight:800; text-align:center; margin-bottom:2mm; color:#1a1208; }
+  .print-table { border-collapse:collapse; border:2px solid #1a1208; }
+  .print-table td { width:9mm; height:9mm; text-align:center; vertical-align:middle; font-size:12pt; font-weight:700; border:0.5px solid #aaa; }
+  .print-table td.br { border-right:2px solid #1a1208; }
+  .print-table td.bb { border-bottom:2px solid #1a1208; }
+  .print-table td.given { background:#f3e5ab; font-weight:900; }
+  .print-guide { margin-top:2mm; font-size:7pt; text-align:center; color:#5c4a28; }
+  .print-ws-wrap ul { list-style:none; padding:0; }
+  .print-ws-wrap li { padding:10px 0 10px 20px; border-bottom:1px solid #eee; font-size:11pt; line-height:1.8; page-break-inside:avoid; }
+}
   </style>
 </head>
 <body>
@@ -847,32 +939,97 @@
   </section>
 
   <!-- GAMES / SUDOKU -->
-  <section id="gamesSection" class="section">
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:32px;flex-wrap:wrap;gap:12px">
+<section id="gamesSection" class="section">
+  <div class="game-section">
+    <div class="game-header">
       <div>
         <button class="page-back" style="margin-bottom:6px" onclick="showDashboard()">← Буцах</button>
-        <h2 class="section-title" style="margin-bottom:0">🎮 Монгол бичгийн Судоку</h2>
+        <div class="game-title">🎮 Монгол бичгийн Судоку</div>
+        <div class="subtitle">Тоглох үнэгүй · Хэвлэхэд эрх шаардлагатай</div>
       </div>
-      <button class="btn-primary" onclick="initSudoku()">🔄 Шинэ тоглоом</button>
+      <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+        <div class="credit-pill" id="creditPill">
+          🖨 <span id="creditCount">0</span> хуудас эрхтэй
+          <button class="refresh-btn" onclick="refreshCredits()">Эрхийг шинэчлэх</button>
+        </div>
+        <button class="btn-primary" onclick="initSudoku()">🔄 Шинэ тоглоом</button>
+      </div>
     </div>
+
     <div class="game-layout">
-      <div id="sudokuGrid" class="sudoku-grid"></div>
-      <div class="sudoku-sidebar">
-        <div class="sudoku-guide">
+      <div class="sudoku-wrap">
+        <div id="sudokuGrid" class="sudoku-grid"></div>
+      </div>
+
+      <div class="sidebar">
+        <div class="panel">
           <h4>Тооны удирдамж</h4>
           <div class="guide-grid">
-            <div class="guide-cell">1 → ᠑</div><div class="guide-cell">2 → ᠒</div><div class="guide-cell">3 → ᠓</div>
-            <div class="guide-cell">4 → ᠔</div><div class="guide-cell">5 → ᠕</div><div class="guide-cell">6 → ᠖</div>
-            <div class="guide-cell">7 → ᠗</div><div class="guide-cell">8 → ᠘</div><div class="guide-cell">9 → ᠙</div>
+            <div class="guide-cell">1→᠑</div><div class="guide-cell">2→᠒</div><div class="guide-cell">3→᠓</div>
+            <div class="guide-cell">4→᠔</div><div class="guide-cell">5→᠕</div><div class="guide-cell">6→᠖</div>
+            <div class="guide-cell">7→᠗</div><div class="guide-cell">8→᠘</div><div class="guide-cell">9→᠙</div>
           </div>
-          <p class="sudoku-hint">Та 1–9 тоо дарахад автоматаар монгол тоонд хөрвөнө.</p>
+          <p class="guide-hint">1–9 тоо дарахад автоматаар монгол тоонд хөрвөнө.</p>
         </div>
-        <button class="sudoku-btn" style="background:var(--tertiary);color:#fff" onclick="checkSudoku()">✅ Шалгах</button>
-        <button class="sudoku-btn" style="background:var(--primary);color:#fff" onclick="solveSudoku()">💡 Шийдэл харах</button>
-        <button class="sudoku-btn" style="background:#1a1208;color:#fff" onclick="printSudoku()">🖨 А4 хэвлэх</button>
+
+        <div class="action-btns">
+          <button class="action-btn btn-new" onclick="initSudoku()">🔄 Шинэ тоглоом</button>
+          <button class="action-btn btn-check" onclick="checkSudoku()">✅ Шалгах</button>
+          <button class="action-btn btn-solve" onclick="solveSudoku()">💡 Шийдэл харах</button>
+          <button class="action-btn btn-print" onclick="handlePrint()">🖨 А4 хэвлэх</button>
+        </div>
+
+        <div class="print-section">
+          <div class="print-section-title">
+            ХЭВЛЭХ ЭРХ АВАХ
+            <a href="#" onclick="refreshCredits();return false">Эрхийг шинэчлэх</a>
+          </div>
+          <div class="free-banner">
+            <div class="free-title">1-Р ХУУДАС ҮНЭГҮЙ!</div>
+            <div class="free-desc">Эрх авахгүйгээр нэг хуудас (4 судоку) хэвлэх боломжтой</div>
+            <button class="btn-free-print" onclick="printFree()">ҮНЭГҮЙ ХЭВЛЭХ</button>
+          </div>
+          <div class="packages-grid">
+            <div class="pkg-card" onclick="buyPackage(5,3000)">
+              <div class="pkg-pages">5</div>
+              <div class="pkg-label">ХУУДАС</div>
+              <div class="pkg-price">3,000₮</div>
+            </div>
+            <div class="pkg-card featured" onclick="buyPackage(10,5000)">
+              <div class="pkg-badge">АЛДАРТАЙ</div>
+              <div class="pkg-pages">10</div>
+              <div class="pkg-label">ХУУДАС</div>
+              <div class="pkg-price">5,000₮</div>
+            </div>
+            <div class="pkg-card" onclick="buyPackage(15,7000)">
+              <div class="pkg-pages">15</div>
+              <div class="pkg-label">ХУУДАС</div>
+              <div class="pkg-price">7,000₮</div>
+            </div>
+          </div>
+          <div class="packages-grid" style="margin-top:10px">
+            <div class="pkg-card" onclick="buyPackage(20,9000)">
+              <div class="pkg-pages">20</div>
+              <div class="pkg-label">ХУУДАС</div>
+              <div class="pkg-price">9,000₮</div>
+            </div>
+            <div class="pkg-card" onclick="buyPackage(25,11000)">
+              <div class="pkg-pages">25</div>
+              <div class="pkg-label">ХУУДАС</div>
+              <div class="pkg-price">11,000₮</div>
+            </div>
+            <div class="pkg-card deal" onclick="buyPackage(30,12000)">
+              <div class="pkg-badge deal-badge">ХЯМДРАЛ!</div>
+              <div class="pkg-pages">30</div>
+              <div class="pkg-label">ХУУДАС</div>
+              <div class="pkg-price">12,000₮</div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
-  </section>
+  </div>
+</section>
 
   <!-- LIBRARY -->
   <section id="librarySection" class="section">
@@ -914,6 +1071,78 @@
   </div>
 </div>
 
+<!-- SUDOKU PAY MODAL -->
+<div id="sudokuPayModal" class="modal-overlay hidden">
+  <div class="pay-modal-card">
+    <div id="spStep1">
+      <div class="modal-top">
+        <div class="m-icon">💳</div>
+        <h3>Хэвлэх эрх худалдаж авах</h3>
+        <p id="spPackageLabel"></p>
+      </div>
+      <div class="modal-body2">
+        <div class="pay-amount2" id="spAmount"></div>
+        <div class="qr-box2">
+          <img src="https://raw.githubusercontent.com/tuult764-crypto/sonirholtoi-hel-bichig-/main/qr.png"
+            alt="QR" style="width:100%;height:100%;object-fit:contain"
+            onerror="this.style.display='none';this.nextSibling.style.display='flex'">
+          <span style="display:none;font-size:48px">🔲</span>
+        </div>
+        <div class="bank-info2">
+          <div class="bank-num2">ХАС БАНК: 5006069631</div>
+          <div class="bank-name2">МӨНХДАЛАЙ ТУУЛ</div>
+        </div>
+        <div class="bank-note2">⚠️ Гүйлгээний <strong>утга</strong> дээр и-мэйл хаягаа заавал бичнэ үү!<br><em>tanii@gmail.com</em></div>
+        <button class="btn-pay-submit" onclick="spGoStep2()">✅ Төлбөр төллөө → Дараах</button>
+        <button class="btn-pay-cancel" onclick="closeSudokuPay()">Хаах</button>
+      </div>
+    </div>
+    <div id="spStep2" style="display:none">
+      <div class="modal-top">
+        <div class="m-icon">📧</div>
+        <h3>И-мэйл хаягаа оруулна уу</h3>
+        <p>Баталгаажсаны дараа энэ хаяг руу мэдэгдэл илгээнэ</p>
+      </div>
+      <div class="modal-body2">
+        <input id="spEmail" class="modal-field2" type="email" placeholder="tanii@gmail.com">
+        <input id="spNote"  class="modal-field2" type="text"  placeholder="Нэмэлт тайлбар (заавал биш)">
+        <div style="background:#f0fdf4;border-radius:12px;padding:12px;margin-bottom:14px;font-size:11px;color:#166534;line-height:1.6">
+          📦 Захиалга баталгаажсаны дараа <strong>24 цагийн дотор</strong> эрхийн код хүлээн авна.
+        </div>
+        <button id="spSubmitBtn" class="btn-pay-submit" onclick="spSubmit()">🚀 Захиалга илгээх</button>
+        <button class="btn-pay-cancel" onclick="spGoStep1()">← Буцах</button>
+      </div>
+    </div>
+    <div id="spStep3" style="display:none;padding:32px 24px;text-align:center">
+      <div style="font-size:48px;margin-bottom:12px">🎉</div>
+      <div style="font-size:18px;font-weight:800;color:var(--tertiary);margin-bottom:8px">Захиалга амжилттай!</div>
+      <div style="font-size:12px;color:var(--on-surface-variant);line-height:1.7;margin-bottom:16px">
+        Төлбөр шалгагдсаны дараа<br>
+        <strong id="spConfirmEmail" style="color:var(--primary)"></strong><br>
+        хаяг руу мэдэгдэл илгээнэ.
+      </div>
+      <div style="background:#f0fdf4;border-radius:12px;padding:12px;font-size:11px;color:#166534;margin-bottom:16px;line-height:1.6">
+        ⏱ <strong>1–24 цагийн дотор</strong> хүргэгдэнэ.<br>
+        Асуух зүйл: <strong>sonirholtoihelbichig@gmail.com</strong>
+      </div>
+      <button class="btn-pay-submit" onclick="closeSudokuPay()">✓ Хаах</button>
+    </div>
+  </div>
+</div>
+
+<!-- SUDOKU WARN MODAL -->
+<div id="sudokuWarnModal" class="modal-overlay hidden">
+  <div class="warn-card">
+    <div class="w-icon">⚠️</div>
+    <h3>Анхаарна уу!</h3>
+    <p id="warnMsg"></p>
+    <div class="warn-btns">
+      <button class="btn-warn-cancel" onclick="closeWarn()">Болих</button>
+      <button class="btn-warn-ok" onclick="confirmWarn()">Хэвлэх</button>
+    </div>
+  </div>
+</div>
+  
 <!-- FOOTER -->
 <footer>
   <div class="footer-inner">
@@ -1029,9 +1258,8 @@
 <div id="printArea"></div>
 
 <script>
-// ════════════════════════════════
 //  CONSTANTS & STATE
-// ════════════════════════════════
+//  SUDOKU
 const AUTH_KEY  = 'shb_auth_v2';
 const MONG_NUMS = { '1':'᠑','2':'᠒','3':'᠓','4':'᠔','5':'᠕','6':'᠖','7':'᠗','8':'᠘','9':'᠙' };
 const MONG_REV  = Object.fromEntries(Object.entries(MONG_NUMS).map(([k,v]) => [v,k]));
@@ -1431,142 +1659,196 @@ function showToast(msg, type='success') {
 }
 
 // ════════════════════════════════
-//  SUDOKU
+//  SUDOKU — ШИНЭЧЛЭГДСЭН ХУВИЛБАР
 // ════════════════════════════════
+const CREDIT_KEY   = 'shb_print_credits';
+const FREE_USED_KEY = 'shb_free_used';
+let _spBuying      = { pages:0, price:0 };
+let _warnCallback  = null;
+
+// Credits
+function getCredits() { return parseInt(localStorage.getItem(CREDIT_KEY)||'0'); }
+function setCredits(n) { localStorage.setItem(CREDIT_KEY, String(Math.max(0,n))); updateCreditUI(); }
+function updateCreditUI() { const el=document.getElementById('creditCount'); if(el) el.textContent=getCredits(); }
+function refreshCredits() { updateCreditUI(); showToast('Эрхийн мэдээлэл шинэчлэгдлээ','success'); }
+function isFreeUsed() { return localStorage.getItem(FREE_USED_KEY)==='1'; }
+function markFreeUsed() { localStorage.setItem(FREE_USED_KEY,'1'); }
+
+// Sudoku generate
 function initSudoku() {
   const { puzzle, solution } = generateSudoku();
-  sudokuSolution = solution;
-  sudokuPuzzle   = puzzle;
-  const grid = document.getElementById('sudokuGrid');
+  sudokuSolution=solution; sudokuPuzzle=puzzle;
+  const grid=document.getElementById('sudokuGrid');
+  if (!grid) return;
   grid.innerHTML='';
-  for (let row=0; row<9; row++) {
-    for (let col=0; col<9; col++) {
-      const idx = row*9+col;
-      const val = puzzle[idx];
-      const inp = document.createElement('input');
-      inp.type='text'; inp.maxLength=1;
-      inp.className='sudoku-cell';
+  for (let row=0;row<9;row++) {
+    for (let col=0;col<9;col++) {
+      const idx=row*9+col, val=puzzle[idx];
+      const inp=document.createElement('input');
+      inp.type='text'; inp.maxLength=1; inp.className='sudoku-cell';
       if (col===2||col===5) inp.classList.add('border-right');
       if (row===2||row===5) inp.classList.add('border-bottom');
-      if (val) {
-        inp.value=MONG_NUMS[String(val)]||'';
-        inp.readOnly=true;
-        inp.classList.add('readonly');
-      }
-      inp.addEventListener('input', function(e) {
+      if (val) { inp.value=MONG_NUMS[String(val)]||''; inp.readOnly=true; inp.classList.add('readonly'); }
+      inp.addEventListener('input',function(e){
         const ch=e.target.value.slice(-1);
         if (MONG_NUMS[ch]) this.value=MONG_NUMS[ch];
         else if (Object.values(MONG_NUMS).includes(ch)) this.value=ch;
-        else this.value='';
-        this.classList.remove('error');
+        else this.value=''; this.classList.remove('error');
       });
-      inp.addEventListener('keydown', function(e) {
-        if (e.key>='1'&&e.key<='9') { e.preventDefault(); this.value=MONG_NUMS[e.key]; this.classList.remove('error'); }
+      inp.addEventListener('keydown',function(e){
+        if (e.key>='1'&&e.key<='9'){e.preventDefault();this.value=MONG_NUMS[e.key];this.classList.remove('error');}
+        if (e.key==='Backspace'||e.key==='Delete'){this.value='';this.classList.remove('error');}
       });
       grid.appendChild(inp);
     }
   }
 }
 function generateSudoku() {
-  const base=Array(81).fill(0);
-  fillSudoku(base);
-  const solution=[...base];
-  const puzzle=[...solution];
-  const positions=[...Array(81).keys()].sort(()=>Math.random()-0.5);
-  let removed=0;
-  for (const pos of positions) { if (removed>=45) break; puzzle[pos]=0; removed++; }
-  return { puzzle, solution };
+  const base=Array(81).fill(0); fillSudoku(base);
+  const solution=[...base], puzzle=[...solution];
+  const pos=[...Array(81).keys()].sort(()=>Math.random()-0.5);
+  let rem=0; for(const p of pos){if(rem>=45)break;puzzle[p]=0;rem++;}
+  return {puzzle,solution};
+}
+function generateNewPuzzle() {
+  const base=Array(81).fill(0); fillSudoku(base);
+  const sol=[...base], puz=[...sol];
+  const pos=[...Array(81).keys()].sort(()=>Math.random()-0.5);
+  let rem=0; for(const p of pos){if(rem>=46)break;puz[p]=0;rem++;}
+  return {puzzle:puz,solution:sol};
 }
 function fillSudoku(board) {
-  const empty=board.indexOf(0); if (empty===-1) return true;
+  const empty=board.indexOf(0); if(empty===-1)return true;
   const nums=shuffle([1,2,3,4,5,6,7,8,9]);
-  for (const n of nums) {
-    if (isValidPlacement(board,empty,n)) {
-      board[empty]=n;
-      if (fillSudoku(board)) return true;
-      board[empty]=0;
-    }
-  }
+  for(const n of nums){if(isValidPlacement(board,empty,n)){board[empty]=n;if(fillSudoku(board))return true;board[empty]=0;}}
   return false;
 }
 function isValidPlacement(board,idx,num) {
-  const row=Math.floor(idx/9), col=idx%9;
-  for (let i=0;i<9;i++) {
-    if (board[row*9+i]===num) return false;
-    if (board[i*9+col]===num) return false;
-  }
-  const br=Math.floor(row/3)*3, bc=Math.floor(col/3)*3;
-  for (let r=0;r<3;r++) for (let c=0;c<3;c++) if (board[(br+r)*9+(bc+c)]===num) return false;
+  const row=Math.floor(idx/9),col=idx%9;
+  for(let i=0;i<9;i++){if(board[row*9+i]===num||board[i*9+col]===num)return false;}
+  const br=Math.floor(row/3)*3,bc=Math.floor(col/3)*3;
+  for(let r=0;r<3;r++)for(let c=0;c<3;c++)if(board[(br+r)*9+(bc+c)]===num)return false;
   return true;
 }
-function shuffle(arr) {
-  for (let i=arr.length-1;i>0;i--) { const j=Math.floor(Math.random()*(i+1)); [arr[i],arr[j]]=[arr[j],arr[i]]; }
-  return arr;
-}
+function shuffle(arr){for(let i=arr.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[arr[i],arr[j]]=[arr[j],arr[i]];}return arr;}
+
+// Check / Solve
 function checkSudoku() {
   const cells=document.querySelectorAll('.sudoku-cell');
-  let hasError=false, hasEmpty=false;
-  cells.forEach((cell,idx) => {
-    if (cell.readOnly) return;
-    cell.classList.remove('error');
-    const mv=cell.value;
-    if (!mv) { hasEmpty=true; return; }
+  let hasError=false,hasEmpty=false;
+  cells.forEach((cell,idx)=>{
+    if(cell.readOnly)return; cell.classList.remove('error');
+    const mv=cell.value; if(!mv){hasEmpty=true;return;}
     const n=parseInt(MONG_REV[mv]||mv);
-    if (n!==sudokuSolution[idx]) { cell.classList.add('error'); hasError=true; }
+    if(n!==sudokuSolution[idx]){cell.classList.add('error');hasError=true;}
   });
-  if (hasEmpty) showToast('Бүх нүдийг бөглөнө үү','error');
-  else if (hasError) showToast('Буруу нүд бий. Улаанаар тэмдэглэгдлээ','error');
+  if(hasEmpty) showToast('Бүх нүдийг бөглөнө үү','error');
+  else if(hasError) showToast('Буруу нүд бий. Улаанаар тэмдэглэгдлээ','error');
   else showToast('Маш сайн! Судоку зөв боллоо! 🎉','success');
 }
 function solveSudoku() {
   const cells=document.querySelectorAll('.sudoku-cell');
-  cells.forEach((cell,idx) => {
-    if (!cell.readOnly) { cell.value=MONG_NUMS[String(sudokuSolution[idx])]||''; cell.classList.remove('error'); }
-  });
+  cells.forEach((cell,idx)=>{if(!cell.readOnly){cell.value=MONG_NUMS[String(sudokuSolution[idx])]||'';cell.classList.remove('error');}});
   showToast('Шийдэл харуулагдлаа','success');
 }
-function printSudoku() {
-  const cells = document.querySelectorAll('.sudoku-cell');
-  let rows = '';
-  for (let r=0; r<9; r++) {
-    rows += '<tr>';
-    for (let c=0; c<9; c++) {
-      const idx = r*9+c;
-      const val = cells[idx] ? cells[idx].value : '';
-      const isGiven = sudokuPuzzle[idx] !== 0;
-      let cls = '';
-      if (c===2||c===5) cls += ' br';
-      if (r===2||r===5) cls += ' bb';
-      if (isGiven)      cls += ' given';
-      rows += `<td class="${cls.trim()}">${val}</td>`;
-    }
-    rows += '</tr>';
+
+// Print
+function handlePrint() {
+  if (!isFreeUsed()) {
+    showWarn('Та эхний хуудсыг ҮНЭГҮЙ хэвлэх боломжтой.\n1 хуудас = 4 өөр судоку агуулна.\n\nҮргэлжлүүлэх үү?',
+      ()=>{ markFreeUsed(); doPrint(1); });
+  } else {
+    const cr=getCredits();
+    if(cr<1){showToast('Хэвлэх эрх байхгүй. Эрх худалдаж аваарай!','error');return;}
+    showWarn(`Та ${cr} хуудасны эрхтэй.\n1 хуудас хэвлэхэд 1 эрх зарцуулна.\n\n⚠️ Дахин харагдахгүй тул принтер бэлэн эсэхийг шалгаарай!`,
+      ()=>{ setCredits(cr-1); doPrint(1); });
   }
-  const guideRows = `
-    <tr><td>1 → ᠑</td><td>2 → ᠒</td><td>3 → ᠓</td><td>4 → ᠔</td><td>5 → ᠕</td></tr>
-    <tr><td>6 → ᠖</td><td>7 → ᠗</td><td>8 → ᠘</td><td>9 → ᠙</td><td></td></tr>`;
-  const pa = document.getElementById('printArea');
-  pa.innerHTML = `
-    <div class="print-sudoku-wrap">
-      <div class="print-sudoku-title">🎮 Монгол бичгийн Судоку</div>
-      <div class="print-sudoku-subtitle">Монгол тоог бичиж хоосон нүдийг бөглөнө үү</div>
-      <table class="print-sudoku-table"><tbody>${rows}</tbody></table>
-      <div class="print-sudoku-guide">
-        <div style="margin-bottom:4px;font-weight:700">Тооны лавлах:</div>
-        <table><tbody>${guideRows}</tbody></table>
-      </div>
-      <div class="print-name-row">
-        <span>Нэр: _______________________</span>
-        <span>Анги: __________</span>
-        <span>Огноо: __________________</span>
-      </div>
-    </div>`;
+}
+function printFree() {
+  if(isFreeUsed()){showToast('Үнэгүй хэвлэх эрхийг аль хэдийн ашигласан байна.','error');return;}
+  showWarn('Эхний 1 хуудасыг ҮНЭГҮЙ хэвлэх гэж байна.\n(4 судоку агуулна)\n\nЭнэ боломжийг зөвхөн 1 удаа ашиглана.',
+    ()=>{ markFreeUsed(); doPrint(1); });
+}
+function doPrint(pageCount) {
+  const pages=[];
+  for(let p=0;p<pageCount;p++){
+    const puzzles=[];
+    for(let q=0;q<4;q++) puzzles.push(generateNewPuzzle());
+    pages.push(puzzles);
+  }
+  buildPrintHTML(pages);
+  const pa=document.getElementById('printArea');
   pa.style.display='block';
-  const cleanup = () => { pa.style.display='none'; pa.innerHTML=''; window.removeEventListener('afterprint',cleanup); };
-  window.addEventListener('afterprint', cleanup);
-  setTimeout(()=>window.print(), 150);
+  const cleanup=()=>{pa.style.display='none';pa.innerHTML='';window.removeEventListener('afterprint',cleanup);};
+  window.addEventListener('afterprint',cleanup);
+  setTimeout(()=>window.print(),200);
+  showToast(`${pageCount} хуудас (${pageCount*4} судоку) хэвлэгдэж байна...`,'success');
+}
+function buildPrintHTML(pages) {
+  const pa=document.getElementById('printArea');
+  pa.innerHTML=pages.map((puzzles,pi)=>{
+    const pzls=puzzles.map((p,qi)=>{
+      let rows='';
+      for(let r=0;r<9;r++){
+        rows+='<tr>';
+        for(let c=0;c<9;c++){
+          const idx=r*9+c, val=p.puzzle[idx], isGiven=val!==0;
+          let cls='';
+          if(c===2||c===5)cls+=' br';
+          if(r===2||r===5)cls+=' bb';
+          if(isGiven)cls+=' given';
+          rows+=`<td class="${cls.trim()}">${isGiven?(MONG_NUMS[String(val)]||val):''}</td>`;
+        }
+        rows+='</tr>';
+      }
+      return `<div class="print-puzzle">
+        <div class="print-puzzle-title">Судоку ${pi*4+qi+1} · Нэр:________________ · Анги:______</div>
+        <table class="print-table"><tbody>${rows}</tbody></table>
+        <div class="print-guide">᠑=1 ᠒=2 ᠓=3 ᠔=4 ᠕=5 ᠖=6 ᠗=7 ᠘=8 ᠙=9</div>
+      </div>`;
+    }).join('');
+    return `<div class="print-page">${pzls}</div>`;
+  }).join('');
 }
 
+// Buy package
+function buyPackage(pages,price) {
+  _spBuying={pages,price};
+  document.getElementById('spPackageLabel').textContent=`${pages} хуудас · ${price.toLocaleString()}₮`;
+  document.getElementById('spAmount').textContent=price.toLocaleString()+'₮';
+  if(currentUser) document.getElementById('spEmail').value=currentUser;
+  spGoStep1();
+  document.getElementById('sudokuPayModal').classList.remove('hidden');
+}
+function spGoStep1(){document.getElementById('spStep1').style.display='';document.getElementById('spStep2').style.display='none';document.getElementById('spStep3').style.display='none';}
+function spGoStep2(){document.getElementById('spStep1').style.display='none';document.getElementById('spStep2').style.display='';document.getElementById('spStep3').style.display='none';}
+function closeSudokuPay(){document.getElementById('sudokuPayModal').classList.add('hidden');spGoStep1();}
+
+async function spSubmit() {
+  const email=document.getElementById('spEmail').value.trim();
+  const note=document.getElementById('spNote').value.trim();
+  if(!email||!email.includes('@')){showToast('Зөв и-мэйл хаяг оруулна уу','error');return;}
+  const btn=document.getElementById('spSubmitBtn');
+  btn.disabled=true; btn.textContent='⏳ Илгээж байна...';
+  try {
+    await fetch(GAS_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({action:'submitOrder',email,note,total:_spBuying.price,
+        items:`Судоку хэвлэх эрх ${_spBuying.pages} хуудас`,printPages:_spBuying.pages,
+        date:new Date().toLocaleString('mn-MN')})});
+    setCredits(getCredits()+_spBuying.pages);
+    document.getElementById('spConfirmEmail').textContent=email;
+    document.getElementById('spStep2').style.display='none';
+    document.getElementById('spStep3').style.display='';
+    showToast(`${_spBuying.pages} хуудасны эрх нэмэгдлээ! 🎉`,'success');
+  } catch(e){showToast('Сүлжээний алдаа. Дахин оролдоно уу.','error');}
+  btn.disabled=false; btn.textContent='🚀 Захиалга илгээх';
+}
+
+// Warn modal
+function showWarn(msg,cb){_warnCallback=cb;document.getElementById('warnMsg').textContent=msg;document.getElementById('sudokuWarnModal').classList.remove('hidden');}
+function closeWarn(){document.getElementById('sudokuWarnModal').classList.add('hidden');_warnCallback=null;}
+function confirmWarn(){closeWarn();if(_warnCallback)_warnCallback();}
+  
 // ════════════════════════════════
 //  AI ASSESSMENT
 // ════════════════════════════════
@@ -1847,9 +2129,6 @@ function addChatMsg(role, text, returnEl=false) {
   if (returnEl) return el;
 }
 
-// ════════════════════════════════
-//  ★ printWorksheet() — хэвлэх
-// ════════════════════════════════
 function printWorksheet() {
   const box = document.getElementById('wsPreview');
   if (!box || !box.innerHTML) { showToast('Эхлээд үүсгэнэ үү!', 'error'); return; }
