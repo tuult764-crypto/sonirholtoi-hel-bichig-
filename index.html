@@ -346,12 +346,11 @@
       padding: 9px 18px; border: 1.5px solid var(--outline-variant);
       border-radius: 12px; font-size: 12px; font-weight: 700;
       background: #fff; cursor: pointer; font-family: 'Lexend', sans-serif;
-      transition: all 0.12s; display: flex; align-items: center; gap: 6px;
+      transition: all 0.12px; display: flex; align-items: center; gap: 6px;
     }
     .ws-action-btn:hover { border-color: var(--primary); background: var(--primary-light); color: var(--primary); }
     #wsPreview { padding: 24px; }
 
-    /* wsPreview дотор li загвар */
     #wsPreview ul { list-style: none; padding: 0; margin: 0; }
     #wsPreview li {
       padding: 14px 0 14px 16px;
@@ -400,46 +399,8 @@
     }
     .chat-send-btn:hover { background: #6d28d9; }
 
-    /* Sudoku */
     .game-layout { display: flex; flex-direction: column; align-items: center; gap: 32px; }
     @media (min-width: 768px) { .game-layout { flex-direction: row; align-items: flex-start; justify-content: center; } }
-    .sudoku-grid {
-      display: grid; grid-template-columns: repeat(9, 44px);
-      border: 2.5px solid #333; background: #333; gap: 0;
-    }
-    .sudoku-cell {
-      width: 44px; height: 44px; text-align: center;
-      font-size: 18px; font-weight: 700; font-family: 'Lexend', sans-serif;
-      border: 0; outline: none; cursor: text;
-      background: #fff; color: var(--on-surface);
-      border-right: 1px solid #ccc; border-bottom: 1px solid #ccc;
-      transition: background 0.1s;
-    }
-    .sudoku-cell:focus { background: #fff3e8; }
-    .sudoku-cell.readonly { background: #f3e5ab; cursor: default; font-weight: 800; }
-    .sudoku-cell.error { background: #fee2e2 !important; }
-    .sudoku-cell.border-right  { border-right: 2.5px solid #333; }
-    .sudoku-cell.border-bottom { border-bottom: 2.5px solid #333; }
-
-    .sudoku-sidebar { max-width: 280px; width: 100%; }
-    .sudoku-guide {
-      background: #fff; border: 1px solid var(--outline-variant);
-      border-radius: 20px; padding: 20px; margin-bottom: 16px;
-    }
-    .sudoku-guide h4 { font-weight: 800; font-size: 14px; margin-bottom: 14px; }
-    .guide-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
-    .guide-cell {
-      background: #f5ede0; border-radius: 8px; padding: 8px;
-      text-align: center; font-size: 13px; font-weight: 700;
-    }
-    .sudoku-hint { font-size: 11px; color: #999; margin-top: 12px; font-style: italic; }
-    .sudoku-btn {
-      display: block; width: 100%; padding: 14px;
-      border: none; border-radius: 16px; cursor: pointer;
-      font-family: 'Lexend', sans-serif; font-size: 13px; font-weight: 700;
-      margin-bottom: 10px; transition: all 0.15s;
-    }
-    .sudoku-btn:hover { transform: translateY(-1px); }
 
     .shop-filter {
       display: flex; gap: 6px; background: #fff;
@@ -567,141 +528,103 @@
 
     #printArea { display: none; }
 
+    /* ── SUDOKU STYLES ── */
+    .game-section { max-width: 960px; margin: 0 auto; }
+    .game-header { display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; margin-bottom:28px; }
+    .game-title { font-size:22px; font-weight:800; font-family:'Baloo 2',cursive; }
+    .subtitle { font-size:12px; color:var(--on-surface-variant); margin-top:2px; }
+    .credit-pill { display:flex; align-items:center; gap:8px; background:#fff3e8; border:1.5px solid #ffd5a8; border-radius:99px; padding:6px 16px; font-size:13px; font-weight:700; color:var(--primary); }
+    .refresh-btn { font-size:11px; color:var(--secondary); text-decoration:underline; background:none; border:none; cursor:pointer; font-family:'Lexend',sans-serif; font-weight:600; }
+    .game-layout { display:grid; grid-template-columns:1fr 300px; gap:24px; align-items:start; }
+    @media(max-width:700px){ .game-layout{ grid-template-columns:1fr; } }
+    .sudoku-wrap { display:flex; justify-content:center; }
+    .sudoku-grid { display:grid; grid-template-columns:repeat(9,1fr); border:2.5px solid #1a1208; background:#1a1208; gap:0; width:min(calc(100vw - 48px),396px); aspect-ratio:1; }
+    .sudoku-cell { width:100%; aspect-ratio:1; text-align:center; font-size:clamp(14px,3vw,20px); font-weight:700; font-family:'Lexend',sans-serif; border:0; outline:none; cursor:text; background:#fff; color:var(--on-surface); border-right:1px solid #ccc; border-bottom:1px solid #ccc; transition:background 0.1s; }
+    .sudoku-cell:focus { background:#fff3e8; }
+    .sudoku-cell.readonly { background:#f3e5ab; cursor:default; font-weight:900; }
+    .sudoku-cell.error { background:#fee2e2 !important; }
+    .sudoku-cell.border-right { border-right:2.5px solid #1a1208; }
+    .sudoku-cell.border-bottom { border-bottom:2.5px solid #1a1208; }
+    .sidebar { display:flex; flex-direction:column; gap:14px; }
+    .panel { background:#fff; border:1px solid var(--outline-variant); border-radius:20px; padding:18px; }
+    .panel h4 { font-weight:800; font-size:13px; margin-bottom:12px; }
+    .guide-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:6px; }
+    .guide-cell { background:var(--surface-container); border-radius:8px; padding:7px 4px; text-align:center; font-size:12px; font-weight:700; color:var(--tertiary); }
+    .guide-hint { font-size:10px; color:#999; margin-top:10px; font-style:italic; line-height:1.5; }
+    .action-btns { display:flex; flex-direction:column; gap:8px; }
+    .action-btn { display:flex; align-items:center; gap:8px; padding:12px 16px; border:none; border-radius:14px; cursor:pointer; font-family:'Lexend',sans-serif; font-size:13px; font-weight:700; transition:all 0.15s; width:100%; }
+    .action-btn:hover { transform:translateY(-1px); }
+    .btn-new { background:#f0fdf4; color:var(--tertiary); border:1.5px solid #a7f3d0; }
+    .btn-check { background:var(--tertiary); color:#fff; }
+    .btn-solve { background:var(--primary); color:#fff; }
+    .btn-print { background:#1a1208; color:#fff; }
+    .print-section { margin-top:8px; }
+    .print-section-title { font-size:14px; font-weight:800; margin-bottom:12px; display:flex; justify-content:space-between; align-items:center; }
+    .print-section-title a { font-size:11px; color:var(--secondary); text-decoration:none; font-weight:700; }
+    .free-banner { background:var(--surface-container); border:1.5px solid #ffd5a8; border-radius:18px; padding:16px; text-align:center; margin-bottom:12px; }
+    .free-title { font-size:13px; font-weight:800; color:var(--primary); margin-bottom:4px; }
+    .free-desc { font-size:11px; color:var(--on-surface-variant); margin-bottom:10px; line-height:1.5; }
+    .btn-free-print { background:#1a1208; color:#fff; border:none; border-radius:12px; padding:10px 20px; font-family:'Lexend',sans-serif; font-size:12px; font-weight:800; cursor:pointer; width:100%; transition:all 0.15s; }
+    .btn-free-print:hover { background:#2d2010; }
+    .packages-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; }
+    .pkg-card { border:2px solid var(--outline-variant); border-radius:14px; padding:12px 6px; text-align:center; cursor:pointer; transition:all 0.18s; position:relative; background:#fff; }
+    .pkg-card:hover { border-color:var(--tertiary); transform:translateY(-2px); box-shadow:0 4px 16px rgba(46,158,91,0.15); }
+    .pkg-card.featured { border-color:var(--tertiary); background:var(--tertiary); color:#fff; }
+    .pkg-card.deal { border-color:#92400e; background:#92400e; color:#fff; }
+    .pkg-badge { position:absolute; top:-9px; left:50%; transform:translateX(-50%); background:#fbbf24; color:#1a1208; font-size:8px; font-weight:800; padding:2px 8px; border-radius:99px; white-space:nowrap; }
+    .pkg-pages { font-size:26px; font-weight:800; font-family:'Baloo 2',cursive; color:var(--tertiary); line-height:1; }
+    .pkg-card.featured .pkg-pages, .pkg-card.deal .pkg-pages { color:#fff; }
+    .pkg-label { font-size:8px; font-weight:700; text-transform:uppercase; letter-spacing:0.08em; opacity:0.65; margin:2px 0 5px; }
+    .pkg-price { font-size:12px; font-weight:800; color:var(--primary); }
+    .pkg-card.featured .pkg-price { color:#d1fae5; }
+    .pkg-card.deal .pkg-price { color:#fde68a; }
+    .pay-modal-card { background:#fff; border-radius:24px; width:100%; max-width:400px; max-height:90vh; overflow-y:auto; }
+    .modal-top { background:#1a1208; padding:24px; border-radius:24px 24px 0 0; text-align:center; color:#fff; }
+    .modal-top .m-icon { font-size:32px; margin-bottom:8px; }
+    .modal-top h3 { font-size:17px; font-weight:800; }
+    .modal-top p { font-size:11px; opacity:0.6; margin-top:4px; }
+    .modal-body2 { padding:22px; }
+    .pay-amount2 { text-align:center; font-size:30px; font-weight:800; font-family:'Baloo 2',cursive; color:var(--primary); margin-bottom:18px; }
+    .qr-box2 { width:150px; height:150px; margin:0 auto 14px; border:2px solid var(--outline-variant); border-radius:14px; display:flex; align-items:center; justify-content:center; font-size:48px; background:#f8f8f8; overflow:hidden; }
+    .bank-info2 { text-align:center; margin-bottom:12px; }
+    .bank-num2 { font-size:15px; font-weight:800; }
+    .bank-name2 { font-size:11px; color:var(--on-surface-variant); }
+    .bank-note2 { background:#fff3e8; color:var(--primary); font-size:11px; font-weight:700; padding:10px 14px; border-radius:12px; text-align:center; margin-bottom:14px; line-height:1.5; }
+    .modal-field2 { width:100%; padding:12px 14px; border:1.5px solid var(--outline-variant); border-radius:12px; font-size:13px; font-family:'Lexend',sans-serif; outline:none; margin-bottom:10px; transition:border-color 0.12s; }
+    .modal-field2:focus { border-color:var(--primary); }
+    .btn-pay-submit { width:100%; padding:14px; background:var(--tertiary); color:#fff; border:none; border-radius:13px; font-size:13px; font-weight:800; cursor:pointer; font-family:'Lexend',sans-serif; transition:all 0.15s; margin-bottom:8px; }
+    .btn-pay-submit:hover { background:#239a4a; }
+    .btn-pay-cancel { width:100%; padding:9px; background:none; border:none; font-size:12px; color:#aaa; cursor:pointer; font-family:'Lexend',sans-serif; }
+    .warn-card { background:#fff; border-radius:24px; width:100%; max-width:340px; padding:28px; text-align:center; }
+    .warn-card .w-icon { font-size:46px; margin-bottom:12px; }
+    .warn-card h3 { font-size:16px; font-weight:800; margin-bottom:8px; }
+    .warn-card p { font-size:12px; color:var(--on-surface-variant); line-height:1.7; margin-bottom:18px; white-space:pre-line; }
+    .warn-btns { display:flex; gap:10px; }
+    .warn-btns button { flex:1; padding:12px; border-radius:12px; font-family:'Lexend',sans-serif; font-size:13px; font-weight:700; cursor:pointer; border:none; }
+    .btn-warn-cancel { background:#f5f5f5; color:#555; }
+    .btn-warn-ok { background:var(--primary); color:#fff; }
+
     @media print {
-      body > *:not(#printArea) { display: none !important; }
-      #printArea {
-        display: block !important;
-        position: fixed; inset: 0;
-        background: #fff;
-        font-family: 'Lexend', sans-serif;
-        padding: 0;
-      }
-      .print-sudoku-wrap {
-        display: flex; flex-direction: column; align-items: center;
-        justify-content: center; min-height: 100vh; padding: 20mm; gap: 24px;
-      }
-      .print-sudoku-title {
-        font-family: 'Baloo 2', cursive; font-size: 22pt; font-weight: 800;
-        text-align: center; color: #1a1208; margin-bottom: 4px;
-      }
-      .print-sudoku-subtitle { font-size: 10pt; text-align: center; color: #5c4a28; margin-bottom: 16px; }
-      .print-sudoku-table { border-collapse: collapse; border: 3px solid #1a1208; margin: 0 auto; }
-      .print-sudoku-table td {
-        width: 20mm; height: 20mm; text-align: center; vertical-align: middle;
-        font-size: 16pt; font-weight: 700; border: 1px solid #999;
-      }
-      .print-sudoku-table td.br { border-right: 3px solid #1a1208; }
-      .print-sudoku-table td.bb { border-bottom: 3px solid #1a1208; }
-      .print-sudoku-table td.given { background: #f3e5ab; font-weight: 900; }
-      .print-sudoku-guide { margin-top: 16px; text-align: center; font-size: 9pt; color: #5c4a28; }
-      .print-sudoku-guide table { border-collapse: collapse; margin: 6px auto 0; }
-      .print-sudoku-guide td { padding: 4px 10px; border: 1px solid #e8d4b0; font-size: 10pt; font-weight: 600; }
-      .print-name-row {
-        display: flex; justify-content: space-between; width: 100%; max-width: 180mm;
-        font-size: 10pt; color: #5c4a28; margin-top: 12px;
-        border-top: 1px solid #e8d4b0; padding-top: 10px;
-      }
-      /* Ажлын хуудас хэвлэх */
-      .print-ws-wrap { padding: 15mm; font-family: 'Lexend', sans-serif; }
-      .print-ws-wrap ul { list-style: none; padding: 0; }
-      .print-ws-wrap li { padding: 10px 0 10px 20px; border-bottom: 1px solid #eee; font-size: 11pt; line-height: 1.8; page-break-inside: avoid; }
+      body > *:not(#printArea) { display:none !important; }
+      #printArea { display:block !important; position:fixed; inset:0; z-index:9999; background:#fff; font-family:'Lexend',sans-serif; }
+      @page { size:A4 portrait; margin:8mm; }
+      .pg { page-break-after:always; display:grid; grid-template-columns:1fr 1fr; grid-template-rows:1fr 1fr; gap:6mm; width:194mm; height:271mm; padding:1mm; }
+      .pg:last-child { page-break-after:avoid; }
+      .pp { display:flex; flex-direction:column; align-items:center; justify-content:center; }
+      .pp-title { font-size:7pt; font-weight:800; font-family:sans-serif; text-align:center; margin-bottom:2mm; color:#1a1208; }
+      .pt { border-collapse:collapse; border:2.5px solid #1a1208; }
+      .pt td { width:8.5mm; height:8.5mm; text-align:center; vertical-align:middle; font-size:11pt; font-weight:700; font-family:sans-serif; border:0.5px solid #aaa; }
+      .pt td.br { border-right:2.5px solid #1a1208; }
+      .pt td.bb { border-bottom:2.5px solid #1a1208; }
+      .pt td.given { background:#f3e5ab; font-weight:900; }
+      .pp-guide { font-family:sans-serif; font-size:7pt; text-align:center; color:#5c4a28; }
+      .print-ws-wrap ul { list-style:none; padding:0; }
+      .print-ws-wrap li { padding:10px 0 10px 20px; border-bottom:1px solid #eee; font-size:11pt; line-height:1.8; page-break-inside:avoid; }
     }
 
     ::-webkit-scrollbar { width: 6px; }
     ::-webkit-scrollbar-track { background: transparent; }
     ::-webkit-scrollbar-thumb { background: var(--outline-variant); border-radius: 99px; }
-    /* ── SUDOKU NEW STYLES ── */
-.game-section { max-width: 960px; margin: 0 auto; }
-.game-header { display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; margin-bottom:28px; }
-.game-title { font-size:22px; font-weight:800; font-family:'Baloo 2',cursive; }
-.subtitle { font-size:12px; color:var(--on-surface-variant); margin-top:2px; }
-.credit-pill { display:flex; align-items:center; gap:8px; background:#fff3e8; border:1.5px solid #ffd5a8; border-radius:99px; padding:6px 16px; font-size:13px; font-weight:700; color:var(--primary); }
-.refresh-btn { font-size:11px; color:var(--secondary); text-decoration:underline; background:none; border:none; cursor:pointer; font-family:'Lexend',sans-serif; font-weight:600; }
-.game-layout { display:grid; grid-template-columns:1fr 300px; gap:24px; align-items:start; }
-@media(max-width:700px){ .game-layout{ grid-template-columns:1fr; } }
-.sudoku-wrap { display:flex; justify-content:center; }
-.sudoku-grid { display:grid; grid-template-columns:repeat(9,1fr); border:2.5px solid #1a1208; background:#1a1208; gap:0; width:min(calc(100vw - 48px),396px); aspect-ratio:1; }
-.sudoku-cell { width:100%; aspect-ratio:1; text-align:center; font-size:clamp(14px,3vw,20px); font-weight:700; font-family:'Lexend',sans-serif; border:0; outline:none; cursor:text; background:#fff; color:var(--on-surface); border-right:1px solid #ccc; border-bottom:1px solid #ccc; transition:background 0.1s; }
-.sudoku-cell:focus { background:#fff3e8; }
-.sudoku-cell.readonly { background:#f3e5ab; cursor:default; font-weight:900; }
-.sudoku-cell.error { background:#fee2e2 !important; }
-.sudoku-cell.border-right { border-right:2.5px solid #1a1208; }
-.sudoku-cell.border-bottom { border-bottom:2.5px solid #1a1208; }
-.sidebar { display:flex; flex-direction:column; gap:14px; }
-.panel { background:#fff; border:1px solid var(--outline-variant); border-radius:20px; padding:18px; }
-.panel h4 { font-weight:800; font-size:13px; margin-bottom:12px; }
-.guide-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:6px; }
-.guide-cell { background:var(--surface-container); border-radius:8px; padding:7px 4px; text-align:center; font-size:12px; font-weight:700; color:var(--tertiary); }
-.guide-hint { font-size:10px; color:#999; margin-top:10px; font-style:italic; line-height:1.5; }
-.action-btns { display:flex; flex-direction:column; gap:8px; }
-.action-btn { display:flex; align-items:center; gap:8px; padding:12px 16px; border:none; border-radius:14px; cursor:pointer; font-family:'Lexend',sans-serif; font-size:13px; font-weight:700; transition:all 0.15s; width:100%; }
-.action-btn:hover { transform:translateY(-1px); }
-.btn-new { background:#f0fdf4; color:var(--tertiary); border:1.5px solid #a7f3d0; }
-.btn-check { background:var(--tertiary); color:#fff; }
-.btn-solve { background:var(--primary); color:#fff; }
-.btn-print { background:#1a1208; color:#fff; }
-.print-section { margin-top:8px; }
-.print-section-title { font-size:14px; font-weight:800; margin-bottom:12px; display:flex; justify-content:space-between; align-items:center; }
-.print-section-title a { font-size:11px; color:var(--secondary); text-decoration:none; font-weight:700; }
-.free-banner { background:var(--surface-container); border:1.5px solid #ffd5a8; border-radius:18px; padding:16px; text-align:center; margin-bottom:12px; }
-.free-title { font-size:13px; font-weight:800; color:var(--primary); margin-bottom:4px; }
-.free-desc { font-size:11px; color:var(--on-surface-variant); margin-bottom:10px; line-height:1.5; }
-.btn-free-print { background:#1a1208; color:#fff; border:none; border-radius:12px; padding:10px 20px; font-family:'Lexend',sans-serif; font-size:12px; font-weight:800; cursor:pointer; width:100%; transition:all 0.15s; }
-.btn-free-print:hover { background:#2d2010; }
-.packages-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; }
-.pkg-card { border:2px solid var(--outline-variant); border-radius:14px; padding:12px 6px; text-align:center; cursor:pointer; transition:all 0.18s; position:relative; background:#fff; }
-.pkg-card:hover { border-color:var(--tertiary); transform:translateY(-2px); box-shadow:0 4px 16px rgba(46,158,91,0.15); }
-.pkg-card.featured { border-color:var(--tertiary); background:var(--tertiary); color:#fff; }
-.pkg-card.deal { border-color:#92400e; background:#92400e; color:#fff; }
-.pkg-badge { position:absolute; top:-9px; left:50%; transform:translateX(-50%); background:#fbbf24; color:#1a1208; font-size:8px; font-weight:800; padding:2px 8px; border-radius:99px; white-space:nowrap; }
-.pkg-pages { font-size:26px; font-weight:800; font-family:'Baloo 2',cursive; color:var(--tertiary); line-height:1; }
-.pkg-card.featured .pkg-pages, .pkg-card.deal .pkg-pages { color:#fff; }
-.pkg-label { font-size:8px; font-weight:700; text-transform:uppercase; letter-spacing:0.08em; opacity:0.65; margin:2px 0 5px; }
-.pkg-price { font-size:12px; font-weight:800; color:var(--primary); }
-.pkg-card.featured .pkg-price { color:#d1fae5; }
-.pkg-card.deal .pkg-price { color:#fde68a; }
-.pay-modal-card { background:#fff; border-radius:24px; width:100%; max-width:400px; max-height:90vh; overflow-y:auto; }
-.modal-top { background:#1a1208; padding:24px; border-radius:24px 24px 0 0; text-align:center; color:#fff; }
-.modal-top .m-icon { font-size:32px; margin-bottom:8px; }
-.modal-top h3 { font-size:17px; font-weight:800; }
-.modal-top p { font-size:11px; opacity:0.6; margin-top:4px; }
-.modal-body2 { padding:22px; }
-.pay-amount2 { text-align:center; font-size:30px; font-weight:800; font-family:'Baloo 2',cursive; color:var(--primary); margin-bottom:18px; }
-.qr-box2 { width:150px; height:150px; margin:0 auto 14px; border:2px solid var(--outline-variant); border-radius:14px; display:flex; align-items:center; justify-content:center; font-size:48px; background:#f8f8f8; overflow:hidden; }
-.bank-info2 { text-align:center; margin-bottom:12px; }
-.bank-num2 { font-size:15px; font-weight:800; }
-.bank-name2 { font-size:11px; color:var(--on-surface-variant); }
-.bank-note2 { background:#fff3e8; color:var(--primary); font-size:11px; font-weight:700; padding:10px 14px; border-radius:12px; text-align:center; margin-bottom:14px; line-height:1.5; }
-.modal-field2 { width:100%; padding:12px 14px; border:1.5px solid var(--outline-variant); border-radius:12px; font-size:13px; font-family:'Lexend',sans-serif; outline:none; margin-bottom:10px; transition:border-color 0.12s; }
-.modal-field2:focus { border-color:var(--primary); }
-.btn-pay-submit { width:100%; padding:14px; background:var(--tertiary); color:#fff; border:none; border-radius:13px; font-size:13px; font-weight:800; cursor:pointer; font-family:'Lexend',sans-serif; transition:all 0.15s; margin-bottom:8px; }
-.btn-pay-submit:hover { background:#239a4a; }
-.btn-pay-cancel { width:100%; padding:9px; background:none; border:none; font-size:12px; color:#aaa; cursor:pointer; font-family:'Lexend',sans-serif; }
-.warn-card { background:#fff; border-radius:24px; width:100%; max-width:340px; padding:28px; text-align:center; }
-.warn-card .w-icon { font-size:46px; margin-bottom:12px; }
-.warn-card h3 { font-size:16px; font-weight:800; margin-bottom:8px; }
-.warn-card p { font-size:12px; color:var(--on-surface-variant); line-height:1.7; margin-bottom:18px; white-space:pre-line; }
-.warn-btns { display:flex; gap:10px; }
-.warn-btns button { flex:1; padding:12px; border-radius:12px; font-family:'Lexend',sans-serif; font-size:13px; font-weight:700; cursor:pointer; border:none; }
-.btn-warn-cancel { background:#f5f5f5; color:#555; }
-.btn-warn-ok { background:var(--primary); color:#fff; }
-@media print {
-  body > *:not(#printArea) { display:none !important; }
-  #printArea { display:block !important; position:fixed; inset:0; z-index:9999; background:#fff; font-family:'Lexend',sans-serif; }
-  @page { size:A4 portrait; margin:8mm; }
-  .print-page { page-break-after:always; display:grid; grid-template-columns:1fr 1fr; grid-template-rows:1fr 1fr; gap:6mm; width:194mm; height:271mm; padding:1mm; }
-  .print-page:last-child { page-break-after:avoid; }
-  .print-puzzle { display:flex; flex-direction:column; align-items:center; justify-content:center; }
-  .print-puzzle-title { font-size:8pt; font-weight:800; text-align:center; margin-bottom:2mm; color:#1a1208; }
-  .print-table { border-collapse:collapse; border:2px solid #1a1208; }
-  .print-table td { width:9mm; height:9mm; text-align:center; vertical-align:middle; font-size:12pt; font-weight:700; border:0.5px solid #aaa; }
-  .print-table td.br { border-right:2px solid #1a1208; }
-  .print-table td.bb { border-bottom:2px solid #1a1208; }
-  .print-table td.given { background:#f3e5ab; font-weight:900; }
-  .print-guide { margin-top:2mm; font-size:7pt; text-align:center; color:#5c4a28; }
-  .print-ws-wrap ul { list-style:none; padding:0; }
-  .print-ws-wrap li { padding:10px 0 10px 20px; border-bottom:1px solid #eee; font-size:11pt; line-height:1.8; page-break-inside:avoid; }
-}
   </style>
 </head>
 <body>
@@ -939,97 +862,97 @@
   </section>
 
   <!-- GAMES / SUDOKU -->
-<section id="gamesSection" class="section">
-  <div class="game-section">
-    <div class="game-header">
-      <div>
-        <button class="page-back" style="margin-bottom:6px" onclick="showDashboard()">← Буцах</button>
-        <div class="game-title">🎮 Монгол бичгийн Судоку</div>
-        <div class="subtitle">Тоглох үнэгүй · Хэвлэхэд эрх шаардлагатай</div>
-      </div>
-      <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
-        <div class="credit-pill" id="creditPill">
-          🖨 <span id="creditCount">0</span> хуудас эрхтэй
-          <button class="refresh-btn" onclick="refreshCredits()">Эрхийг шинэчлэх</button>
+  <section id="gamesSection" class="section">
+    <div class="game-section">
+      <div class="game-header">
+        <div>
+          <button class="page-back" style="margin-bottom:6px" onclick="showDashboard()">← Буцах</button>
+          <div class="game-title">🎮 Монгол бичгийн Судоку</div>
+          <div class="subtitle">Тоглох үнэгүй · Хэвлэхэд эрх шаардлагатай</div>
         </div>
-        <button class="btn-primary" onclick="initSudoku()">🔄 Шинэ тоглоом</button>
+        <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+          <div class="credit-pill" id="creditPill">
+            🖨 <span id="creditCount">0</span> хуудас эрхтэй
+            <button class="refresh-btn" onclick="refreshCredits()">Эрхийг шинэчлэх</button>
+          </div>
+          <button class="btn-primary" onclick="initSudoku()">🔄 Шинэ тоглоом</button>
+        </div>
+      </div>
+
+      <div class="game-layout">
+        <div class="sudoku-wrap">
+          <div id="sudokuGrid" class="sudoku-grid"></div>
+        </div>
+
+        <div class="sidebar">
+          <div class="panel">
+            <h4>Тооны удирдамж</h4>
+            <div class="guide-grid">
+              <div class="guide-cell">1→᠑</div><div class="guide-cell">2→᠒</div><div class="guide-cell">3→᠓</div>
+              <div class="guide-cell">4→᠔</div><div class="guide-cell">5→᠕</div><div class="guide-cell">6→᠖</div>
+              <div class="guide-cell">7→᠗</div><div class="guide-cell">8→᠘</div><div class="guide-cell">9→᠙</div>
+            </div>
+            <p class="guide-hint">1–9 тоо дарахад автоматаар монгол тоонд хөрвөнө.</p>
+          </div>
+
+          <div class="action-btns">
+            <button class="action-btn btn-new" onclick="initSudoku()">🔄 Шинэ тоглоом</button>
+            <button class="action-btn btn-check" onclick="checkSudoku()">✅ Шалгах</button>
+            <button class="action-btn btn-solve" onclick="solveSudoku()">💡 Шийдэл харах</button>
+            <button class="action-btn btn-print" onclick="handlePrint()">🖨 А4 хэвлэх</button>
+          </div>
+
+          <div class="print-section">
+            <div class="print-section-title">
+              ХЭВЛЭХ ЭРХ АВАХ
+              <a href="#" onclick="refreshCredits();return false">Эрхийг шинэчлэх</a>
+            </div>
+            <div class="free-banner">
+              <div class="free-title">1-Р ХУУДАС ҮНЭГҮЙ!</div>
+              <div class="free-desc">Эрх авахгүйгээр нэг хуудас (4 судоку) хэвлэх боломжтой</div>
+              <button class="btn-free-print" onclick="printFree()">ҮНЭГҮЙ ХЭВЛЭХ</button>
+            </div>
+            <div class="packages-grid">
+              <div class="pkg-card" onclick="buyPackage(5,3000)">
+                <div class="pkg-pages">5</div>
+                <div class="pkg-label">ХУУДАС</div>
+                <div class="pkg-price">3,000₮</div>
+              </div>
+              <div class="pkg-card featured" onclick="buyPackage(10,5000)">
+                <div class="pkg-badge">АЛДАРТАЙ</div>
+                <div class="pkg-pages">10</div>
+                <div class="pkg-label">ХУУДАС</div>
+                <div class="pkg-price">5,000₮</div>
+              </div>
+              <div class="pkg-card" onclick="buyPackage(15,7000)">
+                <div class="pkg-pages">15</div>
+                <div class="pkg-label">ХУУДАС</div>
+                <div class="pkg-price">7,000₮</div>
+              </div>
+            </div>
+            <div class="packages-grid" style="margin-top:10px">
+              <div class="pkg-card" onclick="buyPackage(20,9000)">
+                <div class="pkg-pages">20</div>
+                <div class="pkg-label">ХУУДАС</div>
+                <div class="pkg-price">9,000₮</div>
+              </div>
+              <div class="pkg-card" onclick="buyPackage(25,11000)">
+                <div class="pkg-pages">25</div>
+                <div class="pkg-label">ХУУДАС</div>
+                <div class="pkg-price">11,000₮</div>
+              </div>
+              <div class="pkg-card deal" onclick="buyPackage(30,12000)">
+                <div class="pkg-badge">ХЯМДРАЛ!</div>
+                <div class="pkg-pages">30</div>
+                <div class="pkg-label">ХУУДАС</div>
+                <div class="pkg-price">12,000₮</div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
-
-    <div class="game-layout">
-      <div class="sudoku-wrap">
-        <div id="sudokuGrid" class="sudoku-grid"></div>
-      </div>
-
-      <div class="sidebar">
-        <div class="panel">
-          <h4>Тооны удирдамж</h4>
-          <div class="guide-grid">
-            <div class="guide-cell">1→᠑</div><div class="guide-cell">2→᠒</div><div class="guide-cell">3→᠓</div>
-            <div class="guide-cell">4→᠔</div><div class="guide-cell">5→᠕</div><div class="guide-cell">6→᠖</div>
-            <div class="guide-cell">7→᠗</div><div class="guide-cell">8→᠘</div><div class="guide-cell">9→᠙</div>
-          </div>
-          <p class="guide-hint">1–9 тоо дарахад автоматаар монгол тоонд хөрвөнө.</p>
-        </div>
-
-        <div class="action-btns">
-          <button class="action-btn btn-new" onclick="initSudoku()">🔄 Шинэ тоглоом</button>
-          <button class="action-btn btn-check" onclick="checkSudoku()">✅ Шалгах</button>
-          <button class="action-btn btn-solve" onclick="solveSudoku()">💡 Шийдэл харах</button>
-          <button class="action-btn btn-print" onclick="handlePrint()">🖨 А4 хэвлэх</button>
-        </div>
-
-        <div class="print-section">
-          <div class="print-section-title">
-            ХЭВЛЭХ ЭРХ АВАХ
-            <a href="#" onclick="refreshCredits();return false">Эрхийг шинэчлэх</a>
-          </div>
-          <div class="free-banner">
-            <div class="free-title">1-Р ХУУДАС ҮНЭГҮЙ!</div>
-            <div class="free-desc">Эрх авахгүйгээр нэг хуудас (4 судоку) хэвлэх боломжтой</div>
-            <button class="btn-free-print" onclick="printFree()">ҮНЭГҮЙ ХЭВЛЭХ</button>
-          </div>
-          <div class="packages-grid">
-            <div class="pkg-card" onclick="buyPackage(5,3000)">
-              <div class="pkg-pages">5</div>
-              <div class="pkg-label">ХУУДАС</div>
-              <div class="pkg-price">3,000₮</div>
-            </div>
-            <div class="pkg-card featured" onclick="buyPackage(10,5000)">
-              <div class="pkg-badge">АЛДАРТАЙ</div>
-              <div class="pkg-pages">10</div>
-              <div class="pkg-label">ХУУДАС</div>
-              <div class="pkg-price">5,000₮</div>
-            </div>
-            <div class="pkg-card" onclick="buyPackage(15,7000)">
-              <div class="pkg-pages">15</div>
-              <div class="pkg-label">ХУУДАС</div>
-              <div class="pkg-price">7,000₮</div>
-            </div>
-          </div>
-          <div class="packages-grid" style="margin-top:10px">
-            <div class="pkg-card" onclick="buyPackage(20,9000)">
-              <div class="pkg-pages">20</div>
-              <div class="pkg-label">ХУУДАС</div>
-              <div class="pkg-price">9,000₮</div>
-            </div>
-            <div class="pkg-card" onclick="buyPackage(25,11000)">
-              <div class="pkg-pages">25</div>
-              <div class="pkg-label">ХУУДАС</div>
-              <div class="pkg-price">11,000₮</div>
-            </div>
-            <div class="pkg-card deal" onclick="buyPackage(30,12000)">
-              <div class="pkg-badge deal-badge">ХЯМДРАЛ!</div>
-              <div class="pkg-pages">30</div>
-              <div class="pkg-label">ХУУДАС</div>
-              <div class="pkg-price">12,000₮</div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
+  </section>
 
   <!-- LIBRARY -->
   <section id="librarySection" class="section">
@@ -1142,7 +1065,7 @@
     </div>
   </div>
 </div>
-  
+
 <!-- FOOTER -->
 <footer>
   <div class="footer-inner">
@@ -1258,11 +1181,10 @@
 <div id="printArea"></div>
 
 <script>
-//  CONSTANTS & STATE
-//  SUDOKU
-const AUTH_KEY  = 'shb_auth_v2';
-const MONG_NUMS = { '1':'᠑','2':'᠒','3':'᠓','4':'᠔','5':'᠕','6':'᠖','7':'᠗','8':'᠘','9':'᠙' };
-const MONG_REV  = Object.fromEntries(Object.entries(MONG_NUMS).map(([k,v]) => [v,k]));
+// CONSTANTS & STATE
+const AUTH_KEY   = 'shb_auth_v2';
+const MONG_NUMS  = { '1':'᠑','2':'᠒','3':'᠓','4':'᠔','5':'᠕','6':'᠖','7':'᠗','8':'᠘','9':'᠙' };
+const MONG_REV   = Object.fromEntries(Object.entries(MONG_NUMS).map(([k,v]) => [v,k]));
 
 let currentUser    = '';
 let cartItems      = [];
@@ -1290,6 +1212,7 @@ document.addEventListener('DOMContentLoaded', () => {
   loadProducts();
   initSudoku();
   selectGrade(6);
+  updateCreditUI();
 });
 
 // ════════════════════════════════
@@ -1659,22 +1582,20 @@ function showToast(msg, type='success') {
 }
 
 // ════════════════════════════════
-//  SUDOKU — ШИНЭЧЛЭГДСЭН ХУВИЛБАР
+//  SUDOKU
 // ════════════════════════════════
-const CREDIT_KEY   = 'shb_print_credits';
+const CREDIT_KEY    = 'shb_print_credits';
 const FREE_USED_KEY = 'shb_free_used';
-let _spBuying      = { pages:0, price:0 };
-let _warnCallback  = null;
+let _spBuying    = { pages:0, price:0 };
+let _warnCallback = null;
 
-// Credits
-function getCredits() { return parseInt(localStorage.getItem(CREDIT_KEY)||'0'); }
+function getCredits()  { return parseInt(localStorage.getItem(CREDIT_KEY)||'0'); }
 function setCredits(n) { localStorage.setItem(CREDIT_KEY, String(Math.max(0,n))); updateCreditUI(); }
 function updateCreditUI() { const el=document.getElementById('creditCount'); if(el) el.textContent=getCredits(); }
 function refreshCredits() { updateCreditUI(); showToast('Эрхийн мэдээлэл шинэчлэгдлээ','success'); }
-function isFreeUsed() { return localStorage.getItem(FREE_USED_KEY)==='1'; }
-function markFreeUsed() { localStorage.setItem(FREE_USED_KEY,'1'); }
+function isFreeUsed()  { return localStorage.getItem(FREE_USED_KEY)==='1'; }
+function markFreeUsed(){ localStorage.setItem(FREE_USED_KEY,'1'); }
 
-// Sudoku generate
 function initSudoku() {
   const { puzzle, solution } = generateSudoku();
   sudokuSolution=solution; sudokuPuzzle=puzzle;
@@ -1732,7 +1653,6 @@ function isValidPlacement(board,idx,num) {
 }
 function shuffle(arr){for(let i=arr.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[arr[i],arr[j]]=[arr[j],arr[i]];}return arr;}
 
-// Check / Solve
 function checkSudoku() {
   const cells=document.querySelectorAll('.sudoku-cell');
   let hasError=false,hasEmpty=false;
@@ -1752,23 +1672,33 @@ function solveSudoku() {
   showToast('Шийдэл харуулагдлаа','success');
 }
 
-// Print
+// ════════════════════════════════
+//  PRINT — ЗАСВАРЛАСАН
+// ════════════════════════════════
 function handlePrint() {
   if (!isFreeUsed()) {
-    showWarn('Та эхний хуудсыг ҮНЭГҮЙ хэвлэх боломжтой.\n1 хуудас = 4 өөр судоку агуулна.\n\nҮргэлжлүүлэх үү?',
-      ()=>{ markFreeUsed(); doPrint(1); });
+    showWarn(
+      'Та эхний хуудсыг ҮНЭГҮЙ хэвлэх боломжтой.\n1 хуудас = 4 өөр судоку агуулна.\n\nҮргэлжлүүлэх үү?',
+      () => { markFreeUsed(); doPrint(1); }
+    );
   } else {
-    const cr=getCredits();
-    if(cr<1){showToast('Хэвлэх эрх байхгүй. Эрх худалдаж аваарай!','error');return;}
-    showWarn(`Та ${cr} хуудасны эрхтэй.\n1 хуудас хэвлэхэд 1 эрх зарцуулна.\n\n⚠️ Дахин харагдахгүй тул принтер бэлэн эсэхийг шалгаарай!`,
-      ()=>{ setCredits(cr-1); doPrint(1); });
+    const cr = getCredits();
+    if (cr < 1) { showToast('Хэвлэх эрх байхгүй. Эрх худалдаж аваарай!', 'error'); return; }
+    showWarn(
+      `Та ${cr} хуудасны эрхтэй.\n1 хуудас хэвлэхэд 1 эрх зарцуулна.\n\n⚠️ Дахин харагдахгүй тул принтер бэлэн эсэхийг шалгаарай!`,
+      () => { setCredits(cr - 1); doPrint(1); }
+    );
   }
 }
+
 function printFree() {
-  if(isFreeUsed()){showToast('Үнэгүй хэвлэх эрхийг аль хэдийн ашигласан байна.','error');return;}
-  showWarn('Эхний 1 хуудасыг ҮНЭГҮЙ хэвлэх гэж байна.\n(4 судоку агуулна)\n\nЭнэ боломжийг зөвхөн 1 удаа ашиглана.',
-    ()=>{ markFreeUsed(); doPrint(1); });
+  if (isFreeUsed()) { showToast('Үнэгүй хэвлэх эрхийг аль хэдийн ашигласан байна.', 'error'); return; }
+  showWarn(
+    'Эхний 1 хуудасыг ҮНЭГҮЙ хэвлэх гэж байна.\n(4 судоку агуулна)\n\nЭнэ боломжийг зөвхөн 1 удаа ашиглана.',
+    () => { markFreeUsed(); doPrint(1); }
+  );
 }
+
 function doPrint(pageCount) {
   const pages = [];
   for (let p = 0; p < pageCount; p++) {
@@ -1776,9 +1706,12 @@ function doPrint(pageCount) {
     for (let q = 0; q < 4; q++) puzzles.push(generateNewPuzzle());
     pages.push(puzzles);
   }
+
   buildPrintHTML(pages);
+
   const pa = document.getElementById('printArea');
   pa.style.cssText = 'display:block !important; position:fixed; inset:0; z-index:9999; background:#fff;';
+
   setTimeout(() => {
     window.print();
     setTimeout(() => {
@@ -1786,15 +1719,10 @@ function doPrint(pageCount) {
       pa.innerHTML = '';
     }, 1000);
   }, 300);
+
+  showToast(`${pageCount} хуудас (${pageCount * 4} судоку) хэвлэгдэж байна...`, 'success');
 }
-  buildPrintHTML(pages);
-  const pa=document.getElementById('printArea');
-  pa.style.display='block';
-  const cleanup=()=>{pa.style.display='none';pa.innerHTML='';window.removeEventListener('afterprint',cleanup);};
-  window.addEventListener('afterprint',cleanup);
-  setTimeout(()=>window.print(),200);
-  showToast(`${pageCount} хуудас (${pageCount*4} судоку) хэвлэгдэж байна...`,'success');
-}
+
 function buildPrintHTML(pages) {
   const pa = document.getElementById('printArea');
   const pageHTMLs = pages.map((puzzles, pi) => {
@@ -1883,55 +1811,74 @@ function buildPrintHTML(pages) {
 }
 
 // Buy package
-function buyPackage(pages,price) {
-  _spBuying={pages,price};
-  document.getElementById('spPackageLabel').textContent=`${pages} хуудас · ${price.toLocaleString()}₮`;
-  document.getElementById('spAmount').textContent=price.toLocaleString()+'₮';
-  if(currentUser) document.getElementById('spEmail').value=currentUser;
+function buyPackage(pages, price) {
+  _spBuying = { pages, price };
+  document.getElementById('spPackageLabel').textContent = `${pages} хуудас · ${price.toLocaleString()}₮`;
+  document.getElementById('spAmount').textContent = price.toLocaleString() + '₮';
+  if (currentUser) document.getElementById('spEmail').value = currentUser;
   spGoStep1();
   document.getElementById('sudokuPayModal').classList.remove('hidden');
 }
-function spGoStep1(){document.getElementById('spStep1').style.display='';document.getElementById('spStep2').style.display='none';document.getElementById('spStep3').style.display='none';}
-function spGoStep2(){document.getElementById('spStep1').style.display='none';document.getElementById('spStep2').style.display='';document.getElementById('spStep3').style.display='none';}
-function closeSudokuPay(){document.getElementById('sudokuPayModal').classList.add('hidden');spGoStep1();}
+function spGoStep1() {
+  document.getElementById('spStep1').style.display='';
+  document.getElementById('spStep2').style.display='none';
+  document.getElementById('spStep3').style.display='none';
+}
+function spGoStep2() {
+  document.getElementById('spStep1').style.display='none';
+  document.getElementById('spStep2').style.display='';
+  document.getElementById('spStep3').style.display='none';
+}
+function closeSudokuPay() { document.getElementById('sudokuPayModal').classList.add('hidden'); spGoStep1(); }
 
 async function spSubmit() {
-  const email=document.getElementById('spEmail').value.trim();
-  const note=document.getElementById('spNote').value.trim();
-  if(!email||!email.includes('@')){showToast('Зөв и-мэйл хаяг оруулна уу','error');return;}
-  const btn=document.getElementById('spSubmitBtn');
-  btn.disabled=true; btn.textContent='⏳ Илгээж байна...';
+  const email = document.getElementById('spEmail').value.trim();
+  const note  = document.getElementById('spNote').value.trim();
+  if (!email || !email.includes('@')) { showToast('Зөв и-мэйл хаяг оруулна уу', 'error'); return; }
+  const btn = document.getElementById('spSubmitBtn');
+  btn.disabled = true; btn.textContent = '⏳ Илгээж байна...';
   try {
-    await fetch(GAS_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({action:'submitOrder',email,note,total:_spBuying.price,
-        items:`Судоку хэвлэх эрх ${_spBuying.pages} хуудас`,printPages:_spBuying.pages,
-        date:new Date().toLocaleString('mn-MN')})});
-    setCredits(getCredits()+_spBuying.pages);
-    document.getElementById('spConfirmEmail').textContent=email;
-    document.getElementById('spStep2').style.display='none';
-    document.getElementById('spStep3').style.display='';
-    showToast(`${_spBuying.pages} хуудасны эрх нэмэгдлээ! 🎉`,'success');
-  } catch(e){showToast('Сүлжээний алдаа. Дахин оролдоно уу.','error');}
-  btn.disabled=false; btn.textContent='🚀 Захиалга илгээх';
+    await fetch(GAS_URL, {
+      method: 'POST', mode: 'no-cors',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        action: 'submitOrder', email, note,
+        total: _spBuying.price,
+        items: `Судоку хэвлэх эрх ${_spBuying.pages} хуудас`,
+        printPages: _spBuying.pages,
+        date: new Date().toLocaleString('mn-MN')
+      })
+    });
+    setCredits(getCredits() + _spBuying.pages);
+    document.getElementById('spConfirmEmail').textContent = email;
+    document.getElementById('spStep2').style.display = 'none';
+    document.getElementById('spStep3').style.display = '';
+    showToast(`${_spBuying.pages} хуудасны эрх нэмэгдлээ! 🎉`, 'success');
+  } catch(e) { showToast('Сүлжээний алдаа. Дахин оролдоно уу.', 'error'); }
+  btn.disabled = false; btn.textContent = '🚀 Захиалга илгээх';
 }
 
 // Warn modal
-function showWarn(msg,cb){_warnCallback=cb;document.getElementById('warnMsg').textContent=msg;document.getElementById('sudokuWarnModal').classList.remove('hidden');}
-function closeWarn(){document.getElementById('sudokuWarnModal').classList.add('hidden');_warnCallback=null;}
-function confirmWarn(){closeWarn();if(_warnCallback)_warnCallback();}
-  
+function showWarn(msg, cb) {
+  _warnCallback = cb;
+  document.getElementById('warnMsg').textContent = msg;
+  document.getElementById('sudokuWarnModal').classList.remove('hidden');
+}
+function closeWarn()   { document.getElementById('sudokuWarnModal').classList.add('hidden'); _warnCallback = null; }
+function confirmWarn() { closeWarn(); if (_warnCallback) _warnCallback(); }
+
 // ════════════════════════════════
 //  AI ASSESSMENT
 // ════════════════════════════════
 function buildGradeGrid() {
-  const grid=document.getElementById('gradeGrid');
+  const grid = document.getElementById('gradeGrid');
   if (!grid) return;
   [6,7,8,9,10,11,12].forEach(g => {
-    const btn=document.createElement('button');
-    btn.id='gb'+g;
-    btn.className='grade-btn'+(g===6?' active':'');
-    btn.textContent=g;
-    btn.onclick=()=>selectGrade(g);
+    const btn = document.createElement('button');
+    btn.id = 'gb' + g;
+    btn.className = 'grade-btn' + (g === 6 ? ' active' : '');
+    btn.textContent = g;
+    btn.onclick = () => selectGrade(g);
     grid.appendChild(btn);
   });
 }
@@ -1959,23 +1906,23 @@ const DEMO_LIT_DB = {
 };
 
 async function selectGrade(g) {
-  selGrade=g; selWork=null;
-  document.querySelectorAll('.grade-btn').forEach(btn => btn.classList.toggle('active', btn.id==='gb'+g));
-  const loadEl=document.getElementById('litLoading');
-  const selEl =document.getElementById('workSelect');
-  const prevEl=document.getElementById('workPreview');
-  loadEl.style.display='block'; selEl.style.display='none'; prevEl.style.display='none';
-  await new Promise(r=>setTimeout(r,400));
-  const works=DEMO_LIT_DB[String(g)]||[];
-  loadEl.style.display='none'; selEl.style.display='block';
-  selEl.innerHTML='<option value="">Зохиол сонгоно уу</option>'+
-    works.map((w,i)=>`<option value="${i}">${w.title}</option>`).join('');
-  selEl.onchange=()=>{
-    const idx=selEl.value;
-    if (idx==='') { selWork=null; prevEl.style.display='none'; return; }
-    selWork=works[parseInt(idx)];
-    prevEl.style.display='block';
-    prevEl.textContent=selWork.content.substring(0,140)+'…';
+  selGrade = g; selWork = null;
+  document.querySelectorAll('.grade-btn').forEach(btn => btn.classList.toggle('active', btn.id === 'gb' + g));
+  const loadEl = document.getElementById('litLoading');
+  const selEl  = document.getElementById('workSelect');
+  const prevEl = document.getElementById('workPreview');
+  loadEl.style.display = 'block'; selEl.style.display = 'none'; prevEl.style.display = 'none';
+  await new Promise(r => setTimeout(r, 400));
+  const works = DEMO_LIT_DB[String(g)] || [];
+  loadEl.style.display = 'none'; selEl.style.display = 'block';
+  selEl.innerHTML = '<option value="">Зохиол сонгоно уу</option>' +
+    works.map((w, i) => `<option value="${i}">${w.title}</option>`).join('');
+  selEl.onchange = () => {
+    const idx = selEl.value;
+    if (idx === '') { selWork = null; prevEl.style.display = 'none'; return; }
+    selWork = works[parseInt(idx)];
+    prevEl.style.display = 'block';
+    prevEl.textContent = selWork.content.substring(0, 140) + '…';
   };
 }
 
@@ -1988,76 +1935,50 @@ const BLOOM_STYLE = {
   create:    { on:'#7c3aed', bg:'rgba(139,92,246,0.10)' },
 };
 function toggleBloom(level) {
-  const btn=document.getElementById('bl-'+level);
+  const btn = document.getElementById('bl-' + level);
   if (!btn) return;
   if (selBloom.has(level)) {
-    if (selBloom.size<=1) { showToast('Дор хаяж 1 түвшин сонгоно уу','error'); return; }
+    if (selBloom.size <= 1) { showToast('Дор хаяж 1 түвшин сонгоно уу', 'error'); return; }
     selBloom.delete(level);
-    btn.style.border='1.5px solid var(--outline-variant)';
-    btn.style.background='#fff'; btn.style.color='var(--on-surface-variant)';
+    btn.style.border = '1.5px solid var(--outline-variant)';
+    btn.style.background = '#fff'; btn.style.color = 'var(--on-surface-variant)';
   } else {
     selBloom.add(level);
-    const s=BLOOM_STYLE[level];
-    btn.style.border=`1.5px solid ${s.on}`;
-    btn.style.background=s.bg; btn.style.color=s.on;
+    const s = BLOOM_STYLE[level];
+    btn.style.border = `1.5px solid ${s.on}`;
+    btn.style.background = s.bg; btn.style.color = s.on;
   }
 }
-function selectQCount(q,t) {
-  selQCount=q; selTime=t;
-  document.querySelectorAll('.qcount-btn').forEach(btn=>btn.classList.toggle('active', btn.id==='qc'+q));
+function selectQCount(q, t) {
+  selQCount = q; selTime = t;
+  document.querySelectorAll('.qcount-btn').forEach(btn => btn.classList.toggle('active', btn.id === 'qc' + q));
 }
 
-// ════════════════════════════════
-//  ★ buildPrompt() — OpenAI промтын яг загвар
-// ════════════════════════════════
 function buildPrompt() {
   const bloomLabels = {
     remember:'Санах', understand:'Ойлгох', apply:'Хэрэглэх',
     analyze:'Шинжлэх', evaluate:'Үнэлэх', create:'Бүтээх'
   };
   const selectedBloom = [...selBloom].map(l => bloomLabels[l]).join(', ');
-
   return `Зохиолын нэр: ${selWork.title}, Анги: ${selGrade}.
-Багш нь Монгол хэл, уран зохиолын мэргэжлийн арга зүйчийн үүргээр, Блүүмийн таксономын түвшин бүрийг (${selectedBloom}) тусгасан, сурагчийн сэтгэхүйг хөгжүүлэх, сонирхолтой ${selQCount} асуултыг боловсруулж өгнө.
+Блүүмийн таксономын түвшин (${selectedBloom}) тусгасан, сурагчийн сэтгэхүйг хөгжүүлэх ${selQCount} асуулт боловсруул.
 
 Зохиолын эх:
 """
 ${selWork.content.substring(0, 3000)}
 """
 
-Зорилт:
-- Эхлээд эх зохиолуудаа уншина.
-- Уншсан агуулгаасаа асуултуудаа Блүүмийн түвшин бүрт ангилж товч тодорхойлж бичнэ.
-- Асуулт бүрийг сурагчдад сонирхолтой, бодож тунгаахыг шаардсан байдлаар боловсруул.
-- Асуулт тус бүрийн хариуг (оноо) хаалтанд бичнэ.
-- Асуултын хариултын хуудсыг <div> болон <ul> HTML таг ашиглан маш цэвэрхэн, ойлгомжтой загварт гарга.
-- Эцсийн хариултаа гаргахын өмнө шаардлагатай бүх асуултыг бүрэн боловсруулсан эсэхээ шалгаж үзнэ.
-
-Ажлын шат дараалал:
-1. Зохиолын агуулга болон тухайн ангийн ойлголтын онцлогт нийцүүлэн Блүүмийн түвшин тус бүрээр сэтгэж, асуултын санаагаа гаргана.
-2. Хуулбарлах болон уншсанаа зүгээр л давтат бичихээс зайлсхийнэ; оронд нь танин мэдэх, логик задлан шинжлэх, бүтээлчээр бодох боломжийг олгоно.
-3. Асуултын ард оноог хаалтанд (жишээ нь: (2 оноо)) бичнэ.
-4. Бүх асуултыг HTML <div> болон <ul> бүтэцээр форматлаж цэгцтэй гаргана.
-5. Цааш нэмэлт чиглэл (анги, зохиолын нэр, асуултын тоо, түвшин) ирвэл хэв маягийг хадгалж, агуулгыг тааруулан өөрчилнө.
-
-Гаралтын формат (зөвхөн HTML, өөр ямар ч текст бичихгүй):
+Гаралтын формат (зөвхөн HTML):
 <div>
   <ul>
     <li>Санах түвшний асуулт: ... (оноо)</li>
     <li>Ойлгох түвшний асуулт: ... (оноо)</li>
-    <li>Хэрэглэх түвшний асуулт: ... (оноо)</li>
-    <li>Шинжлэх түвшний асуулт: ... (оноо)</li>
-    <li>Үнэлэх түвшний асуулт: ... (оноо)</li>
-    <li>Бүтээх түвшний асуулт: ... (оноо)</li>
   </ul>
 </div>
 
-Зөвхөн HTML <div> болон <ul> таг ашиглана (код блок, тайлбар, нэмэлт текст хэрэглэхгүй).`;
+Зөвхөн HTML <div> болон <ul> таг ашиглана.`;
 }
 
-// ════════════════════════════════
-//  ★ buildFallback() — AI ажиллахгүй үед
-// ════════════════════════════════
 function buildFallback() {
   const t = selWork ? selWork.title : 'Зохиол';
   return `<div>
@@ -2072,9 +1993,6 @@ function buildFallback() {
 </div>`;
 }
 
-// ════════════════════════════════
-//  ★ generateWorksheet() — HTML гаралт хүлээн авна
-// ════════════════════════════════
 async function generateWorksheet() {
   if (!selWork) { showToast('Зохиол сонгоно уу!', 'error'); return; }
   const btn = document.getElementById('genBtn');
@@ -2095,7 +2013,6 @@ async function generateWorksheet() {
   }, 1800);
 
   let wsHTML = '';
-
   try {
     const resp = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
@@ -2108,9 +2025,8 @@ async function generateWorksheet() {
     });
     const data = await resp.json();
     const raw  = (data.content || []).map(b => b.text || '').join('');
-    // <div>...</div> гаралт авна
-    const m = raw.match(/<div[\s\S]*?<\/div>/i);
-    wsHTML  = m ? m[0] : buildFallback();
+    const m    = raw.match(/<div[\s\S]*?<\/div>/i);
+    wsHTML     = m ? m[0] : buildFallback();
   } catch (e) {
     wsHTML = buildFallback();
     showToast('AI холболт амжилтгүй. Жишээ хуудас харуулж байна.', 'error');
@@ -2129,9 +2045,6 @@ async function generateWorksheet() {
   showToast('Ажлын хуудас бэлэн боллоо!', 'success');
 }
 
-// ════════════════════════════════
-//  ★ renderPreview() — HTML шууд харуулна
-// ════════════════════════════════
 function renderPreview(wsHTML) {
   const header = `
     <div style="text-align:center;border-bottom:2px solid #e8d4b0;padding-bottom:16px;margin-bottom:20px;">
@@ -2148,9 +2061,6 @@ function renderPreview(wsHTML) {
   document.getElementById('wsPreview').innerHTML = header + (wsHTML || '');
 }
 
-// ════════════════════════════════
-//  ★ sendChat() — HTML форматаар засвар
-// ════════════════════════════════
 async function sendChat(suggestion = '') {
   const inp = document.getElementById('chatInput');
   const msg = suggestion || inp.value.trim();
@@ -2189,7 +2099,7 @@ async function sendChat(suggestion = '') {
   }
 }
 
-function addChatMsg(role, text, returnEl=false) {
+function addChatMsg(role, text, returnEl = false) {
   const box = document.getElementById('chatMessages');
   const el  = document.createElement('div');
   el.className = `chat-msg ${role}`;
@@ -2215,14 +2125,11 @@ function printWorksheet() {
       ${box.innerHTML}
     </div>`;
   pa.style.display = 'block';
-  const cleanup = () => { pa.style.display='none'; pa.innerHTML=''; window.removeEventListener('afterprint',cleanup); };
+  const cleanup = () => { pa.style.display='none'; pa.innerHTML=''; window.removeEventListener('afterprint', cleanup); };
   window.addEventListener('afterprint', cleanup);
   setTimeout(() => window.print(), 150);
 }
 
-// ════════════════════════════════
-//  ★ downloadWorksheet() — Word татах
-// ════════════════════════════════
 function downloadWorksheet() {
   const box = document.getElementById('wsPreview');
   if (!box || !box.innerHTML) { showToast('Эхлээд үүсгэнэ үү!', 'error'); return; }
