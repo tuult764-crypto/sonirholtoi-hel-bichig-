@@ -1031,7 +1031,6 @@
             🖨 <span id="creditCount">0</span> хуудас эрхтэй
             <button class="refresh-btn" onclick="refreshCredits()" id="refreshCreditBtn">⟳ Эрхийг шинэчлэх</button>
           </div>
-          <button onclick="manualAddCredit()" style="font-size:11px;padding:5px 12px;border-radius:99px;border:1.5px dashed #e8600a;background:#fff3e8;color:#e8600a;cursor:pointer;font-family:Lexend,sans-serif;font-weight:700">+ Кредит нэмэх</button>
           <button class="btn-primary" onclick="initSudoku()">🔄 Шинэ тоглоом</button>
         </div>
       </div>
@@ -1782,12 +1781,6 @@ async function refreshCredits() {
 function isFreeUsed()  { return localStorage.getItem(FREE_USED_KEY)==='1'; }
 function markFreeUsed(){ localStorage.setItem(FREE_USED_KEY,'1'); }
 
-function manualAddCredit() {
-  const n = parseInt(prompt('Нэмэх хуудасны тоо оруулна уу (admin баталгаажуулсан тоо):'));
-  if (!n || isNaN(n) || n < 1) return;
-  setCredits(getCredits() + n);
-  showToast(n + ' хуудас нэмэгдлээ!', 'success');
-}
 
 function initSudoku() {
   const { puzzle, solution } = generateSudoku();
@@ -1875,171 +1868,111 @@ function solveSudoku() {
 // ════════════════════════════════════════════════════════════
 
 function handlePrint() {
-  if (!isFreeUsed()) {
-    // Үнэгүй 1 хуудас → баталгаажуулсны дараа шууд хэвлэх
-    showWarn(
-      'Та эхний хуудсыг ҮНЭГҮЙ хэвлэх боломжтой.\n1 хуудас = 4 өөр судоку агуулна.\n\nҮргэлжлүүлэх үү?',
-      () => { markFreeUsed(); doPrint(1); }
-    );
-  } else {
-    const cr = getCredits();
-    if (cr < 1) {
-      showToast('Хэвлэх эрх байхгүй. Эрх худалдаж аваарай!', 'error');
-      return;
-    }
-    askPrintCount();
+  const cr = getCredits();
+  if (cr < 1 && isFreeUsed()) {
+    showToast('Хэвлэх эрх байхгүй. Эрх худалдаж аваарай!', 'error');
+    return;
   }
+  // Хэдэн хуудас хэвлэхийг асуух
+  askPrintCount();
 }
 
 function printFree() {
-  if (isFreeUsed()) {
-    showToast('Үнэгүй хэвлэх эрхийг аль хэдийн ашигласан байна.', 'error');
-    return;
-  }
-  showWarn(
-    'Эхний 1 хуудасыг ҮНЭГҮЙ хэвлэх гэж байна.\n(4 судоку агуулна)\n\nЭнэ боломжийг зөвхөн 1 удаа ашиглана.',
-    () => { markFreeUsed(); askPrintCount(); }
-  );
+  askPrintCount();
 }
 
 function askPrintCount() {
-  const old = document.getElementById('printCountModal');
-  if (old) old.remove();
+  const existing = document.getElementById('printCountModal');
+  if (existing) existing.remove();
 
   const cr = getCredits();
-  const isFreeMode = !isFreeUsed() || cr === 0;
-  const maxPages = isFreeMode ? 1 : cr;
+  const freeAvail = !isFreeUsed();
+  // Нийт хэвлэх боломжтой хуудас
+  const maxPages = freeAvail ? Math.max(cr, 1) : cr;
 
   const modal = document.createElement('div');
   modal.id = 'printCountModal';
-  modal.style.cssText = [
-    'position:fixed', 'inset:0', 'z-index:99999',
-    'background:rgba(0,0,0,0.65)',
-    'display:flex', 'align-items:center', 'justify-content:center',
-    'padding:20px', 'font-family:Lexend,sans-serif'
-  ].join(';');
+  modal.style.cssText = 'position:fixed;inset:0;z-index:99999;background:rgba(0,0,0,0.65);display:flex;align-items:center;justify-content:center;padding:20px;font-family:Lexend,sans-serif';
 
-  const btns = [1,2,3,4,5]
-    .filter(n => n <= Math.max(maxPages, 1))
-    .map(n => `
-      <button
-        id="pcBtn${n}"
-        onclick="selectPrintCount(${n})"
-        style="width:52px;height:52px;border-radius:14px;border:2px solid #e8d4b0;
-          background:#fff;font-size:16px;font-weight:800;cursor:pointer;
-          font-family:Lexend,sans-serif;color:#5c4a28;transition:all 0.15s"
-      >${n}</button>`)
-    .join('');
+  // 1-5 товчлуур, кредиттэй бол 5 хүртэл
+  const maxBtn = Math.min(maxPages, 5);
+  const btns = Array.from({length: maxBtn}, (_, i) => i + 1).map(n => `
+    <button id="pcBtn${n}" onclick="selectPrintCount(${n})"
+      style="width:52px;height:52px;border-radius:14px;border:2px solid #e8d4b0;
+      background:#fff;font-size:16px;font-weight:800;cursor:pointer;
+      font-family:Lexend,sans-serif;color:#5c4a28">${n}</button>`).join('');
 
-  const customInput = maxPages > 5
-    ? `<input id="pcCustom" type="number" min="1" max="${maxPages}"
-        placeholder="Тоо" oninput="clearPcBtns()"
+  const extraInput = maxPages > 5
+    ? `<input id="pcCustom" type="number" min="1" max="${maxPages}" placeholder="Тоо"
+        oninput="selectPrintCount(parseInt(this.value)||0)"
         style="width:72px;height:52px;border-radius:14px;border:2px solid #e8d4b0;
-          text-align:center;font-size:15px;font-weight:800;
-          font-family:Lexend,sans-serif;outline:none;color:#5c4a28">`
+        text-align:center;font-size:15px;font-weight:800;font-family:Lexend,sans-serif;outline:none;color:#5c4a28">`
     : '';
 
+  const creditInfo = cr > 0
+    ? `Таны эрх: <strong>${cr} хуудас</strong>`
+    : freeAvail ? 'Үнэгүй: <strong>1 хуудас</strong>' : '⚠️ Эрх байхгүй';
+
   modal.innerHTML = `
-    <div style="background:#fff;border-radius:24px;padding:32px 28px;
-      width:100%;max-width:340px;text-align:center;
-      box-shadow:0 20px 60px rgba(0,0,0,0.3)">
+    <div style="background:#fff;border-radius:24px;padding:32px 28px;width:100%;max-width:340px;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,0.3)">
       <div style="font-size:40px;margin-bottom:12px">🖨️</div>
-      <h3 style="font-size:17px;font-weight:800;margin-bottom:8px;color:#1a1208">
-        Хэдэн хуудас хэвлэх вэ?
-      </h3>
+      <h3 style="font-size:17px;font-weight:800;margin-bottom:8px;color:#1a1208">Хэдэн хуудас хэвлэх вэ?</h3>
       <p style="font-size:12px;color:#5c4a28;margin-bottom:20px;line-height:1.6">
-        1 хуудас = 4 судоку агуулна.<br>
-        ${cr > 0 ? `Таны эрх: <strong>${cr} хуудас</strong>` : 'Үнэгүй: <strong>1 хуудас</strong>'}
+        1 хуудас = 4 судоку агуулна.<br>${creditInfo}
       </p>
       <div style="display:flex;gap:8px;justify-content:center;margin-bottom:24px;flex-wrap:wrap">
-        ${btns}${customInput}
+        ${btns}${extraInput}
       </div>
-      <div id="pcPreview" style="background:#fff3e8;border-radius:12px;padding:10px;
-        font-size:12px;color:#e8600a;font-weight:700;margin-bottom:18px;display:none"></div>
+      <div id="pcPreview" style="background:#fff3e8;border-radius:12px;padding:10px;font-size:12px;color:#e8600a;font-weight:700;margin-bottom:18px;display:none"></div>
       <div style="display:flex;gap:10px">
         <button onclick="closePrintCountModal()"
-          style="flex:1;padding:13px;border-radius:13px;border:none;
-            background:#f5f5f5;color:#555;font-family:Lexend,sans-serif;
-            font-size:13px;font-weight:700;cursor:pointer">Болих</button>
+          style="flex:1;padding:13px;border-radius:13px;border:none;background:#f5f5f5;color:#555;font-family:Lexend,sans-serif;font-size:13px;font-weight:700;cursor:pointer">Болих</button>
         <button id="pcConfirmBtn" onclick="confirmPrintCount()"
-          style="flex:2;padding:13px;border-radius:13px;border:none;
-            background:#1a1208;color:#fff;font-family:Lexend,sans-serif;
-            font-size:13px;font-weight:800;cursor:pointer;
-            opacity:0.4;pointer-events:none">🖨️ Хэвлэх</button>
+          style="flex:2;padding:13px;border-radius:13px;border:none;background:#e8600a;color:#fff;font-family:Lexend,sans-serif;font-size:13px;font-weight:800;cursor:pointer;opacity:0.4;pointer-events:none">🖨️ Хэвлэх</button>
       </div>
     </div>`;
-
   document.body.appendChild(modal);
   window._selectedPrintCount = 0;
 }
 
 function selectPrintCount(n) {
+  if (!n || n < 1) return;
   window._selectedPrintCount = n;
   [1,2,3,4,5].forEach(i => {
     const b = document.getElementById('pcBtn' + i);
     if (!b) return;
-    b.classList.remove('selected');
-    b.style.borderColor = '#e8d4b0';
-    b.style.background  = '#fff';
-    b.style.color       = '#5c4a28';
+    b.style.borderColor = i === n ? '#e8600a' : '#e8d4b0';
+    b.style.background  = i === n ? 'rgba(232,96,10,0.12)' : '#fff';
+    b.style.color       = i === n ? '#e8600a' : '#5c4a28';
   });
-  const sel = document.getElementById('pcBtn' + n);
-  if (sel) {
-    sel.classList.add('selected');
-    sel.style.borderColor = '#e8600a';
-    sel.style.background  = 'rgba(232,96,10,0.12)';
-    sel.style.color        = '#e8600a';
-  }
-  const ci = document.getElementById('pcCustom');
-  if (ci) ci.value = '';
-  updatePcPreview(n);
-}
-
-function clearPcBtns() {
-  window._selectedPrintCount = 0;
-  [1,2,3,4,5].forEach(i => {
-    const b = document.getElementById('pcBtn' + i);
-    if (!b) return;
-    b.classList.remove('selected');
-    b.style.borderColor = '#e8d4b0';
-    b.style.background  = '#fff';
-    b.style.color       = '#5c4a28';
-  });
-  const ci = document.getElementById('pcCustom');
-  if (ci) updatePcPreview(parseInt(ci.value) || 0);
-}
-
-function updatePcPreview(n) {
   const prev = document.getElementById('pcPreview');
   const btn  = document.getElementById('pcConfirmBtn');
-  if (!prev || !btn) return;
-  if (n > 0) {
-    prev.style.display      = 'block';
-    prev.textContent        = `${n} хуудас · ${n * 4} судоку хэвлэгдэнэ`;
-    btn.style.opacity       = '1';
-    btn.style.pointerEvents = 'auto';
-  } else {
-    prev.style.display      = 'none';
-    btn.style.opacity       = '0.4';
-    btn.style.pointerEvents = 'none';
-  }
+  if (prev) { prev.style.display = 'block'; prev.textContent = `${n} хуудас · ${n * 4} судоку хэвлэгдэнэ`; }
+  if (btn)  { btn.style.opacity = '1'; btn.style.pointerEvents = 'auto'; }
 }
 
+function clearPcBtns() {}
+
+function updatePcPreview(n) { selectPrintCount(n); }
+
 function confirmPrintCount() {
-  const ci = document.getElementById('pcCustom');
-  if (ci && ci.value) window._selectedPrintCount = parseInt(ci.value) || 0;
-
-  const n  = window._selectedPrintCount;
-  const cr = getCredits();
-
+  const n = window._selectedPrintCount || 0;
   if (!n || n < 1) { showToast('Хуудасны тоо сонгоно уу!', 'error'); return; }
-  if (isFreeUsed() && n > cr) {
-    showToast(`Эрх хүрэлцэхгүй байна. Таны эрх: ${cr} хуудас`, 'error');
+  const cr = getCredits();
+  const freeAvail = !isFreeUsed();
+  // Кредит хангалттай эсэх: үнэгүй 1 хуудас эсвэл кредиттэй
+  if (!freeAvail && n > cr) {
+    showToast(`Эрх хүрэлцэхгүй. Таны эрх: ${cr} хуудас`, 'error');
     return;
   }
-
   closePrintCountModal();
-  if (isFreeUsed()) setCredits(cr - n);
+  // Кредит хасах — үнэгүй хэвлэлт эхний удаад тооцохгүй
+  if (!freeAvail) {
+    setCredits(cr - n);
+  } else {
+    markFreeUsed();
+    if (cr > 0) setCredits(Math.max(0, cr - Math.max(0, n - 1)));
+  }
   doPrint(n);
 }
 
@@ -2048,7 +1981,6 @@ function closePrintCountModal() {
   if (m) m.remove();
 }
 
-// ── Хэвлэх үндсэн функц ──
 function doPrint(pageCount) {
   const pages = [];
   for (let p = 0; p < pageCount; p++) {
@@ -2057,36 +1989,41 @@ function doPrint(pageCount) {
     pages.push(puzzles);
   }
   const html = buildPrintHTML(pages);
+  showToast(`${pageCount} хуудас хэвлэж байна...`, 'success');
 
   setTimeout(function() {
     const pa = document.getElementById('printArea');
     if (!pa) { showToast('Хэвлэх талбар олдсонгүй!', 'error'); return; }
     pa.innerHTML = html;
     pa.style.display = 'block';
-
     setTimeout(function() {
       window.print();
       function cleanup() {
-        const pa2 = document.getElementById('printArea');
-        if (pa2) { pa2.style.display = 'none'; pa2.innerHTML = ''; }
+        const el = document.getElementById('printArea');
+        if (el) { el.style.display = 'none'; el.innerHTML = ''; }
         window.removeEventListener('afterprint', cleanup);
       }
       window.addEventListener('afterprint', cleanup);
       setTimeout(function() {
-        const pa2 = document.getElementById('printArea');
-        if (pa2 && pa2.style.display !== 'none') { pa2.style.display = 'none'; pa2.innerHTML = ''; }
-      }, 3000);
-    }, 300);
-  }, 100);
-
-  showToast(`${pageCount} хуудас хэвлэж байна...`, 'success');
+        const el = document.getElementById('printArea');
+        if (el && el.style.display !== 'none') { el.style.display = 'none'; el.innerHTML = ''; }
+      }, 4000);
+    }, 400);
+  }, 150);
 }
-  
-// ── Хэвлэх бүрэн HTML ──
+
 function buildPrintHTML(pages) {
   const MN = {'1':'᠑','2':'᠒','3':'᠓','4':'᠔','5':'᠕','6':'᠖','7':'᠗','8':'᠘','9':'᠙'};
-
   return pages.map((puzzles, pi) => {
+    const header = `<div class="pg-header">
+      <img src="https://raw.githubusercontent.com/tuult764-crypto/sonirholtoi-hel-bichig-/main/logo.png"
+        alt="" onerror="this.style.display='none'"
+        style="width:28px;height:28px;object-fit:contain;border-radius:6px;background:#1a1208;">
+      <div class="pg-header-text">
+        <div class="pg-header-title">Сонирхолтой хэл бичиг</div>
+        <div class="pg-header-sub">Судоку · Хуудас ${pi + 1}</div>
+      </div>
+    </div>`;
     const puzzleHTMLs = puzzles.map((p, qi) => {
       let rows = '';
       for (let r = 0; r < 9; r++) {
@@ -2108,20 +2045,12 @@ function buildPrintHTML(pages) {
         <div class="pp-guide">᠑=1 ᠒=2 ᠓=3 ᠔=4 ᠕=5 ᠖=6 ᠗=7 ᠘=8 ᠙=9</div>
       </div>`;
     }).join('');
-    const pageHeader = `
-      <div class="pg-header">
-        <img src="https://raw.githubusercontent.com/tuult764-crypto/sonirholtoi-hel-bichig-/main/logo.png"
-          alt="" onerror="this.style.display='none'"
-          style="width:28px;height:28px;object-fit:contain;border-radius:6px;background:#1a1208;">
-        <div class="pg-header-text">
-          <div class="pg-header-title">Сонирхолтой хэл бичиг</div>
-          <div class="pg-header-sub">Судоку · Хуудас ${pi + 1}</div>
-        </div>
-      </div>`;
-    return `<div class="pg">${pageHeader}${puzzleHTMLs}</div>`;
+    return `<div class="pg">${header}${puzzleHTMLs}</div>`;
   }).join('');
+
 }
- 
+
+
 // Buy package
 function buyPackage(pages, price) {
   _spBuying = { pages, price };
