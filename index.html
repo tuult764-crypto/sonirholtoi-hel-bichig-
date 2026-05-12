@@ -439,12 +439,7 @@
       .corner-grid { grid-template-columns: 1fr; gap: 12px; }
     }
 
-    /* ══ AI WORKSHEET STYLES (шинэ) ══ */
-    .ws-accent { --accent: #7c3aed; --surface-2: #fdf3e3; --border: #e8d4b0;
-      --on-surface-muted: #5c4a28; --shadow-sm: 0 2px 8px rgba(26,18,8,0.06);
-      --shadow-md: 0 8px 32px rgba(26,18,8,0.10);
-      --radius-sm: 12px; --radius-md: 18px; --radius-lg: 24px; }
-
+    /* ══ AI WORKSHEET STYLES ══ */
     .page-icon { width:64px; height:64px; border-radius:20px; background:linear-gradient(135deg,#fff0e8,#ffd5b0); display:flex; align-items:center; justify-content:center; font-size:30px; border:1.5px solid #ffc08a; flex-shrink:0; }
     .page-sub { font-size:13px; color:var(--on-surface-variant); margin-top:4px; }
     .progress-bar { display:flex; align-items:center; gap:0; margin-bottom:32px; background:#fff; border:1px solid var(--outline-variant); border-radius:99px; padding:6px 8px; box-shadow:0 2px 8px rgba(26,18,8,0.06); overflow:hidden; }
@@ -679,13 +674,22 @@
     </div>
   </section>
 
-  <!-- ═══════════════════════════════════════════════
-       AI ASSESSMENT — ШИНЭ ХУУДАС
-       ═══════════════════════════════════════════════ -->
+  <!-- AI ASSESSMENT -->
   <section id="aiassessmentSection" class="section">
     <button class="page-back" onclick="showSection('teacher')">← Буцах</button>
+    <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:24px">
+      <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+        <div class="credit-pill" style="background:#f0fdf4;border-color:#a7f3d0;color:#065f46">
+          🎁 Үнэгүй: <strong id="wsFreelLeft">2</strong> хуудас
+        </div>
+        <div class="credit-pill" id="wsCreditPill">
+          📝 Эрх: <strong id="wsCreditCount">0</strong> хуудас
+          <button class="refresh-btn" onclick="refreshWSCredits()">⟳ Шинэчлэх</button>
+        </div>
+        <button class="btn-primary" style="font-size:12px;padding:8px 18px" onclick="openWSPayModal()">➕ Эрх нэмэх</button>
+      </div>
+    </div>
 
-    <!-- Page header -->
     <div style="display:flex;align-items:center;gap:18px;margin-bottom:28px;padding-bottom:20px;border-bottom:2px solid var(--outline-variant)">
       <div class="page-icon">📝</div>
       <div>
@@ -694,7 +698,6 @@
       </div>
     </div>
 
-    <!-- Progress steps -->
     <div class="progress-bar" id="wsProgressBar">
       <div class="step-dot active" id="sd1"><div class="step-num">1</div>Анги</div>
       <div class="step-line" id="sl1"></div>
@@ -707,10 +710,7 @@
       <div class="step-dot" id="sd5"><div class="step-num">5</div>Асуулт</div>
     </div>
 
-    <!-- Main layout -->
     <div class="main-layout">
-
-      <!-- LEFT: Config -->
       <div class="config-col">
 
         <!-- Step 1: Grade -->
@@ -846,7 +846,6 @@
       <!-- RIGHT: Output -->
       <div class="output-col">
         <div class="output-box">
-          <!-- Placeholder -->
           <div id="wsPlaceholder2" class="ws-placeholder2">
             <div class="placeholder-icon">🗂️</div>
             <div class="placeholder-title">Ажлын хуудас энд гарна</div>
@@ -859,7 +858,6 @@
               <span class="placeholder-step">⚡ Үүсгэх</span>
             </div>
           </div>
-          <!-- Generating -->
           <div id="wsGenerating2" class="ws-generating2">
             <div class="ws-spinner"></div>
             <div class="gen-msg2" id="wsGenMsg">AI зохиолыг шинжилж байна...</div>
@@ -870,7 +868,6 @@
               <div class="gen-step-item" id="wsGs4"><div class="gen-step-dot"></div>Эцсийн шүүлт хийж байна</div>
             </div>
           </div>
-          <!-- Result -->
           <div id="wsResult2" class="ws-result2">
             <div class="result-header">
               <div>
@@ -901,7 +898,6 @@
           </div>
         </div>
 
-        <!-- Chat panel -->
         <div class="chat-panel2" id="wsChatPanel" style="display:none">
           <div class="chat-panel-head2">
             <div class="chat-head-title2">🤖 AI Хөтөч — Засах, өөрчлөх</div>
@@ -1057,6 +1053,85 @@
   </div>
 </div>
 
+<!-- WS PAY MODAL -->
+<div id="wsPayModal" class="modal-overlay hidden">
+  <div class="pay-modal-card">
+    <div id="wsPayStep1">
+      <div class="modal-top">
+        <div class="m-icon">📝</div>
+        <h3>Ажлын хуудасны эрх авах</h3>
+        <p id="wsPayLabel">Үнэгүй хуудас дуусжээ</p>
+      </div>
+      <div class="modal-body2">
+        <div class="packages-grid" style="margin-bottom:10px">
+          <div class="pkg-card" onclick="wsSelectPkg(5,2000)">
+            <div class="pkg-pages">5</div>
+            <div class="pkg-label">ХУУДАС</div>
+            <div class="pkg-price">2,000₮</div>
+          </div>
+          <div class="pkg-card featured" onclick="wsSelectPkg(10,3500)">
+            <div class="pkg-badge">АЛДАРТАЙ</div>
+            <div class="pkg-pages">10</div>
+            <div class="pkg-label">ХУУДАС</div>
+            <div class="pkg-price">3,500₮</div>
+          </div>
+          <div class="pkg-card deal" onclick="wsSelectPkg(20,6000)">
+            <div class="pkg-badge">ХЯМДРАЛ!</div>
+            <div class="pkg-pages">20</div>
+            <div class="pkg-label">ХУУДАС</div>
+            <div class="pkg-price">6,000₮</div>
+          </div>
+        </div>
+        <div id="wsPayAmountBox" style="display:none">
+          <div class="pay-amount2" id="wsPayAmount"></div>
+          <div class="qr-box2">
+            <img src="https://raw.githubusercontent.com/tuult764-crypto/sonirholtoi-hel-bichig-/main/qr.png"
+                 alt="QR" style="width:100%;height:100%;object-fit:contain"
+                 onerror="this.style.display='none'">
+          </div>
+          <div class="bank-info2">
+            <div class="bank-num2">ХАС БАНК: 5006069631</div>
+            <div class="bank-name2">МӨНХДАЛАЙ ТУУЛ</div>
+          </div>
+          <div class="bank-note2">⚠️ Гүйлгээний <strong>утга</strong> дээр и-мэйл хаягаа заавал бичнэ үү!</div>
+          <button class="btn-pay-submit" onclick="wsPayGoStep2()">✅ Төлбөр төллөө → Дараах</button>
+        </div>
+        <button class="btn-pay-cancel" onclick="closeWSPayModal()">Хаах</button>
+      </div>
+    </div>
+
+    <div id="wsPayStep2" style="display:none">
+      <div class="modal-top">
+        <div class="m-icon">📧</div>
+        <h3>И-мэйл хаягаа оруулна уу</h3>
+        <p>Баталгаажсаны дараа мэдэгдэл илгээнэ</p>
+      </div>
+      <div class="modal-body2">
+        <input id="wsPayEmail" class="modal-field2" type="email" placeholder="tanii@gmail.com">
+        <input id="wsPayNote"  class="modal-field2" type="text"  placeholder="Нэмэлт тайлбар (заавал биш)">
+        <div style="background:#f0fdf4;border-radius:12px;padding:12px;margin-bottom:14px;font-size:11px;color:#166534;line-height:1.6">
+          📦 Захиалга баталгаажсаны дараа <strong>24 цагийн дотор</strong> эрхийн код хүлээн авна.
+        </div>
+        <button id="wsPaySubmitBtn" class="btn-pay-submit" onclick="wsPaySubmit()">🚀 Захиалга илгээх</button>
+        <button class="btn-pay-cancel" onclick="wsPayGoStep1()">← Буцах</button>
+      </div>
+    </div>
+
+    <div id="wsPayStep3" style="display:none;padding:32px 24px;text-align:center">
+      <div style="font-size:48px;margin-bottom:12px">🎉</div>
+      <div style="font-size:18px;font-weight:800;color:var(--tertiary);margin-bottom:8px">Захиалга амжилттай!</div>
+      <div style="font-size:12px;color:var(--on-surface-variant);line-height:1.7;margin-bottom:16px">
+        Төлбөр шалгагдсаны дараа<br>
+        <strong id="wsPayConfirmEmail" style="color:var(--primary)"></strong><br>
+        хаяг руу мэдэгдэл илгээнэ.
+      </div>
+      <button class="btn-pay-submit" style="margin-bottom:10px"
+              onclick="closeWSPayModal(); refreshWSCredits()">⟳ Эрх шинэчлэх</button>
+      <button class="btn-pay-cancel" onclick="closeWSPayModal()">Хаах</button>
+    </div>
+  </div>
+</div>
+
 <!-- SUDOKU WARN MODAL -->
 <div id="sudokuWarnModal" class="modal-overlay hidden">
   <div class="warn-card">
@@ -1159,6 +1234,26 @@ const SHEET_NAME = 'Products';
 const CREDIT_KEY    = 'shb_print_credits';
 const FREE_USED_KEY = 'shb_free_used';
 
+// Ажлын хуудасны кредит
+const WS_CREDIT_KEY    = 'shb_ws_credits';
+const WS_FREE_USED_KEY = 'shb_ws_free_used';
+
+function getWSCredits()   { return parseInt(localStorage.getItem(WS_CREDIT_KEY) || '0'); }
+function setWSCredits(n)  { localStorage.setItem(WS_CREDIT_KEY, String(Math.max(0, n))); updateWSCreditUI(); }
+function getWSFreeCount() { return parseInt(localStorage.getItem(WS_FREE_USED_KEY + '_count') || '0'); }
+function isWSFreeUsed()   { return getWSFreeCount() >= 2; }
+function markWSFreeUsed(n) {
+  const used = getWSFreeCount() + (n || 1);
+  localStorage.setItem(WS_FREE_USED_KEY + '_count', String(used));
+}
+function updateWSCreditUI() {
+  const el = document.getElementById('wsCreditCount');
+  if (el) el.textContent = getWSCredits();
+  const freeLeft = Math.max(0, 2 - getWSFreeCount());
+  const freeEl = document.getElementById('wsFreelLeft');
+  if (freeEl) freeEl.textContent = freeLeft;
+}
+
 let currentUser    = '';
 let cartItems      = [];
 let authTab        = 'login';
@@ -1166,6 +1261,7 @@ let allProducts    = [];
 let sudokuSolution = [];
 let sudokuPuzzle   = [];
 let _spBuying      = { pages:0, price:0 };
+let _wsPkg         = { pages:0, price:0 };
 let _warnCallback  = null;
 
 // ── AI WORKSHEET STATE ──
@@ -1229,7 +1325,7 @@ document.addEventListener('DOMContentLoaded', () => {
   loadProducts();
   initSudoku();
   updateCreditUI();
-  // AI Worksheet init
+  updateWSCreditUI();
   wsInitGradeGrid();
   wsSelectGrade(6);
   ['remember','understand'].forEach(l => wsApplyBloomStyle(l, true));
@@ -1628,15 +1724,67 @@ function wsMNBloom2Key(txt) {
 }
 
 function wsBuildPrompt() {
-  const bloomLabels={remember:'Санах',understand:'Ойлгох',apply:'Хэрэглэх',analyze:'Шинжлэх',evaluate:'Үнэлэх',create:'Бүтээх'};
-  const bloomSelected=[...wsSelBloom].map(l=>bloomLabels[l]).join(', ');
-  const tmplInstr={
-    mixed:'Олон төрлийн асуулт: богино хариулттай, нэрлэх, тайлбарлах, эссе зэрэг холимог.',
-    open:'Зөвхөн задгай даалгавар: тайлбарлах, үзэл бодлоо бичих, жишээ гаргах, өөрийн байр суурийг илэрхийлэх.',
-    drill:'Тест хэлбэрийн даалгавар: олон сонголттой (A/B/C/D) тест, харгалзуулах, зөв/буруу тэмдэглэх.',
-    creative:'Бүтээлч даалгавар: эсээ бичих, зохион бичлэг, зохиолын үргэлжлэл бичих, дүрийн нэрийн өмнөөс захидал бичих.'
+  const bloomLabels = {
+    remember:'Санах', understand:'Ойлгох', apply:'Хэрэглэх',
+    analyze:'Шинжлэх', evaluate:'Үнэлэх', create:'Бүтээх'
   };
-  return `Та монгол хэл, уран зохиолын туршлагатай багш. ${wsSelGrade}-р ангийн сурагчдад зориулсан ажлын хуудас зохио.\n\nЗохиол: ${wsSelWork.title}\nЗохиолын эх:\n"""\n${wsSelWork.content.substring(0,2500)}\n"""\n\nШААРДЛАГА:\n- Нийт ${wsSelQCount} асуулт\n- Блүүмийн түвшин: ${bloomSelected}\n- Загвар: ${tmplInstr[wsSelTemplate]}\n- Хугацаа: ${wsSelTime} минут\n- Анги: ${wsSelGrade}\n\nГАРАЛТ — зөвхөн дараах HTML форматаар:\n<div>\n<ul>\n<li data-bloom="санах" data-score="1">Асуулт текст...</li>\n</ul>\n</div>\n\n- data-bloom: санах|ойлгох|хэрэглэх|шинжлэх|үнэлэх|бүтээх\n- data-score: оноо (1-5)\n- Зөвхөн HTML буцаа.`;
+  const bloomSelected = [...wsSelBloom].map(l => bloomLabels[l]).join(', ');
+  const tmplInstr = {
+    mixed:    'Богино хариулт (2-3), задгай тайлбар (2-3), нэг бүтээлч даалгавар багтаасан холимог.',
+    open:     'Зөвхөн задгай даалгавар: тайлбарлах, дүн шинжилгээ хийх, байр сууриа илэрхийлэх.',
+    drill:    'A/B/C/D сонголттой тест (3), зөв/буруу (2), харгалзуулах (1) хэлбэрийн холимог.',
+    creative: 'Зохиолын үргэлжлэл бичих, дүрийн нэрийн өмнөөс захидал, яруу найраг зохиох зэрэг бүтээлч даалгавар.'
+  };
+  const bloomGuidance = {
+    remember:   'Нэрлэх, жагсаах, тодорхойлох асуулт.',
+    understand: 'Тайлбарлах, харьцуулах, хүүрнэх асуулт.',
+    apply:      'Амьдралтай холбох, жишээ гаргах, хэрэглэх асуулт.',
+    analyze:    'Задлах, шалтгаан-үр дагавар олох, ялгаа гаргах асуулт.',
+    evaluate:   'Дүгнэх, шүүмжлэх, үнэлэх, зөвшилцөх/зөвшилцөхгүй байх асуулт.',
+    create:     'Зохиох, загварлах, шинэ санаа боловсруулах даалгавар.'
+  };
+  const bloomInstructions = [...wsSelBloom]
+    .map(l => `• ${bloomLabels[l]}: ${bloomGuidance[l]}`).join('\n');
+
+  return `Та монгол хэл, уран зохиолын туршлагатай багш бөгөөд даалгавар боловсруулахдаа маш сайн мэргэшсэн бөгөөд мөн блүүмийн таксономыг гүнзгий мэддэг багш юм.
+
+${wsSelGrade}-р ангийн сурагчдад зориулсан ажлын хуудас зохио.
+
+━━ ЗОХИОЛЫН МЭДЭЭЛЭЛ ━━
+Гарчиг: ${wsSelWork.title}
+Анги: ${wsSelGrade}-р анги
+Эх бичвэр:
+"""
+${wsSelWork.content.substring(0, 3000)}
+"""
+
+━━ ШААРДЛАГА ━━
+- Нийт асуулт: ${wsSelQCount}
+- Загвар: ${tmplInstr[wsSelTemplate]}
+- Хугацаа: ${wsSelTime} минут
+- Сурагчийн нас/түвшин: ${wsSelGrade}-р анги (${wsSelGrade + 11}-${wsSelGrade + 12} настай)
+
+━━ БЛҮҮМИЙН ТҮВШИН ━━
+${bloomInstructions}
+
+━━ ЧАНАРЫН ШААРДЛАГА ━━
+1. Асуулт бүр зохиолын эх бичвэртэй шууд холбоотой байх
+2. Хялбараас хүнд рүү дараалал баримтлах
+3. Монгол хэлний дүрэм, найруулга зөв байх
+4. Сурагч бүрт ойлгомжтой, тодорхой асуулт
+5. Оноог асуултын хүндрэлтэй уялдуулах (1=хялбар, 5=хэцүү)
+
+━━ ГАРАЛТЫН ФОРМАТ ━━
+Зөвхөн дараах HTML буцаа, өөр тайлбар, текст нэмэхгүй:
+<div>
+<ul>
+<li data-bloom="санах" data-score="1">Асуулт...</li>
+<li data-bloom="ойлгох" data-score="2">Асуулт...</li>
+</ul>
+</div>
+
+data-bloom утгууд: санах | ойлгох | хэрэглэх | шинжлэх | үнэлэх | бүтээх
+data-score утга: 1-5 (бүхэл тоо)`;
 }
 
 function wsBuildFallback() {
@@ -1652,46 +1800,108 @@ function wsBuildFallback() {
   return`<div><ul>${items.map(it=>`<li data-bloom="${it.b}" data-score="${it.s}">${it.t}</li>`).join('')}</ul></div>`;
 }
 
+// ════════════════════════════════
+//  GENERATE WORKSHEET — ЗАСАГДСАН
+// ════════════════════════════════
 async function wsGenerateWorksheet() {
-  if(!wsSelWork){showToast('Зохиол сонгоно уу!','error');return;}
-  const btn=document.getElementById('wsGenBtn'); btn.disabled=true;
-  document.getElementById('wsPlaceholder2').style.display='none';
-  document.getElementById('wsResult2').style.display='none';
-  document.getElementById('wsGenerating2').style.display='flex';
-  document.getElementById('wsChatPanel').style.display='none';
-  const stepIds=['wsGs1','wsGs2','wsGs3','wsGs4'];
-  const stepMsgs=['Зохиолыг уншиж байна...','Блүүмийн дагуу асуулт боловсруулж байна...','Монгол хэлийг тохируулж байна...','Эцсийн шүүлт хийж байна...'];
-  let si=0;
-  const stepInterval=setInterval(()=>{
-    if(si>0){const prev=document.getElementById(stepIds[si-1]);if(prev){prev.classList.remove('active');prev.classList.add('done');}}
-    const cur=document.getElementById(stepIds[si]);if(cur)cur.classList.add('active');
-    const gm=document.getElementById('wsGenMsg');if(gm)gm.textContent=stepMsgs[si];
-    si++;if(si>=stepIds.length)clearInterval(stepInterval);
-  },1400);
-  let wsHTML='';
+  // 1. Зохиол шалгах
+  if (!wsSelWork) { showToast('Зохиол сонгоно уу!', 'error'); return; }
+
+  // 2. Кредит шалгах
+  const freeLeft = Math.max(0, 2 - getWSFreeCount());
+  const paid     = getWSCredits();
+  if (freeLeft <= 0 && paid <= 0) {
+    openWSPayModal();
+    return;
+  }
+
+  // 3. UI: generating state
+  const btn = document.getElementById('wsGenBtn');
+  btn.disabled = true;
+  document.getElementById('wsPlaceholder2').style.display  = 'none';
+  document.getElementById('wsResult2').style.display       = 'none';
+  document.getElementById('wsGenerating2').style.display   = 'flex';
+  document.getElementById('wsChatPanel').style.display     = 'none';
+
+  // 4. Step animation
+  const stepIds  = ['wsGs1','wsGs2','wsGs3','wsGs4'];
+  const stepMsgs = [
+    'Зохиолыг уншиж байна...',
+    'Блүүмийн дагуу асуулт боловсруулж байна...',
+    'Монгол хэлийг тохируулж байна...',
+    'Эцсийн шүүлт хийж байна...'
+  ];
+  let si = 0;
+  const stepInterval = setInterval(() => {
+    if (si > 0) {
+      const prev = document.getElementById(stepIds[si-1]);
+      if (prev) { prev.classList.remove('active'); prev.classList.add('done'); }
+    }
+    const cur = document.getElementById(stepIds[si]);
+    if (cur) cur.classList.add('active');
+    const gm = document.getElementById('wsGenMsg');
+    if (gm) gm.textContent = stepMsgs[si];
+    si++;
+    if (si >= stepIds.length) clearInterval(stepInterval);
+  }, 1400);
+
+  // 5. API дуудах
+  let wsHTML = '';
   try {
-    const resp=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1000,messages:[{role:'user',content:wsBuildPrompt()}]})});
-    const data=await resp.json();
-    const raw=(data.content||[]).map(b=>b.text||'').join('');
-    const m=raw.match(/<div[\s\S]*?<\/div>/i);
-    wsHTML=m?m[0]:wsBuildFallback();
-  } catch(e){wsHTML=wsBuildFallback();showToast('AI холболт амжилтгүй. Жишээ хуудас харуулж байна.','error');}
+    const resp = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 1000,
+        messages: [{ role: 'user', content: wsBuildPrompt() }]
+      })
+    });
+    const data = await resp.json();
+    const raw  = (data.content || []).map(b => b.text || '').join('');
+    const m    = raw.match(/<div[\s\S]*?<\/div>/i);
+    wsHTML     = m ? m[0] : wsBuildFallback();
+  } catch(e) {
+    wsHTML = wsBuildFallback();
+    showToast('AI холболт амжилтгүй. Жишээ хуудас харуулж байна.', 'error');
+  }
+
   clearInterval(stepInterval);
-  stepIds.forEach(id=>{const el=document.getElementById(id);if(el){el.classList.remove('active','done');}});
-  wsLastHTML=wsHTML;
-  document.getElementById('wsGenerating2').style.display='none';
-  document.getElementById('wsResult2').style.display='block';
-  document.getElementById('wsChatPanel').style.display='block';
-  document.getElementById('wsPreviewTitle').textContent=wsSelWork.title;
-  document.getElementById('wsPreviewGrade').textContent=wsSelGrade+'-р анги';
-  document.getElementById('wsPreviewTime').textContent=wsSelTime;
-  document.getElementById('wsResultSubtitle').textContent=wsSelGrade+'-р анги · '+wsSelWork.title+' · '+wsSelQCount+' асуулт';
+  stepIds.forEach(id => {
+    const el = document.getElementById(id);
+    if (el) { el.classList.remove('active', 'done'); }
+  });
+
+  // 6. Кредит хасах (амжилттай дуусвал)
+  if (freeLeft > 0) {
+    markWSFreeUsed(1);
+  } else {
+    setWSCredits(paid - 1);
+  }
+
+  // 7. Result харуулах
+  wsLastHTML = wsHTML;
+  document.getElementById('wsGenerating2').style.display = 'none';
+  document.getElementById('wsResult2').style.display     = 'block';
+  document.getElementById('wsChatPanel').style.display   = 'block';
+  document.getElementById('wsPreviewTitle').textContent  = wsSelWork.title;
+  document.getElementById('wsPreviewGrade').textContent  = wsSelGrade + '-р анги';
+  document.getElementById('wsPreviewTime').textContent   = wsSelTime;
+  document.getElementById('wsResultSubtitle').textContent =
+    wsSelGrade + '-р анги · ' + wsSelWork.title + ' · ' + wsSelQCount + ' асуулт';
+
   wsRenderQuestions(wsHTML);
-  const chatBox=document.getElementById('wsChatMessages'); chatBox.innerHTML='';
-  wsAddChatMsg('assistant','✅ "'+wsSelWork.title+'" зохиолд үндэслэсэн '+wsSelQCount+' асуулт амжилттай үүслээ! Засвар хийхийг хүсвэл хэлнэ үү.');
+
+  const chatBox = document.getElementById('wsChatMessages');
+  chatBox.innerHTML = '';
+  wsAddChatMsg('assistant',
+    '✅ "' + wsSelWork.title + '" зохиолд үндэслэсэн ' + wsSelQCount +
+    ' асуулт амжилттай үүслээ! Засвар хийхийг хүсвэл хэлнэ үү.'
+  );
+
   wsUpdateProgress(5);
-  btn.disabled=false;
-  showToast('Ажлын хуудас бэлэн боллоо! 🎉','success');
+  btn.disabled = false;
+  showToast('Ажлын хуудас бэлэн боллоо! 🎉', 'success');
 }
 
 function wsRenderQuestions(html) {
@@ -1712,47 +1922,163 @@ function wsRenderQuestions(html) {
 
 function wsRegenerate() { wsGenerateWorksheet(); }
 
-async function wsSendChat(suggestion='') {
-  const inp=document.getElementById('wsChatInput');
-  const msg=suggestion||inp.value.trim(); if(!msg)return; inp.value='';
-  wsAddChatMsg('user',msg);
-  const typingEl=document.createElement('div');
-  typingEl.className='ws-chat-msg assistant';
-  typingEl.innerHTML='<div class="ws-chat-msg-who" style="color:#7c3aed">🤖 AI Хөтөч</div><div class="dot-pulse"><span></span><span></span><span></span></div>';
+async function wsSendChat(suggestion) {
+  const inp = document.getElementById('wsChatInput');
+  const msg = suggestion || inp.value.trim();
+  if (!msg) return;
+  inp.value = '';
+  wsAddChatMsg('user', msg);
+
+  const typingEl = document.createElement('div');
+  typingEl.className = 'ws-chat-msg assistant';
+  typingEl.innerHTML = '<div class="ws-chat-msg-who" style="color:#7c3aed">🤖 AI Хөтөч</div><div class="dot-pulse"><span></span><span></span><span></span></div>';
   document.getElementById('wsChatMessages').appendChild(typingEl);
-  document.getElementById('wsChatMessages').scrollTop=99999;
-  const ctx=`Одоогийн ажлын хуудас (HTML):\n${wsLastHTML}\n\nЗохиол: ${wsSelWork?wsSelWork.title:''}, ${wsSelGrade}-р анги\nЗахиалга: ${msg}\n\nШинэчлэгдсэн бүрэн HTML буцаа — зөвхөн <div><ul><li data-bloom="..." data-score="...">...</li></ul></div> формат.`;
+  document.getElementById('wsChatMessages').scrollTop = 99999;
+
+  const ctx = `Одоогийн ажлын хуудас (HTML):\n${wsLastHTML}\n\nЗохиол: ${wsSelWork?wsSelWork.title:''}, ${wsSelGrade}-р анги\nЗахиалга: ${msg}\n\nШинэчлэгдсэн бүрэн HTML буцаа — зөвхөн <div><ul><li data-bloom="..." data-score="...">...</li></ul></div> формат.`;
+
   try {
-    const resp=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1000,messages:[{role:'user',content:ctx}]})});
-    const data=await resp.json();
-    const raw=(data.content||[]).map(b=>b.text||'').join('');
-    const m=raw.match(/<div[\s\S]*?<\/div>/i);
+    const resp = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 1000,
+        messages: [{ role: 'user', content: ctx }]
+      })
+    });
+    const data = await resp.json();
+    const raw  = (data.content || []).map(b => b.text || '').join('');
+    const m    = raw.match(/<div[\s\S]*?<\/div>/i);
     typingEl.remove();
-    if(m){wsLastHTML=m[0];wsRenderQuestions(m[0]);wsAddChatMsg('assistant','✅ Ажлын хуудас шинэчлэгдлээ!');showToast('Шинэчлэгдлээ!','success');}
-    else{wsAddChatMsg('assistant',raw.substring(0,200)||'Уучлаарай, дахин оролдоно уу.');}
-  } catch(e){typingEl.remove();wsAddChatMsg('assistant','Холболтын алдаа гарлаа.');}
+    if (m) {
+      wsLastHTML = m[0];
+      wsRenderQuestions(m[0]);
+      wsAddChatMsg('assistant', '✅ Ажлын хуудас шинэчлэгдлээ!');
+      showToast('Шинэчлэгдлээ!', 'success');
+    } else {
+      wsAddChatMsg('assistant', raw.substring(0, 200) || 'Уучлаарай, дахин оролдоно уу.');
+    }
+  } catch(e) {
+    typingEl.remove();
+    wsAddChatMsg('assistant', 'Холболтын алдаа гарлаа.');
+  }
 }
 
-function wsAddChatMsg(role,text) {
-  const box=document.getElementById('wsChatMessages');
-  const el=document.createElement('div'); el.className='ws-chat-msg '+role;
-  el.innerHTML=`<div class="ws-chat-msg-who" style="color:${role==='user'?'var(--secondary)':'#7c3aed'}">${role==='user'?'👤 Та':'🤖 AI Хөтөч'}</div><div>${text}</div>`;
-  box.appendChild(el); box.scrollTop=box.scrollHeight;
+function wsAddChatMsg(role, text) {
+  const box = document.getElementById('wsChatMessages');
+  const el  = document.createElement('div');
+  el.className = 'ws-chat-msg ' + role;
+  el.innerHTML = `<div class="ws-chat-msg-who" style="color:${role==='user'?'var(--secondary)':'#7c3aed'}">${role==='user'?'👤 Та':'🤖 AI Хөтөч'}</div><div>${text}</div>`;
+  box.appendChild(el);
+  box.scrollTop = box.scrollHeight;
 }
 
 function wsPrintWorksheet() {
-  const content=document.getElementById('wsPreviewArea'); if(!content){showToast('Эхлээд үүсгэнэ үү!','error');return;}
-  const win=window.open('','_blank');
+  const content = document.getElementById('wsPreviewArea');
+  if (!content) { showToast('Эхлээд үүсгэнэ үү!', 'error'); return; }
+  const win = window.open('', '_blank');
   win.document.write(`<!DOCTYPE html><html><head><meta charset="utf-8"><link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;800&family=Lexend:wght@400;700&display=swap" rel="stylesheet"><style>body{font-family:'Lexend',sans-serif;padding:15mm;color:#1a1208;font-size:11pt}h1{font-family:'Baloo 2',cursive;font-size:16pt}ul{list-style:none;padding:0;counter-reset:q}li{counter-increment:q;padding:10pt 0 10pt 36pt;position:relative;border-bottom:1px solid #eee;line-height:1.8;page-break-inside:avoid}li::before{content:counter(q);position:absolute;left:0;top:10pt;width:24pt;height:24pt;background:#fff3e8;color:#e8600a;font-weight:800;font-size:9pt;border-radius:50%;display:flex;align-items:center;justify-content:center;line-height:24pt}.bloom-tag{display:inline-block;font-size:8pt;font-weight:800;text-transform:uppercase;padding:1pt 6pt;border-radius:99pt;margin-right:4pt}.score-tag{float:right;font-size:8pt;color:#888;border:1pt solid #ddd;padding:1pt 8pt;border-radius:99pt}.q-answer-line{display:block;border-bottom:1px dashed #ccc;height:18pt;margin-top:6pt}@page{margin:15mm}</style></head><body>${content.outerHTML}</body></html>`);
-  win.document.close();setTimeout(()=>{win.print();win.close();},600);
+  win.document.close();
+  setTimeout(() => { win.print(); win.close(); }, 600);
 }
 
 function wsDownloadWorksheet() {
-  const content=document.getElementById('wsPreviewArea'); if(!content){showToast('Эхлээд үүсгэнэ үү!','error');return;}
-  const fname=wsSelWork?`Ajliin_huudas_${wsSelGrade}_${wsSelWork.title.replace(/[^\w]/g,'_').substring(0,15)}.doc`:`Ajliin_huudas_${wsSelGrade}_angi.doc`;
-  const blob=new Blob([`<html><head><meta charset="utf-8"><style>body{font-family:serif;font-size:12pt;margin:20mm}ul{list-style:none;padding:0}li{padding:10pt 0;border-bottom:1px solid #eee;line-height:1.9}</style></head><body>${content.outerHTML}</body></html>`],{type:'application/msword'});
-  const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download=fname;a.click();URL.revokeObjectURL(url);
-  showToast('Word файл татагдаж байна!','success');
+  const content = document.getElementById('wsPreviewArea');
+  if (!content) { showToast('Эхлээд үүсгэнэ үү!', 'error'); return; }
+  const fname = wsSelWork
+    ? `Ajliin_huudas_${wsSelGrade}_${wsSelWork.title.replace(/[^\w]/g,'_').substring(0,15)}.doc`
+    : `Ajliin_huudas_${wsSelGrade}_angi.doc`;
+  const blob = new Blob(
+    [`<html><head><meta charset="utf-8"><style>body{font-family:serif;font-size:12pt;margin:20mm}ul{list-style:none;padding:0}li{padding:10pt 0;border-bottom:1px solid #eee;line-height:1.9}</style></head><body>${content.outerHTML}</body></html>`],
+    { type: 'application/msword' }
+  );
+  const url = URL.createObjectURL(blob);
+  const a   = document.createElement('a');
+  a.href = url; a.download = fname; a.click();
+  URL.revokeObjectURL(url);
+  showToast('Word файл татагдаж байна!', 'success');
+}
+
+// ════════════════════════════════
+//  WS PAY MODAL
+// ════════════════════════════════
+function openWSPayModal() {
+  const freeLeft = Math.max(0, 2 - getWSFreeCount());
+  const lbl = document.getElementById('wsPayLabel');
+  if (lbl) lbl.textContent = freeLeft > 0
+    ? `Үлдсэн үнэгүй: ${freeLeft} хуудас`
+    : 'Үнэгүй хуудас дуусжээ. Эрх худалдан авна уу.';
+  document.getElementById('wsPayAmountBox').style.display = 'none';
+  _wsPkg = { pages: 0, price: 0 };
+  wsPayGoStep1();
+  document.getElementById('wsPayModal').classList.remove('hidden');
+}
+function closeWSPayModal() {
+  document.getElementById('wsPayModal').classList.add('hidden');
+}
+function wsSelectPkg(pages, price) {
+  _wsPkg = { pages, price };
+  document.getElementById('wsPayAmount').textContent = price.toLocaleString() + '₮';
+  document.getElementById('wsPayAmountBox').style.display = 'block';
+}
+function wsPayGoStep1() {
+  document.getElementById('wsPayStep1').style.display = '';
+  document.getElementById('wsPayStep2').style.display = 'none';
+  document.getElementById('wsPayStep3').style.display = 'none';
+}
+function wsPayGoStep2() {
+  if (!_wsPkg.pages) { showToast('Багц сонгоно уу!', 'error'); return; }
+  document.getElementById('wsPayStep1').style.display = 'none';
+  document.getElementById('wsPayStep2').style.display = '';
+  if (currentUser) document.getElementById('wsPayEmail').value = currentUser;
+}
+async function wsPaySubmit() {
+  const email = document.getElementById('wsPayEmail').value.trim();
+  const note  = document.getElementById('wsPayNote').value.trim();
+  if (!email || !email.includes('@')) { showToast('Зөв и-мэйл хаяг оруулна уу', 'error'); return; }
+  const btn = document.getElementById('wsPaySubmitBtn');
+  btn.disabled = true; btn.textContent = '⏳ Илгээж байна...';
+  try {
+    await fetch(GAS_URL, {
+      method: 'POST', mode: 'no-cors',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        action: 'submitOrder', email, note,
+        total: _wsPkg.price,
+        items: `Ажлын хуудас эрх ${_wsPkg.pages} хуудас`,
+        wsPages: _wsPkg.pages,
+        date: new Date().toLocaleString('mn-MN')
+      })
+    });
+    document.getElementById('wsPayConfirmEmail').textContent = email;
+    document.getElementById('wsPayStep2').style.display = 'none';
+    document.getElementById('wsPayStep3').style.display = '';
+    showToast('Захиалга амжилттай!', 'success');
+  } catch(e) {
+    showToast('Сүлжээний алдаа. Дахин оролдоно уу.', 'error');
+  }
+  btn.disabled = false; btn.textContent = '🚀 Захиалга илгээх';
+}
+async function refreshWSCredits() {
+  if (!currentUser) { showToast('Эхлээд нэвтэрнэ үү!', 'error'); return; }
+  try {
+    const resp = await fetch(GAS_URL + '?action=getApproved&email=' + encodeURIComponent(currentUser));
+    const data = await resp.json();
+    if (Array.isArray(data) && data.length) {
+      let total = 0;
+      data.forEach(item => {
+        const p = parseInt(item.wsPages || item.printPages || 0);
+        total += isNaN(p) ? 0 : p;
+      });
+      if (total > 0) {
+        setWSCredits(total);
+        showToast('✅ Ажлын хуудасны эрх шинэчлэгдлээ: ' + total, 'success');
+      } else {
+        showToast('Батлагдсан захиалга байхгүй.', 'error');
+      }
+    }
+  } catch(e) { showToast('Сүлжээний алдаа.', 'error'); }
 }
 </script>
 </body>
