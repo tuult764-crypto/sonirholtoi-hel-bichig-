@@ -1204,7 +1204,8 @@
         ⏱ <strong>1–24 цагийн дотор</strong> хүргэгдэнэ.<br>
         Асуух зүйл: <strong>sonirholtoihelbichig@gmail.com</strong>
       </div>
-      <button class="btn-pay-submit" onclick="closeSudokuPay()">✓ Хаах</button>
+      <button class="btn-pay-submit" style="margin-bottom:10px" onclick="closeSudokuPay();refreshCredits()">⟳ Эрх шинэчлэх</button>
+      <button class="btn-pay-cancel" onclick="closeSudokuPay()">Хаах</button>
     </div>
   </div>
 </div>
@@ -1750,34 +1751,38 @@ function setCredits(n) { localStorage.setItem(CREDIT_KEY, String(Math.max(0,n)))
 function updateCreditUI() { const el=document.getElementById('creditCount'); if(el) el.textContent=getCredits(); }
 async function refreshCredits() {
   if (!currentUser) { showToast('Эхлээд нэвтэрнэ үү!', 'error'); return; }
-  showToast('Эрх шалгаж байна...', 'success');
+  const btn = document.getElementById('refreshCreditBtn');
+  if (btn) { btn.textContent = '⏳'; btn.disabled = true; }
   try {
-    const resp = await fetch(GAS_URL + '?action=getCredits&email=' + encodeURIComponent(currentUser));
+    const resp = await fetch(GAS_URL + '?action=getApproved&email=' + encodeURIComponent(currentUser));
     const data = await resp.json();
-    // GAS-аас {pages: N} эсвэл тоо буцааж ирнэ
-    const pages = typeof data === 'number' ? data :
-                  (data && data.pages != null ? parseInt(data.pages) : null);
-    if (pages != null && !isNaN(pages)) {
-      setCredits(pages);
-      showToast('Эрх шинэчлэгдлээ: ' + pages + ' хуудас', 'success');
-    } else {
-      // getCredits endpoint байхгүй бол getApproved-оос printPages нийлбэрийг авна
-      const resp2 = await fetch(GAS_URL + '?action=getApproved&email=' + encodeURIComponent(currentUser));
-      const data2 = await resp2.json();
-      console.log('[Кредит шалгах] GAS хариу:', JSON.stringify(data2));
-      if (Array.isArray(data2) && data2.length) {
-        const total = data2.reduce((sum, item) => sum + (parseInt(item.printPages) || parseInt(item.pages) || parseInt(item.credits) || 0), 0);
-        if (total > 0) { setCredits(total); showToast('Эрх шинэчлэгдлээ: ' + total + ' хуудас', 'success'); return; }
-        showToast('GAS өгөгдөлд printPages талбар байхгүй байна. + Кредит нэмэх товч ашиглана уу.', 'error');
+    console.log('[Кредит] GAS хариу:', JSON.stringify(data));
+    if (Array.isArray(data) && data.length) {
+      // printPages талбараас нийт кредит тооцно
+      let total = 0;
+      data.forEach(item => {
+        const p = parseInt(item.printPages || item.pages || item.credits || 0);
+        total += isNaN(p) ? 0 : p;
+      });
+      if (total > 0) {
+        setCredits(total);
+        showToast('✅ Эрх шинэчлэгдлээ: ' + total + ' хуудас', 'success');
+      } else {
+        showToast('Батлагдсан хэвлэх эрх олдсонгүй.', 'error');
       }
+    } else {
       updateCreditUI();
-      showToast('Батлагдсан эрх олдсонгүй. Захиалгаа шалгана уу.', 'error');
+      showToast('Батлагдсан захиалга байхгүй байна.', 'error');
     }
   } catch(e) {
+    console.error('[Кредит] Алдаа:', e);
     updateCreditUI();
     showToast('Сүлжээний алдаа. Дахин оролдоно уу.', 'error');
   }
+  if (btn) { btn.textContent = '⟳ Эрхийг шинэчлэх'; btn.disabled = false; }
 }
+
+
 function isFreeUsed()  { return localStorage.getItem(FREE_USED_KEY)==='1'; }
 function markFreeUsed(){ localStorage.setItem(FREE_USED_KEY,'1'); }
 
@@ -2090,11 +2095,10 @@ async function spSubmit() {
         date: new Date().toLocaleString('mn-MN')
       })
     });
-    setCredits(getCredits() + _spBuying.pages);
     document.getElementById('spConfirmEmail').textContent = email;
     document.getElementById('spStep2').style.display = 'none';
     document.getElementById('spStep3').style.display = '';
-    showToast(`${_spBuying.pages} хуудасны эрх нэмэгдлээ! 🎉`, 'success');
+    showToast('Захиалга амжилттай илгээгдлээ! Баталгаажсаны дараа эрх нэмэгдэнэ.', 'success');
   } catch(e) { showToast('Сүлжээний алдаа. Дахин оролдоно уу.', 'error'); }
   btn.disabled = false; btn.textContent = '🚀 Захиалга илгээх';
 }
