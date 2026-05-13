@@ -4,27 +4,37 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Сонирхолтой хэл бичиг | Цахим сургалт</title>
-  <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;600;800&family=Lexend:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;600;800&family=Lexend:wght@300;400;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
+    /* ═══════════════════════════════════════
+       ШИНЭ ӨНГИЙН СИСТЕМ — Warm Slate + Amber
+       ═══════════════════════════════════════ */
     :root {
-      --primary: #e8600a;
-      --primary-light: rgba(232,96,10,0.10);
-      --secondary: #1a6eb5;
-      --tertiary: #2e9e5b;
-      --error: #c0392b;
-      --accent-purple: #7c3aed;
-      --surface: #fffbf5;
-      --surface-container: #fdf3e3;
-      --on-surface: #1a1208;
-      --on-surface-variant: #5c4a28;
-      --outline-variant: #e8d4b0;
-      --shadow: 0 4px 24px rgba(232,96,10,0.07);
+      --primary:        #d97706;       /* amber-600 */
+      --primary-light:  rgba(217,119,6,0.10);
+      --primary-dark:   #b45309;
+      --secondary:      #2563eb;
+      --tertiary:       #059669;
+      --error:          #dc2626;
+      --accent-purple:  #7c3aed;
+
+      --surface:        #fafaf9;
+      --surface-container: #f5f0e8;
+      --on-surface:     #1c1917;
+      --on-surface-variant: #57534e;
+      --outline-variant: #e7e5e4;
+      --shadow:         0 4px 24px rgba(0,0,0,0.08);
+
+      /* Зүүн панелийн шинэ хувьсагчид */
+      --panel-bg:       #ffffff;
+      --panel-border:   #e7e5e4;
+      --step-line:      #d6d3d1;
     }
 
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     body {
-      font-family: 'Lexend', sans-serif;
+      font-family: 'Plus Jakarta Sans', 'Lexend', sans-serif;
       background: var(--surface);
       color: var(--on-surface);
       min-height: 100vh;
@@ -37,7 +47,7 @@
       100% { background-position:  200% 0; }
     }
     .shimmer {
-      background: linear-gradient(90deg, var(--primary), #ff9d5c, var(--primary));
+      background: linear-gradient(90deg, var(--primary), #f59e0b, var(--primary));
       background-size: 200% 100%;
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
@@ -60,10 +70,11 @@
     }
     .slide-up { animation: slideUp 0.35s ease-out; }
 
+    /* ── NAV ── */
     nav {
       position: sticky; top: 0; z-index: 50;
-      background: rgba(255,251,245,0.88);
-      backdrop-filter: blur(12px);
+      background: rgba(250,250,249,0.92);
+      backdrop-filter: blur(14px);
       border-bottom: 1px solid var(--outline-variant);
     }
     .nav-inner {
@@ -83,7 +94,7 @@
     }
     .nav-links button {
       background: none; border: none; cursor: pointer;
-      font-family: 'Lexend', sans-serif; font-weight: 600; font-size: 13px;
+      font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 600; font-size: 13px;
       color: var(--on-surface-variant); padding: 8px 14px; border-radius: 10px;
       transition: all 0.15s;
     }
@@ -129,10 +140,10 @@
       display: block; width: 100%; text-align: left;
       padding: 12px 16px; font-size: 13px; font-weight: 600;
       border: none; background: none; cursor: pointer;
-      color: var(--on-surface); font-family: 'Lexend', sans-serif;
+      color: var(--on-surface); font-family: 'Plus Jakarta Sans', sans-serif;
       transition: background 0.12s;
     }
-    .user-menu button:hover { background: #fdf3e3; }
+    .user-menu button:hover { background: var(--surface-container); }
     .user-menu hr { border: none; border-top: 1px solid var(--outline-variant); }
     .user-menu .logout { color: var(--error); }
     .user-menu .logout:hover { background: #fef2f2; }
@@ -140,16 +151,16 @@
     .btn-primary {
       background: var(--primary); color: #fff;
       border: none; border-radius: 99px;
-      padding: 10px 24px; font-family: 'Lexend', sans-serif;
+      padding: 10px 24px; font-family: 'Plus Jakarta Sans', sans-serif;
       font-size: 13px; font-weight: 700; cursor: pointer;
-      box-shadow: 0 4px 16px rgba(232,96,10,0.25);
+      box-shadow: 0 4px 16px rgba(217,119,6,0.30);
       transition: transform 0.15s, box-shadow 0.15s;
     }
-    .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(232,96,10,0.35); }
+    .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(217,119,6,0.40); }
     .btn-ghost {
       background: none; border: 2px solid var(--primary);
       color: var(--primary); border-radius: 99px;
-      padding: 10px 24px; font-family: 'Lexend', sans-serif;
+      padding: 10px 24px; font-family: 'Plus Jakarta Sans', sans-serif;
       font-size: 13px; font-weight: 700; cursor: pointer;
       transition: all 0.15s;
     }
@@ -159,11 +170,12 @@
     .section { display: none; }
     .section.active { display: block; }
 
+    /* ── HERO ── */
     .hero { display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: center; margin-bottom: 80px; }
     @media (max-width: 768px) { .hero { grid-template-columns: 1fr; gap: 32px; } }
     .hero-tag {
       display: inline-block;
-      background: #fff3e8; color: var(--primary);
+      background: #fef3c7; color: var(--primary-dark);
       padding: 5px 16px; border-radius: 99px;
       font-size: 10px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase;
     }
@@ -184,8 +196,9 @@
     .hero-card .icon { font-size: 36px; margin-bottom: 10px; }
     .hero-card h3 { font-weight: 700; font-size: 15px; }
 
+    /* ── STATS ── */
     .stats-strip {
-      background: #1a1208; border-radius: 28px; padding: 40px;
+      background: #1c1917; border-radius: 28px; padding: 40px;
       display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px;
       text-align: center; margin-bottom: 64px;
     }
@@ -243,94 +256,238 @@
     }
     .page-back {
       background: none; border: none; cursor: pointer;
-      font-family: 'Lexend', sans-serif; font-size: 12px; font-weight: 700;
+      font-family: 'Plus Jakarta Sans', sans-serif; font-size: 12px; font-weight: 700;
       color: var(--primary); text-transform: uppercase; letter-spacing: 0.08em;
       display: flex; align-items: center; gap: 6px; margin-bottom: 28px;
     }
 
-    .ws-layout { display: grid; grid-template-columns: 360px 1fr; gap: 32px; align-items: start; }
+    /* ═══════════════════════════════════════════════
+       AI ASSESSMENT — ШИНЭ ЗҮҮН ПАНЕЛИЙН ДИЗАЙН
+       Stepper + Card бүтэц, нарийн shadow, gradient
+       ═══════════════════════════════════════════════ */
+
+    /* Layout */
+    .ws-layout { display: grid; grid-template-columns: 380px 1fr; gap: 28px; align-items: start; }
     @media (max-width: 900px) { .ws-layout { grid-template-columns: 1fr; } }
-    .ws-panel {
+
+    /* Guide strip */
+    .ws-guide-strip {
+      display: flex; align-items: center; gap: 6px; flex-wrap: wrap;
       background: #fff; border: 1px solid var(--outline-variant);
-      border-radius: 24px; padding: 24px; margin-bottom: 16px;
+      border-radius: 16px; padding: 12px 18px; margin-bottom: 20px;
+      font-size: 11px; font-weight: 700; color: var(--on-surface-variant);
     }
+    .ws-guide-step { display: flex; align-items: center; gap: 6px; }
+    .ws-guide-num {
+      width: 20px; height: 20px; border-radius: 50%;
+      background: var(--primary); color: #fff;
+      font-size: 10px; font-weight: 800;
+      display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+    }
+    .ws-guide-arrow { color: #d6d3d1; font-size: 14px; }
+
+    /* Stepper container */
+    .ws-left {
+      display: flex; flex-direction: column; gap: 0;
+      position: relative;
+    }
+    /* Vertical connector line between steps */
+    .ws-left::before {
+      content: '';
+      position: absolute;
+      left: 19px; top: 28px; bottom: 60px;
+      width: 2px;
+      background: linear-gradient(to bottom, var(--primary) 0%, #e7e5e4 100%);
+      z-index: 0;
+      border-radius: 2px;
+    }
+
+    /* Individual step panel */
+    .ws-panel {
+      background: var(--panel-bg);
+      border: 1px solid var(--panel-border);
+      border-radius: 20px;
+      padding: 18px 18px 18px 20px;
+      margin-bottom: 10px;
+      position: relative;
+      z-index: 1;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .ws-panel:hover {
+      border-color: #d6d3d1;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+    }
+    .ws-panel:focus-within {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(217,119,6,0.10);
+    }
+
+    /* Panel header row */
     .ws-panel-head {
-      display: flex; align-items: center; gap: 12px; margin-bottom: 18px;
+      display: flex; align-items: center; gap: 12px; margin-bottom: 14px;
     }
+
+    /* Circular step badge — redesigned */
     .step-badge {
-      width: 30px; height: 30px; border-radius: 50%;
+      width: 32px; height: 32px; border-radius: 50%; flex-shrink: 0;
       display: flex; align-items: center; justify-content: center;
-      font-size: 11px; font-weight: 800;
+      font-size: 12px; font-weight: 800;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.12);
     }
-    .ws-panel-head span { font-size: 14px; font-weight: 700; }
+    .ws-panel-head span:last-child {
+      font-size: 13px; font-weight: 700; color: var(--on-surface);
+      letter-spacing: -0.01em;
+    }
+
+    /* Grade grid */
     .grade-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; }
     .grade-btn {
       border: 1.5px solid var(--outline-variant); border-radius: 10px;
       padding: 9px 0; font-size: 12px; font-weight: 700;
       background: #fff; cursor: pointer; color: var(--on-surface-variant);
-      transition: all 0.12s; font-family: 'Lexend', sans-serif;
+      transition: all 0.12s; font-family: 'Plus Jakarta Sans', sans-serif;
     }
     .grade-btn.active {
-      border-color: var(--primary); background: var(--primary-light); color: var(--primary);
+      border-color: var(--primary); background: var(--primary);
+      color: #fff; box-shadow: 0 2px 8px rgba(217,119,6,0.30);
     }
+    .grade-btn:hover:not(.active) {
+      border-color: var(--primary); color: var(--primary);
+      background: var(--primary-light);
+    }
+
+    /* Select */
     .ws-select {
-      width: 100%; padding: 12px 14px; border: 1.5px solid var(--outline-variant);
-      border-radius: 14px; font-size: 13px; font-weight: 600;
-      font-family: 'Lexend', sans-serif; outline: none; appearance: none;
-      background: #fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' fill='none'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%235c4a28' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E") no-repeat right 14px center;
+      width: 100%; padding: 11px 14px; border: 1.5px solid var(--outline-variant);
+      border-radius: 12px; font-size: 13px; font-weight: 600;
+      font-family: 'Plus Jakarta Sans', sans-serif; outline: none; appearance: none;
+      background: #fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' fill='none'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%2357534e' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E") no-repeat right 14px center;
       cursor: pointer; transition: border-color 0.12s;
+      color: var(--on-surface);
     }
-    .ws-select:focus { border-color: var(--primary); }
+    .ws-select:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(217,119,6,0.10); }
+
     .work-preview {
-      margin-top: 10px; padding: 12px; background: #fdf3e3;
-      border-radius: 12px; font-size: 11px; color: var(--on-surface-variant);
-      line-height: 1.6; display: none;
+      margin-top: 10px; padding: 12px 14px; background: #fef9f0;
+      border-radius: 10px; font-size: 11px; color: var(--on-surface-variant);
+      line-height: 1.6; display: none; border-left: 3px solid var(--primary);
     }
     .lit-loading {
       font-size: 12px; color: var(--on-surface-variant);
       padding: 10px 0; display: none;
     }
+
+    /* Bloom buttons — redesigned */
     .bloom-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; }
     .bloom-btn {
       border: 1.5px solid var(--outline-variant); border-radius: 12px;
-      padding: 10px 8px; font-size: 11px; font-weight: 700;
+      padding: 11px 10px; font-size: 11px; font-weight: 700;
       background: #fff; cursor: pointer; text-align: left;
-      color: var(--on-surface-variant); font-family: 'Lexend', sans-serif;
-      transition: all 0.12s; line-height: 1.4;
+      color: var(--on-surface-variant); font-family: 'Plus Jakarta Sans', sans-serif;
+      transition: all 0.15s; line-height: 1.5;
     }
+    .bloom-btn .bloom-desc {
+      display: block; font-size: 9px; font-weight: 500;
+      opacity: 0.7; margin-top: 2px; line-height: 1.3;
+    }
+    .bloom-btn:hover:not(.bloom-active) {
+      border-color: #a8a29e; transform: translateY(-1px);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+    .bloom-active {
+      border-color: var(--primary) !important;
+      background: var(--primary-light) !important;
+      color: var(--primary-dark) !important;
+      box-shadow: 0 2px 8px rgba(217,119,6,0.15);
+    }
+
+    /* Qcount buttons — redesigned */
     .qcount-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
     .qcount-btn {
-      border: 1.5px solid var(--outline-variant); border-radius: 12px;
-      padding: 10px 0; font-size: 12px; font-weight: 700;
+      border: 1.5px solid var(--outline-variant); border-radius: 14px;
+      padding: 12px 6px; font-size: 12px; font-weight: 700;
       background: #fff; cursor: pointer; text-align: center;
-      color: var(--on-surface-variant); font-family: 'Lexend', sans-serif;
-      transition: all 0.12s;
+      color: var(--on-surface-variant); font-family: 'Plus Jakarta Sans', sans-serif;
+      transition: all 0.15s;
     }
     .qcount-btn.active {
-      border-color: var(--tertiary); background: rgba(46,158,91,0.08); color: var(--tertiary);
+      border-color: var(--tertiary); background: #f0fdf9; color: var(--tertiary);
+      box-shadow: 0 2px 8px rgba(5,150,105,0.15);
     }
+    .qcount-btn:hover:not(.active) {
+      border-color: #a8a29e; transform: translateY(-1px);
+    }
+
+    /* Template grid */
+    .template-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+    .tpl-btn {
+      border: 1.5px solid var(--outline-variant); border-radius: 12px;
+      padding: 12px 6px; font-size: 11px; font-weight: 700;
+      background: #fff; cursor: pointer; text-align: center;
+      color: var(--on-surface-variant); font-family: 'Plus Jakarta Sans', sans-serif;
+      transition: all 0.15s;
+    }
+    .tpl-btn.active {
+      border-color: var(--accent-purple);
+      background: rgba(124,58,237,0.07);
+      color: var(--accent-purple);
+      box-shadow: 0 2px 8px rgba(124,58,237,0.12);
+    }
+
+    /* Teacher fields */
+    .ws-field-label {
+      display: block; font-size: 10px; font-weight: 700;
+      color: #78716c; margin-bottom: 5px; letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+    .ws-field-input {
+      width: 100%; padding: 9px 12px; border: 1.5px solid #e7e5e4; border-radius: 10px;
+      font-size: 12px; font-family: 'Plus Jakarta Sans', sans-serif; color: var(--on-surface);
+      background: #fafaf9; outline: none; box-sizing: border-box; transition: all 0.2s;
+    }
+    .ws-field-input:focus {
+      border-color: var(--accent-purple);
+      background: #fff;
+      box-shadow: 0 0 0 3px rgba(124,58,237,0.08);
+    }
+    .ws-field-input::placeholder { color: #c4b9b0; }
+
+    /* Generate button */
     .gen-btn {
       width: 100%; padding: 18px; border: none; cursor: pointer;
-      background: linear-gradient(135deg, #7c3aed, #4f46e5);
+      background: linear-gradient(135deg, #7c3aed 0%, #4f46e5 50%, #2563eb 100%);
       color: #fff; border-radius: 18px; font-size: 14px; font-weight: 800;
-      font-family: 'Lexend', sans-serif; letter-spacing: 0.05em;
-      box-shadow: 0 8px 24px rgba(124,58,237,0.30);
-      transition: all 0.2s;
+      font-family: 'Plus Jakarta Sans', sans-serif; letter-spacing: 0.03em;
+      box-shadow: 0 8px 24px rgba(124,58,237,0.35);
+      transition: all 0.2s; position: relative; overflow: hidden;
     }
-    .gen-btn:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 12px 32px rgba(124,58,237,0.40); }
+    .gen-btn::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: linear-gradient(135deg, rgba(255,255,255,0.15) 0%, transparent 60%);
+    }
+    .gen-btn:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 32px rgba(124,58,237,0.45);
+    }
     .gen-btn:disabled { opacity: 0.6; cursor: default; transform: none; }
 
+    /* Output box */
     .ws-output-box {
       background: #fff; border: 1px solid var(--outline-variant);
-      border-radius: 28px; overflow: hidden; min-height: 400px;
+      border-radius: 24px; overflow: hidden; min-height: 400px;
     }
     .ws-placeholder {
       display: flex; flex-direction: column; align-items: center;
       justify-content: center; padding: 80px 40px; text-align: center;
-      color: #bbb;
     }
     .ws-placeholder .icon { font-size: 56px; margin-bottom: 16px; }
-    .ws-placeholder p { font-size: 13px; font-weight: 600; }
+    .ws-tip-box {
+      margin-top: 20px; padding: 14px 18px;
+      background: #fef9f0; border: 1px solid #fde68a;
+      border-radius: 14px; font-size: 12px; color: #92400e;
+      line-height: 1.6; max-width: 320px;
+    }
     .ws-generating {
       display: none; flex-direction: column; align-items: center;
       justify-content: center; padding: 80px 40px; text-align: center; gap: 20px;
@@ -345,35 +502,58 @@
     .ws-action-btn {
       padding: 9px 18px; border: 1.5px solid var(--outline-variant);
       border-radius: 12px; font-size: 12px; font-weight: 700;
-      background: #fff; cursor: pointer; font-family: 'Lexend', sans-serif;
-      transition: all 0.12px; display: flex; align-items: center; gap: 6px;
+      background: #fff; cursor: pointer; font-family: 'Plus Jakarta Sans', sans-serif;
+      transition: all 0.12s; display: flex; align-items: center; gap: 6px;
     }
-    .ws-action-btn:hover { border-color: var(--primary); background: var(--primary-light); color: var(--primary); }
-    #wsPreview { padding: 24px; }
+    .ws-action-btn:hover { border-color: var(--primary); background: var(--primary-light); color: var(--primary-dark); }
 
+    /* Worksheet preview list */
     #wsPreview ul { list-style: none; padding: 0; margin: 0; }
     #wsPreview li {
-      padding: 14px 0 14px 16px;
-      border-bottom: 1px solid #f0e8d8;
+      padding: 14px 0 14px 24px;
+      border-bottom: 1px solid #f5f0e8;
       font-size: 13px; line-height: 1.75;
-      color: #1a1208; position: relative;
+      color: var(--on-surface); position: relative;
     }
     #wsPreview li::before {
-      content: '📌';
-      position: absolute; left: 0; top: 14px;
-      font-size: 11px;
+      content: '';
+      position: absolute; left: 0; top: 20px;
+      width: 8px; height: 8px;
+      border-radius: 50%; background: var(--primary);
     }
     #wsPreview li:last-child { border-bottom: none; }
 
+    /* Worksheet header box */
+    .wh-box {
+      border: 2px solid var(--on-surface); border-radius: 12px; margin-bottom: 18px;
+      overflow: hidden; font-family: 'Baloo 2', cursive;
+    }
+    .wh-top {
+      background: var(--on-surface); color: #fff; padding: 12px 18px;
+      display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap;
+    }
+    .wh-school { font-size: 13px; font-weight: 800; }
+    .wh-subject { font-size: 11px; opacity: 0.75; }
+    .wh-title { font-size: 16px; font-weight: 900; text-align: center; flex: 1; }
+    .wh-meta { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; border-top: 2px solid var(--on-surface); }
+    .wh-meta-cell {
+      padding: 8px 10px; font-size: 10px; border-right: 1px solid #e7e5e4;
+      display: flex; flex-direction: column; gap: 2px;
+    }
+    .wh-meta-cell:last-child { border-right: none; }
+    .wh-meta-label { color: #9c7c4a; font-weight: 600; font-size: 9px; letter-spacing: 0.05em; text-transform: uppercase; }
+    .wh-meta-line { border-bottom: 1.5px solid var(--on-surface); min-height: 18px; margin-top: 3px; }
+
+    /* Chat section */
     .chat-section {
       border-top: 1px solid var(--outline-variant); padding: 20px 24px;
     }
     .chat-title { font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.08em; color: var(--accent-purple); margin-bottom: 14px; }
     .chat-suggestions { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 14px; }
     .chat-suggestion-btn {
-      border: 1px solid #ddd; border-radius: 99px;
+      border: 1px solid #e7e5e4; border-radius: 99px;
       padding: 5px 14px; font-size: 11px; font-weight: 600;
-      background: #fafafa; cursor: pointer; font-family: 'Lexend', sans-serif;
+      background: #fafaf9; cursor: pointer; font-family: 'Plus Jakarta Sans', sans-serif;
       transition: all 0.12s;
     }
     .chat-suggestion-btn:hover { border-color: var(--accent-purple); color: var(--accent-purple); background: rgba(124,58,237,0.06); }
@@ -382,38 +562,75 @@
       border: 1.5px solid var(--outline-variant); border-radius: 14px;
       padding: 12px 16px; font-size: 12px; line-height: 1.6;
     }
-    .chat-msg.user { margin-left: 40px; background: rgba(26,110,181,0.05); }
+    .chat-msg.user { margin-left: 40px; background: rgba(37,99,235,0.05); }
     .chat-msg.assistant { margin-right: 40px; }
     .chat-msg-label { font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 5px; }
     .chat-input-row { display: flex; gap: 8px; }
     #chatInput {
       flex: 1; padding: 10px 14px; border: 1.5px solid var(--outline-variant);
-      border-radius: 12px; font-size: 12px; font-family: 'Lexend', sans-serif;
+      border-radius: 12px; font-size: 12px; font-family: 'Plus Jakarta Sans', sans-serif;
       outline: none; transition: border-color 0.12s;
     }
     #chatInput:focus { border-color: var(--accent-purple); }
     .chat-send-btn {
       padding: 10px 18px; background: var(--accent-purple); color: #fff;
       border: none; border-radius: 12px; font-size: 13px; cursor: pointer; font-weight: 700;
-      font-family: 'Lexend', sans-serif; transition: all 0.15s;
+      font-family: 'Plus Jakarta Sans', sans-serif; transition: all 0.15s;
     }
     .chat-send-btn:hover { background: #6d28d9; }
 
-    .game-layout { display: flex; flex-direction: column; align-items: center; gap: 32px; }
-    @media (min-width: 768px) { .game-layout { flex-direction: row; align-items: flex-start; justify-content: center; } }
+    /* ── SUDOKU ── */
+    .game-section { max-width: 960px; margin: 0 auto; }
+    .game-header { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; margin-bottom: 28px; }
+    .game-title { font-size: 22px; font-weight: 800; font-family: 'Baloo 2', cursive; }
+    .subtitle { font-size: 12px; color: var(--on-surface-variant); margin-top: 2px; }
+    .credit-pill { display: flex; align-items: center; gap: 8px; background: #fef3c7; border: 1.5px solid #fcd34d; border-radius: 99px; padding: 6px 16px; font-size: 13px; font-weight: 700; color: var(--primary-dark); }
+    .refresh-btn { font-size: 11px; color: var(--secondary); text-decoration: underline; background: none; border: none; cursor: pointer; font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 600; }
+    .game-layout { display: grid; grid-template-columns: 1fr 300px; gap: 24px; align-items: start; }
+    @media (max-width: 700px) { .game-layout { grid-template-columns: 1fr; } }
+    .sudoku-wrap { display: flex; justify-content: center; }
+    .sudoku-grid { display: grid; grid-template-columns: repeat(9, 1fr); border: 2.5px solid #1c1917; background: #1c1917; gap: 0; width: min(calc(100vw - 48px), 396px); aspect-ratio: 1; }
+    .sudoku-cell { width: 100%; aspect-ratio: 1; text-align: center; font-size: clamp(14px, 3vw, 20px); font-weight: 700; font-family: 'Plus Jakarta Sans', sans-serif; border: 0; outline: none; cursor: text; background: #fff; color: var(--on-surface); border-right: 1px solid #ccc; border-bottom: 1px solid #ccc; transition: background 0.1s; }
+    .sudoku-cell:focus { background: #fef9f0; }
+    .sudoku-cell.readonly { background: #fef3c7; cursor: default; font-weight: 900; }
+    .sudoku-cell.error { background: #fee2e2 !important; }
+    .sudoku-cell.border-right { border-right: 2.5px solid #1c1917; }
+    .sudoku-cell.border-bottom { border-bottom: 2.5px solid #1c1917; }
+    .sidebar { display: flex; flex-direction: column; gap: 14px; }
+    .panel { background: #fff; border: 1px solid var(--outline-variant); border-radius: 20px; padding: 18px; }
+    .panel h4 { font-weight: 800; font-size: 13px; margin-bottom: 12px; }
+    .guide-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
+    .guide-cell { background: var(--surface-container); border-radius: 8px; padding: 7px 4px; text-align: center; font-size: 12px; font-weight: 700; color: var(--tertiary); }
+    .guide-hint { font-size: 10px; color: #999; margin-top: 10px; font-style: italic; line-height: 1.5; }
+    .action-btns { display: flex; flex-direction: column; gap: 8px; }
+    .action-btn { display: flex; align-items: center; gap: 8px; padding: 12px 16px; border: none; border-radius: 14px; cursor: pointer; font-family: 'Plus Jakarta Sans', sans-serif; font-size: 13px; font-weight: 700; transition: all 0.15s; width: 100%; }
+    .action-btn:hover { transform: translateY(-1px); }
+    .btn-new { background: #f0fdf4; color: var(--tertiary); border: 1.5px solid #a7f3d0; }
+    .btn-check { background: var(--tertiary); color: #fff; }
+    .btn-solve { background: var(--primary); color: #fff; }
+    .btn-print { background: #1c1917; color: #fff; }
+    .print-section { margin-top: 8px; }
+    .print-section-title { font-size: 14px; font-weight: 800; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; }
+    .print-section-title a { font-size: 11px; color: var(--secondary); text-decoration: none; font-weight: 700; }
+    .free-banner { background: var(--surface-container); border: 1.5px solid #fcd34d; border-radius: 18px; padding: 16px; text-align: center; margin-bottom: 12px; }
+    .free-title { font-size: 13px; font-weight: 800; color: var(--primary); margin-bottom: 4px; }
+    .free-desc { font-size: 11px; color: var(--on-surface-variant); margin-bottom: 10px; line-height: 1.5; }
+    .btn-free-print { background: #1c1917; color: #fff; border: none; border-radius: 12px; padding: 10px 20px; font-family: 'Plus Jakarta Sans', sans-serif; font-size: 12px; font-weight: 800; cursor: pointer; width: 100%; transition: all 0.15s; }
+    .btn-free-print:hover { background: #292524; }
+    .packages-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+    .pkg-card { border: 2px solid var(--outline-variant); border-radius: 14px; padding: 12px 6px; text-align: center; cursor: pointer; transition: all 0.18s; position: relative; background: #fff; }
+    .pkg-card:hover { border-color: var(--tertiary); transform: translateY(-2px); box-shadow: 0 4px 16px rgba(5,150,105,0.15); }
+    .pkg-card.featured { border-color: var(--tertiary); background: var(--tertiary); color: #fff; }
+    .pkg-card.deal { border-color: #92400e; background: #92400e; color: #fff; }
+    .pkg-badge { position: absolute; top: -9px; left: 50%; transform: translateX(-50%); background: #fbbf24; color: #1c1917; font-size: 8px; font-weight: 800; padding: 2px 8px; border-radius: 99px; white-space: nowrap; }
+    .pkg-pages { font-size: 26px; font-weight: 800; font-family: 'Baloo 2', cursive; color: var(--tertiary); line-height: 1; }
+    .pkg-card.featured .pkg-pages, .pkg-card.deal .pkg-pages { color: #fff; }
+    .pkg-label { font-size: 8px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; opacity: 0.65; margin: 2px 0 5px; }
+    .pkg-price { font-size: 12px; font-weight: 800; color: var(--primary); }
+    .pkg-card.featured .pkg-price { color: #d1fae5; }
+    .pkg-card.deal .pkg-price { color: #fde68a; }
 
-    .shop-filter {
-      display: flex; gap: 6px; background: #fff;
-      border: 1px solid var(--outline-variant); padding: 4px; border-radius: 14px;
-      margin-bottom: 24px; width: fit-content;
-    }
-    .filter-btn {
-      padding: 8px 18px; border-radius: 10px; border: none; cursor: pointer;
-      font-family: 'Lexend', sans-serif; font-size: 12px; font-weight: 700;
-      background: none; color: var(--on-surface-variant); transition: all 0.12s;
-    }
-    .filter-btn.active { background: var(--primary-light); color: var(--primary); }
-
+    /* Modals */
     .modal-overlay {
       position: fixed; inset: 0; z-index: 60;
       background: rgba(0,0,0,0.55); display: flex;
@@ -423,7 +640,7 @@
     .auth-sheet {
       background: #fff; width: 100%; max-width: 460px;
       border-radius: 28px 28px 0 0; padding: 36px 32px 48px;
-      animation: slideUp 0.35s ease-out;
+      animation: slideUp 0.35s ease-out; position: relative;
     }
     .auth-close {
       position: absolute; top: 20px; right: 20px;
@@ -435,87 +652,105 @@
     .auth-tab {
       padding-bottom: 14px; font-size: 16px; font-weight: 700;
       background: none; border: none; border-bottom: 3px solid transparent;
-      cursor: pointer; font-family: 'Lexend', sans-serif; color: #aaa;
+      cursor: pointer; font-family: 'Plus Jakarta Sans', sans-serif; color: #aaa;
       transition: all 0.15s;
     }
     .auth-tab.active { border-bottom-color: var(--primary); color: var(--primary); }
     .auth-field {
       width: 100%; padding: 16px 18px;
-      background: #f8f5f0; border: 1.5px solid transparent;
-      border-radius: 16px; font-size: 14px; font-family: 'Lexend', sans-serif;
+      background: #fafaf9; border: 1.5px solid transparent;
+      border-radius: 16px; font-size: 14px; font-family: 'Plus Jakarta Sans', sans-serif;
       outline: none; margin-bottom: 14px; transition: border-color 0.12s;
     }
     .auth-field:focus { border-color: var(--primary); background: #fff; }
     .auth-submit {
       width: 100%; padding: 18px; background: var(--primary);
       color: #fff; border: none; border-radius: 16px; font-size: 15px; font-weight: 800;
-      cursor: pointer; font-family: 'Lexend', sans-serif;
-      box-shadow: 0 6px 20px rgba(232,96,10,0.30); transition: all 0.15s;
+      cursor: pointer; font-family: 'Plus Jakarta Sans', sans-serif;
+      box-shadow: 0 6px 20px rgba(217,119,6,0.30); transition: all 0.15s;
     }
-    .auth-submit:hover { transform: translateY(-1px); box-shadow: 0 10px 28px rgba(232,96,10,0.38); }
+    .auth-submit:hover { transform: translateY(-1px); }
     .auth-forgot {
       display: block; text-align: center; margin-top: 14px;
       font-size: 12px; color: #aaa; background: none; border: none;
-      cursor: pointer; font-family: 'Lexend', sans-serif;
+      cursor: pointer; font-family: 'Plus Jakarta Sans', sans-serif;
     }
-    .auth-sheet { position: relative; }
 
+    /* Pay modals */
     .payment-overlay {
       position: fixed; inset: 0; z-index: 70;
       background: rgba(0,0,0,0.75); display: flex;
       align-items: center; justify-content: center; padding: 20px;
     }
     .payment-overlay.hidden { display: none; }
-    .payment-card {
-      background: #fff; width: 100%; max-width: 360px;
-      border-radius: 28px; overflow: hidden;
-    }
-    .payment-top {
-      background: #1a1208; padding: 36px; text-align: center; color: #fff;
-    }
+    .payment-card { background: #fff; width: 100%; max-width: 360px; border-radius: 28px; overflow: hidden; }
+    .payment-top { background: #1c1917; padding: 36px; text-align: center; color: #fff; }
     .payment-top .lbl { font-size: 10px; text-transform: uppercase; letter-spacing: 0.12em; opacity: 0.5; margin-bottom: 6px; }
     .payment-top .amount { font-size: 36px; font-weight: 800; font-family: 'Baloo 2', cursive; }
     .payment-body { padding: 28px; }
-    .qr-box {
-      width: 180px; height: 180px; margin: 0 auto 20px;
-      border: 2px solid var(--outline-variant); border-radius: 16px;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 60px; background: #f8f8f8;
-    }
+    .qr-box { width: 180px; height: 180px; margin: 0 auto 20px; border: 2px solid var(--outline-variant); border-radius: 16px; display: flex; align-items: center; justify-content: center; font-size: 60px; background: #f8f8f8; }
     .bank-info { text-align: center; margin-bottom: 16px; }
     .bank-num { font-size: 18px; font-weight: 800; margin-bottom: 4px; }
     .bank-name { font-size: 12px; color: var(--on-surface-variant); }
-    .bank-note {
-      background: #fff3e8; color: var(--primary);
-      font-size: 11px; font-weight: 700; padding: 10px 14px;
-      border-radius: 12px; text-align: center; margin-bottom: 18px;
-    }
-    .pay-done-btn {
-      width: 100%; padding: 16px; background: var(--tertiary);
-      color: #fff; border: none; border-radius: 16px; font-size: 14px;
-      font-weight: 800; cursor: pointer; font-family: 'Lexend', sans-serif;
-      transition: all 0.15s;
-    }
-    .pay-done-btn:hover { background: #239a4a; }
-    .pay-close-btn {
-      width: 100%; padding: 10px; background: none; border: none;
-      font-size: 12px; color: #aaa; cursor: pointer; margin-top: 8px;
-      font-family: 'Lexend', sans-serif;
-    }
+    .bank-note { background: #fef3c7; color: var(--primary-dark); font-size: 11px; font-weight: 700; padding: 10px 14px; border-radius: 12px; text-align: center; margin-bottom: 18px; }
+    .pay-done-btn { width: 100%; padding: 16px; background: var(--tertiary); color: #fff; border: none; border-radius: 16px; font-size: 14px; font-weight: 800; cursor: pointer; font-family: 'Plus Jakarta Sans', sans-serif; transition: all 0.15s; }
+    .pay-done-btn:hover { background: #047857; }
+    .pay-close-btn { width: 100%; padding: 10px; background: none; border: none; font-size: 12px; color: #aaa; cursor: pointer; margin-top: 8px; font-family: 'Plus Jakarta Sans', sans-serif; }
 
+    .pay-modal-card { background: #fff; border-radius: 24px; width: 100%; max-width: 400px; max-height: 90vh; overflow-y: auto; }
+    .modal-top { background: #1c1917; padding: 24px; border-radius: 24px 24px 0 0; text-align: center; color: #fff; }
+    .modal-top .m-icon { font-size: 32px; margin-bottom: 8px; }
+    .modal-top h3 { font-size: 17px; font-weight: 800; }
+    .modal-top p { font-size: 11px; opacity: 0.6; margin-top: 4px; }
+    .modal-body2 { padding: 22px; }
+    .pay-amount2 { text-align: center; font-size: 30px; font-weight: 800; font-family: 'Baloo 2', cursive; color: var(--primary); margin-bottom: 18px; }
+    .qr-box2 { width: 150px; height: 150px; margin: 0 auto 14px; border: 2px solid var(--outline-variant); border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 48px; background: #f8f8f8; overflow: hidden; }
+    .bank-info2 { text-align: center; margin-bottom: 12px; }
+    .bank-num2 { font-size: 15px; font-weight: 800; }
+    .bank-name2 { font-size: 11px; color: var(--on-surface-variant); }
+    .bank-note2 { background: #fef3c7; color: var(--primary-dark); font-size: 11px; font-weight: 700; padding: 10px 14px; border-radius: 12px; text-align: center; margin-bottom: 14px; line-height: 1.5; }
+    .modal-field2 { width: 100%; padding: 12px 14px; border: 1.5px solid var(--outline-variant); border-radius: 12px; font-size: 13px; font-family: 'Plus Jakarta Sans', sans-serif; outline: none; margin-bottom: 10px; transition: border-color 0.12s; }
+    .modal-field2:focus { border-color: var(--primary); }
+    .btn-pay-submit { width: 100%; padding: 14px; background: var(--tertiary); color: #fff; border: none; border-radius: 13px; font-size: 13px; font-weight: 800; cursor: pointer; font-family: 'Plus Jakarta Sans', sans-serif; transition: all 0.15s; margin-bottom: 8px; }
+    .btn-pay-submit:hover { background: #047857; }
+    .btn-pay-cancel { width: 100%; padding: 9px; background: none; border: none; font-size: 12px; color: #aaa; cursor: pointer; font-family: 'Plus Jakarta Sans', sans-serif; }
+    .warn-card { background: #fff; border-radius: 24px; width: 100%; max-width: 340px; padding: 28px; text-align: center; }
+    .warn-card .w-icon { font-size: 46px; margin-bottom: 12px; }
+    .warn-card h3 { font-size: 16px; font-weight: 800; margin-bottom: 8px; }
+    .warn-card p { font-size: 12px; color: var(--on-surface-variant); line-height: 1.7; margin-bottom: 18px; white-space: pre-line; }
+    .warn-btns { display: flex; gap: 10px; }
+    .warn-btns button { flex: 1; padding: 12px; border-radius: 12px; font-family: 'Plus Jakarta Sans', sans-serif; font-size: 13px; font-weight: 700; cursor: pointer; border: none; }
+    .btn-warn-cancel { background: #f5f5f5; color: #555; }
+    .btn-warn-ok { background: var(--primary); color: #fff; }
+
+    /* Shop filter */
+    .shop-filter {
+      display: flex; gap: 6px; background: #fff;
+      border: 1px solid var(--outline-variant); padding: 4px; border-radius: 14px;
+      margin-bottom: 24px; width: fit-content;
+    }
+    .filter-btn {
+      padding: 8px 18px; border-radius: 10px; border: none; cursor: pointer;
+      font-family: 'Plus Jakarta Sans', sans-serif; font-size: 12px; font-weight: 700;
+      background: none; color: var(--on-surface-variant); transition: all 0.12s;
+    }
+    .filter-btn.active { background: var(--primary-light); color: var(--primary-dark); }
+
+    /* Toast */
     #toast {
       position: fixed; bottom: 32px; left: 50%; transform: translateX(-50%);
       z-index: 200; padding: 12px 28px; border-radius: 99px;
-      font-size: 13px; font-weight: 700; font-family: 'Lexend', sans-serif;
+      font-size: 13px; font-weight: 700; font-family: 'Plus Jakarta Sans', sans-serif;
       pointer-events: none; opacity: 0; transition: opacity 0.25s;
       white-space: nowrap; max-width: 90vw;
     }
     #toast.show { opacity: 1; }
-    #toast.success { background: #1a1208; color: #fff; }
+    #toast.success { background: #1c1917; color: #fff; }
     #toast.error   { background: var(--error); color: #fff; }
 
+    /* Footer */
     footer {
-      background: linear-gradient(135deg, #1a1208, #0d0a04);
+      background: linear-gradient(135deg, #1c1917, #0c0a09);
       color: #fff; margin-top: 80px; padding: 64px 20px;
     }
     .footer-inner { max-width: 1280px; margin: 0 auto; display: grid; grid-template-columns: repeat(3, 1fr); gap: 48px; }
@@ -528,290 +763,46 @@
 
     #printArea { display: none; }
 
-    /* ── SUDOKU STYLES ── */
-    .game-section { max-width: 960px; margin: 0 auto; }
-    .game-header { display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; margin-bottom:28px; }
-    .game-title { font-size:22px; font-weight:800; font-family:'Baloo 2',cursive; }
-    .subtitle { font-size:12px; color:var(--on-surface-variant); margin-top:2px; }
-    .credit-pill { display:flex; align-items:center; gap:8px; background:#fff3e8; border:1.5px solid #ffd5a8; border-radius:99px; padding:6px 16px; font-size:13px; font-weight:700; color:var(--primary); }
-    .refresh-btn { font-size:11px; color:var(--secondary); text-decoration:underline; background:none; border:none; cursor:pointer; font-family:'Lexend',sans-serif; font-weight:600; }
-    .game-layout { display:grid; grid-template-columns:1fr 300px; gap:24px; align-items:start; }
-    @media(max-width:700px){ .game-layout{ grid-template-columns:1fr; } }
-    .sudoku-wrap { display:flex; justify-content:center; }
-    .sudoku-grid { display:grid; grid-template-columns:repeat(9,1fr); border:2.5px solid #1a1208; background:#1a1208; gap:0; width:min(calc(100vw - 48px),396px); aspect-ratio:1; }
-    .sudoku-cell { width:100%; aspect-ratio:1; text-align:center; font-size:clamp(14px,3vw,20px); font-weight:700; font-family:'Lexend',sans-serif; border:0; outline:none; cursor:text; background:#fff; color:var(--on-surface); border-right:1px solid #ccc; border-bottom:1px solid #ccc; transition:background 0.1s; }
-    .sudoku-cell:focus { background:#fff3e8; }
-    .sudoku-cell.readonly { background:#f3e5ab; cursor:default; font-weight:900; }
-    .sudoku-cell.error { background:#fee2e2 !important; }
-    .sudoku-cell.border-right { border-right:2.5px solid #1a1208; }
-    .sudoku-cell.border-bottom { border-bottom:2.5px solid #1a1208; }
-    .sidebar { display:flex; flex-direction:column; gap:14px; }
-    .panel { background:#fff; border:1px solid var(--outline-variant); border-radius:20px; padding:18px; }
-    .panel h4 { font-weight:800; font-size:13px; margin-bottom:12px; }
-    .guide-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:6px; }
-    .guide-cell { background:var(--surface-container); border-radius:8px; padding:7px 4px; text-align:center; font-size:12px; font-weight:700; color:var(--tertiary); }
-    .guide-hint { font-size:10px; color:#999; margin-top:10px; font-style:italic; line-height:1.5; }
-    .action-btns { display:flex; flex-direction:column; gap:8px; }
-    .action-btn { display:flex; align-items:center; gap:8px; padding:12px 16px; border:none; border-radius:14px; cursor:pointer; font-family:'Lexend',sans-serif; font-size:13px; font-weight:700; transition:all 0.15s; width:100%; }
-    .action-btn:hover { transform:translateY(-1px); }
-    .btn-new { background:#f0fdf4; color:var(--tertiary); border:1.5px solid #a7f3d0; }
-    .btn-check { background:var(--tertiary); color:#fff; }
-    .btn-solve { background:var(--primary); color:#fff; }
-    .btn-print { background:#1a1208; color:#fff; }
-    .print-section { margin-top:8px; }
-    .print-section-title { font-size:14px; font-weight:800; margin-bottom:12px; display:flex; justify-content:space-between; align-items:center; }
-    .print-section-title a { font-size:11px; color:var(--secondary); text-decoration:none; font-weight:700; }
-    .free-banner { background:var(--surface-container); border:1.5px solid #ffd5a8; border-radius:18px; padding:16px; text-align:center; margin-bottom:12px; }
-    .free-title { font-size:13px; font-weight:800; color:var(--primary); margin-bottom:4px; }
-    .free-desc { font-size:11px; color:var(--on-surface-variant); margin-bottom:10px; line-height:1.5; }
-    .btn-free-print { background:#1a1208; color:#fff; border:none; border-radius:12px; padding:10px 20px; font-family:'Lexend',sans-serif; font-size:12px; font-weight:800; cursor:pointer; width:100%; transition:all 0.15s; }
-    .btn-free-print:hover { background:#2d2010; }
-    .packages-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; }
-    .pkg-card { border:2px solid var(--outline-variant); border-radius:14px; padding:12px 6px; text-align:center; cursor:pointer; transition:all 0.18s; position:relative; background:#fff; }
-    .pkg-card:hover { border-color:var(--tertiary); transform:translateY(-2px); box-shadow:0 4px 16px rgba(46,158,91,0.15); }
-    .pkg-card.featured { border-color:var(--tertiary); background:var(--tertiary); color:#fff; }
-    .pkg-card.deal { border-color:#92400e; background:#92400e; color:#fff; }
-    .pkg-badge { position:absolute; top:-9px; left:50%; transform:translateX(-50%); background:#fbbf24; color:#1a1208; font-size:8px; font-weight:800; padding:2px 8px; border-radius:99px; white-space:nowrap; }
-    .pkg-pages { font-size:26px; font-weight:800; font-family:'Baloo 2',cursive; color:var(--tertiary); line-height:1; }
-    .pkg-card.featured .pkg-pages, .pkg-card.deal .pkg-pages { color:#fff; }
-    .pkg-label { font-size:8px; font-weight:700; text-transform:uppercase; letter-spacing:0.08em; opacity:0.65; margin:2px 0 5px; }
-    .pkg-price { font-size:12px; font-weight:800; color:var(--primary); }
-    .pkg-card.featured .pkg-price { color:#d1fae5; }
-    .pkg-card.deal .pkg-price { color:#fde68a; }
-    .pay-modal-card { background:#fff; border-radius:24px; width:100%; max-width:400px; max-height:90vh; overflow-y:auto; }
-    .modal-top { background:#1a1208; padding:24px; border-radius:24px 24px 0 0; text-align:center; color:#fff; }
-    .modal-top .m-icon { font-size:32px; margin-bottom:8px; }
-    .modal-top h3 { font-size:17px; font-weight:800; }
-    .modal-top p { font-size:11px; opacity:0.6; margin-top:4px; }
-    .modal-body2 { padding:22px; }
-    .pay-amount2 { text-align:center; font-size:30px; font-weight:800; font-family:'Baloo 2',cursive; color:var(--primary); margin-bottom:18px; }
-    .qr-box2 { width:150px; height:150px; margin:0 auto 14px; border:2px solid var(--outline-variant); border-radius:14px; display:flex; align-items:center; justify-content:center; font-size:48px; background:#f8f8f8; overflow:hidden; }
-    .bank-info2 { text-align:center; margin-bottom:12px; }
-    .bank-num2 { font-size:15px; font-weight:800; }
-    .bank-name2 { font-size:11px; color:var(--on-surface-variant); }
-    .bank-note2 { background:#fff3e8; color:var(--primary); font-size:11px; font-weight:700; padding:10px 14px; border-radius:12px; text-align:center; margin-bottom:14px; line-height:1.5; }
-    .modal-field2 { width:100%; padding:12px 14px; border:1.5px solid var(--outline-variant); border-radius:12px; font-size:13px; font-family:'Lexend',sans-serif; outline:none; margin-bottom:10px; transition:border-color 0.12s; }
-    .modal-field2:focus { border-color:var(--primary); }
-    .btn-pay-submit { width:100%; padding:14px; background:var(--tertiary); color:#fff; border:none; border-radius:13px; font-size:13px; font-weight:800; cursor:pointer; font-family:'Lexend',sans-serif; transition:all 0.15s; margin-bottom:8px; }
-    .btn-pay-submit:hover { background:#239a4a; }
-    .btn-pay-cancel { width:100%; padding:9px; background:none; border:none; font-size:12px; color:#aaa; cursor:pointer; font-family:'Lexend',sans-serif; }
-    .warn-card { background:#fff; border-radius:24px; width:100%; max-width:340px; padding:28px; text-align:center; }
-    .warn-card .w-icon { font-size:46px; margin-bottom:12px; }
-    .warn-card h3 { font-size:16px; font-weight:800; margin-bottom:8px; }
-    .warn-card p { font-size:12px; color:var(--on-surface-variant); line-height:1.7; margin-bottom:18px; white-space:pre-line; }
-    .warn-btns { display:flex; gap:10px; }
-    .warn-btns button { flex:1; padding:12px; border-radius:12px; font-family:'Lexend',sans-serif; font-size:13px; font-weight:700; cursor:pointer; border:none; }
-    .btn-warn-cancel { background:#f5f5f5; color:#555; }
-    .btn-warn-ok { background:var(--primary); color:#fff; }
-
-    @media print {
-      @media print {
-  body > *:not(#printArea) { display:none !important; }
-  #printArea { display:block !important; }
-  @page { size:A4 portrait; margin:8mm; }
-  .pg { display:grid; grid-template-columns:1fr 1fr; grid-template-rows:auto 1fr 1fr;
-    gap:4mm; width:194mm; height:279mm; padding:3mm; page-break-after:always; }
-  .pg:last-child { page-break-after:avoid; }
-  .pg-header {
-    grid-column: 1 / -1;
-    display:flex; align-items:center; gap:8pt;
-    border-bottom:1.5pt solid #1a1208; padding-bottom:3mm; margin-bottom:1mm;
-  }
-  .pg-header-text { display:flex; flex-direction:column; gap:1pt; }
-  .pg-header-title { font-size:10pt; font-weight:900; color:#1a1208; font-family:'Baloo 2',cursive; letter-spacing:0.02em; }
-  .pg-header-sub { font-size:7pt; color:#5c4a28; font-weight:600; letter-spacing:0.08em; text-transform:uppercase; }
-  .pp { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:2mm; }
-  .pp-title { font-size:7pt; font-weight:700; text-align:center; color:#1a1208; }
-  .pt { border-collapse:collapse; border:2.5px solid #1a1208; }
-  .pt td { width:8.5mm; height:8.5mm; text-align:center; vertical-align:middle;
-    font-size:11pt; font-weight:700; border:0.5px solid #aaa; color:#1a1208; }
-  .pt td.br { border-right:2.5px solid #1a1208; }
-  .pt td.bb { border-bottom:2.5px solid #1a1208; }
-  .pt td.given { background:#f3e5ab; font-weight:900; }
-  .pp-guide { font-size:7pt; text-align:center; color:#5c4a28; }
-}
-
-
-    /* ── Багшийн тохируулга талбарууд ── */
-    .ws-field-label { display:block; font-size:10px; font-weight:700; color:#5c4a28; margin-bottom:5px; letter-spacing:0.03em; }
-    .ws-field-input {
-      width:100%; padding:9px 12px; border:1.5px solid #e8d4b0; border-radius:10px;
-      font-size:12px; font-family:'Lexend',sans-serif; color:#1a1208; background:#fff;
-      outline:none; box-sizing:border-box; transition:border-color .2s;
-    }
-    .ws-field-input:focus { border-color:#7c3aed; }
-    .ws-field-input::placeholder { color:#c5a87a; }
-
-    /* ── Ажлын хуудасны толгой хэсэг ── */
-    .wh-box {
-      border:2px solid #1a1208; border-radius:12px; margin-bottom:18px;
-      overflow:hidden; font-family:'Baloo 2',cursive;
-    }
-    .wh-top {
-      background:#1a1208; color:#fff; padding:12px 18px;
-      display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap;
-    }
-    .wh-school { font-size:13px; font-weight:800; }
-    .wh-subject { font-size:11px; opacity:0.75; }
-    .wh-title { font-size:16px; font-weight:900; text-align:center; flex:1; }
-    .wh-meta { display:grid; grid-template-columns:repeat(4,1fr); gap:0; border-top:2px solid #1a1208; }
-    .wh-meta-cell {
-      padding:8px 10px; font-size:10px; border-right:1px solid #e8d4b0;
-      display:flex; flex-direction:column; gap:2px;
-    }
-    .wh-meta-cell:last-child { border-right:none; }
-    .wh-meta-label { color:#9c7c4a; font-weight:600; font-size:9px; letter-spacing:0.05em; text-transform:uppercase; }
-    .wh-meta-line { border-bottom:1.5px solid #1a1208; min-height:18px; margin-top:3px; }
-  
+    /* Scrollbar */
     ::-webkit-scrollbar { width: 6px; }
     ::-webkit-scrollbar-track { background: transparent; }
     ::-webkit-scrollbar-thumb { background: var(--outline-variant); border-radius: 99px; }
 
-    /* ══════════════════════════════════════════
-       MOBILE RESPONSIVE FIXES
-       ══════════════════════════════════════════ */
-
-    /* NAV – mobile */
-    @media (max-width: 640px) {
-      .nav-inner { padding: 0 14px; height: 56px; gap: 8px; }
-      .nav-brand { font-size: 14px; gap: 7px; }
-      .nav-brand > span:not([style]) { display: none; } /* брэндийн текстийг нуух – лого хангалттай */
-      .nav-links button { font-size: 11px; padding: 6px 8px; }
-      .user-pill { padding: 5px 10px 5px 6px; font-size: 12px; }
-      .btn-primary { padding: 8px 14px; font-size: 12px; }
+    /* ── PRINT STYLES ── */
+    @media print {
+      body > *:not(#printArea) { display: none !important; }
+      #printArea { display: block !important; }
+      @page { size: A4 portrait; margin: 8mm; }
+      .pg { display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: auto 1fr 1fr;
+        gap: 4mm; width: 194mm; height: 279mm; padding: 3mm; page-break-after: always; }
+      .pg:last-child { page-break-after: avoid; }
+      .pg-header { grid-column: 1 / -1; display: flex; align-items: center; gap: 8pt; border-bottom: 1.5pt solid #1c1917; padding-bottom: 3mm; margin-bottom: 1mm; }
+      .pg-header-text { display: flex; flex-direction: column; gap: 1pt; }
+      .pg-header-title { font-size: 10pt; font-weight: 900; color: #1c1917; font-family: 'Baloo 2', cursive; letter-spacing: 0.02em; }
+      .pg-header-sub { font-size: 7pt; color: #57534e; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; }
+      .pp { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2mm; }
+      .pp-title { font-size: 7pt; font-weight: 700; text-align: center; color: #1c1917; }
+      .pt { border-collapse: collapse; border: 2.5px solid #1c1917; }
+      .pt td { width: 8.5mm; height: 8.5mm; text-align: center; vertical-align: middle; font-size: 11pt; font-weight: 700; border: 0.5px solid #aaa; color: #1c1917; }
+      .pt td.br { border-right: 2.5px solid #1c1917; }
+      .pt td.bb { border-bottom: 2.5px solid #1c1917; }
+      .pt td.given { background: #fef3c7; font-weight: 900; }
+      .pp-guide { font-size: 7pt; text-align: center; color: #57534e; }
     }
 
-    /* HERO */
+    /* Mobile */
     @media (max-width: 640px) {
-      .hero { gap: 24px; margin-bottom: 40px; }
+      .nav-inner { padding: 0 14px; height: 56px; }
+      .nav-brand { font-size: 14px; }
+      main { padding: 20px 14px; }
       .hero h1 { font-size: 30px; }
-      .hero p { font-size: 14px; margin-top: 12px; }
-      .hero-btns { gap: 10px; margin-top: 20px; }
-      .hero-btns .btn-primary,
-      .hero-btns .btn-ghost { padding: 10px 18px; font-size: 13px; width: 100%; text-align: center; }
-      .hero-cards { gap: 10px; }
-      .hero-card { padding: 16px; border-radius: 16px; }
-      .hero-card .icon { font-size: 28px; margin-bottom: 6px; }
-      .hero-card h3 { font-size: 13px; }
+      .stats-strip { padding: 24px 16px; border-radius: 20px; grid-template-columns: repeat(2, 1fr); }
+      .ws-layout { gap: 14px; }
+      .ws-panel { padding: 14px 14px 14px 16px; }
     }
-
-    /* STATS STRIP */
-    @media (max-width: 640px) {
-      .stats-strip { padding: 24px 16px; border-radius: 20px; gap: 16px; margin-bottom: 40px; }
-      .stats-strip .num { font-size: 24px; }
-    }
-
-    /* SECTION TITLE */
-    @media (max-width: 640px) {
-      .section-title { font-size: 20px; margin-bottom: 16px; }
-    }
-
-    /* PRODUCT GRID */
     @media (max-width: 480px) {
       .product-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
-      .product-img { height: 130px; font-size: 38px; }
-      .product-body { padding: 12px; }
-      .product-title { font-size: 12px; margin-bottom: 10px; }
-      .product-price { font-size: 13px; }
-    }
-
-    /* CORNER GRID */
-    @media (max-width: 480px) {
-      .corner-grid { grid-template-columns: 1fr; gap: 12px; }
-      .corner-card { padding: 20px; border-radius: 20px; }
-      .corner-card h3 { font-size: 16px; }
-    }
-
-    /* WORKSHEET LAYOUT */
-    @media (max-width: 900px) {
-      .ws-layout { gap: 20px; }
-    }
-    @media (max-width: 640px) {
-      .ws-layout { gap: 14px; }
-      .ws-panel { padding: 16px; border-radius: 18px; }
-      .grade-grid { grid-template-columns: repeat(7, 1fr); gap: 4px; }
-      .grade-btn { font-size: 11px; padding: 7px 0; border-radius: 8px; }
-      .bloom-grid { grid-template-columns: repeat(2, 1fr); gap: 6px; }
-      .qcount-grid { grid-template-columns: repeat(3, 1fr); gap: 6px; }
-      .gen-btn { padding: 14px; font-size: 13px; border-radius: 14px; }
-      .ws-output-box { border-radius: 18px; min-height: 280px; }
-      .ws-result-header { padding: 14px 16px; }
-      .ws-result-actions { flex-wrap: wrap; gap: 6px; }
-      .ws-action-btn { padding: 7px 12px; font-size: 11px; }
-      #wsPreview { padding: 14px; }
-      #wsPreview li { font-size: 12px; padding: 10px 0 10px 16px; }
-    }
-
-    /* CHAT SECTION */
-    @media (max-width: 640px) {
-      .chat-section { padding: 14px 16px; }
-      .chat-msg.user { margin-left: 16px; }
-      .chat-msg.assistant { margin-right: 16px; }
-      #chatMessages { max-height: 200px; }
-    }
-
-    /* GAME LAYOUT */
-    @media (max-width: 700px) {
-      .game-layout { gap: 16px; }
-      .sudoku-grid { width: min(calc(100vw - 32px), 340px); }
-      .sudoku-cell { font-size: clamp(12px, 4vw, 18px); }
-      .sidebar { gap: 10px; }
-      .panel { padding: 14px; border-radius: 16px; }
-    }
-    @media (max-width: 480px) {
-      .sudoku-grid { width: min(calc(100vw - 24px), 300px); }
-    }
-
-    /* PACKAGES GRID */
-    @media (max-width: 480px) {
-      .packages-grid { grid-template-columns: repeat(3, 1fr); gap: 6px; }
-      .pkg-pages { font-size: 20px; }
-      .pkg-price { font-size: 10px; }
-    }
-
-    /* AUTH SHEET */
-    @media (max-width: 480px) {
-      .auth-sheet { padding: 28px 20px 40px; }
-      .auth-field { padding: 13px 14px; font-size: 13px; }
-      .auth-submit { padding: 15px; font-size: 14px; }
-    }
-
-    /* PAYMENT CARD */
-    @media (max-width: 480px) {
-      .payment-card { border-radius: 22px; }
-      .payment-top { padding: 24px 20px; }
-      .payment-top .amount { font-size: 28px; }
-      .payment-body { padding: 20px; }
-      .qr-box { width: 140px; height: 140px; font-size: 46px; }
-      .bank-num { font-size: 15px; }
-    }
-
-    /* FOOTER */
-    @media (max-width: 480px) {
-      footer { padding: 40px 16px; margin-top: 48px; }
-      .footer-brand { font-size: 16px; }
-    }
-
-    /* MAIN PADDING */
-    @media (max-width: 640px) {
-      main { padding: 20px 14px; }
-    }
-
-    /* NAV-LINKS horizontal scroll on small screens */
-    @media (max-width: 520px) {
-      .nav-links { overflow-x: auto; -webkit-overflow-scrolling: touch; }
-      .nav-links button { white-space: nowrap; font-size: 11px; padding: 6px 10px; }
-    }
-
-    /* SHOP FILTER scroll on mobile */
-    @media (max-width: 480px) {
-      .shop-filter { overflow-x: auto; -webkit-overflow-scrolling: touch; white-space: nowrap; width: 100%; }
-      .filter-btn { flex-shrink: 0; }
-    }
-
-    /* TOAST */
-    @media (max-width: 480px) {
-      #toast { bottom: 20px; font-size: 12px; padding: 10px 20px; }
+      .corner-grid { grid-template-columns: 1fr; }
     }
   </style>
 </head>
@@ -821,7 +812,7 @@
 <nav>
   <div class="nav-inner">
     <div class="nav-brand" onclick="showDashboard()">
-      <div style="width:40px;height:40px;border-radius:12px;background:#1a1208;
+      <div style="width:40px;height:40px;border-radius:12px;background:#1c1917;
         display:flex;align-items:center;justify-content:center;overflow:hidden;flex-shrink:0">
         <img src="https://raw.githubusercontent.com/tuult764-crypto/sonirholtoi-hel-bichig-/main/logo.png"
           alt="Лого" style="width:36px;height:36px;object-fit:contain"
@@ -873,7 +864,7 @@
         </div>
       </div>
       <div class="hero-cards">
-        <div class="hero-card" style="background:#fff0f0;border-color:#fcd5d5" onclick="showCorner('teacher')">
+        <div class="hero-card" style="background:#fff7ed;border-color:#fde68a" onclick="showCorner('teacher')">
           <div class="icon">👩‍🏫</div><h3>Багш</h3>
         </div>
         <div class="hero-card" style="background:#eff6ff;border-color:#c7deff" onclick="showCorner('student')">
@@ -882,14 +873,14 @@
         <div class="hero-card" style="background:#f0fdf4;border-color:#bbf7d0" onclick="showSection('games')">
           <div class="icon">🎮</div><h3>Тоглоом</h3>
         </div>
-        <div class="hero-card" style="background:#fff7ed;border-color:#fde68a" onclick="showSection('shop')">
+        <div class="hero-card" style="background:#fef3c7;border-color:#fcd34d" onclick="showSection('shop')">
           <div class="icon">🛒</div><h3>Дэлгүүр</h3>
         </div>
       </div>
     </div>
 
     <div class="stats-strip">
-      <div><div class="num" style="color:#fb923c">6+</div><div class="lbl">Хэсэг</div></div>
+      <div><div class="num" style="color:#fbbf24">6+</div><div class="lbl">Хэсэг</div></div>
       <div><div class="num" style="color:#60a5fa">∞</div><div class="lbl">Судоку</div></div>
       <div><div class="num" style="color:#4ade80">10+</div><div class="lbl">Шалгалт</div></div>
       <div><div class="num" style="color:#c084fc">1</div><div class="lbl">Туул Багш</div></div>
@@ -905,7 +896,7 @@
     <h2 class="section-title">👩‍🏫 Багшийн булан</h2>
     <div class="corner-grid">
       <div class="corner-card" onclick="showSection('aiassessment')">
-        <div class="corner-icon" style="background:#fff0f0">📝</div>
+        <div class="corner-icon" style="background:#fff7ed">📝</div>
         <h3>AI Ажлын хуудас</h3>
         <p>Зохиол сонгоод Блүүмийн таксономын дагуу ажлын хуудас үүсгэнэ.</p>
       </div>
@@ -946,20 +937,22 @@
     </div>
   </section>
 
-  <!-- AI ASSESSMENT -->
+  <!-- AI ASSESSMENT — ШИНЭ ЗАГВАР -->
   <section id="aiassessmentSection" class="section">
     <button class="page-back" onclick="showSection('teacher')">← Буцах</button>
 
     <!-- Header -->
-    <div class="ws-header">
-      <div class="ws-header-icon">📝</div>
+    <div style="display:flex;align-items:center;gap:16px;margin-bottom:20px">
+      <div style="width:52px;height:52px;border-radius:16px;background:linear-gradient(135deg,#7c3aed,#4f46e5);
+        display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0;
+        box-shadow:0 6px 20px rgba(124,58,237,0.30)">📝</div>
       <div>
-        <h2 class="ws-header-title">AI Ажлын Хуудас Үүсгэгч</h2>
-        <p class="ws-header-sub">Блүүмийн таксономын дагуу минутын дотор бэлэн ажлын хуудас</p>
+        <h2 style="font-size:22px;font-weight:800;color:var(--on-surface)">AI Ажлын Хуудас Үүсгэгч</h2>
+        <p style="font-size:12px;color:var(--on-surface-variant);margin-top:3px">Блүүмийн таксономын дагуу минутын дотор бэлэн ажлын хуудас</p>
       </div>
     </div>
 
-    <!-- Guide -->
+    <!-- Guide strip -->
     <div class="ws-guide-strip">
       <div class="ws-guide-step"><span class="ws-guide-num">1</span>Анги &amp; зохиол</div>
       <div class="ws-guide-arrow">→</div>
@@ -971,13 +964,13 @@
     </div>
 
     <div class="ws-layout">
-      <!-- LEFT PANEL -->
+      <!-- LEFT STEPPER -->
       <div class="ws-left">
 
         <!-- Step 1: Анги -->
         <div class="ws-panel">
           <div class="ws-panel-head">
-            <span class="step-badge" style="background:#eff6ff;color:var(--secondary)">1</span>
+            <span class="step-badge" style="background:linear-gradient(135deg,#2563eb,#1d4ed8);color:#fff">1</span>
             <span>Анги сонгох</span>
           </div>
           <div class="grade-grid" id="gradeGrid"></div>
@@ -986,7 +979,7 @@
         <!-- Step 2: Зохиол -->
         <div class="ws-panel">
           <div class="ws-panel-head">
-            <span class="step-badge" style="background:#fff0f0;color:var(--primary)">2</span>
+            <span class="step-badge" style="background:linear-gradient(135deg,#d97706,#b45309);color:#fff">2</span>
             <span>Зохиол сонгох</span>
           </div>
           <div class="lit-loading" id="litLoading">⌛ Зохиолуудыг ачааллаж байна...</div>
@@ -999,23 +992,23 @@
         <!-- Step 3: Блүүм -->
         <div class="ws-panel">
           <div class="ws-panel-head">
-            <span class="step-badge" style="background:#f5f0ff;color:var(--accent-purple)">3</span>
-            <span>Блүүмийн түвшин <span style="font-size:10px;font-weight:500;color:#aaa">(нэг буюу олон)</span></span>
+            <span class="step-badge" style="background:linear-gradient(135deg,#7c3aed,#6d28d9);color:#fff">3</span>
+            <span>Блүүмийн түвшин <span style="font-size:10px;font-weight:500;color:#a8a29e">(нэг буюу олон)</span></span>
           </div>
           <div class="bloom-grid">
-            <button id="bl-remember"   class="bloom-btn bloom-active" onclick="toggleBloom('remember')"   data-color="#ef4444">🔴 Санах<br><span class="bloom-desc">Тодорхойлох, нэрлэх</span></button>
-            <button id="bl-understand" class="bloom-btn bloom-active" onclick="toggleBloom('understand')" data-color="#f97316">🟠 Ойлгох<br><span class="bloom-desc">Тайлбарлах, дүгнэх</span></button>
-            <button id="bl-apply"      class="bloom-btn" onclick="toggleBloom('apply')"      data-color="#eab308">🟡 Хэрэглэх<br><span class="bloom-desc">Ашиглах, гүйцэтгэх</span></button>
-            <button id="bl-analyze"    class="bloom-btn" onclick="toggleBloom('analyze')"    data-color="#22c55e">🟢 Шинжлэх<br><span class="bloom-desc">Задлах, харьцуулах</span></button>
-            <button id="bl-evaluate"   class="bloom-btn" onclick="toggleBloom('evaluate')"   data-color="#3b82f6">🔵 Үнэлэх<br><span class="bloom-desc">Шүүмжлэх, батлах</span></button>
-            <button id="bl-create"     class="bloom-btn" onclick="toggleBloom('create')"     data-color="#a855f7">🟣 Бүтээх<br><span class="bloom-desc">Зохиох, бүтээх</span></button>
+            <button id="bl-remember"   class="bloom-btn bloom-active" onclick="toggleBloom('remember')"   data-color="#ef4444">🔴 Санах<span class="bloom-desc">Тодорхойлох, нэрлэх</span></button>
+            <button id="bl-understand" class="bloom-btn bloom-active" onclick="toggleBloom('understand')" data-color="#f97316">🟠 Ойлгох<span class="bloom-desc">Тайлбарлах, дүгнэх</span></button>
+            <button id="bl-apply"      class="bloom-btn" onclick="toggleBloom('apply')"      data-color="#eab308">🟡 Хэрэглэх<span class="bloom-desc">Ашиглах, гүйцэтгэх</span></button>
+            <button id="bl-analyze"    class="bloom-btn" onclick="toggleBloom('analyze')"    data-color="#22c55e">🟢 Шинжлэх<span class="bloom-desc">Задлах, харьцуулах</span></button>
+            <button id="bl-evaluate"   class="bloom-btn" onclick="toggleBloom('evaluate')"   data-color="#3b82f6">🔵 Үнэлэх<span class="bloom-desc">Шүүмжлэх, батлах</span></button>
+            <button id="bl-create"     class="bloom-btn" onclick="toggleBloom('create')"     data-color="#a855f7">🟣 Бүтээх<span class="bloom-desc">Зохиох, бүтээх</span></button>
           </div>
         </div>
 
         <!-- Step 4: Хичээлийн хэлбэр -->
         <div class="ws-panel">
           <div class="ws-panel-head">
-            <span class="step-badge" style="background:#f0fdf4;color:var(--tertiary)">4</span>
+            <span class="step-badge" style="background:linear-gradient(135deg,#059669,#047857);color:#fff">4</span>
             <span>Хичээлийн хэлбэр</span>
           </div>
           <div class="qcount-grid">
@@ -1040,7 +1033,7 @@
         <!-- Step 5: Загвар -->
         <div class="ws-panel">
           <div class="ws-panel-head">
-            <span class="step-badge" style="background:#fff7ed;color:#f97316">5</span>
+            <span class="step-badge" style="background:linear-gradient(135deg,#f97316,#ea580c);color:#fff">5</span>
             <span>Ажлын хуудасны загвар</span>
           </div>
           <div class="template-grid">
@@ -1062,10 +1055,10 @@
           </div>
         </div>
 
-        <!-- Step 6: Багшийн тохируулга (шинэ) -->
-        <div class="ws-panel" style="border:1.5px solid #e0d4f7">
+        <!-- Step 6: Багшийн тохируулга -->
+        <div class="ws-panel" style="border-color:#ede9fe">
           <div class="ws-panel-head">
-            <span class="step-badge" style="background:#f5f0ff;color:#7c3aed">6</span>
+            <span class="step-badge" style="background:linear-gradient(135deg,#7c3aed,#4f46e5);color:#fff">6</span>
             <span>Багшийн тохируулга</span>
           </div>
 
@@ -1076,10 +1069,9 @@
             </div>
             <div>
               <label class="ws-field-label">📅 Огноо</label>
-              <input id="tcDate" class="ws-field-input" type="text" id="tcDate" placeholder="2026 оны 05 сарын 13">
+              <input id="tcDate" class="ws-field-input" type="text" placeholder="2026 оны 05 сарын 13">
             </div>
           </div>
-
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px">
             <div>
               <label class="ws-field-label">👩‍🏫 Багшийн нэр</label>
@@ -1087,14 +1079,13 @@
             </div>
             <div>
               <label class="ws-field-label">⏱ Хугацаа (мин)</label>
-              <input id="tcDuration" class="ws-field-input" type="number" min="5" max="90" value="25" placeholder="25">
+              <input id="tcDuration" class="ws-field-input" type="number" min="5" max="90" value="25">
             </div>
           </div>
-
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px">
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px">
             <div>
               <label class="ws-field-label">🏆 Нийт оноо</label>
-              <input id="tcTotalScore" class="ws-field-input" type="number" min="10" max="100" value="20" placeholder="20">
+              <input id="tcTotalScore" class="ws-field-input" type="number" min="10" max="100" value="20">
             </div>
             <div>
               <label class="ws-field-label">📐 Шалгалтын нэр</label>
@@ -1102,7 +1093,7 @@
             </div>
           </div>
 
-          <div style="background:#f0fdf4;border-radius:10px;padding:10px 12px;font-size:11px;color:#166534;line-height:1.7">
+          <div style="background:#f5f3ff;border-radius:10px;padding:10px 12px;font-size:11px;color:#5b21b6;line-height:1.7">
             💡 Эдгээр мэдээлэл ажлын хуудасны <strong>толгой хэсэгт</strong> автоматаар нэмэгдэнэ.
           </div>
         </div>
@@ -1116,8 +1107,8 @@
       <div class="ws-output-box">
         <div id="wsPlaceholder" class="ws-placeholder">
           <div class="icon">📋</div>
-          <p style="font-size:14px;font-weight:700;color:#5c4a28;margin-bottom:8px">Бэлтгэхэд бэлэн!</p>
-          <p style="font-size:12px">Зүүн тохиргоог хийгээд<br><strong style="color:var(--accent-purple)">⚡ Үүсгэх</strong> товч дарна уу</p>
+          <p style="font-size:14px;font-weight:700;color:#57534e;margin-bottom:8px">Бэлтгэхэд бэлэн!</p>
+          <p style="font-size:12px;color:#a8a29e">Зүүн тохиргоог хийгээд<br><strong style="color:var(--accent-purple)">⚡ Үүсгэх</strong> товч дарна уу</p>
           <div class="ws-tip-box">
             💡 <strong>Зөвлөгөө:</strong> Санах + Ойлгох түвшин сонгосон байна. Илүү өндөр сэтгэхүйд Шинжлэх, Бүтээх нэм.
           </div>
@@ -1132,7 +1123,7 @@
         <div id="wsResult" class="ws-result">
           <div class="ws-result-header">
             <div>
-              <span style="font-size:14px;font-weight:800;color:#1a1208">✅ Ажлын хуудас бэлэн!</span>
+              <span style="font-size:14px;font-weight:800;color:var(--on-surface)">✅ Ажлын хуудас бэлэн!</span>
               <div id="wsResultMeta" style="font-size:11px;color:#9c7c4a;margin-top:2px"></div>
             </div>
             <div class="ws-result-actions">
@@ -1142,6 +1133,22 @@
             </div>
           </div>
           <div id="wsPreview" style="padding:20px 24px;overflow-y:auto;flex:1"></div>
+
+          <!-- Chat -->
+          <div class="chat-section">
+            <div class="chat-title">🤖 AI Хөтөч — Засварлах</div>
+            <div class="chat-suggestions">
+              <button class="chat-suggestion-btn" onclick="sendChat('Асуултуудыг хялбарчил')">Хялбарчил</button>
+              <button class="chat-suggestion-btn" onclick="sendChat('Илүү бүтээлч болго')">Бүтээлч болго</button>
+              <button class="chat-suggestion-btn" onclick="sendChat('Оноог нэм')">Оноо нэм</button>
+              <button class="chat-suggestion-btn" onclick="sendChat('Монгол хэлийг засна уу')">Хэл засах</button>
+            </div>
+            <div id="chatMessages"></div>
+            <div class="chat-input-row">
+              <input id="chatInput" type="text" placeholder="Засвар хийх хүсэлт бичнэ үү...">
+              <button class="chat-send-btn" onclick="sendChat()">→</button>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -1218,20 +1225,14 @@
             </div>
             <div class="packages-grid" style="margin-top:10px">
               <div class="pkg-card" onclick="buyPackage(20,9000)">
-                <div class="pkg-pages">20</div>
-                <div class="pkg-label">ХУУДАС</div>
-                <div class="pkg-price">9,000₮</div>
+                <div class="pkg-pages">20</div><div class="pkg-label">ХУУДАС</div><div class="pkg-price">9,000₮</div>
               </div>
               <div class="pkg-card" onclick="buyPackage(25,11000)">
-                <div class="pkg-pages">25</div>
-                <div class="pkg-label">ХУУДАС</div>
-                <div class="pkg-price">11,000₮</div>
+                <div class="pkg-pages">25</div><div class="pkg-label">ХУУДАС</div><div class="pkg-price">11,000₮</div>
               </div>
               <div class="pkg-card deal" onclick="buyPackage(30,12000)">
                 <div class="pkg-badge">ХЯМДРАЛ!</div>
-                <div class="pkg-pages">30</div>
-                <div class="pkg-label">ХУУДАС</div>
-                <div class="pkg-price">12,000₮</div>
+                <div class="pkg-pages">30</div><div class="pkg-label">ХУУДАС</div><div class="pkg-price">12,000₮</div>
               </div>
             </div>
           </div>
@@ -1247,7 +1248,7 @@
       <h2 class="section-title" style="margin-bottom:0">📚 Миний сан</h2>
       <button class="btn-primary" onclick="loadLibrary()" style="font-size:12px;padding:8px 20px">🔄 Шинэчлэх</button>
     </div>
-    <div id="libStatus" style="display:none;background:#fff3e8;border:1px solid #ffd5a8;border-radius:16px;padding:14px 20px;margin-bottom:20px;font-size:13px;color:var(--primary);font-weight:600"></div>
+    <div id="libStatus" style="display:none;background:#fef3c7;border:1px solid #fcd34d;border-radius:16px;padding:14px 20px;margin-bottom:20px;font-size:13px;color:var(--primary-dark);font-weight:600"></div>
     <div id="libraryGrid" class="product-grid">
       <div style="grid-column:1/-1;text-align:center;padding:60px;color:#bbb">
         <div style="font-size:48px;margin-bottom:14px">📭</div>
@@ -1358,7 +1359,7 @@
   <div class="footer-inner">
     <div>
       <div class="footer-brand" style="display:flex;align-items:center;gap:12px">
-        <div style="width:44px;height:44px;border-radius:12px;background:#1a1208;
+        <div style="width:44px;height:44px;border-radius:12px;background:#1c1917;
           border:1px solid rgba(255,255,255,0.1);display:flex;align-items:center;
           justify-content:center;overflow:hidden;flex-shrink:0">
           <img src="https://raw.githubusercontent.com/tuult764-crypto/sonirholtoi-hel-bichig-/main/logo.png"
@@ -1433,10 +1434,10 @@
       </div>
       <div class="payment-body">
         <input id="payEmail" type="email"
-          style="width:100%;padding:14px 16px;border:1.5px solid var(--outline-variant);border-radius:14px;font-size:14px;font-family:'Lexend',sans-serif;outline:none;margin-bottom:10px;box-sizing:border-box"
+          style="width:100%;padding:14px 16px;border:1.5px solid var(--outline-variant);border-radius:14px;font-size:14px;font-family:'Plus Jakarta Sans',sans-serif;outline:none;margin-bottom:10px;box-sizing:border-box"
           placeholder="tanii@gmail.com">
         <input id="payNote" type="text"
-          style="width:100%;padding:12px 16px;border:1.5px solid var(--outline-variant);border-radius:14px;font-size:13px;font-family:'Lexend',sans-serif;outline:none;margin-bottom:16px;box-sizing:border-box"
+          style="width:100%;padding:12px 16px;border:1.5px solid var(--outline-variant);border-radius:14px;font-size:13px;font-family:'Plus Jakarta Sans',sans-serif;outline:none;margin-bottom:16px;box-sizing:border-box"
           placeholder="Нэмэлт тайлбар (заавал биш)">
         <div style="background:#f0fdf4;border-radius:12px;padding:12px 14px;margin-bottom:16px;font-size:12px;color:#166534;line-height:1.6">
           📦 Захиалга баталгаажсаны дараа та <strong>24 цагийн дотор</strong> файлаа и-мэйлээр хүлээн авна.
@@ -1479,6 +1480,7 @@ let authTab        = 'login';
 let allProducts    = [];
 let sudokuSolution = [];
 let sudokuPuzzle   = [];
+let selTemplate    = 'standard';
 
 // AI worksheet state
 let selGrade   = 6;
@@ -1488,9 +1490,7 @@ let selQCount  = 5;
 let selTime    = 15;
 let chatHistory = [];
 
-// ════════════════════════════════
-//  INIT
-// ════════════════════════════════
+// INIT
 document.addEventListener('DOMContentLoaded', () => {
   const saved = localStorage.getItem(AUTH_KEY);
   if (saved) { currentUser = saved; }
@@ -1503,9 +1503,7 @@ document.addEventListener('DOMContentLoaded', () => {
   updateCreditUI();
 });
 
-// ════════════════════════════════
-//  NAVIGATION
-// ════════════════════════════════
+// NAVIGATION
 function fillTodayDate() {
   const el = document.getElementById('tcDate');
   if (el && !el.value) {
@@ -1513,7 +1511,6 @@ function fillTodayDate() {
     el.value = `${now.getFullYear()} оны ${String(now.getMonth()+1).padStart(2,'0')} сарын ${String(now.getDate()).padStart(2,'0')}`;
   }
 }
-
 function showSection(name) {
   document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
   const el = document.getElementById(name + 'Section');
@@ -1526,13 +1523,9 @@ function showDashboard() {
   document.getElementById('dashboardSection').classList.add('active');
   window.scrollTo(0,0);
 }
-function showCorner(type) {
-  showSection(type === 'teacher' ? 'teacher' : 'student');
-}
+function showCorner(type) { showSection(type === 'teacher' ? 'teacher' : 'student'); }
 
-// ════════════════════════════════
-//  AUTH
-// ════════════════════════════════
+// AUTH
 function openAuth()  { document.getElementById('authModal').classList.remove('hidden'); }
 function closeAuth() { document.getElementById('authModal').classList.add('hidden'); }
 function switchTab(tab) {
@@ -1559,9 +1552,7 @@ function updateNavUser() {
   document.getElementById('userLabel').textContent     = currentUser.split('@')[0].substring(0, 12);
 }
 
-// ════════════════════════════════
-//  PRODUCTS
-// ════════════════════════════════
+// PRODUCTS
 const SHEET_ID   = '19XbGi1hWULDm2MRjFAG8G0dtlp7tbfN2pJSupKWA6G4';
 const SHEET_NAME = 'Products';
 
@@ -1618,10 +1609,8 @@ async function loadProducts() {
     const errHtml = `<div style="grid-column:1/-1;text-align:center;padding:48px;color:#bbb">
       <div style="font-size:40px;margin-bottom:12px">⚠️</div>
       <p style="font-size:13px;font-weight:600;margin-bottom:8px">Бүтээгдэхүүн ачаалах боломжгүй.</p>
-      <p style="font-size:11px;color:#999">Алдаа: ${e.message}</p>
       <button class="btn-primary" style="margin-top:16px;font-size:12px" onclick="loadProducts()">🔄 Дахин оролдох</button></div>`;
     ['shopGrid','dashGrid'].forEach(id => { const g=document.getElementById(id); if(g) g.innerHTML=errHtml; });
-    showToast('Бүтээгдэхүүн татахад алдаа гарлаа','error');
   }
 }
 
@@ -1684,7 +1673,7 @@ function renderProducts(prods, gridId) {
         ${free && dlUrl ? `<a href="${dlUrl}" target="_blank" rel="noopener" download
           style="display:block;margin-top:10px;text-align:center;background:var(--tertiary);color:#fff;
           padding:9px;border-radius:12px;font-size:12px;font-weight:700;text-decoration:none;transition:all 0.15s"
-          onmouseover="this.style.background='#239a4a'" onmouseout="this.style.background='var(--tertiary)'">⬇ Татаж авах</a>` : ''}
+          onmouseover="this.style.background='#047857'" onmouseout="this.style.background='var(--tertiary)'">⬇ Татаж авах</a>` : ''}
       </div></div>`;
   }).join('');
 }
@@ -1695,7 +1684,6 @@ function filterShop(cat, btn) {
   renderProducts(filtered, 'shopGrid');
 }
 
-// Preview modal
 function openPreview(p) {
   if (!p) return;
   const imgs = (p.img || '').split(',').map(s=>s.trim()).filter(Boolean);
@@ -1753,14 +1741,10 @@ function previewGoTo(idx) {
 }
 function closePreviewModal() { document.getElementById('previewModal').classList.add('hidden'); }
 
-// ════════════════════════════════
-//  GOOGLE APPS SCRIPT
-// ════════════════════════════════
+// GAS
 const GAS_URL = 'https://script.google.com/macros/s/AKfycby1Hsa1TvOLBeuLuHtMTzYfuE8i6HT6fRxfhZqYcXB7tGSnt6-61sPQLwdulKhqf6FldQ/exec';
 
-// ════════════════════════════════
-//  CART
-// ════════════════════════════════
+// CART
 function addToCart(id) {
   const p = allProducts.find(x => x.id === id);
   if (!p) return;
@@ -1820,9 +1804,7 @@ async function submitOrder() {
   btn.disabled=false; btn.textContent='🚀 Захиалга илгээх';
 }
 
-// ════════════════════════════════
-//  LIBRARY
-// ════════════════════════════════
+// LIBRARY
 async function loadLibrary() {
   const grid   = document.getElementById('libraryGrid');
   const status = document.getElementById('libStatus');
@@ -1837,7 +1819,6 @@ async function loadLibrary() {
       grid.innerHTML=`<div style="grid-column:1/-1;text-align:center;padding:60px;color:#bbb">
         <div style="font-size:48px;margin-bottom:14px">📭</div>
         <p style="font-size:14px;font-weight:600">Баталгаажсан захиалга байхгүй байна.</p>
-        <p style="font-size:12px;margin-top:8px">Төлбөр илгээсэн бол 24 цагийн дотор баталгаажна.</p>
         <button class="btn-primary" style="margin-top:20px" onclick="showSection('shop')">Дэлгүүр рүү очих</button></div>`; return;
     }
     status.style.display='block';
@@ -1857,15 +1838,11 @@ async function loadLibrary() {
         </div></div>`).join('');
   } catch(e) {
     grid.innerHTML=`<div style="grid-column:1/-1;text-align:center;padding:60px;color:#bbb">
-      <div style="font-size:40px;margin-bottom:12px">⚠️</div>
       <p style="font-size:13px;font-weight:600">Мэдээлэл татахад алдаа гарлаа.</p></div>`;
-    showToast('Алдаа гарлаа','error');
   }
 }
 
-// ════════════════════════════════
-//  TOAST
-// ════════════════════════════════
+// TOAST
 let toastTimer;
 function showToast(msg, type='success') {
   const t = document.getElementById('toast');
@@ -1874,9 +1851,7 @@ function showToast(msg, type='success') {
   toastTimer=setTimeout(()=>{ t.className=''; },3000);
 }
 
-// ════════════════════════════════
-//  SUDOKU
-// ════════════════════════════════
+// SUDOKU
 const CREDIT_KEY    = 'shb_print_credits';
 const FREE_USED_KEY = 'shb_free_used';
 let _spBuying    = { pages:0, price:0 };
@@ -1892,9 +1867,7 @@ async function refreshCredits() {
   try {
     const resp = await fetch(GAS_URL + '?action=getApproved&email=' + encodeURIComponent(currentUser));
     const data = await resp.json();
-    console.log('[Кредит] GAS хариу:', JSON.stringify(data));
     if (Array.isArray(data) && data.length) {
-      // printPages талбараас нийт кредит тооцно
       let total = 0;
       data.forEach(item => {
         const p = parseInt(item.printPages || item.pages || item.credits || 0);
@@ -1911,17 +1884,14 @@ async function refreshCredits() {
       showToast('Батлагдсан захиалга байхгүй байна.', 'error');
     }
   } catch(e) {
-    console.error('[Кредит] Алдаа:', e);
     updateCreditUI();
     showToast('Сүлжээний алдаа. Дахин оролдоно уу.', 'error');
   }
   if (btn) { btn.textContent = '⟳ Эрхийг шинэчлэх'; btn.disabled = false; }
 }
 
-
 function isFreeUsed()  { return localStorage.getItem(FREE_USED_KEY)==='1'; }
 function markFreeUsed(){ localStorage.setItem(FREE_USED_KEY,'1'); }
-
 
 function initSudoku() {
   const { puzzle, solution } = generateSudoku();
@@ -1999,129 +1969,87 @@ function solveSudoku() {
   showToast('Шийдэл харуулагдлаа','success');
 }
 
-// ════════════════════════════════════════════════════════════
-//  БҮРЭН ЗАСВАРЛАСАН ХЭВЛЭХ КОД v4
-//  Хуучин handlePrint, printFree, askPrintCount,
-//  selectPrintCount, clearPcBtns, updatePcPreview,
-//  confirmPrintCount, closePrintCountModal,
-//  doPrint, buildPrintHTML функцүүдийг
-//  ЭНЭ БҮХЭН КОДООР СОЛИНО УУ
-// ════════════════════════════════════════════════════════════
-
+// PRINT
 function handlePrint() {
   const cr = getCredits();
   if (cr < 1 && isFreeUsed()) {
     showToast('Хэвлэх эрх байхгүй. Эрх худалдаж аваарай!', 'error');
     return;
   }
-  // Хэдэн хуудас хэвлэхийг асуух
   askPrintCount();
 }
-
-function printFree() {
-  askPrintCount();
-}
+function printFree() { askPrintCount(); }
 
 function askPrintCount() {
   const existing = document.getElementById('printCountModal');
   if (existing) existing.remove();
-
   const cr = getCredits();
   const freeAvail = !isFreeUsed();
-  // Нийт хэвлэх боломжтой хуудас
   const maxPages = freeAvail ? Math.max(cr, 1) : cr;
-
   const modal = document.createElement('div');
   modal.id = 'printCountModal';
-  modal.style.cssText = 'position:fixed;inset:0;z-index:99999;background:rgba(0,0,0,0.65);display:flex;align-items:center;justify-content:center;padding:20px;font-family:Lexend,sans-serif';
-
-  // 1-5 товчлуур, кредиттэй бол 5 хүртэл
+  modal.style.cssText = 'position:fixed;inset:0;z-index:99999;background:rgba(0,0,0,0.65);display:flex;align-items:center;justify-content:center;padding:20px;font-family:"Plus Jakarta Sans",sans-serif';
   const maxBtn = Math.min(maxPages, 5);
   const btns = Array.from({length: maxBtn}, (_, i) => i + 1).map(n => `
     <button id="pcBtn${n}" onclick="selectPrintCount(${n})"
-      style="width:52px;height:52px;border-radius:14px;border:2px solid #e8d4b0;
+      style="width:52px;height:52px;border-radius:14px;border:2px solid #e7e5e4;
       background:#fff;font-size:16px;font-weight:800;cursor:pointer;
-      font-family:Lexend,sans-serif;color:#5c4a28">${n}</button>`).join('');
-
+      font-family:'Plus Jakarta Sans',sans-serif;color:#57534e">${n}</button>`).join('');
   const extraInput = maxPages > 5
     ? `<input id="pcCustom" type="number" min="1" max="${maxPages}" placeholder="Тоо"
         oninput="selectPrintCount(parseInt(this.value)||0)"
-        style="width:72px;height:52px;border-radius:14px;border:2px solid #e8d4b0;
-        text-align:center;font-size:15px;font-weight:800;font-family:Lexend,sans-serif;outline:none;color:#5c4a28">`
+        style="width:72px;height:52px;border-radius:14px;border:2px solid #e7e5e4;
+        text-align:center;font-size:15px;font-weight:800;font-family:'Plus Jakarta Sans',sans-serif;outline:none;color:#57534e">`
     : '';
-
   const creditInfo = cr > 0
     ? `Таны эрх: <strong>${cr} хуудас</strong>`
     : freeAvail ? 'Үнэгүй: <strong>1 хуудас</strong>' : '⚠️ Эрх байхгүй';
-
   modal.innerHTML = `
     <div style="background:#fff;border-radius:24px;padding:32px 28px;width:100%;max-width:340px;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,0.3)">
       <div style="font-size:40px;margin-bottom:12px">🖨️</div>
-      <h3 style="font-size:17px;font-weight:800;margin-bottom:8px;color:#1a1208">Хэдэн хуудас хэвлэх вэ?</h3>
-      <p style="font-size:12px;color:#5c4a28;margin-bottom:20px;line-height:1.6">
-        1 хуудас = 4 судоку агуулна.<br>${creditInfo}
-      </p>
+      <h3 style="font-size:17px;font-weight:800;margin-bottom:8px;color:#1c1917">Хэдэн хуудас хэвлэх вэ?</h3>
+      <p style="font-size:12px;color:#57534e;margin-bottom:20px;line-height:1.6">1 хуудас = 4 судоку агуулна.<br>${creditInfo}</p>
       <div style="display:flex;gap:8px;justify-content:center;margin-bottom:24px;flex-wrap:wrap">
         ${btns}${extraInput}
       </div>
-      <div id="pcPreview" style="background:#fff3e8;border-radius:12px;padding:10px;font-size:12px;color:#e8600a;font-weight:700;margin-bottom:18px;display:none"></div>
+      <div id="pcPreview" style="background:#fef3c7;border-radius:12px;padding:10px;font-size:12px;color:#92400e;font-weight:700;margin-bottom:18px;display:none"></div>
       <div style="display:flex;gap:10px">
         <button onclick="closePrintCountModal()"
-          style="flex:1;padding:13px;border-radius:13px;border:none;background:#f5f5f5;color:#555;font-family:Lexend,sans-serif;font-size:13px;font-weight:700;cursor:pointer">Болих</button>
+          style="flex:1;padding:13px;border-radius:13px;border:none;background:#f5f5f5;color:#555;font-family:'Plus Jakarta Sans',sans-serif;font-size:13px;font-weight:700;cursor:pointer">Болих</button>
         <button id="pcConfirmBtn" onclick="confirmPrintCount()"
-          style="flex:2;padding:13px;border-radius:13px;border:none;background:#e8600a;color:#fff;font-family:Lexend,sans-serif;font-size:13px;font-weight:800;cursor:pointer;opacity:0.4;pointer-events:none">🖨️ Хэвлэх</button>
+          style="flex:2;padding:13px;border-radius:13px;border:none;background:var(--primary);color:#fff;font-family:'Plus Jakarta Sans',sans-serif;font-size:13px;font-weight:800;cursor:pointer;opacity:0.4;pointer-events:none">🖨️ Хэвлэх</button>
       </div>
     </div>`;
   document.body.appendChild(modal);
   window._selectedPrintCount = 0;
 }
-
 function selectPrintCount(n) {
   if (!n || n < 1) return;
   window._selectedPrintCount = n;
   [1,2,3,4,5].forEach(i => {
     const b = document.getElementById('pcBtn' + i);
     if (!b) return;
-    b.style.borderColor = i === n ? '#e8600a' : '#e8d4b0';
-    b.style.background  = i === n ? 'rgba(232,96,10,0.12)' : '#fff';
-    b.style.color       = i === n ? '#e8600a' : '#5c4a28';
+    b.style.borderColor = i === n ? 'var(--primary)' : '#e7e5e4';
+    b.style.background  = i === n ? 'rgba(217,119,6,0.12)' : '#fff';
+    b.style.color       = i === n ? 'var(--primary)' : '#57534e';
   });
   const prev = document.getElementById('pcPreview');
   const btn  = document.getElementById('pcConfirmBtn');
   if (prev) { prev.style.display = 'block'; prev.textContent = `${n} хуудас · ${n * 4} судоку хэвлэгдэнэ`; }
   if (btn)  { btn.style.opacity = '1'; btn.style.pointerEvents = 'auto'; }
 }
-
-function clearPcBtns() {}
-
-function updatePcPreview(n) { selectPrintCount(n); }
-
+function closePrintCountModal() { const m = document.getElementById('printCountModal'); if (m) m.remove(); }
 function confirmPrintCount() {
   const n = window._selectedPrintCount || 0;
   if (!n || n < 1) { showToast('Хуудасны тоо сонгоно уу!', 'error'); return; }
   const cr = getCredits();
   const freeAvail = !isFreeUsed();
-  // Кредит хангалттай эсэх: үнэгүй 1 хуудас эсвэл кредиттэй
-  if (!freeAvail && n > cr) {
-    showToast(`Эрх хүрэлцэхгүй. Таны эрх: ${cr} хуудас`, 'error');
-    return;
-  }
+  if (!freeAvail && n > cr) { showToast(`Эрх хүрэлцэхгүй. Таны эрх: ${cr} хуудас`, 'error'); return; }
   closePrintCountModal();
-  // Кредит хасах — үнэгүй хэвлэлт эхний удаад тооцохгүй
-  if (!freeAvail) {
-    setCredits(cr - n);
-  } else {
-    markFreeUsed();
-    if (cr > 0) setCredits(Math.max(0, cr - Math.max(0, n - 1)));
-  }
+  if (!freeAvail) { setCredits(cr - n); }
+  else { markFreeUsed(); if (cr > 0) setCredits(Math.max(0, cr - Math.max(0, n - 1))); }
   doPrint(n);
 }
-
-function closePrintCountModal() {
-  const m = document.getElementById('printCountModal');
-  if (m) m.remove();
-}
-
 function doPrint(pageCount) {
   const pages = [];
   for (let p = 0; p < pageCount; p++) {
@@ -2131,7 +2059,6 @@ function doPrint(pageCount) {
   }
   const html = buildPrintHTML(pages);
   showToast(`${pageCount} хуудас хэвлэж байна...`, 'success');
-
   setTimeout(function() {
     const pa = document.getElementById('printArea');
     if (!pa) { showToast('Хэвлэх талбар олдсонгүй!', 'error'); return; }
@@ -2152,14 +2079,13 @@ function doPrint(pageCount) {
     }, 400);
   }, 150);
 }
-
 function buildPrintHTML(pages) {
   const MN = {'1':'᠑','2':'᠒','3':'᠓','4':'᠔','5':'᠕','6':'᠖','7':'᠗','8':'᠘','9':'᠙'};
   return pages.map((puzzles, pi) => {
     const header = `<div class="pg-header">
       <img src="https://raw.githubusercontent.com/tuult764-crypto/sonirholtoi-hel-bichig-/main/logo.png"
         alt="" onerror="this.style.display='none'"
-        style="width:28px;height:28px;object-fit:contain;border-radius:6px;background:#1a1208;">
+        style="width:28px;height:28px;object-fit:contain;border-radius:6px;background:#1c1917;">
       <div class="pg-header-text">
         <div class="pg-header-title">Сонирхолтой хэл бичиг</div>
         <div class="pg-header-sub">Судоку · Хуудас ${pi + 1}</div>
@@ -2188,9 +2114,7 @@ function buildPrintHTML(pages) {
     }).join('');
     return `<div class="pg">${header}${puzzleHTMLs}</div>`;
   }).join('');
-
 }
-
 
 // Buy package
 function buyPackage(pages, price) {
@@ -2212,7 +2136,6 @@ function spGoStep2() {
   document.getElementById('spStep3').style.display='none';
 }
 function closeSudokuPay() { document.getElementById('sudokuPayModal').classList.add('hidden'); spGoStep1(); }
-
 async function spSubmit() {
   const email = document.getElementById('spEmail').value.trim();
   const note  = document.getElementById('spNote').value.trim();
@@ -2234,12 +2157,10 @@ async function spSubmit() {
     document.getElementById('spConfirmEmail').textContent = email;
     document.getElementById('spStep2').style.display = 'none';
     document.getElementById('spStep3').style.display = '';
-    showToast('Захиалга амжилттай илгээгдлээ! Баталгаажсаны дараа эрх нэмэгдэнэ.', 'success');
+    showToast('Захиалга амжилттай илгээгдлээ!', 'success');
   } catch(e) { showToast('Сүлжээний алдаа. Дахин оролдоно уу.', 'error'); }
   btn.disabled = false; btn.textContent = '🚀 Захиалга илгээх';
 }
-
-// Warn modal
 function showWarn(msg, cb) {
   _warnCallback = cb;
   document.getElementById('warnMsg').textContent = msg;
@@ -2248,9 +2169,7 @@ function showWarn(msg, cb) {
 function closeWarn()   { document.getElementById('sudokuWarnModal').classList.add('hidden'); _warnCallback = null; }
 function confirmWarn() { closeWarn(); if (_warnCallback) _warnCallback(); }
 
-// ════════════════════════════════
-//  AI ASSESSMENT
-// ════════════════════════════════
+// AI ASSESSMENT
 function buildGradeGrid() {
   const grid = document.getElementById('gradeGrid');
   if (!grid) return;
@@ -2270,19 +2189,18 @@ const DEMO_LIT_DB = {
     { title: '"ХУУР ХӨГЖИМ ҮҮССЭН НЬ" — Домог', content: 'Бурхан багш ээжийгээ алдаад уй гашуу болж суухдаа гуньж гутсан сэтгэлээ сэргээх нэг юм гаргах сан гэж бодоод хуур гэдэг юмыг хийх болжээ.' },
     { title: '"АРГАТ УЛААН ҮНЭГ" — Үлгэр', content: 'Эрт урьд цагт нэг хоосон ядуу хүү оготно, зурманд урхи, тор зүүж, түүгээрээ амьдардаг байжээ.' },
     { title: '"ХААНЫ ХҮҮ ГОМБО, ХАРЦЫН ХҮҮ ГОНГОР" — Үлгэр', content: 'Эрт урьд цагт нэг хааны хүү, харцын хүү хоёр их дотно үерхэж байжээ. Хааны хүүг Гомбо гэдэг, харцын хүүг Гонгор гэдэг байжээ.' },
-    { title: '"АРСЛАНДАЙ МЭРГЭН ХААН" — Үлгэр', content: 'Эрт урьд цагт Арсландай мэргэн хаан гэж байжээ. Арааараа дүүрэн ай түмэн арван живаа адуутай, өврөөрөө дүүрэн үй түмэн хорин живаа хонгор алаг адуутай юм гэнэ.' },
-    { title: '"АЛТ, МӨНГӨ ХОЁР" — П.Хорлоо', content: 'Эрт цагт нэгэн эцгийн хоёр хүүхэд холын уулнаас мод түүж ирэхээр явах болжээ. Явахад нь эх нь хоёр хүүхдэдээ нэг нэг боодолтой ааруул ээзгий өгөөд "Хоорондоо эвтэй яв" хэмээн захижээ.' },
-    { title: '"ШИДЭТ БИЙР" — Үлгэр', content: 'Урьд Ма Лянь гэдэг өнчин хүү байжээ. Өвс зулгааж, гишүү түүсэн шиг амь зууна. Багаасаа л зурах дуртай ч ядмаг түүнд бийр авах мөнгө яаж олдох билээ.' },
-    { title: '"ШУДАРГА ШҮҮГЧ" — Л.Н.Толстой', content: 'Алжирын хаан Бауакас өөрийнх нь нэгэн хотод маш шударга шүүгч байдаг, түүнээс нэг ч зальт этгээд бултан гарч чаддаггүй гэж сонсоод үнэн худлыг нь нүдээр үзэхээр явжээ.' },
-    { title: '"ТОСГОНЫ ОВГОР" — Оскар Уайлд', content: 'Түүнийг хэн нь ч Овгор гэж нэрлэсэн юм бэ, бүү мэд. Лав л маш сайхан цэцэрлэгтэй юм даг. Хүүхдүүд тэнд очиж тоглох дуртай.' },
+    { title: '"АРСЛАНДАЙ МЭРГЭН ХААН" — Үлгэр', content: 'Эрт урьд цагт Арсландай мэргэн хаан гэж байжээ. Арааараа дүүрэн ай түмэн арван живаа адуутай байжээ.' },
+    { title: '"АЛТ, МӨНГӨ ХОЁР" — П.Хорлоо', content: 'Эрт цагт нэгэн эцгийн хоёр хүүхэд холын уулнаас мод түүж ирэхээр явах болжээ.' },
+    { title: '"ШИДЭТ БИЙР" — Үлгэр', content: 'Урьд Ма Лянь гэдэг өнчин хүү байжээ. Өвс зулгааж, гишүү түүсэн шиг амь зууна.' },
+    { title: '"ШУДАРГА ШҮҮГЧ" — Л.Н.Толстой', content: 'Алжирын хаан Бауакас өөрийнх нь нэгэн хотод маш шударга шүүгч байдаг гэж сонсоод үнэн худлыг нь нүдээр үзэхээр явжээ.' },
   ],
   '7': [
     { title: '"ХОРЬ ТҮМЭД, ХОРИДАЙ МЭРГЭНИЙ ТҮҮХЭН ДОМОГ"', content: 'Эрт нэгэн цагт Байгал нуурын урд биеэр нутагладаг нэгэн айлд Хори, Хоридай гэж хоёр хөвүүн байжээ.' },
-    { title: '"АРВАЙХЭЭРИЙН ТҮҮХЭН ДОМОГ"', content: 'Агь Үйзэн гүний хошууны ард Гомбо үзэсгэлэнт нэгэн охинтой байжээ. Гэтэл охиныг нь нутгийн баян Балбар гэгч ганц хүүдээ гэргий болгон богтлон сүйлж аваад, өргөн их найр хурим хийжээ.' },
-    { title: '"ШҮХЭРЧ БУНИЯА" — Б.Ринчен', content: 'Манж Дайчин улсын Тэнгэрийг тэтгэсэн хааны аравдугаар он билээ. Улиастайд суугаа зарлигийн манж сайд Автай сайн хааны байгуулсан Эрдэнэ Зуугийн хийдийг сонирхон үзэх гэж зуны дэлгэр сайхан цагаар очсон байжээ.' },
+    { title: '"АРВАЙХЭЭРИЙН ТҮҮХЭН ДОМОГ"', content: 'Агь Үйзэн гүний хошууны ард Гомбо үзэсгэлэнт нэгэн охинтой байжээ.' },
+    { title: '"ШҮХЭРЧ БУНИЯА" — Б.Ринчен', content: 'Манж Дайчин улсын Тэнгэрийг тэтгэсэн хааны аравдугаар он билээ.' },
   ],
   '8': [
-    { title: '"ҮРЭГДСЭНИЙГ ХҮЛЭЭГЧ" — Д.Намдаг', content: '1939 оны намар говь нутагт суудлын задгай ногоон машинтай цэргийн нэг дарга Нямаа өвгөн гэгчийнхийг эрэн сурсаар очив. Тэрээр Халх голын байлдаанд баатарлах байлдсан нэг бага даргын тухай яваа боловч очсон тэр айлдаа баяр баясгаланг өгч даанч чадсангүй.' },
+    { title: '"ҮРЭГДСЭНИЙГ ХҮЛЭЭГЧ" — Д.Намдаг', content: '1939 оны намар говь нутагт суудлын задгай ногоон машинтай цэргийн нэг дарга Нямаа өвгөн гэгчийнхийг эрэн сурсаар очив.' },
   ],
 };
 
@@ -2323,86 +2241,68 @@ function toggleBloom(level) {
     selBloom.delete(level);
     btn.style.border = '1.5px solid var(--outline-variant)';
     btn.style.background = '#fff'; btn.style.color = 'var(--on-surface-variant)';
+    btn.classList.remove('bloom-active');
   } else {
     selBloom.add(level);
     const s = BLOOM_STYLE[level];
     btn.style.border = `1.5px solid ${s.on}`;
     btn.style.background = s.bg; btn.style.color = s.on;
+    btn.classList.add('bloom-active');
   }
 }
 function selectQCount(q, t) {
   selQCount = q; selTime = t;
   document.querySelectorAll('.qcount-btn').forEach(btn => btn.classList.toggle('active', btn.id === 'qc' + q));
 }
+function selectTemplate(tpl) {
+  selTemplate = tpl;
+  document.querySelectorAll('.tpl-btn').forEach(btn => btn.classList.toggle('active', btn.id === 'tpl-' + tpl));
+}
 
 function buildPrompt() {
   const BLOOM_META = {
-    remember:  { mn:'Санах',    verbs:'нэрлэх, жагсаах, тодорхойлох',
-      tip:'Зохиолоос ТОД нэрлэгдсэн зүйл — дүрийн нэр, газар, он ашиглан асуу.',
-      ex:'Жишээ: зохиолын тодорхой хэсэгт дурдсан баатрын нэрийг нэрлэ.' },
-    understand:{ mn:'Ойлгох',   verbs:'тайлбарлах, харьцуулах, хүүрнэх',
-      tip:'Зохиолын ТОДОРХОЙ хэсгийг иш татан тайлбарлуул.',
-      ex:'Жишээ: 1-2-р өгүүлбэрт болсон үйл явдлыг тайлбарла.' },
-    apply:     { mn:'Хэрэглэх', verbs:'хэрэглэх, ашиглах, жишээ гаргах',
-      tip:'Дүрийн шийдвэрийг өөр нөхцөлд хэрэглэвэл яах вэ гэж ас.',
-      ex:'Жишээ: дүрийн аргыг өөрийн нөхцөлд хэрэглэвэл юу болох вэ?' },
-    analyze:   { mn:'Шинжлэх',  verbs:'задлах, шалтгаан-үр дагавар олох',
-      tip:'Хоёр үйл явдал харьцуулах эсвэл шалтгаан-үр дагаврыг задлуул.',
-      ex:'Жишээ: тухайн үйл явдлын шалтгаан юу байсан бэ?' },
-    evaluate:  { mn:'Үнэлэх',   verbs:'дүгнэх, шүүмжлэх, үнэлэх',
-      tip:'Тодорхой шийдвэр/үйлдлийг үнэлүүл — баримт дурдуулах.',
-      ex:'Жишээ: дүрийн үйлдэл зөв байсан уу? Зохиолоос баримт гарга.' },
-    create:    { mn:'Бүтээх',   verbs:'зохиох, бүтээх, нэгтгэх',
-      tip:'Тод нөхцөл дээр тулгуурлан бүтээлч даалгавар өг.',
-      ex:'Жишээ: дүрийн байранд тухайн нөхцөлд ороход та юу хийх байсан вэ?' },
+    remember:  { mn:'Санах',    verbs:'нэрлэх, жагсаах, тодорхойлох', tip:'Зохиолоос ТОД нэрлэгдсэн зүйл ашиглан асуу.', ex:'Жишээ: зохиолын тодорхой хэсэгт дурдсан баатрын нэрийг нэрлэ.' },
+    understand:{ mn:'Ойлгох',   verbs:'тайлбарлах, харьцуулах, хүүрнэх', tip:'Зохиолын ТОДОРХОЙ хэсгийг иш татан тайлбарлуул.', ex:'Жишээ: 1-2-р өгүүлбэрт болсон үйл явдлыг тайлбарла.' },
+    apply:     { mn:'Хэрэглэх', verbs:'хэрэглэх, ашиглах, жишээ гаргах', tip:'Дүрийн шийдвэрийг өөр нөхцөлд хэрэглэвэл яах вэ.', ex:'Жишээ: дүрийн аргыг өөрийн нөхцөлд хэрэглэвэл юу болох вэ?' },
+    analyze:   { mn:'Шинжлэх',  verbs:'задлах, шалтгаан-үр дагавар олох', tip:'Хоёр үйл явдал харьцуулах эсвэл шалтгаан-үр дагаврыг задлуул.', ex:'Жишээ: тухайн үйл явдлын шалтгаан юу байсан бэ?' },
+    evaluate:  { mn:'Үнэлэх',   verbs:'дүгнэх, шүүмжлэх, үнэлэх', tip:'Тодорхой шийдвэр/үйлдлийг үнэлүүл — баримт дурдуулах.', ex:'Жишээ: дүрийн үйлдэл зөв байсан уу? Зохиолоос баримт гарга.' },
+    create:    { mn:'Бүтээх',   verbs:'зохиох, бүтээх, нэгтгэх', tip:'Тод нөхцөл дээр тулгуурлан бүтээлч даалгавар өг.', ex:'Жишээ: дүрийн байранд тухайн нөхцөлд ороход та юу хийх байсан вэ?' },
   };
-
   const TMPL = {
     standard:  'Холимог: богино хариулт, задгай, бүтээлч даалгавар.',
     fillblank: 'Зохиолоос шууд авсан өгүүлбэрт ___ хоосон зай үлдээж нөхөх ' + selQCount + ' даалгавар.',
     creative:  'Үргэлжлэл бичих, дүрийн нэрийн өмнөөс захидал, шүлэг зэрэг ' + selQCount + ' бүтээлч даалгавар.',
   };
-
   const selected = [...selBloom];
   const qPerBloom = Math.ceil(selQCount / selected.length);
-
   const bloomLines = selected.map(function(key) {
     const m = BLOOM_META[key];
     return '【' + m.mn + ' — ' + qPerBloom + ' асуулт】 Үйл үг: ' + m.verbs + '. ' + m.tip + ' ' + m.ex;
   }).join(' | ');
-
-  const prompt = 'Та монгол хэл уран зохиолын мэргэшсэн багш. '
-    + 'Гарчиг: ' + selWork.title + '. '
-    + 'Анги: ' + selGrade + '-р анги. '
+  return 'Та монгол хэл уран зохиолын мэргэшсэн багш. '
+    + 'Гарчиг: ' + selWork.title + '. Анги: ' + selGrade + '-р анги. '
     + 'Загвар: ' + (TMPL[selTemplate] || TMPL.standard)
     + ' Нийт асуулт: ' + selQCount + '. Хугацаа: ' + selTime + ' мин.'
     + ' ЭХ БИЧВЭР: ' + selWork.content
     + ' БЛҮҮМИЙН ЗААВАРЧИЛГАА: ' + bloomLines
     + ' ЧАНАРЫН ДҮРЭМ: 1. Асуулт бүрт зохиолын ямар хэсгийг ашигласнаа заах.'
-    + ' 2. Эх бичвэрт байгаа тодорхой дүр газар үйл явдал ишлэл ашиглах — ерөнхий асуулт хийхгүй.'
+    + ' 2. Эх бичвэрт байгаа тодорхой дүр газар үйл явдал ишлэл ашиглах.'
     + ' 3. Зохиолыг уншилгүй хариулах боломжтой асуулт хийхгүй.'
     + ' 4. Хялбараас хүнд рүү дараалал. 5. Монгол хэл найруулга зөв.'
     + ' ГАРАЛТЫН ФОРМАТ — зөвхөн дараах HTML:'
-    + ' <div><ul>'
-    + ' <li data-bloom="санах" data-score="1">асуулт...</li>'
-    + ' </ul></div>'
+    + ' <div><ul><li data-bloom="санах" data-score="1">асуулт...</li></ul></div>'
     + ' data-bloom: санах|ойлгох|хэрэглэх|шинжлэх|үнэлэх|бүтээх. data-score: 1-5.';
-
-  return prompt;
 }
-
 function buildFallback() {
   const t = selWork ? selWork.title : 'Зохиол';
-  return `<div>
-  <ul>
+  return `<div><ul>
     <li>Санах түвшний асуулт: "${t}" зохиолын гол баатрын нэрийг нэрлэ. (1 оноо)</li>
     <li>Ойлгох түвшний асуулт: Зохиолын гол санааг өөрийн үгээр тайлбарла. (2 оноо)</li>
     <li>Хэрэглэх түвшний асуулт: Гол дүрийн үйлдлийг өөрийн амьдралтай холбон ярь. (2 оноо)</li>
     <li>Шинжлэх түвшний асуулт: Зохиолд ямар асуудал үүссэн бэ? Үр дагаврыг задлан шинжил. (3 оноо)</li>
     <li>Үнэлэх түвшний асуулт: Зохиолын үйл явдлыг хэр бодитой гэж үзэж байна вэ? Баримтаар тайлбарла. (2 оноо)</li>
     <li>Бүтээх түвшний асуулт: Зохиолын үргэлжлэлийг 5-7 өгүүлбэрээр зохио. (3 оноо)</li>
-  </ul>
-</div>`;
+  </ul></div>`;
 }
 
 async function generateWorksheet() {
@@ -2412,18 +2312,11 @@ async function generateWorksheet() {
   document.getElementById('wsPlaceholder').style.display = 'none';
   document.getElementById('wsResult').style.display      = 'none';
   document.getElementById('wsGenerating').style.display  = 'flex';
-
-  const msgs = [
-    'Зохиолыг шинжилж байна…',
-    'Блүүмийн дагуу асуулт зохиож байна…',
-    'Хэл найруулгыг тохируулж байна…',
-    'Эцсийн шүүлт хийж байна…'
-  ];
+  const msgs = ['Зохиолыг шинжилж байна…','Блүүмийн дагуу асуулт зохиож байна…','Хэл найруулгыг тохируулж байна…','Эцсийн шүүлт хийж байна…'];
   let mi = 0;
   const rotate = setInterval(() => {
     document.getElementById('genMsg').textContent = msgs[++mi % msgs.length];
   }, 1800);
-
   let wsHTML = '';
   try {
     const resp = await fetch('https://api.anthropic.com/v1/messages', {
@@ -2438,36 +2331,31 @@ async function generateWorksheet() {
     });
     const data = await resp.json();
     const raw  = (data.content || []).map(b => b.text || '').join('');
-    // Match the full <div>...</div> block including all nested content
     const m    = raw.match(/<div[^>]*>[\s\S]*<\/div>/);
     wsHTML     = m ? m[0] : buildFallback();
   } catch (e) {
     wsHTML = buildFallback();
     showToast('AI холболт амжилтгүй. Жишээ хуудас харуулж байна.', 'error');
   }
-
   clearInterval(rotate);
   chatHistory = [];
   document.getElementById('wsGenerating').style.display = 'none';
   document.getElementById('wsResult').style.display     = 'block';
   renderPreview(wsHTML);
-
   const box = document.getElementById('chatMessages');
   box.innerHTML = '';
-  addChatMsg('assistant', `"${selWork.title}" зохиолд үндэслэсэн ${selQCount} асуулт амжилттай үүслээ! Засвар хийхийг хүсвэл хэлнэ үү.`);
+  addChatMsg('assistant', `"${selWork.title}" зохиолд үндэслэсэн ${selQCount} асуулт амжилттай үүслээ!`);
   btn.disabled = false;
   showToast('Ажлын хуудас бэлэн боллоо!', 'success');
 }
 
 function renderPreview(wsHTML) {
-  // Багшийн тохируулгын утгуудыг авах
   const school   = (document.getElementById('tcSchool')     || {}).value || '';
   const teacher  = (document.getElementById('tcTeacher')    || {}).value || '';
   const dateVal  = (document.getElementById('tcDate')       || {}).value || '2026 оны 05 сарын 13';
   const duration = (document.getElementById('tcDuration')   || {}).value || selTime || 25;
   const totalSc  = (document.getElementById('tcTotalScore') || {}).value || 20;
   const wsTitle  = (document.getElementById('tcTitle')      || {}).value || 'Ажлын хуудас';
-
   const header = `
     <div class="wh-box">
       <div class="wh-top">
@@ -2482,25 +2370,12 @@ function renderPreview(wsHTML) {
         </div>
       </div>
       <div class="wh-meta">
-        <div class="wh-meta-cell">
-          <span class="wh-meta-label">Сурагчийн нэр</span>
-          <div class="wh-meta-line"></div>
-        </div>
-        <div class="wh-meta-cell">
-          <span class="wh-meta-label">Анги, дугаар</span>
-          <div class="wh-meta-line"></div>
-        </div>
-        <div class="wh-meta-cell">
-          <span class="wh-meta-label">Хугацаа</span>
-          <div style="font-size:13px;font-weight:800;margin-top:3px">${duration} мин</div>
-        </div>
-        <div class="wh-meta-cell">
-          <span class="wh-meta-label">Нийт оноо</span>
-          <div style="font-size:13px;font-weight:800;margin-top:3px">${totalSc} оноо</div>
-        </div>
+        <div class="wh-meta-cell"><span class="wh-meta-label">Сурагчийн нэр</span><div class="wh-meta-line"></div></div>
+        <div class="wh-meta-cell"><span class="wh-meta-label">Анги, дугаар</span><div class="wh-meta-line"></div></div>
+        <div class="wh-meta-cell"><span class="wh-meta-label">Хугацаа</span><div style="font-size:13px;font-weight:800;margin-top:3px">${duration} мин</div></div>
+        <div class="wh-meta-cell"><span class="wh-meta-label">Нийт оноо</span><div style="font-size:13px;font-weight:800;margin-top:3px">${totalSc} оноо</div></div>
       </div>
     </div>`;
-
   document.getElementById('wsPreview').innerHTML = header + (wsHTML || '');
 }
 
@@ -2511,10 +2386,8 @@ async function sendChat(suggestion = '') {
   inp.value = '';
   addChatMsg('user', msg);
   const typingEl = addChatMsg('assistant', '<em style="color:#aaa">Боловсруулж байна…</em>', true);
-
   const currentHTML = document.getElementById('wsPreview').innerHTML;
-  const ctx = `Одоогийн ажлын хуудас (HTML):\n${currentHTML}\n\nЗохиол: ${selWork ? selWork.title : ''}, ${selGrade}-р анги\nХүсэлт: ${msg}\n\nШинэчлэгдсэн бүрэн HTML <div><ul><li> форматаар буцаа. Зөвхөн HTML, өөр текст бичихгүй.`;
-
+  const ctx = `Одоогийн ажлын хуудас (HTML):\n${currentHTML}\n\nЗохиол: ${selWork ? selWork.title : ''}, ${selGrade}-р анги\nХүсэлт: ${msg}\n\nШинэчлэгдсэн бүрэн HTML <div><ul><li> форматаар буцаа. Зөвхөн HTML.`;
   try {
     const resp = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
@@ -2541,7 +2414,6 @@ async function sendChat(suggestion = '') {
     addChatMsg('assistant', 'Холболтын алдаа гарлаа.');
   }
 }
-
 function addChatMsg(role, text, returnEl = false) {
   const box = document.getElementById('chatMessages');
   const el  = document.createElement('div');
@@ -2557,22 +2429,20 @@ function printWorksheet() {
   const box = document.getElementById('wsPreview');
   if (!box || !box.innerHTML) { showToast('Эхлээд үүсгэнэ үү!', 'error'); return; }
   const pa = document.getElementById('printArea');
-  pa.innerHTML = `
-    <div class="print-ws-wrap">
-      <style>
-        @page { size: A4 portrait; margin: 15mm; }
-        body  { font-family: 'Lexend', sans-serif; }
-        ul    { list-style: none; padding: 0; }
-        li    { padding: 12px 0 12px 24px; border-bottom: 1px solid #eee; font-size: 11pt; line-height: 1.8; page-break-inside: avoid; }
-      </style>
-      ${box.innerHTML}
-    </div>`;
+  pa.innerHTML = `<div class="print-ws-wrap">
+    <style>
+      @page { size: A4 portrait; margin: 15mm; }
+      body  { font-family: 'Plus Jakarta Sans', sans-serif; }
+      ul    { list-style: none; padding: 0; }
+      li    { padding: 12px 0 12px 24px; border-bottom: 1px solid #eee; font-size: 11pt; line-height: 1.8; page-break-inside: avoid; }
+    </style>
+    ${box.innerHTML}
+  </div>`;
   pa.style.display = 'block';
   const cleanup = () => { pa.style.display='none'; pa.innerHTML=''; window.removeEventListener('afterprint', cleanup); };
   window.addEventListener('afterprint', cleanup);
   setTimeout(() => window.print(), 150);
 }
-
 function downloadWorksheet() {
   const box = document.getElementById('wsPreview');
   if (!box || !box.innerHTML) { showToast('Эхлээд үүсгэнэ үү!', 'error'); return; }
@@ -2580,12 +2450,8 @@ function downloadWorksheet() {
     ? `Ajliin_huudas_${selGrade}r_${selWork.title.replace(/[^\w]/g,'_').substring(0,15)}.doc`
     : `Ajliin_huudas_${selGrade}r_angi.doc`;
   const blob = new Blob([`<html><head><meta charset="utf-8">
-    <style>
-      body { font-family: serif; font-size: 12pt; margin: 20mm; }
-      ul   { list-style: none; padding: 0; }
-      li   { padding: 10px 0; border-bottom: 1px solid #eee; line-height: 1.8; }
-    </style></head><body>${box.innerHTML}</body></html>`],
-    { type: 'application/msword' });
+    <style>body{font-family:serif;font-size:12pt;margin:20mm}ul{list-style:none;padding:0}li{padding:10px 0;border-bottom:1px solid #eee;line-height:1.8}</style>
+    </head><body>${box.innerHTML}</body></html>`], { type: 'application/msword' });
   const url = URL.createObjectURL(blob);
   const a   = document.createElement('a');
   a.href = url; a.download = fname; a.click();
