@@ -1499,7 +1499,7 @@ document.addEventListener('DOMContentLoaded', () => {
   buildGradeGrid();
   loadProducts();
   initSudoku();
-  selectGrade(6);
+  getLitDB().then(() => selectGrade(6));
   updateCreditUI();
 });
 
@@ -2183,48 +2183,92 @@ function buildGradeGrid() {
   });
 }
 
-const DEMO_LIT_DB = {
-  '6': [
-    { title: '"ДЭЛХИЙ АНХ ТОГТСОН НЬ" — Домог', content: 'Эрт урьд цагт гэнэ. Шагжамуни анхны хүсэл сэтгэлчлэн бүтсэнд туйлын их баярлаж байжээ. Хурмаст тэнгэр: "Доод газар дээр юу болж байна?" гэж асуусанд "Эзэн минь, тэнд газар гэх юмгүй, уснаас өөр юу ч үгүй" гэжээ.' },
-    { title: '"ХУУР ХӨГЖИМ ҮҮССЭН НЬ" — Домог', content: 'Бурхан багш ээжийгээ алдаад уй гашуу болж суухдаа гуньж гутсан сэтгэлээ сэргээх нэг юм гаргах сан гэж бодоод хуур гэдэг юмыг хийх болжээ.' },
-    { title: '"АРГАТ УЛААН ҮНЭГ" — Үлгэр', content: 'Эрт урьд цагт нэг хоосон ядуу хүү оготно, зурманд урхи, тор зүүж, түүгээрээ амьдардаг байжээ.' },
-    { title: '"ХААНЫ ХҮҮ ГОМБО, ХАРЦЫН ХҮҮ ГОНГОР" — Үлгэр', content: 'Эрт урьд цагт нэг хааны хүү, харцын хүү хоёр их дотно үерхэж байжээ. Хааны хүүг Гомбо гэдэг, харцын хүүг Гонгор гэдэг байжээ.' },
-    { title: '"АРСЛАНДАЙ МЭРГЭН ХААН" — Үлгэр', content: 'Эрт урьд цагт Арсландай мэргэн хаан гэж байжээ. Арааараа дүүрэн ай түмэн арван живаа адуутай байжээ.' },
-    { title: '"АЛТ, МӨНГӨ ХОЁР" — П.Хорлоо', content: 'Эрт цагт нэгэн эцгийн хоёр хүүхэд холын уулнаас мод түүж ирэхээр явах болжээ.' },
-    { title: '"ШИДЭТ БИЙР" — Үлгэр', content: 'Урьд Ма Лянь гэдэг өнчин хүү байжээ. Өвс зулгааж, гишүү түүсэн шиг амь зууна.' },
-    { title: '"ШУДАРГА ШҮҮГЧ" — Л.Н.Толстой', content: 'Алжирын хаан Бауакас өөрийнх нь нэгэн хотод маш шударга шүүгч байдаг гэж сонсоод үнэн худлыг нь нүдээр үзэхээр явжээ.' },
-  ],
-  '7': [
-    { title: '"ХОРЬ ТҮМЭД, ХОРИДАЙ МЭРГЭНИЙ ТҮҮХЭН ДОМОГ"', content: 'Эрт нэгэн цагт Байгал нуурын урд биеэр нутагладаг нэгэн айлд Хори, Хоридай гэж хоёр хөвүүн байжээ.' },
-    { title: '"АРВАЙХЭЭРИЙН ТҮҮХЭН ДОМОГ"', content: 'Агь Үйзэн гүний хошууны ард Гомбо үзэсгэлэнт нэгэн охинтой байжээ.' },
-    { title: '"ШҮХЭРЧ БУНИЯА" — Б.Ринчен', content: 'Манж Дайчин улсын Тэнгэрийг тэтгэсэн хааны аравдугаар он билээ.' },
-  ],
-  '8': [
-    { title: '"ҮРЭГДСЭНИЙГ ХҮЛЭЭГЧ" — Д.Намдаг', content: '1939 оны намар говь нутагт суудлын задгай ногоон машинтай цэргийн нэг дарга Нямаа өвгөн гэгчийнхийг эрэн сурсаар очив.' },
-  ],
-};
+// ── GitHub-аас зохиолын мэдээлэл татах ──
+const LIT_DB_URL = 'https://raw.githubusercontent.com/tuult764-crypto/sonirholtoi-hel-bichig-/main/literature_db.txt';
+let _litDB = null;
+let _litDBLoading = false;
+let _litDBCallbacks = [];
+
+function parseLitDB(text) {
+  const db = {};
+  const angiBlocks = text.split(/\nАНГИ:\s*/);
+  angiBlocks.forEach(block => {
+    if (!block.trim()) return;
+    const firstLine = block.split('\n')[0].trim();
+    const grade = parseInt(firstLine);
+    if (isNaN(grade)) return;
+    const rest = block.substring(firstLine.length);
+    const workBlocks = rest.split(/\n===\n/);
+    const works = [];
+    workBlocks.forEach(wb => {
+      wb = wb.trim();
+      if (!wb) return;
+      const titleMatch = wb.match(/ГАРЧИГ:\s*([\s\S]*?)(?:\nЭХ:|\n===|$)/);
+      const contentMatch = wb.match(/ЭХ:\s*([\s\S]*?)$/);
+      if (!titleMatch || !contentMatch) return;
+      const rawTitle = titleMatch[1].replace(/\n/g,' ').trim();
+      const rawContent = contentMatch[1].trim();
+      if (!rawTitle || !rawContent) return;
+      works.push({ title: rawTitle, author: '', content: rawContent, topic: rawTitle });
+    });
+    if (works.length) db[grade] = works;
+  });
+  return db;
+}
+
+async function getLitDB() {
+  if (_litDB) return _litDB;
+  if (_litDBLoading) return new Promise(res => _litDBCallbacks.push(res));
+  _litDBLoading = true;
+  try {
+    const resp = await fetch(LIT_DB_URL);
+    const text = await resp.text();
+    _litDB = parseLitDB(text);
+  } catch(e) {
+    _litDB = {};
+  }
+  _litDBLoading = false;
+  _litDBCallbacks.forEach(cb => cb(_litDB));
+  _litDBCallbacks = [];
+  return _litDB;
+}
 
 async function selectGrade(g) {
-  selGrade = g; selWork = null;
-  document.querySelectorAll('.grade-btn').forEach(btn => btn.classList.toggle('active', btn.id === 'gb' + g));
+  selGrade = g;
+  selWork = null;
+  document.querySelectorAll('.grade-btn').forEach(b => b.classList.toggle('active', b.id === 'gb' + g));
   const loadEl = document.getElementById('litLoading');
   const selEl  = document.getElementById('workSelect');
   const prevEl = document.getElementById('workPreview');
-  loadEl.style.display = 'block'; selEl.style.display = 'none'; prevEl.style.display = 'none';
-  await new Promise(r => setTimeout(r, 400));
-  const works = DEMO_LIT_DB[String(g)] || [];
-  loadEl.style.display = 'none'; selEl.style.display = 'block';
-  selEl.innerHTML = '<option value="">Зохиол сонгоно уу</option>' +
+  loadEl.style.display = 'block';
+  loadEl.textContent   = '⌛ GitHub-аас зохиол татаж байна…';
+  selEl.style.display  = 'none';
+  prevEl.style.display = 'none';
+
+  const db = await getLitDB();
+  let works = db[g] || [];
+
+  loadEl.style.display = 'none';
+  selEl.style.display  = 'block';
+
+  if (!works.length) {
+    selEl.innerHTML = '<option value="">— Зохиол олдсонгүй —</option>';
+    showToast(`${g}-р ангийн зохиол олдсонгүй`, 'error');
+    return;
+  }
+
+  selEl.innerHTML = `<option value="">— ${works.length} зохиолоос сонгоно уу —</option>` +
     works.map((w, i) => `<option value="${i}">${w.title}</option>`).join('');
+
   selEl.onchange = () => {
     const idx = selEl.value;
     if (idx === '') { selWork = null; prevEl.style.display = 'none'; return; }
     selWork = works[parseInt(idx)];
     prevEl.style.display = 'block';
-    prevEl.textContent = selWork.content.substring(0, 140) + '…';
+    prevEl.textContent   = selWork.content.substring(0, 140) + '…';
   };
 }
-
+  
 const BLOOM_STYLE = {
   remember:  { on:'#ef4444', bg:'rgba(239,68,68,0.10)' },
   understand:{ on:'#f97316', bg:'rgba(249,115,22,0.10)' },
