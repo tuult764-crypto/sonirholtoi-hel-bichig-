@@ -713,8 +713,8 @@ footer .copy{color:rgba(255,255,255,.2)}
       </div>
       <div id="playerNamesWrap" style="margin-bottom:20px"></div>
       <div style="background:#fef9f0;border:1px solid #fde68a;border-radius:12px;padding:12px;font-size:11px;color:#92400e;line-height:1.7;margin-bottom:20px">
-        <strong>Дүрэм:</strong> 4 бэрх=4 алхам · 3 морь=3 · 2 морь=2 · 1 морь=1 · 0 морь=1<br>
-        Нэмэлт асуулт зөв хариулбал +2 алхам нэмнэ. 🎯
+        <strong>Дүрэм:</strong> 4 бэрх=4 алхам · 3 бэрх=3 · 2 бэрх=2 · 1 бэрх=1 · 0 бэрх=1<br>
+        Нэмэлт асуулт зөв хариулвал +2 алхам нэмнэ. 🎯
       </div>
       <button class="btn-p" style="width:100%;padding:14px;font-size:14px" onclick="startHorseGame()">🐎 Тоглоом эхлэх</button>
     </div>
@@ -760,7 +760,7 @@ footer .copy{color:rgba(255,255,255,.2)}
     <div class="training-hero-text">
       <div class="training-hero-tag">🎓 Онлайн сургалт</div>
       <h2>Мэргэжлийн<br>багштай хамтран суралц</h2>
-      <p>Монгол хэл, бичиг, уран уншлагын мэргэжлийн сургалтууд. Гэрийнхээ тухтай орчинд, багштайгаа хамтран ярилцах.</p>
+      <p>Монгол хэл, бичиг, уран уншлагын мэргэжлийн сургалтууд. Гэрийнхээ тухтай орчинд, өөрийн хурдаар.</p>
     </div>
     <div class="training-hero-emoji">🏫</div>
   </div>
@@ -779,7 +779,7 @@ footer .copy{color:rgba(255,255,255,.2)}
     <button class="tr-flt-btn" onclick="filterTraining('writing',this)">✍️ Бичиг</button>
     <button class="tr-flt-btn" onclick="filterTraining('homework',this)">📝 Гэрийн даалгавар</button>
     <button class="tr-flt-btn" onclick="filterTraining('reading',this)">📖 Унших</button>
-    <button class="tr-flt-btn" onclick="filterTraining('script',this)">Монгол бичгийн анхан шат</button>
+    <button class="tr-flt-btn" onclick="filterTraining('script',this)">ᠮᠣᠨᠭᠣᠯ ᠪᠢᠴᠢᠭ᠌</button>
   </div>
 
   <!-- Course Grid -->
@@ -797,20 +797,22 @@ footer .copy{color:rgba(255,255,255,.2)}
         </div>
         <div class="course-icon-wrap" style="background:#fef3c7">✍️</div>
         <h3>Алдаагүй бичиж сурцгаая</h3>
-        <p class="course-desc">Монгол хэлний дүрмийн алдааг засаж, зөв бичих дадал эзэмшицгээе. Багш сурагч тус бүрд анхаарал хандуулан ажиллана.</p>
+        <p class="course-desc">Тасралтгүй 21 хоногийн сургалт. Цээж бичиг бичүүлж, алдааг дараа өдөр нь засан тохирох дүрмийн бичлэг илгээнэ. Нэмэлт ажлын хуудас өгч, даалгавар шалган дахин цээж бичгээр дуусгана.</p>
         <div class="course-meta">
-          <div class="meta-chip"><span>👤</span> Цөөн тоотой бүлэг</div>
-          <div class="meta-chip"><span>⏱</span> Долоо хоног бүр</div>
-          <div class="meta-chip"><span>🏅</span> Батламж</div>
+          <div class="meta-chip"><span>📅</span> 21 хоног тасралтгүй</div>
+          <div class="meta-chip"><span>👤</span> Макс 10 суралцагч</div>
+          <div class="meta-chip"><span>🔞</span> Насны хязгааргүй</div>
+          <div class="meta-chip"><span>🎬</span> Видео бичлэг</div>
         </div>
-        <div style="background:#fef9f0;border-radius:12px;padding:10px 12px;font-size:11px;color:#92400e;line-height:1.6">
-          📌 Цөөн тоотой бүлэг учраас бүртгэл хурдан дүүрдэг. Суудал хязгаарлагдмал!
+        <div style="background:#fef9f0;border-radius:12px;padding:10px 12px;font-size:11px;color:#92400e;line-height:1.7">
+          📌 <strong>Хэрхэн явагдах вэ:</strong> Цээж бичиг → Алдаа засах → Дүрмийн бичлэг → Ажлын хуудас → Шалгалт → Дахин цээж бичиг<br>
+          ⚠️ 10-аас хэтрэхгүй тоотой бүлэг. Суудал хязгаарлагдмал!
         </div>
       </div>
       <div class="course-card-foot">
         <div>
-          <div class="course-price">Үнэ тохируулга</div>
-          <div class="course-price-sub">Бүртгүүлээд мэдэж авна</div>
+          <div class="course-price">50,000₮</div>
+          <div class="course-price-sub">21 хоногийн бүрэн сургалт</div>
         </div>
         <button class="btn-enroll amber-btn" onclick="event.stopPropagation();openCourseDetail('writing')">Бүртгүүлэх →</button>
       </div>
@@ -828,30 +830,30 @@ footer .copy{color:rgba(255,255,255,.2)}
           </div>
         </div>
         <div class="course-icon-wrap" style="background:#fdf4ff">📝</div>
-        <h3>Гэрийн даалгавраа багштай хамтран хий</h3>
-        <p class="course-desc">Монгол хэлний гэрийн даалгавраа мэргэжлийн багштай хамт хийж гүйцэтгэнэ. Долоо хоног бүр бүртгэл авна.</p>
+        <h3>Гэрийн даалгавараа багштай хамтран хий</h3>
+        <p class="course-desc">Онлайн ганцаарчилсан Meet уулзалт. Анги болон хичээлийн цагаа бүртгүүлж, багш цагт нь тохирох суудал олгоно.</p>
         <div class="course-meta">
-          <div class="meta-chip"><span>📅</span> 7 хоног бүр</div>
-          <div class="meta-chip"><span>👨‍🏫</span> Мэргэжлийн багш</div>
-          <div class="meta-chip"><span>✅</span> Хувийн хичээл</div>
+          <div class="meta-chip"><span>📅</span> Да·Мя·Лх·Пү·Ба хичээл</div>
+          <div class="meta-chip"><span>✏️</span> Бямба·Нямд бүртгэл</div>
+          <div class="meta-chip"><span>👤</span> Цагт 2 сурагч</div>
         </div>
-        <div style="margin-bottom:8px">
-          <div style="font-size:11px;font-weight:700;color:var(--mid);margin-bottom:8px">📆 Долоо хоногийн хуваарь:</div>
-          <div class="schedule-chips" id="schedChips">
-            <span class="sched-chip">Даваа</span>
-            <span class="sched-chip">Мягмар</span>
-            <span class="sched-chip">Лхагва</span>
-            <span class="sched-chip">Пүрэв</span>
-            <span class="sched-chip">Баасан</span>
-            <span class="sched-chip">Бямба</span>
-            <span class="sched-chip">Ням</span>
+        <div style="margin-bottom:10px">
+          <div style="font-size:11px;font-weight:800;color:var(--mid);margin-bottom:7px">🕐 Хичээлийн цагийн сонголт:</div>
+          <div style="display:flex;gap:7px;flex-wrap:wrap">
+            <span style="background:#1c1917;color:#fff;border-radius:10px;padding:5px 13px;font-size:10px;font-weight:800">19:00</span>
+            <span style="background:#1c1917;color:#fff;border-radius:10px;padding:5px 13px;font-size:10px;font-weight:800">20:00</span>
+            <span style="background:#1c1917;color:#fff;border-radius:10px;padding:5px 13px;font-size:10px;font-weight:800">21:00</span>
+            <span style="background:#fee2e2;color:#991b1b;border-radius:10px;padding:5px 13px;font-size:10px;font-weight:800">Дүүрсэн бол 🔒</span>
           </div>
+        </div>
+        <div style="background:#fef9f0;border-radius:12px;padding:10px 12px;font-size:11px;color:#92400e;line-height:1.7">
+          📌 <strong>Бямба, Нямд бүртгэл авна.</strong> Бүртгэхдээ анги болон хичээлийн цагаа оруулна. Багш цагийг үзээд зөвшөөрвөл баталгаажна.<br>⚠️ Цаг бүрт <strong>2 сурагч</strong> л. Дүүрсэн цаг автоматаар хаагдана.
         </div>
       </div>
       <div class="course-card-foot">
         <div>
-          <div class="course-price">Үнэ тохируулга</div>
-          <div class="course-price-sub">Долоо хоног / сар</div>
+          <div class="course-price">50,000₮</div>
+          <div class="course-price-sub">Анхны хямдаралтай үнэ / сар</div>
         </div>
         <button class="btn-enroll amber-btn" onclick="event.stopPropagation();openCourseDetail('homework')">Бүртгүүлэх →</button>
       </div>
@@ -868,61 +870,69 @@ footer .copy{color:rgba(255,255,255,.2)}
           </div>
         </div>
         <div class="course-icon-wrap" style="background:#f0fdf4">📖</div>
-        <h3>Унших, ойлгох чадвараа сайжруулцгаая</h3>
-        <p class="course-desc">Насны ангилалтай. Уншиж ойлгосноо ярьж мэдэрч уншдаг болно. Гүн ойлголт, хурдан унших дадал.</p>
+        <h3>Унших чадвараа сайжруулцгаая</h3>
+        <p class="course-desc">Meet уулзалт · 21 хоног тасралтгүй. Насны ангиллаар бүртгэнэ — ангилал тус бүрт 3 сурагч. Хурдан уншиж яриулах, зогсолттой мэдэрч унших, гол санааг тайлбарлах арга эзэмшинэ.</p>
         <div class="age-badges">
-          <span class="age-badge">6-9 нас</span>
-          <span class="age-badge">10-13 нас</span>
-          <span class="age-badge">14-17 нас</span>
+          <span class="age-badge">6–9 нас</span>
+          <span class="age-badge">10–13 нас</span>
+          <span class="age-badge">14–17 нас</span>
           <span class="age-badge">18+ нас</span>
         </div>
         <div class="course-meta">
-          <div class="meta-chip"><span>👶</span> Насны ангилал</div>
-          <div class="meta-chip"><span>🗣</span> Ярих чадвар</div>
-          <div class="meta-chip"><span>🧠</span> Ойлголт</div>
+          <div class="meta-chip"><span>📅</span> 21 хоног Meet</div>
+          <div class="meta-chip"><span>👥</span> Ангилалт бүрт 3 суралцагч</div>
+          <div class="meta-chip"><span>🗣</span> Ярих · Мэдрэх · Тайлбар</div>
         </div>
-        <div style="background:#f0fdf4;border-radius:12px;padding:10px 12px;font-size:11px;color:#065f46;line-height:1.6">
-          ✅ Уншиж ойлгосноо ярьж, мэдэрч уншдаг болно. Аль ч насны хүүхдэд тохиромжтой.
+        <div style="background:#f0fdf4;border-radius:12px;padding:10px 12px;font-size:11px;color:#065f46;line-height:1.7">
+          📚 <strong>Хэрхэн явагдах:</strong> Хурдан унших → Дахин уншиж ярих → Зогсолттой мэдэрч унших → Гол санааг тайлбарлах<br>
+          ⚠️ Насны ангилал тус бүрт <strong>3 сурагч</strong> л. Дүүрсэн бол хаагдана.
         </div>
       </div>
       <div class="course-card-foot">
         <div>
-          <div class="course-price">Үнэ тохируулга</div>
-          <div class="course-price-sub">Насны бүлгээр</div>
+          <div class="course-price">99,000₮</div>
+          <div class="course-price-sub">21 хоног · насны ангиллаар</div>
         </div>
         <button class="btn-enroll green-btn" onclick="event.stopPropagation();openCourseDetail('reading')">Бүртгүүлэх →</button>
       </div>
     </div>
 
-    <!-- Card 4: Монгол бичиг -->
+    <!-- Card 4: Үндэсний бичиг -->
     <div class="course-card" data-cat="script" onclick="openCourseDetail('script')">
+      <div class="ribbon">20% CASHBACK</div>
       <div class="course-card-top">
         <div class="course-tag-row">
-          <span class="course-tag tag-limited">⏳ 1 сарын хугацаа</span>
+          <span class="course-tag tag-limited">🎁 Урамшуулалтай</span>
           <div class="stars">
             <span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span>
             <span class="rating-count">(19)</span>
           </div>
         </div>
         <div class="course-icon-wrap" style="background:#ede9fe">ᠮ</div>
-        <h3>Монгол бичгийн анхан шатны сургалт</h3>
-        <p class="course-desc">1 сарын хугацаатай эрчимт сургалт. Монгол бичгийн үсэг таних, уншиж бичиж сурахаас эхлэн өгүүлбэр бичих хүртэл.</p>
+        <h3>Үндэсний бичгийн анхан шатны сургалт</h3>
+        <p class="course-desc">Meet уулзалт · Анхан шатны сургалт. Сургалтын материал болон эх бүгд сургалтаас гарна. Макс 10 суралцагч.</p>
         <div class="course-meta">
-          <div class="meta-chip"><span>📅</span> 1 сар</div>
+          <div class="meta-chip"><span>💻</span> Meet уулзалт</div>
+          <div class="meta-chip"><span>👤</span> Макс 10 суралцагч</div>
           <div class="meta-chip"><span>ᠠ</span> Анхан шат</div>
-          <div class="meta-chip"><span>🎓</span> Батламж</div>
-          <div class="meta-chip"><span>📱</span> Онлайн</div>
+          <div class="meta-chip"><span>📄</span> Материал дотроос</div>
+        </div>
+        <!-- Cashback banner -->
+        <div style="background:linear-gradient(135deg,#1c1917,#292524);border-radius:14px;padding:14px;margin-bottom:10px;position:relative;overflow:hidden">
+          <div style="position:absolute;top:-10px;right:-10px;font-size:48px;opacity:.1">🎁</div>
+          <div style="font-size:11px;font-weight:800;color:#fbbf24;margin-bottom:5px;letter-spacing:.06em">🎁 20% CASHBACK УРАМШУУЛАЛ</div>
+          <div style="font-size:10px;color:rgba(255,255,255,.7);line-height:1.7">Нэг ч өдөр тасалдалгүй өгсөн даалгаврыг бүрэн гүйцэт хийж, хичээлийн үед дүрсээ асааж ярьсан тохиолдолд <strong style="color:#fbbf24">19,800₮ буцаагдана!</strong></div>
         </div>
         <div style="background:#ede9fe;border-radius:12px;padding:10px 12px;font-size:11px;color:#5b21b6;line-height:1.6">
-          🏆 Сургалт дууссаны дараа монгол бичгийн үсэг нүдлэн таньж, богино өгүүлбэр, эх унших чадвартай болсон байна.
+          ✅ Сургалтын материал болон эх бүгд хичээлийн явцад багшаас гарна. Тусгайлан худалдаж авах шаардлагагүй.
         </div>
         <div class="course-progress"><div class="course-progress-fill" style="width:68%"></div></div>
-        <div style="font-size:10px;color:var(--muted);margin-top:4px">Суудлын тоо хязгаартай </div>
+        <div style="font-size:10px;color:var(--muted);margin-top:4px">Суудлын тоо хязгаартай</div>
       </div>
       <div class="course-card-foot">
         <div>
-          <div class="course-price">Үнэ тохируулга</div>
-          <div class="course-price-sub">1 сарын бүрэн курс</div>
+          <div class="course-price">99,000₮</div>
+          <div class="course-price-sub">Cashback-тэй бол 79,200₮</div>
         </div>
         <button class="btn-enroll" style="background:var(--purple);color:#fff" onclick="event.stopPropagation();openCourseDetail('script')">Бүртгүүлэх →</button>
       </div>
@@ -936,7 +946,7 @@ footer .copy{color:rgba(255,255,255,.2)}
     <div class="testi-grid">
       <div class="testi-card">
         <div class="testi-stars">★★★★★</div>
-        <div class="testi-text">"Хүүхэд минь монгол бичигт дуртай болсон. Багш сурагчтайгаа танхимд байгаа мэт зааэ ажилладаг."</div>
+        <div class="testi-text">"Хүүхэд минь монгол бичигт дуртай болсон. Багш маш тайлбарлах чадвартай, тавтай заадаг."</div>
         <div class="testi-author">
           <div class="testi-avatar" style="background:#d97706">Д</div>
           <div><div class="testi-name">Дэлгэрмаа</div><div class="testi-role">Эцэг эх · Улаанбаатар</div></div>
@@ -947,7 +957,7 @@ footer .copy{color:rgba(255,255,255,.2)}
         <div class="testi-text">"Гэрийн даалгаврын тусламж маш хэрэгтэй болсон. Хүүхэдтэйгээ хамт суухгүйгээр даалгавраа дуусгадаг болсон."</div>
         <div class="testi-author">
           <div class="testi-avatar" style="background:#059669">Б</div>
-          <div><div class="testi-name">Батзориг</div><div class="testi-role">Эцэг эх · Улаанбаатар</div></div>
+          <div><div class="testi-name">Батзориг</div><div class="testi-role">Эцэг эх · Дархан</div></div>
         </div>
       </div>
       <div class="testi-card">
@@ -1024,10 +1034,10 @@ footer .copy{color:rgba(255,255,255,.2)}
       </div>
       <div class="cp-body">
         <div class="cp-amt" id="cpAmt">Тохируулга</div>
-        <div class="cp-amt-sub">Бүртгүүлсний дараа багш холбоо барина</div>
+        <div class="cp-amt-sub" id="cpAmtSub">Бүртгүүлсний дараа багш холбоо барина</div>
         <div class="qr-box"><img src="https://raw.githubusercontent.com/tuult764-crypto/sonirholtoi-hel-bichig-/main/qr.png" alt="QR" onerror="this.style.display='none';this.nextSibling.style.display='flex'"><span style="display:none;font-size:44px">🔲</span></div>
         <div class="bank-info"><div class="bank-num">ХАС БАНК: 5006069631</div><div class="bank-name">МӨНХДАЛАЙ ТУУЛ</div></div>
-        <div class="bank-note">⚠️ Гүйлгээний <strong>утга</strong> дээр и-мэйл хаягаа бичнэ үү!<br>Жишээ: <em>tanii@gmail.com · Сургалтын нэр</em></div>
+        <div class="bank-note">⚠️ Гүйлгээний <strong>утга</strong> дээр:<br><em>И-мэйл · Сургалтын нэр · Хүссэн цаг</em><br>жш: <em>tanii@gmail.com · Гэрийн даалгавар · 19:00</em></div>
         <button class="pay-next" onclick="cpGoStep2()">✅ Төлбөр төллөө → Дараах</button>
         <button class="pay-close-lnk" onclick="closeCoursePayModal()">Хаах</button>
       </div>
@@ -1035,24 +1045,33 @@ footer .copy{color:rgba(255,255,255,.2)}
     <div id="cpStep2" style="display:none">
       <div class="cp-top">
         <div class="cp-icon">📧</div>
-        <h3>И-мэйл болон мэдээлэл</h3>
-        <p>Бүртгэлийн мэдээллээ оруулна уу</p>
+        <h3>Бүртгэлийн мэдээлэл</h3>
+        <p>Бүх талбарыг бөглөнө үү</p>
       </div>
       <div class="cp-body">
-        <input id="cpName" class="modal-field" type="text" placeholder="Таны нэр">
+        <input id="cpName" class="modal-field" type="text" placeholder="Таны нэр (суралцагчийн нэр)">
         <input id="cpEmail" class="modal-field" type="email" placeholder="И-мэйл хаяг (tanii@gmail.com)">
         <input id="cpPhone" class="modal-field" type="tel" placeholder="Утасны дугаар">
-        <input id="cpChildAge" class="modal-field" type="text" placeholder="Хүүхдийн нас (хэрэв хүүхдэд бол)" id="cpChildAge">
+        <input id="cpGrade" class="modal-field" type="text" placeholder="Анги (жш: 3-р анги, 9-р анги, насанд хүрэгч)">
+        <input id="cpChildAge" class="modal-field" type="text" placeholder="Нас (жш: 10 нас, 35 нас)">
+        <!-- Time slot picker - homework only -->
+        <div id="cpTimeWrap" style="margin-bottom:12px;display:none">
+          <div style="font-size:11px;font-weight:800;color:var(--mid);margin-bottom:8px">🕐 Хичээлийн цагаа сонгоно уу <span style="color:var(--red);font-size:9px">(заавал)</span></div>
+          <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-bottom:6px">
+            <button class="cp-time-btn" data-time="19:00" onclick="selectTimeSlot(this)" style="padding:12px 6px;border:2px solid var(--border);border-radius:12px;background:#fff;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif;font-size:13px;font-weight:800;text-align:center;transition:all .15s;color:var(--mid)">19:00</button>
+            <button class="cp-time-btn" data-time="20:00" onclick="selectTimeSlot(this)" style="padding:12px 6px;border:2px solid var(--border);border-radius:12px;background:#fff;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif;font-size:13px;font-weight:800;text-align:center;transition:all .15s;color:var(--mid)">20:00</button>
+            <button class="cp-time-btn" data-time="21:00" onclick="selectTimeSlot(this)" style="padding:12px 6px;border:2px solid var(--border);border-radius:12px;background:#fff;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif;font-size:13px;font-weight:800;text-align:center;transition:all .15s;color:var(--mid)">21:00</button>
+          </div>
+          <div style="font-size:9px;color:var(--muted);line-height:1.5">⚠️ Цаг бүрт 2 сурагч л бүртгэгдэнэ. Цаг нь дүүрсэн бол багш мэдэгдэнэ.</div>
+        </div>
         <div id="cpSchedWrap" style="margin-bottom:10px;display:none">
-          <div style="font-size:11px;font-weight:700;color:var(--mid);margin-bottom:8px">📆 Хүссэн хуваарь:</div>
+          <div style="font-size:11px;font-weight:700;color:var(--mid);margin-bottom:8px">📆 Хүссэн өдрүүд:</div>
           <div class="sched-select-wrap">
             <button class="sched-sel-btn" onclick="toggleSchedBtn(this)">Даваа</button>
             <button class="sched-sel-btn" onclick="toggleSchedBtn(this)">Мягмар</button>
             <button class="sched-sel-btn" onclick="toggleSchedBtn(this)">Лхагва</button>
             <button class="sched-sel-btn" onclick="toggleSchedBtn(this)">Пүрэв</button>
             <button class="sched-sel-btn" onclick="toggleSchedBtn(this)">Баасан</button>
-            <button class="sched-sel-btn" onclick="toggleSchedBtn(this)">Бямба</button>
-            <button class="sched-sel-btn" onclick="toggleSchedBtn(this)">Ням</button>
           </div>
         </div>
         <input id="cpNote" class="modal-field" type="text" placeholder="Нэмэлт тайлбар (заавал биш)">
@@ -1263,65 +1282,73 @@ const COURSE_DATA = {
     icon:'✍️',
     color:'#fef3c7',
     title:'Алдаагүй бичиж сурцгаая',
-    subtitle:'Монгол хэлний дүрэм, зөв бичих дадал',
-    desc:'Монгол хэлний бичгийн дүрмийг гүнзгий эзэмших сургалт. Багш тус бүрд ганцаарчилсан анхаарал хандуулна. Цөөн тоотой бүлэг учраас хурдан дүүрдэг.',
+    subtitle:'21 хоног тасралтгүй · 50,000₮ · Макс 10 суралцагч',
+    desc:'Тасралтгүй 21 хоногийн онлайн сургалт. Цээж бичиг бичүүлж, алдааг дараа өдөр нь засан тохирох дүрмийн хичээлийн бичлэг илгээнэ. Нэмэлтээр ажлын хуудас өгч, даалгавар шалган дахин цээж бичгээр хичээл дуусгана. Насны хязгааргүй.',
     features:[
-      {icon:'👤', text:'Цөөн тоотой бүлэг', sub:'Ганцаарчилсан анхаарал'},
-      {icon:'✅', text:'Алдаа засах', sub:'Тус бүрийн дүрмийн алдаа'},
-      {icon:'📝', text:'Дасгал ажил', sub:'Долоо хоног бүр'},
-      {icon:'🏅', text:'Гэрчилгээ', sub:'Сургалт дуусмагц'},
+      {icon:'📝', text:'Цээж бичиг', sub:'Алдааг дараа өдөр засна'},
+      {icon:'🎬', text:'Дүрмийн бичлэг', sub:'Тохирох дүрэм бүрт'},
+      {icon:'📄', text:'Ажлын хуудас', sub:'Нэмэлт дасгал даалгавар'},
+      {icon:'✅', text:'Шалгалт', sub:'Дахин цээж бичгээр дуусгана'},
     ],
     hasSchedule: false,
     hasAge: false,
-    priceNote:'Бүртгүүлсний дараа багш үнийг тохируулна'
+    priceNote:'50,000₮ — 21 хоногийн бүрэн сургалт',
+    priceFull:'50,000₮',
+    priceSub:'21 хоног тасралтгүй'
   },
   homework: {
     icon:'📝',
     color:'#fdf4ff',
-    title:'Гэрийн даалгавараа багштай хамт хий',
-    subtitle:'Долоо хоног бүр бүртгэл · Мэргэжлийн багш',
-    desc:'Монгол хэлний гэрийн даалгавараа мэргэжлийн багштай хамтран гүйцэтгэнэ. Долоо хоногийн аль ч өдөр бүртгүүлэх боломжтой.',
+    title:'Гэрийн даалгавараа багштай хамтран хий',
+    subtitle:'50,000₮ анхны хямдрал · Ганцаарчилсан Meet · Цагт 2 сурагч',
+    desc:'Онлайн ганцаарчилсан Meet уулзалт. Да·Мя·Лх·Пү·Ба хичээл явагдана. Бямба, Нямд бүртгэл авна. Бүртгэхдээ анги болон хичээлийн цагаа сонгоно — багш цагийг үзээд зөвшөөрвөл баталгаажна. Цаг бүрт 2 сурагч л бүртгэгдэх тул эрт бүртгүүлэхийг зөвлөнө.',
     features:[
-      {icon:'📅', text:'7 хоног бүр', sub:'Долоо хоног бүр бүртгэл'},
-      {icon:'👨‍🏫', text:'Мэргэжлийн багш', sub:'Туршлагатай зааж заавар'},
-      {icon:'💻', text:'Онлайн хичээл', sub:'Гэрийнхээ орчноос'},
-      {icon:'⚡', text:'Хурдан хариу', sub:'24 цагийн дотор'},
+      {icon:'💻', text:'Онлайн Meet', sub:'Ганцаарчилсан хичээл'},
+      {icon:'📅', text:'Да·Мя·Лх·Пү·Ба', sub:'Хичээлийн өдрүүд'},
+      {icon:'✏️', text:'Бямба·Нямд бүртгэл', sub:'Долоо хоног бүр нээнэ'},
+      {icon:'👤', text:'Цагт 2 сурагч', sub:'Дүүрсэн бол хаагдана'},
     ],
     hasSchedule: true,
     hasAge: false,
-    priceNote:'Долоо хоног / сарын хуваарь — тохируулга'
+    priceNote:'50,000₮ — Анхны хямдаралтай үнэ / сар',
+    priceFull:'50,000₮',
+    priceSub:'сар / анхны хямдрал'
   },
   reading: {
     icon:'📖',
     color:'#f0fdf4',
     title:'Унших чадвараа сайжруулцгаая',
-    subtitle:'Насны ангилалтай · Уншиж мэдэрч уншдаг болно',
-    desc:'Насны ангилалтай сургалт. Уншиж ойлгосноо ярьж, мэдэрч уншдаг болно. Гүн ойлголт, хурдан унших, дуу хоолойгоор унших чадвар эзэмшинэ.',
+    subtitle:'99,000₮ · 21 хоног Meet · Ангилалт бүрт 3 суралцагч',
+    desc:'Meet уулзалт · 21 хоног тасралтгүй. Насны ангиллаар бүртгэнэ — ангилал тус бүрт 3 сурагч л, дүүрвэл хаагдана. Хурдан уншиж яриулах, эхийг дахин уншиж мэдэрч унших, зогсолттой ойлгомжтой унших, гол санааг тайлбарлах арга эзэмшинэ. Аргачлалыг дотоодод хадгалдаг тул зөвхөн хичээлийн явцад эзэмшинэ.',
     features:[
-      {icon:'👶', text:'Насны ангилал', sub:'6 наснаас дээш'},
-      {icon:'🗣', text:'Ярих чадвар', sub:'Уншсанаа ярьж өгөх'},
-      {icon:'🧠', text:'Гүн ойлголт', sub:'Утгыг нь мэдрэх'},
-      {icon:'📚', text:'Олон номын сантай', sub:'Ном, шүлэг, өгүүллэг'},
+      {icon:'⚡', text:'Хурдан унших', sub:'Яриулах дасгалтай'},
+      {icon:'🔄', text:'Дахин уншиж ярих', sub:'Ойлголтоо бататгана'},
+      {icon:'❤️', text:'Мэдэрч унших', sub:'Зогсолттой, ойлгомжтой'},
+      {icon:'💬', text:'Гол санаа тайлбарлах', sub:'Бусдад хүргэх чадвар'},
     ],
     hasSchedule: false,
     hasAge: true,
-    priceNote:'Насны бүлгээс хамааран тохируулга'
+    priceNote:'99,000₮ — 21 хоногийн Meet сургалт',
+    priceFull:'99,000₮',
+    priceSub:'21 хоног · насны ангиллаар'
   },
   script: {
     icon:'ᠮ',
     color:'#ede9fe',
-    title:'Монгол бичгийн анхан шатны сургалт',
-    subtitle:'1 сарын эрчимт сургалт · Гэрчилгээтэй',
-    desc:'1 сарын хугацаатай эрчимт сургалт. Монгол бичгийн үсэг танихаас эхлэн өгүүлбэр бичих хүртэл бүрэн эзэмшинэ. Гэрчилгээтэй.',
+    title:'Үндэсний бичгийн анхан шатны сургалт',
+    subtitle:'99,000₮ · Meet уулзалт · Макс 10 суралцагч · 20% Cashback',
+    desc:'Meet уулзалт · Анхан шатны сургалт. Сургалтын материал болон эх бүгд хичээлийн явцад багшаас гарна — тусгайлан худалдаж авах шаардлагагүй. Макс 10 суралцагч. Нэг ч өдөр тасалдалгүй даалгавраа бүрэн гүйцэт хийж, хичээлийн үед дүрсээ асааж ярьсан тохиолдолд 20% cashback буцаагдана!',
     features:[
-      {icon:'📅', text:'1 сарын хугацаа', sub:'Эрчимт хөтөлбөр'},
-      {icon:'ᠠ', text:'Анхан шатнаас', sub:'Тэг мэдлэгтэй ч болно'},
-      {icon:'✍️', text:'Бичих дадал', sub:'Гар бичиг + дижитал'},
-      {icon:'🎓', text:'Гэрчилгээ', sub:'Дуусмагц олгоно'},
+      {icon:'💻', text:'Meet уулзалт', sub:'Онлайн бүлгийн хичээл'},
+      {icon:'📄', text:'Материал бүгд дотроос', sub:'Тусгай зардал байхгүй'},
+      {icon:'👤', text:'Макс 10 суралцагч', sub:'Цөөн, анхаарал хангалттай'},
+      {icon:'🎁', text:'20% Cashback', sub:'Тасралтгүй идэвхтэй бол'},
     ],
     hasSchedule: false,
     hasAge: false,
-    priceNote:'1 сарын бүрэн курсын үнэ — тохируулга'
+    priceNote:'99,000₮ — Cashback-тэй бол 79,200₮',
+    priceFull:'99,000₮',
+    priceSub:'Cashback-тэй бол 79,200₮'
   }
 };
 
@@ -1350,12 +1377,43 @@ function openCourseDetail(type) {
 
   const ageSection = d.hasAge ? `
     <div style="margin-bottom:20px">
-      <div style="font-size:13px;font-weight:800;margin-bottom:10px">👶 Насны бүлэг</div>
-      <div style="display:flex;gap:8px;flex-wrap:wrap">
-        <span class="age-badge" style="font-size:11px;padding:5px 14px">6–9 нас</span>
-        <span class="age-badge" style="font-size:11px;padding:5px 14px">10–13 нас</span>
-        <span class="age-badge" style="font-size:11px;padding:5px 14px">14–17 нас</span>
-        <span class="age-badge" style="font-size:11px;padding:5px 14px">18+ насанд хүрсэн</span>
+      <div style="font-size:13px;font-weight:800;margin-bottom:10px">👶 Насны бүлэг — ангилалт бүрт 3 суралцагч</div>
+      <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:8px">
+        <div style="background:#eff6ff;border:1px solid #bfdbfe;border-radius:12px;padding:10px;text-align:center"><div style="font-size:13px;font-weight:800;color:#1d4ed8">6–9 нас</div><div style="font-size:9px;color:#3b82f6;margin-top:2px">Бага ангийн дунд</div></div>
+        <div style="background:#eff6ff;border:1px solid #bfdbfe;border-radius:12px;padding:10px;text-align:center"><div style="font-size:13px;font-weight:800;color:#1d4ed8">10–13 нас</div><div style="font-size:9px;color:#3b82f6;margin-top:2px">Ахлах бага анги</div></div>
+        <div style="background:#eff6ff;border:1px solid #bfdbfe;border-radius:12px;padding:10px;text-align:center"><div style="font-size:13px;font-weight:800;color:#1d4ed8">14–17 нас</div><div style="font-size:9px;color:#3b82f6;margin-top:2px">Дунд сургуулийн</div></div>
+        <div style="background:#eff6ff;border:1px solid #bfdbfe;border-radius:12px;padding:10px;text-align:center"><div style="font-size:13px;font-weight:800;color:#1d4ed8">18+ нас</div><div style="font-size:9px;color:#3b82f6;margin-top:2px">Насанд хүрэгч</div></div>
+      </div>
+      <div style="background:#fef9f0;border-radius:10px;padding:9px 12px;font-size:10px;color:#92400e;margin-top:8px;line-height:1.5">⚠️ Ангилалт бүрт <strong>3 сурагч</strong> л. Дүүрсэн бол тухайн ангилал хаагдана.</div>
+    </div>` : '';
+
+  const cashbackSection = (type==='script') ? `
+    <div style="background:linear-gradient(135deg,#1c1917,#292524);border-radius:16px;padding:18px;margin-bottom:16px">
+      <div style="font-size:12px;font-weight:800;color:#fbbf24;margin-bottom:8px">🎁 20% CASHBACK УРАМШУУЛАЛ</div>
+      <div style="font-size:11px;color:rgba(255,255,255,.75);line-height:1.8;margin-bottom:10px">Дараах 2 нөхцөлийг давхар биелүүлсэн тохиолдолд <strong style="color:#fbbf24">19,800₮</strong> буцаагдана:</div>
+      <div style="display:flex;flex-direction:column;gap:7px">
+        <div style="background:rgba(255,255,255,.08);border-radius:10px;padding:9px 12px;display:flex;align-items:center;gap:10px">
+          <span style="font-size:18px">✅</span>
+          <div style="font-size:10px;color:rgba(255,255,255,.8);line-height:1.5"><strong style="color:#fff">Нэг ч өдөр тасалдалгүй</strong> сургалтаас өгсөн даалгаврыг бүрэн гүйцэт хийсэн байх</div>
+        </div>
+        <div style="background:rgba(255,255,255,.08);border-radius:10px;padding:9px 12px;display:flex;align-items:center;gap:10px">
+          <span style="font-size:18px">📹</span>
+          <div style="font-size:10px;color:rgba(255,255,255,.8);line-height:1.5">Хичээлийн үед <strong style="color:#fff">дүрсээ асааж ярьсан</strong> байх</div>
+        </div>
+      </div>
+    </div>` : '';
+
+  const schedSection = (type==='homework') ? `
+    <div style="margin-bottom:20px">
+      <div style="font-size:13px;font-weight:800;margin-bottom:10px">🕐 Хичээлийн цагийн сонголт</div>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:10px">
+        <div style="background:#1c1917;color:#fff;border-radius:12px;padding:12px 8px;text-align:center"><div style="font-size:16px;font-weight:800">19:00</div><div style="font-size:9px;opacity:.6;margin-top:3px">Орой</div></div>
+        <div style="background:#1c1917;color:#fff;border-radius:12px;padding:12px 8px;text-align:center"><div style="font-size:16px;font-weight:800">20:00</div><div style="font-size:9px;opacity:.6;margin-top:3px">Орой</div></div>
+        <div style="background:#1c1917;color:#fff;border-radius:12px;padding:12px 8px;text-align:center"><div style="font-size:16px;font-weight:800">21:00</div><div style="font-size:9px;opacity:.6;margin-top:3px">Орой</div></div>
+      </div>
+      <div style="background:#fef9f0;border-radius:10px;padding:9px 12px;font-size:10px;color:#92400e;line-height:1.6">
+        ⚠️ Цаг бүрт <strong>2 сурагч</strong> л бүртгэгдэнэ. Дүүрсэн цаг автоматаар хаагдана.<br>
+        📌 Хичээл: <strong>Да·Мя·Лх·Пү·Ба</strong> · Бүртгэл: <strong>Бямба·Нямд</strong>
       </div>
     </div>` : '';
 
@@ -1365,8 +1423,11 @@ function openCourseDetail(type) {
       ${d.features.map(f=>`<div class="cm-feature"><div class="cf-icon">${f.icon}</div><div><div class="cf-text">${f.text}</div><div class="cf-sub">${f.sub}</div></div></div>`).join('')}
     </div>
     ${ageSection}
-    <div style="background:#fef9f0;border:1.5px solid #fde68a;border-radius:14px;padding:14px;margin-bottom:20px;font-size:12px;color:#92400e;line-height:1.6">
-      💰 <strong>${d.priceNote}</strong><br>Бүртгүүлсний дараа багш тан руу холбоо барьж үнэ болон цагийн хуваарийг тохируулна.
+    ${cashbackSection}
+    ${schedSection}
+    <div style="background:#1c1917;border-radius:14px;padding:16px;margin-bottom:16px;display:flex;align-items:center;justify-content:space-between">
+      <div><div style="font-size:10px;color:rgba(255,255,255,.5);text-transform:uppercase;letter-spacing:.1em;margin-bottom:3px">Үнэ</div><div style="font-size:24px;font-weight:800;color:#fbbf24;font-family:'Baloo 2',cursive">${d.priceFull||d.priceNote}</div><div style="font-size:10px;color:rgba(255,255,255,.5);margin-top:2px">${d.priceSub||''}</div></div>
+      <div style="font-size:32px">💳</div>
     </div>
     <button onclick="closeCourseModal();openCoursePayModal('${type}')" class="btn-p" style="width:100%;padding:14px;font-size:14px;border-radius:14px;font-weight:800">🎓 Одоо бүртгүүлэх →</button>
     <button onclick="closeCourseModal()" style="width:100%;padding:10px;margin-top:8px;background:none;border:none;font-size:11px;color:#aaa;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif">Хаах</button>`;
@@ -1384,12 +1445,17 @@ function openCoursePayModal(type) {
   const d = COURSE_DATA[type];
   if(!d) return;
   document.getElementById('cpTitle').textContent = d.title;
-  document.getElementById('cpSubtitle').textContent = d.subtitle;
-  document.getElementById('cpAmt').textContent = d.priceNote;
+  document.getElementById('cpSubtitle').textContent = d.priceSub || d.subtitle;
+  document.getElementById('cpAmt').textContent = d.priceFull || d.priceNote;
   document.getElementById('cpEmail').value = currentUser !== 'guest@shb.mn' ? currentUser : '';
   // Show/hide schedule picker
   const sw = document.getElementById('cpSchedWrap');
   if(sw) sw.style.display = d.hasSchedule ? 'block' : 'none';
+  // Show/hide time slot picker (homework only)
+  const tw = document.getElementById('cpTimeWrap');
+  if(tw) tw.style.display = (type==='homework') ? 'block' : 'none';
+  // Reset time slot selections
+  document.querySelectorAll('.cp-time-btn').forEach(b=>b.classList.remove('active'));
   cpGoStep1();
   document.getElementById('coursePayModal').classList.remove('hidden');
 }
@@ -1404,18 +1470,33 @@ function cpGoStep2(){['cpStep1','cpStep2','cpStep3'].forEach((id,i)=>document.ge
 
 function toggleSchedBtn(btn){btn.classList.toggle('active');}
 
+function selectTimeSlot(btn) {
+  // Only one time slot at a time
+  document.querySelectorAll('.cp-time-btn').forEach(b=>{
+    b.classList.remove('active');
+    b.style.borderColor='var(--border)';
+    b.style.background='#fff';
+    b.style.color='var(--mid)';
+  });
+  btn.classList.add('active');
+  btn.style.borderColor='var(--amber)';
+  btn.style.background='var(--amber-l)';
+  btn.style.color='var(--amber-d)';
+}
+
 async function cpSubmit() {
   const name  = document.getElementById('cpName').value.trim();
   const email = document.getElementById('cpEmail').value.trim();
   const phone = document.getElementById('cpPhone').value.trim();
   const age   = document.getElementById('cpChildAge').value.trim();
   const note  = document.getElementById('cpNote').value.trim();
+  const grade = document.getElementById('cpGrade') ? document.getElementById('cpGrade').value.trim() : '';
 
   if(!name){showToast('Нэрээ оруулна уу','error');return;}
   if(!email||!email.includes('@')){showToast('Зөв и-мэйл хаяг оруулна уу','error');return;}
 
-  // Collect selected schedule days
   const schedDays = [...document.querySelectorAll('.sched-sel-btn.active')].map(b=>b.textContent).join(', ');
+  const timeSlot  = [...document.querySelectorAll('.cp-time-btn.active')].map(b=>b.dataset.time).join(', ') || '';
   const d = COURSE_DATA[_currentCourseType]||{};
 
   const btn = document.getElementById('cpSubmitBtn');
@@ -1426,9 +1507,9 @@ async function cpSubmit() {
       body:JSON.stringify({
         action:'submitOrder',
         email,
-        note:`Сургалт: ${d.title} | Нэр: ${name} | Утас: ${phone} | Нас: ${age} | Хуваарь: ${schedDays} | ${note}`,
-        total:0,
-        items:`Сургалтын бүртгэл: ${d.title}`,
+        note:`Сургалт: ${d.title} | Нэр: ${name} | Утас: ${phone} | Нас: ${age} | Анги: ${grade} | Хуваарь: ${schedDays} | Цаг: ${timeSlot} | ${note}`,
+        total: d.priceFull ? parseInt(d.priceFull.replace(/[^0-9]/g,'')) : 0,
+        items:`Сургалтын бүртгэл: ${d.title} — ${d.priceFull||''}`,
         date:new Date().toLocaleString('mn-MN')
       })
     });
