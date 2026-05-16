@@ -483,18 +483,33 @@ footer .copy{color:rgba(255,255,255,.2)}
     </div>
     <div class="nav-right">
       <button class="cart-btn" onclick="openCart()">🛒<span id="cartBadge" class="cart-badge">0</span></button>
-      <div class="user-pill">
-        <img id="userAvatar" src="https://api.dicebear.com/7.x/avataaars/svg?seed=user" alt="">
-        <span id="userLabel">...</span>
+
+      <!-- Guest: нэвтрэх / бүртгүүлэх товч -->
+      <div id="navGuest" style="display:flex;gap:6px;align-items:center">
+        <button class="btn-g" style="padding:8px 16px;font-size:12px" onclick="openAuth('login')">Нэвтрэх</button>
+        <button class="btn-p" style="padding:8px 16px;font-size:12px" onclick="openAuth('reg')">Бүртгүүлэх</button>
+      </div>
+
+      <!-- Logged in: user pill -->
+      <div class="user-pill" id="navUserPill" style="display:none">
+        <div id="userAvatarWrap" onclick="openAvatarPicker(event)" title="Профайл зураг солих" style="position:relative;cursor:pointer">
+          <img id="userAvatar" src="https://api.dicebear.com/7.x/avataaars/svg?seed=default" alt="" style="width:28px;height:28px;border-radius:50%;object-fit:cover;border:2px solid var(--amber)">
+          <div style="position:absolute;bottom:-2px;right:-2px;width:12px;height:12px;background:var(--amber);border-radius:50%;border:1.5px solid #fff;display:flex;align-items:center;justify-content:center;font-size:7px">✏️</div>
+        </div>
+        <span id="userLabel" style="max-width:80px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">...</span>
         <div class="user-menu">
+          <div style="padding:12px 15px;border-bottom:1px solid var(--border)">
+            <div style="font-size:11px;font-weight:800;color:var(--dark)" id="menuUserName">—</div>
+            <div style="font-size:10px;color:var(--muted);margin-top:2px" id="menuUserEmail">—</div>
+          </div>
+          <button onclick="openAvatarPicker(event)">🖼 Профайл зураг солих</button>
           <button onclick="showSec('library')">📚 Миний сан</button>
           <button onclick="showSec('training')">🎓 Сургалт</button>
           <button onclick="openCart()">🛒 Сагс</button>
           <hr>
-          <button class="logout" onclick="logout()">Гарах</button>
+          <button class="logout" onclick="logout()">↩ Гарах</button>
         </div>
       </div>
-      <button id="navLoginBtn" class="btn-p" onclick="openAuth()" style="display:none">Нэвтрэх</button>
     </div>
   </div>
 </nav>
@@ -823,15 +838,21 @@ footer .copy{color:rgba(255,255,255,.2)}
       <div class="ribbon">АЛДАРТАЙ</div>
       <div class="course-card-top">
         <div class="course-tag-row">
-          <span class="course-tag tag-popular">🔥 Эрэлттэй</span>
+          <span class="course-tag tag-popular" id="hwRegTag">🔥 Эрэлттэй</span>
           <div class="stars">
             <span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span>
             <span class="rating-count">(28)</span>
           </div>
         </div>
         <div class="course-icon-wrap" style="background:#fdf4ff">📝</div>
-        <h3>Гэрийн даалгавараа багштай хамтран хий</h3>
+        <h3>Гэрийн даалгаврын сургалт багштай хамтран</h3>
         <p class="course-desc">Онлайн ганцаарчилсан Meet уулзалт. Анги болон хичээлийн цагаа бүртгүүлж, багш цагт нь тохирох суудал олгоно.</p>
+
+        <!-- REGISTRATION WINDOW STATUS -->
+        <div id="hwRegStatus" style="border-radius:12px;padding:10px 12px;font-size:11px;line-height:1.6;margin-bottom:10px;background:#f5f0e8;color:var(--mid)">
+          Бүртгэлийн хугацааг тооцоолж байна...
+        </div>
+
         <div class="course-meta">
           <div class="meta-chip"><span>📅</span> Да·Мя·Лх·Пү·Ба хичээл</div>
           <div class="meta-chip"><span>✏️</span> Бямба·Нямд бүртгэл</div>
@@ -847,7 +868,7 @@ footer .copy{color:rgba(255,255,255,.2)}
           </div>
         </div>
         <div style="background:#fef9f0;border-radius:12px;padding:10px 12px;font-size:11px;color:#92400e;line-height:1.7">
-          📌 <strong>Бямба, Нямд бүртгэл авна.</strong> Бүртгэхдээ анги болон хичээлийн цагаа оруулна. Багш цагийг үзээд зөвшөөрвөл баталгаажна.<br>⚠️ Цаг бүрт <strong>2 сурагч</strong> л. Дүүрсэн цаг автоматаар хаагдана.
+          📌 <strong>7 хоног бүрийн Бямба, Нямд бүртгэл авна.</strong> Бүртгэхдээ анги болон хичээлийн цагаа оруулна. Багш цагийг үзээд зөвшөөрвөл баталгаажна.<br>⚠️ Цаг бүрт <strong>2 сурагч</strong> л. Дүүрсэн цаг автоматаар хаагдана.
         </div>
       </div>
       <div class="course-card-foot">
@@ -855,7 +876,7 @@ footer .copy{color:rgba(255,255,255,.2)}
           <div class="course-price">50,000₮</div>
           <div class="course-price-sub">Анхны хямдаралтай үнэ / сар</div>
         </div>
-        <button class="btn-enroll amber-btn" onclick="event.stopPropagation();openCourseDetail('homework')">Бүртгүүлэх →</button>
+        <button class="btn-enroll amber-btn" id="hwEnrollBtn" onclick="event.stopPropagation();handleHomeworkEnroll()">Бүртгүүлэх →</button>
       </div>
     </div>
 
@@ -902,7 +923,7 @@ footer .copy{color:rgba(255,255,255,.2)}
       <div class="ribbon">20% CASHBACK</div>
       <div class="course-card-top">
         <div class="course-tag-row">
-          <span class="course-tag tag-limited">🎁 Урамшуулалтай</span>
+          <span class="course-tag tag-limited" id="scriptRegTag">⏳ Бүртгэл шалгаж байна...</span>
           <div class="stars">
             <span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span>
             <span class="rating-count">(19)</span>
@@ -911,18 +932,36 @@ footer .copy{color:rgba(255,255,255,.2)}
         <div class="course-icon-wrap" style="background:#ede9fe">ᠮ</div>
         <h3>Үндэсний бичгийн анхан шатны сургалт</h3>
         <p class="course-desc">Meet уулзалт · Анхан шатны сургалт. Сургалтын материал болон эх бүгд сургалтаас гарна. Макс 10 суралцагч.</p>
+
+        <!-- CLASS START INFO -->
+        <div style="background:linear-gradient(135deg,#5b21b6,#7c3aed);border-radius:14px;padding:14px;margin-bottom:10px">
+          <div style="font-size:10px;font-weight:700;color:rgba(255,255,255,.6);text-transform:uppercase;letter-spacing:.1em;margin-bottom:6px">🗓 Анги эхлэх хугацаа</div>
+          <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px">
+            <div>
+              <div style="font-size:17px;font-weight:800;color:#fff">2026 оны 5 сарын 18</div>
+              <div style="font-size:12px;color:rgba(255,255,255,.7);margin-top:2px">Орой 19:00 цагт · Google Meet</div>
+            </div>
+            <div id="scriptCountdown" style="background:rgba(0,0,0,.25);border-radius:10px;padding:8px 12px;text-align:center;min-width:80px">
+              <div style="font-size:18px;font-weight:800;color:#fbbf24;font-family:'Baloo 2',cursive" id="cdDisplay">--:--:--</div>
+              <div style="font-size:9px;color:rgba(255,255,255,.5);margin-top:1px">үлдсэн хугацаа</div>
+            </div>
+          </div>
+        </div>
+
         <div class="course-meta">
           <div class="meta-chip"><span>💻</span> Meet уулзалт</div>
           <div class="meta-chip"><span>👤</span> Макс 10 суралцагч</div>
           <div class="meta-chip"><span>ᠠ</span> Анхан шат</div>
           <div class="meta-chip"><span>📄</span> Материал дотроос</div>
         </div>
+
         <!-- Cashback banner -->
         <div style="background:linear-gradient(135deg,#1c1917,#292524);border-radius:14px;padding:14px;margin-bottom:10px;position:relative;overflow:hidden">
           <div style="position:absolute;top:-10px;right:-10px;font-size:48px;opacity:.1">🎁</div>
           <div style="font-size:11px;font-weight:800;color:#fbbf24;margin-bottom:5px;letter-spacing:.06em">🎁 20% CASHBACK УРАМШУУЛАЛ</div>
           <div style="font-size:10px;color:rgba(255,255,255,.7);line-height:1.7">Нэг ч өдөр тасалдалгүй өгсөн даалгаврыг бүрэн гүйцэт хийж, хичээлийн үед дүрсээ асааж ярьсан тохиолдолд <strong style="color:#fbbf24">19,800₮ буцаагдана!</strong></div>
         </div>
+
         <div style="background:#ede9fe;border-radius:12px;padding:10px 12px;font-size:11px;color:#5b21b6;line-height:1.6">
           ✅ Сургалтын материал болон эх бүгд хичээлийн явцад багшаас гарна. Тусгайлан худалдаж авах шаардлагагүй.
         </div>
@@ -1299,7 +1338,7 @@ const COURSE_DATA = {
   homework: {
     icon:'📝',
     color:'#fdf4ff',
-    title:'Гэрийн даалгавараа багштай хамтран хий',
+    title:'Гэрийн даалгаврын сургалт багштай хамтран',
     subtitle:'50,000₮ анхны хямдрал · Ганцаарчилсан Meet · Цагт 2 сурагч',
     desc:'Онлайн ганцаарчилсан Meet уулзалт. Да·Мя·Лх·Пү·Ба хичээл явагдана. Бямба, Нямд бүртгэл авна. Бүртгэхдээ анги болон хичээлийн цагаа сонгоно — багш цагийг үзээд зөвшөөрвөл баталгаажна. Цаг бүрт 2 сурагч л бүртгэгдэх тул эрт бүртгүүлэхийг зөвлөнө.',
     features:[
@@ -1801,6 +1840,167 @@ function answerBonus(idx){if(questionAnswered)return;questionAnswered=true;const
 function nextTurn(){horseTurn=(horseTurn+1)%horsePlayerCount;horseRolled=false;questionAnswered=false;currentQuestion=null;document.getElementById('qText').textContent='Шагайгаа буулгасны дараа нэмэлт асуулт гарч ирнэ.';document.getElementById('qOpts').innerHTML='';document.getElementById('rollBtn').disabled=false;updateHorseUI();}
 function endGame(winner){gameOver=true;document.getElementById('rollBtn').disabled=true;document.getElementById('winnerBanner').style.display='block';const wname=horsePlayerNames[winner]||PLAYER_COLORS[winner].name;document.getElementById('winnerText').textContent=`🏆 ${PLAYER_COLORS[winner].emoji} ${wname} ялагч боллоо!`;document.getElementById('winnerSub').textContent=`${FINISH} алхам туулж финишэд хүрлээ!`;showToast('Уралдаан дууслаа! 🎉','success');}
 function updateHorseUI(){horsePos.forEach((pos,i)=>{const pct=Math.min(pos/FINISH*92,92);const h=document.getElementById('horse'+i);if(h)h.style.left=pct+'%';const pl=document.getElementById('pos'+i+'Label');if(pl)pl.textContent=pos;});const sr=document.getElementById('scoreRow');if(sr)sr.innerHTML=horsePlayerNames.map((name,i)=>`<div class="p-score"><div class="p-score-num" style="color:${PLAYER_COLORS[i].color}">${horsePos[i]||0}</div><div class="p-score-lbl">${PLAYER_COLORS[i].emoji} ${name}</div></div>${i<horsePlayerNames.length-1?'<div style="font-size:18px">⚡</div>':''}`).join('');const tname=horsePlayerNames[horseTurn]||PLAYER_COLORS[horseTurn].name;document.getElementById('turnLabel').textContent=gameOver?'🏁 Тоглоом дууслаа':`${PLAYER_COLORS[horseTurn].emoji} ${tname}-ийн ээлж`;const cp=document.getElementById('curPlayerLabel');if(cp)cp.textContent=`🎲 ${PLAYER_COLORS[horseTurn].emoji} ${tname}: Шагай буулгах`;}
+
+/* ════════════════════════════════════
+   ҮНДЭСНИЙ БИЧГИЙН СУРГАЛТ
+   Countdown + Бүртгэлийн цонхны систем
+════════════════════════════════════ */
+
+// ── Тохируулга ──────────────────────
+// Анги эхлэх цаг (Монгол цаг UTC+8)
+const CLASS_START = new Date('2026-05-18T19:00:00+08:00');
+
+// Бүртгэлийн цонх: сар бүрийн хагас сайн 00:00 → бүтэн сайн 00:00
+// Монгол цаг дээр тооцоолно (UTC+8)
+function getMonthlyRegWindow(now) {
+  const mn = new Date(now.toLocaleString('en-US', {timeZone:'Asia/Ulaanbaatar'}));
+  const y = mn.getFullYear(), m = mn.getMonth();
+
+  // Тухайн сарын хагас сайн (Saturday) болон бүтэн сайн (Sunday) олно
+  // Эхний Saturday, Sunday олно
+  function firstWeekend(year, month) {
+    const days = [];
+    for (let d = 1; d <= 31; d++) {
+      const dt = new Date(year, month, d);
+      if (dt.getMonth() !== month) break;
+      const dow = dt.getDay();
+      if (dow === 6 && !days.find(x=>x.day===6)) days.push({day:6, date:d});
+      if (dow === 0 && !days.find(x=>x.day===0)) days.push({day:0, date:d});
+      if (days.length === 2) break;
+    }
+    return days;
+  }
+
+  // Сар бүрийн аль 7 хоногийн эхний бямба, ням сонгоно
+  // Бүртгэл: Бямба 00:00 → Ням 23:59:59
+  const we = firstWeekend(y, m);
+  const satObj = we.find(x=>x.day===6);
+  const sunObj = we.find(x=>x.day===0);
+  if (!satObj || !sunObj) return null;
+
+  const openUB  = new Date(y, m, satObj.date, 0, 0, 0);   // Бямба 00:00
+  const closeUB = new Date(y, m, sunObj.date, 23, 59, 59); // Ням 23:59
+
+  // UB time → UTC
+  const TZ_OFFSET = 8 * 60; // UTC+8
+  const open  = new Date(openUB.getTime()  - (openUB.getTimezoneOffset() + TZ_OFFSET) * 60000);
+  const close = new Date(closeUB.getTime() - (closeUB.getTimezoneOffset() + TZ_OFFSET) * 60000);
+
+  return {open, close, satDate: satObj.date, sunDate: sunObj.date};
+}
+
+function isRegOpen(now) {
+  const w = getMonthlyRegWindow(now);
+  if (!w) return false;
+  return now >= w.open && now <= w.close;
+}
+
+function nextRegWindow(now) {
+  // This month or next month
+  const w = getMonthlyRegWindow(now);
+  if (w && now < w.open) return w;
+  // Next month
+  const mn = new Date(now.toLocaleString('en-US',{timeZone:'Asia/Ulaanbaatar'}));
+  const nextM = new Date(mn.getFullYear(), mn.getMonth()+1, 1);
+  return getMonthlyRegWindow(nextM);
+}
+
+function pad2(n){ return String(n).padStart(2,'0'); }
+function formatDate(d){
+  const mn = new Date(d.toLocaleString('en-US',{timeZone:'Asia/Ulaanbaatar'}));
+  return `${mn.getMonth()+1} сарын ${mn.getDate()}-нд`;
+}
+
+// ── Үндэсний бичгийн countdown ONLY ──
+function updateScriptUI() {
+  const now = new Date();
+  const cd = document.getElementById('cdDisplay');
+  if (!cd) return;
+  const diff = CLASS_START - now;
+  if (diff <= 0) {
+    cd.textContent = '🟢 Эхэлсэн!';
+    cd.style.color = '#4ade80';
+  } else {
+    const totalSec = Math.floor(diff / 1000);
+    const days  = Math.floor(totalSec / 86400);
+    const hours = Math.floor((totalSec % 86400) / 3600);
+    const mins  = Math.floor((totalSec % 3600) / 60);
+    const secs  = totalSec % 60;
+    cd.textContent = days > 0
+      ? `${days}өдөр ${pad2(hours)}:${pad2(mins)}:${pad2(secs)}`
+      : `${pad2(hours)}:${pad2(mins)}:${pad2(secs)}`;
+  }
+}
+
+// ── Гэрийн даалгаврын бүртгэлийн цонх ──
+function updateHomeworkUI() {
+  const now = new Date();
+  const regEl    = document.getElementById('hwRegStatus');
+  const tagEl    = document.getElementById('hwRegTag');
+  const enrollBtn = document.getElementById('hwEnrollBtn');
+  if (!regEl || !tagEl || !enrollBtn) return;
+
+  const open = isRegOpen(now);
+  const w = open ? getMonthlyRegWindow(now) : nextRegWindow(now);
+
+  if (open && w) {
+    const timeLeft = w.close - now;
+    const hrs  = Math.floor(timeLeft/3600000);
+    const mins = Math.floor((timeLeft%3600000)/60000);
+
+    regEl.style.background = '#f0fdf4';
+    regEl.style.color = '#065f46';
+    regEl.innerHTML = `✅ <strong>Бүртгэл нээлттэй байна!</strong><br>
+      Хаагдах хугацаа: ${formatDate(w.close)} · ${hrs}ц ${mins}мин үлдсэн<br>
+      <span style="font-size:10px;opacity:.8">7 хоног бүрийн Бямба·Нямд бүртгэл явагдана</span>`;
+
+    tagEl.textContent = '🟢 Бүртгэл нээлттэй';
+    tagEl.style.background = '#d1fae5';
+    tagEl.style.color = '#065f46';
+
+    enrollBtn.disabled = false;
+    enrollBtn.style.opacity = '1';
+    enrollBtn.style.background = 'var(--amber)';
+    enrollBtn.textContent = 'Бүртгүүлэх →';
+
+  } else if (w) {
+    const timeLeft = w.open - now;
+    const days = Math.floor(timeLeft/86400000);
+    const hrs  = Math.floor((timeLeft%86400000)/3600000);
+    const mins = Math.floor((timeLeft%3600000)/60000);
+
+    regEl.style.background = '#fef9f0';
+    regEl.style.color = '#92400e';
+    regEl.innerHTML = `🔒 <strong>Бүртгэл одоогоор хаалттай</strong><br>
+      Дараагийн бүртгэл: ${formatDate(w.open)} 00:00 цагт нээгдэнэ<br>
+      <span style="font-size:10px;opacity:.8">${days > 0 ? days+'өдөр ' : ''}${pad2(hrs)}:${pad2(mins)} үлдсэн · 7 хоног бүрийн Бямба·Нямд</span>`;
+
+    tagEl.textContent = '🔒 Бүртгэл хаалттай';
+    tagEl.style.background = '#fee2e2';
+    tagEl.style.color = '#991b1b';
+
+    enrollBtn.disabled = true;
+    enrollBtn.style.opacity = '0.45';
+    enrollBtn.style.background = '#9ca3af';
+    enrollBtn.textContent = '🔒 Хаалттай';
+  }
+}
+
+function handleHomeworkEnroll() {
+  const now = new Date();
+  if (!isRegOpen(now)) {
+    const w = nextRegWindow(now);
+    const msg = w ? `Бүртгэл ${formatDate(w.open)} 00:00 цагт нээгдэнэ.` : 'Бүртгэл одоогоор хаалттай байна.';
+    showToast('🔒 ' + msg, 'error');
+    return;
+  }
+  openCourseDetail('homework');
+}
+
+// Init + секунд бүр шинэчлэх
+updateScriptUI();
+updateHomeworkUI();
+setInterval(() => { updateScriptUI(); updateHomeworkUI(); }, 1000);
 </script>
 </body>
 </html>
