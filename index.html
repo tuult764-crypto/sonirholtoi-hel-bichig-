@@ -359,19 +359,51 @@ main{max-width:1200px;margin:0 auto;padding:32px 20px}
 .tr-stat-num{font-size:26px;font-weight:800;font-family:'Baloo 2',cursive;color:var(--amber)}
 .tr-stat-lbl{font-size:10px;font-weight:700;color:var(--mid);text-transform:uppercase;letter-spacing:.08em;margin-top:3px}
 
-/* ── MODALS ── */
-.overlay{position:fixed;inset:0;z-index:60;background:rgba(0,0,0,.55);display:flex;align-items:flex-end;justify-content:center}
-.overlay.hidden{display:none}
-.auth-sheet{background:#fff;width:100%;max-width:440px;border-radius:24px 24px 0 0;padding:32px 28px 44px;animation:slideUp .35s ease-out;position:relative}
-.auth-close{position:absolute;top:18px;right:18px;background:#f5f5f5;border:none;border-radius:50%;width:30px;height:30px;font-size:15px;cursor:pointer;display:flex;align-items:center;justify-content:center}
-.auth-tabs{display:flex;gap:20px;border-bottom:1px solid var(--border);margin-bottom:24px}
-.auth-tab{padding-bottom:12px;font-size:15px;font-weight:700;background:none;border:none;border-bottom:3px solid transparent;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif;color:#aaa;transition:all .15s}
-.auth-tab.active{border-bottom-color:var(--amber);color:var(--amber)}
-.auth-field{width:100%;padding:14px 16px;background:#fafaf9;border:1.5px solid transparent;border-radius:14px;font-size:13px;font-family:'Plus Jakarta Sans',sans-serif;outline:none;margin-bottom:12px;transition:border-color .12s}
-.auth-field:focus{border-color:var(--amber);background:#fff}
-.auth-submit{width:100%;padding:16px;background:var(--amber);color:#fff;border:none;border-radius:14px;font-size:14px;font-weight:800;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif;box-shadow:0 5px 18px rgba(217,119,6,.3);transition:all .15s}
-.auth-submit:hover{transform:translateY(-1px)}
-.auth-forgot{display:block;text-align:center;margin-top:12px;font-size:11px;color:#aaa;background:none;border:none;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif}
+/* ── AUTH MODAL — Right slide-in ── */
+.auth-overlay{position:fixed;inset:0;z-index:60;background:rgba(0,0,0,.5);display:flex;align-items:stretch;justify-content:flex-end;backdrop-filter:blur(4px)}
+.auth-overlay.hidden{display:none}
+.auth-panel{background:#fff;width:100%;max-width:400px;height:100%;overflow-y:auto;display:flex;flex-direction:column;animation:slideInRight .3s cubic-bezier(.4,0,.2,1)}
+@keyframes slideInRight{from{transform:translateX(100%);opacity:0}to{transform:translateX(0);opacity:1}}
+.auth-panel-head{background:var(--dark);padding:28px 24px 24px;position:relative;flex-shrink:0}
+.auth-panel-close{position:absolute;top:16px;right:16px;background:rgba(255,255,255,.12);border:none;border-radius:50%;width:32px;height:32px;color:#fff;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .15s}
+.auth-panel-close:hover{background:rgba(255,255,255,.22)}
+.auth-logo-row{display:flex;align-items:center;gap:10px;margin-bottom:20px}
+.auth-logo-icon{width:36px;height:36px;border-radius:9px;background:var(--amber);display:flex;align-items:center;justify-content:center;font-size:18px}
+.auth-logo-name{font-family:'Baloo 2',cursive;font-weight:800;font-size:14px;color:#fff}
+.auth-tabs-row{display:flex;gap:0;background:rgba(255,255,255,.1);border-radius:12px;padding:4px}
+.auth-tab-btn{flex:1;padding:9px 6px;border:none;border-radius:9px;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif;font-size:13px;font-weight:700;background:none;color:rgba(255,255,255,.6);transition:all .18s}
+.auth-tab-btn.active{background:#fff;color:var(--dark);box-shadow:0 2px 8px rgba(0,0,0,.15)}
+.auth-body{padding:24px;flex:1}
+.auth-section-title{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:10px;margin-top:18px}
+.auth-section-title:first-child{margin-top:0}
+.auth-input{width:100%;padding:13px 15px;background:var(--surface2);border:1.5px solid transparent;border-radius:13px;font-size:13px;font-family:'Plus Jakarta Sans',sans-serif;outline:none;margin-bottom:10px;transition:all .15s;color:var(--dark)}
+.auth-input:focus{border-color:var(--amber);background:#fff;box-shadow:0 0 0 3px rgba(217,119,6,.1)}
+.auth-input::placeholder{color:var(--muted)}
+.auth-submit-btn{width:100%;padding:15px;background:var(--amber);color:#fff;border:none;border-radius:13px;font-size:14px;font-weight:800;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif;box-shadow:0 4px 16px rgba(217,119,6,.35);transition:all .18s;margin-top:6px}
+.auth-submit-btn:hover{transform:translateY(-2px);box-shadow:0 8px 22px rgba(217,119,6,.42)}
+.auth-divider{text-align:center;font-size:11px;color:var(--muted);margin:14px 0;position:relative}
+.auth-divider::before,.auth-divider::after{content:'';position:absolute;top:50%;width:42%;height:1px;background:var(--border)}
+.auth-divider::before{left:0}.auth-divider::after{right:0}
+.auth-forgot-btn{display:block;text-align:center;font-size:11px;color:var(--blue);background:none;border:none;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif;font-weight:600;margin-top:10px;text-decoration:underline}
+.auth-error{background:#fef2f2;border:1px solid #fecaca;border-radius:10px;padding:10px 13px;font-size:11px;color:var(--red);font-weight:600;margin-bottom:10px;display:none}
+.auth-success{background:#f0fdf4;border:1px solid #a7f3d0;border-radius:10px;padding:10px 13px;font-size:11px;color:#065f46;font-weight:600;margin-bottom:10px;display:none}
+
+/* Avatar picker modal */
+.avatar-overlay{position:fixed;inset:0;z-index:90;background:rgba(0,0,0,.6);display:flex;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(4px)}
+.avatar-overlay.hidden{display:none}
+.avatar-modal{background:#fff;border-radius:24px;width:100%;max-width:480px;max-height:80vh;overflow:hidden;display:flex;flex-direction:column;animation:slideUp .3s ease-out}
+.avatar-modal-head{padding:20px 22px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+.avatar-modal-head h3{font-size:16px;font-weight:800;font-family:'Baloo 2',cursive}
+.avatar-close{background:#f5f5f5;border:none;border-radius:50%;width:30px;height:30px;font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.avatar-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;padding:18px;overflow-y:auto;flex:1}
+.avatar-opt{width:100%;aspect-ratio:1;border-radius:16px;border:3px solid transparent;cursor:pointer;overflow:hidden;transition:all .18s;background:var(--surface2);display:flex;align-items:center;justify-content:center}
+.avatar-opt:hover{border-color:var(--amber);transform:scale(1.06)}
+.avatar-opt.selected{border-color:var(--amber);box-shadow:0 0 0 3px rgba(217,119,6,.25)}
+.avatar-opt img{width:100%;height:100%;object-fit:cover}
+.avatar-modal-foot{padding:14px 22px;border-top:1px solid var(--border);display:flex;gap:10px}
+.avatar-confirm{flex:2;padding:12px;background:var(--amber);color:#fff;border:none;border-radius:12px;font-size:13px;font-weight:800;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif}
+.avatar-cancel{flex:1;padding:12px;background:var(--surface2);color:var(--mid);border:none;border-radius:12px;font-size:13px;font-weight:700;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif}
+
 
 /* ── PAY MODAL ── */
 .pay-overlay{position:fixed;inset:0;z-index:70;background:rgba(0,0,0,.75);display:flex;align-items:center;justify-content:center;padding:18px}
@@ -419,6 +451,8 @@ main{max-width:1200px;margin:0 auto;padding:32px 20px}
 #toast.show{opacity:1}
 #toast.success{background:var(--dark);color:#fff}
 #toast.error{background:var(--red);color:#fff}
+/* Generic hidden helper */
+.hidden{display:none!important}
 
 /* ── FOOTER ── */
 footer{background:linear-gradient(135deg,#1c1917,#0c0a09);color:#fff;margin-top:72px;padding:56px 20px}
@@ -794,7 +828,7 @@ footer .copy{color:rgba(255,255,255,.2)}
     <button class="tr-flt-btn" onclick="filterTraining('writing',this)">✍️ Бичиг</button>
     <button class="tr-flt-btn" onclick="filterTraining('homework',this)">📝 Гэрийн даалгавар</button>
     <button class="tr-flt-btn" onclick="filterTraining('reading',this)">📖 Унших</button>
-    <button class="tr-flt-btn" onclick="filterTraining('script',this)">ᠮᠣᠩᠭᠣᠯ ᠪᠢᠴᠢᠭ᠌</button>
+    <button class="tr-flt-btn" onclick="filterTraining('script',this)">ᠮᠣᠨᠭᠣᠯ ᠪᠢᠴᠢᠭ᠌</button>
   </div>
 
   <!-- Course Grid -->
@@ -874,7 +908,7 @@ footer .copy{color:rgba(255,255,255,.2)}
       <div class="course-card-foot">
         <div>
           <div class="course-price">50,000₮</div>
-          <div class="course-price-sub">Анхны хямдралтай үнэ / сар</div>
+          <div class="course-price-sub">Анхны хямдаралтай үнэ / сар</div>
         </div>
         <button class="btn-enroll amber-btn" id="hwEnrollBtn" onclick="event.stopPropagation();handleHomeworkEnroll()">Бүртгүүлэх →</button>
       </div>
@@ -901,8 +935,8 @@ footer .copy{color:rgba(255,255,255,.2)}
         </div>
         <div class="course-meta">
           <div class="meta-chip"><span>📅</span> 21 хоног Meet</div>
-          <div class="meta-chip"><span>👥</span> Ангилал бүрд 3 суралцагч</div>
-          <div class="meta-chip"><span>🗣</span> Ярих · Ойлгох · Тайлбарлах</div>
+          <div class="meta-chip"><span>👥</span> Ангилалт бүрт 3 суралцагч</div>
+          <div class="meta-chip"><span>🗣</span> Ярих · Мэдрэх · Тайлбар</div>
         </div>
         <div style="background:#f0fdf4;border-radius:12px;padding:10px 12px;font-size:11px;color:#065f46;line-height:1.7">
           📚 <strong>Хэрхэн явагдах:</strong> Хурдан унших → Дахин уншиж ярих → Зогсолттой мэдэрч унших → Гол санааг тайлбарлах<br>
@@ -959,11 +993,11 @@ footer .copy{color:rgba(255,255,255,.2)}
         <div style="background:linear-gradient(135deg,#1c1917,#292524);border-radius:14px;padding:14px;margin-bottom:10px;position:relative;overflow:hidden">
           <div style="position:absolute;top:-10px;right:-10px;font-size:48px;opacity:.1">🎁</div>
           <div style="font-size:11px;font-weight:800;color:#fbbf24;margin-bottom:5px;letter-spacing:.06em">🎁 20% CASHBACK УРАМШУУЛАЛ</div>
-          <div style="font-size:10px;color:rgba(255,255,255,.7);line-height:1.7">Нэг ч өдөр таслалтгүй өгсөн даалгаврыг бүрэн гүйцэт хийж, хичээлийн үед дүрсээ асааж ярьсан тохиолдолд <strong style="color:#fbbf24">19,800₮ буцаагдана!</strong></div>
+          <div style="font-size:10px;color:rgba(255,255,255,.7);line-height:1.7">Нэг ч өдөр тасалдалгүй өгсөн даалгаврыг бүрэн гүйцэт хийж, хичээлийн үед дүрсээ асааж ярьсан тохиолдолд <strong style="color:#fbbf24">19,800₮ буцаагдана!</strong></div>
         </div>
 
         <div style="background:#ede9fe;border-radius:12px;padding:10px 12px;font-size:11px;color:#5b21b6;line-height:1.6">
-          ✅ Сургалтын материал хичээлийн явцад багшаас гарна. Тусгайлан худалдаж авах шаардлагагүй.
+          ✅ Сургалтын материал болон эх бүгд хичээлийн явцад багшаас гарна. Тусгайлан худалдаж авах шаардлагагүй.
         </div>
         <div class="course-progress"><div class="course-progress-fill" style="width:68%"></div></div>
         <div style="font-size:10px;color:var(--muted);margin-top:4px">Суудлын тоо хязгаартай</div>
@@ -1001,7 +1035,7 @@ footer .copy{color:rgba(255,255,255,.2)}
       </div>
       <div class="testi-card">
         <div class="testi-stars">★★★★☆</div>
-        <div class="testi-text">"Унших сургалт маш их тус болсон. Хүүхэд минь одоо уншихаасаа зугтдаггүй болсон, аяндаа сонирхдог болсон."</div>
+        <div class="testi-text">"Унших сургалт маш их тус болсон. Хүүхэд минь одоо уншихаасаа зугатдаггүй болсон, аяндаа сонирхдог болсон."</div>
         <div class="testi-author">
           <div class="testi-avatar" style="background:#7c3aed">О</div>
           <div><div class="testi-name">Оюунцэцэг</div><div class="testi-role">Эцэг эх · Эрдэнэт</div></div>
@@ -1045,7 +1079,7 @@ footer .copy{color:rgba(255,255,255,.2)}
 </main>
 
 <!-- PREVIEW MODAL -->
-<div id="previewModal" class="overlay hidden" onclick="if(event.target===this)closePreviewModal()">
+<div id="previewModal" class="hidden" style="position:fixed;inset:0;z-index:60;background:rgba(0,0,0,.55);display:flex;align-items:flex-end;justify-content:center" onclick="if(event.target===this)closePreviewModal()">
   <div style="background:#fff;width:100%;max-width:520px;border-radius:24px 24px 0 0;padding:24px;max-height:92vh;overflow-y:auto;animation:slideUp .35s ease-out">
     <div id="previewModalBody"></div>
   </div>
@@ -1085,7 +1119,7 @@ footer .copy{color:rgba(255,255,255,.2)}
       <div class="cp-top">
         <div class="cp-icon">📧</div>
         <h3>Бүртгэлийн мэдээлэл</h3>
-        <p>Бүх талбарыг бөглөнө үү.Баярлалаа.</p>
+        <p>Бүх талбарыг бөглөнө үү</p>
       </div>
       <div class="cp-body">
         <input id="cpName" class="modal-field" type="text" placeholder="Таны нэр (суралцагчийн нэр)">
@@ -1101,7 +1135,7 @@ footer .copy{color:rgba(255,255,255,.2)}
             <button class="cp-time-btn" data-time="20:00" onclick="selectTimeSlot(this)" style="padding:12px 6px;border:2px solid var(--border);border-radius:12px;background:#fff;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif;font-size:13px;font-weight:800;text-align:center;transition:all .15s;color:var(--mid)">20:00</button>
             <button class="cp-time-btn" data-time="21:00" onclick="selectTimeSlot(this)" style="padding:12px 6px;border:2px solid var(--border);border-radius:12px;background:#fff;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif;font-size:13px;font-weight:800;text-align:center;transition:all .15s;color:var(--mid)">21:00</button>
           </div>
-          <div style="font-size:9px;color:var(--muted);line-height:1.5">⚠️ Цаг бүрд 2 сурагч л бүртгэгдэнэ. Цаг нь дүүрсэн бол багш мэдэгдэнэ.</div>
+          <div style="font-size:9px;color:var(--muted);line-height:1.5">⚠️ Цаг бүрт 2 сурагч л бүртгэгдэнэ. Цаг нь дүүрсэн бол багш мэдэгдэнэ.</div>
         </div>
         <div id="cpSchedWrap" style="margin-bottom:10px;display:none">
           <div style="font-size:11px;font-weight:700;color:var(--mid);margin-bottom:8px">📆 Хүссэн өдрүүд:</div>
@@ -1205,20 +1239,76 @@ footer .copy{color:rgba(255,255,255,.2)}
   </div>
 </div>
 
-<!-- AUTH MODAL -->
-<div id="authModal" class="overlay hidden">
-  <div class="auth-sheet">
-    <button class="auth-close" onclick="closeAuth()">✕</button>
-    <div class="auth-tabs">
-      <button id="tabLogin" class="auth-tab active" onclick="switchTab('login')">Нэвтрэх</button>
-      <button id="tabReg" class="auth-tab" onclick="switchTab('reg')">Бүртгүүлэх</button>
+<!-- AUTH MODAL — Right panel -->
+<div id="authModal" class="auth-overlay hidden" onclick="if(event.target===this)closeAuth()">
+  <div class="auth-panel">
+
+    <!-- Header -->
+    <div class="auth-panel-head">
+      <button class="auth-panel-close" onclick="closeAuth()">✕</button>
+      <div class="auth-logo-row">
+        <div class="auth-logo-icon">📖</div>
+        <div class="auth-logo-name">Сонирхолтой хэл бичиг</div>
+      </div>
+      <div class="auth-tabs-row">
+        <button class="auth-tab-btn active" id="tabLogin" onclick="switchTab('login')">🔑 Нэвтрэх</button>
+        <button class="auth-tab-btn" id="tabReg" onclick="switchTab('reg')">✨ Бүртгүүлэх</button>
+      </div>
     </div>
-    <input id="authEmail" class="auth-field" type="email" placeholder="Цахим шуудан">
-    <input id="authPass" class="auth-field" type="password" placeholder="Нууц үг">
-    <button class="auth-submit" onclick="handleAuth()">Үргэлжлүүлэх</button>
-    <button class="auth-forgot" onclick="handleForgot()">Нууц үг мартсан уу?</button>
+
+    <!-- Body -->
+    <div class="auth-body">
+
+      <!-- Error/success messages -->
+      <div class="auth-error" id="authError"></div>
+      <div class="auth-success" id="authSuccess"></div>
+
+      <!-- Login fields -->
+      <div id="loginFields">
+        <div class="auth-section-title">И-мэйл хаяг</div>
+        <input id="authEmail" class="auth-input" type="email" placeholder="tanii@gmail.com" autocomplete="email">
+        <div class="auth-section-title">Нууц үг</div>
+        <input id="authPass" class="auth-input" type="password" placeholder="Нууц үгээ оруулна уу" autocomplete="current-password">
+        <button class="auth-submit-btn" onclick="handleAuth()">🔑 Нэвтрэх</button>
+        <button class="auth-forgot-btn" onclick="handleForgot()">Нууц үг мартсан уу?</button>
+      </div>
+
+      <!-- Register fields -->
+      <div id="regFields" style="display:none">
+        <div class="auth-section-title">Таны нэр</div>
+        <input id="regName" class="auth-input" type="text" placeholder="Овог нэр" autocomplete="name">
+        <div class="auth-section-title">И-мэйл хаяг</div>
+        <input id="regEmail" class="auth-input" type="email" placeholder="tanii@gmail.com" autocomplete="email">
+        <div class="auth-section-title">Нууц үг</div>
+        <input id="regPass" class="auth-input" type="password" placeholder="Хамгийн багадаа 6 тэмдэгт" autocomplete="new-password">
+        <input id="regPass2" class="auth-input" type="password" placeholder="Нууц үгээ давтана уу" autocomplete="new-password">
+
+        <!-- Avatar choose -->
+        <div class="auth-section-title">Профайл дүрс сонгох</div>
+        <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-bottom:14px" id="regAvatarGrid"></div>
+
+        <button class="auth-submit-btn" style="background:var(--green);box-shadow:0 4px 16px rgba(5,150,105,.35)" onclick="handleRegister()">✨ Бүртгүүлэх</button>
+      </div>
+
+    </div>
   </div>
 </div>
+
+<!-- AVATAR PICKER MODAL -->
+<div id="avatarModal" class="avatar-overlay hidden" onclick="if(event.target===this)closeAvatarPicker()">
+  <div class="avatar-modal">
+    <div class="avatar-modal-head">
+      <h3>🖼 Профайл дүрс сонгох</h3>
+      <button class="avatar-close" onclick="closeAvatarPicker()">✕</button>
+    </div>
+    <div class="avatar-grid" id="avatarGrid"></div>
+    <div class="avatar-modal-foot">
+      <button class="avatar-cancel" onclick="closeAvatarPicker()">Болих</button>
+      <button class="avatar-confirm" onclick="confirmAvatar()">✅ Сонгох</button>
+    </div>
+  </div>
+</div>
+
 
 <footer>
   <div class="footer-in">
@@ -1271,7 +1361,7 @@ let _currentCourseType = '';
 ════════════════════════════════════ */
 document.addEventListener('DOMContentLoaded',()=>{
   const saved = localStorage.getItem(AUTH_KEY);
-  if(saved){currentUser=saved;}else{currentUser='guest@shb.mn';localStorage.setItem(AUTH_KEY,currentUser);}
+  currentUser = saved || '';
   updateNavUser();
   loadProducts();
   initSudoku();
@@ -1295,23 +1385,251 @@ function showSec(name){
 }
 
 /* ════════════════════════════════════
-   AUTH
+   AUTH — Нэвтрэх / Бүртгүүлэх / Avatar
 ════════════════════════════════════ */
-function openAuth(){document.getElementById('authModal').classList.remove('hidden');}
-function closeAuth(){document.getElementById('authModal').classList.add('hidden');}
-function switchTab(tab){authTab=tab;document.getElementById('tabLogin').classList.toggle('active',tab==='login');document.getElementById('tabReg').classList.toggle('active',tab==='reg');}
-function handleAuth(){
-  const email=document.getElementById('authEmail').value.trim();
-  const pass=document.getElementById('authPass').value;
-  if(!email||pass.length<6){showToast('Мэдээллээ бүрэн оруулна уу','error');return;}
-  currentUser=email;localStorage.setItem(AUTH_KEY,email);updateNavUser();closeAuth();showToast('Амжилттай нэвтэрлээ!','success');
+const USERS_KEY   = 'shb_users_v1';
+const AVATAR_KEY  = 'shb_avatar_v1';
+
+// DiceBear avatar seeds — 20 сонголт
+const AVATAR_SEEDS = [
+  'Tuul','Oyun','Bat','Khuu','Deli','Mogi','Naran','Saran',
+  'Gal','Tenger','Urd','Zuun','Barun','Umar','Gobi',
+  'Khar','Tsagaan','Ulaan','Nogoon','Khukh'
+];
+const AVATAR_STYLES = [
+  'avataaars','bottts','fun-emoji','pixel-art','adventurer',
+  'lorelei','notionists','open-peeps','personas','croodles'
+];
+
+function getAvatarUrl(seed, style='avataaars') {
+  return `https://api.dicebear.com/7.x/${style}/svg?seed=${encodeURIComponent(seed)}&backgroundColor=b6e3f4,c0aede,d1d4f9,ffd5dc,ffdfbf`;
 }
-function handleForgot(){showToast('Имэйл хаяг руу холбоос илгээгдэх болно.','success');}
-function logout(){localStorage.removeItem(AUTH_KEY);location.reload();}
-function updateNavUser(){
-  document.getElementById('navLoginBtn').style.display='none';
-  document.getElementById('userLabel').textContent=currentUser.split('@')[0].substring(0,12);
+
+function getSavedUsers() {
+  try { return JSON.parse(localStorage.getItem(USERS_KEY)||'{}'); } catch{ return {}; }
 }
+function saveUser(email, data) {
+  const users = getSavedUsers();
+  users[email] = {...(users[email]||{}), ...data};
+  localStorage.setItem(USERS_KEY, JSON.stringify(users));
+}
+function getUser(email) {
+  return getSavedUsers()[email] || null;
+}
+
+// ── Open/Close ──────────────────────
+function openAuth(tab='login') {
+  switchTab(tab);
+  clearAuthMessages();
+  document.getElementById('authModal').classList.remove('hidden');
+  document.body.style.overflow = 'hidden';
+}
+function closeAuth() {
+  document.getElementById('authModal').classList.add('hidden');
+  document.body.style.overflow = '';
+}
+
+function switchTab(tab) {
+  authTab = tab;
+  const isLogin = tab === 'login';
+  document.getElementById('tabLogin').classList.toggle('active', isLogin);
+  document.getElementById('tabReg').classList.toggle('active', !isLogin);
+  document.getElementById('loginFields').style.display = isLogin ? '' : 'none';
+  document.getElementById('regFields').style.display   = isLogin ? 'none' : '';
+  clearAuthMessages();
+  if (!isLogin) buildRegAvatarGrid();
+}
+
+function showAuthError(msg) {
+  const el = document.getElementById('authError');
+  el.textContent = msg; el.style.display = 'block';
+  document.getElementById('authSuccess').style.display = 'none';
+}
+function showAuthSuccess(msg) {
+  const el = document.getElementById('authSuccess');
+  el.textContent = msg; el.style.display = 'block';
+  document.getElementById('authError').style.display = 'none';
+}
+function clearAuthMessages() {
+  document.getElementById('authError').style.display = 'none';
+  document.getElementById('authSuccess').style.display = 'none';
+}
+
+// ── Login ───────────────────────────
+function handleAuth() {
+  const email = document.getElementById('authEmail').value.trim().toLowerCase();
+  const pass  = document.getElementById('authPass').value;
+  if (!email || !email.includes('@')) { showAuthError('Зөв и-мэйл хаяг оруулна уу.'); return; }
+  if (pass.length < 6) { showAuthError('Нууц үг хамгийн багадаа 6 тэмдэгт байна.'); return; }
+
+  const user = getUser(email);
+  if (!user) { showAuthError('И-мэйл бүртгэлгүй байна. Бүртгүүлнэ үү.'); return; }
+  if (user.pass !== btoa(pass)) { showAuthError('Нууц үг буруу байна.'); return; }
+
+  loginSuccess(email, user);
+}
+
+// ── Register ────────────────────────
+let _selectedRegAvatar = AVATAR_SEEDS[0];
+let _selectedRegStyle  = AVATAR_STYLES[0];
+
+function buildRegAvatarGrid() {
+  const grid = document.getElementById('regAvatarGrid');
+  if (!grid || grid.children.length) return; // already built
+  AVATAR_SEEDS.slice(0,10).forEach((seed,i) => {
+    const style = AVATAR_STYLES[i % AVATAR_STYLES.length];
+    const div = document.createElement('div');
+    div.style.cssText = 'border-radius:12px;border:2.5px solid var(--border);cursor:pointer;overflow:hidden;aspect-ratio:1;background:var(--surface2);transition:all .18s';
+    div.onclick = () => {
+      document.querySelectorAll('#regAvatarGrid > div').forEach(d => {
+        d.style.borderColor = 'var(--border)'; d.style.transform = '';
+      });
+      div.style.borderColor = 'var(--amber)';
+      div.style.transform = 'scale(1.08)';
+      _selectedRegAvatar = seed; _selectedRegStyle = style;
+    };
+    const img = document.createElement('img');
+    img.src = getAvatarUrl(seed, style);
+    img.style.cssText = 'width:100%;height:100%;object-fit:cover;display:block';
+    div.appendChild(img);
+    grid.appendChild(div);
+    if (i === 0) { div.style.borderColor = 'var(--amber)'; div.style.transform = 'scale(1.08)'; }
+  });
+}
+
+function handleRegister() {
+  const name  = document.getElementById('regName').value.trim();
+  const email = document.getElementById('regEmail').value.trim().toLowerCase();
+  const pass  = document.getElementById('regPass').value;
+  const pass2 = document.getElementById('regPass2').value;
+
+  if (!name)                       { showAuthError('Нэрээ оруулна уу.'); return; }
+  if (!email.includes('@'))        { showAuthError('Зөв и-мэйл хаяг оруулна уу.'); return; }
+  if (pass.length < 6)             { showAuthError('Нууц үг хамгийн багадаа 6 тэмдэгт байна.'); return; }
+  if (pass !== pass2)              { showAuthError('Нууц үг тохирохгүй байна.'); return; }
+  if (getUser(email))              { showAuthError('Энэ и-мэйл аль хэдийн бүртгэлтэй байна.'); return; }
+
+  saveUser(email, {
+    name, pass: btoa(pass),
+    avatarSeed: _selectedRegAvatar,
+    avatarStyle: _selectedRegStyle,
+    createdAt: Date.now()
+  });
+  showAuthSuccess('✅ Бүртгэл амжилттай! Нэвтэрч байна...');
+  setTimeout(() => loginSuccess(email, getUser(email)), 1000);
+}
+
+function loginSuccess(email, user) {
+  currentUser = email;
+  localStorage.setItem(AUTH_KEY, email);
+  // Save avatar preference
+  if (user.avatarSeed) {
+    localStorage.setItem(AVATAR_KEY, JSON.stringify({seed: user.avatarSeed, style: user.avatarStyle||'avataaars'}));
+  }
+  updateNavUser();
+  closeAuth();
+  showToast(`👋 Сайн байна уу, ${user.name || email.split('@')[0]}!`, 'success');
+}
+
+function logout() {
+  localStorage.removeItem(AUTH_KEY);
+  currentUser = '';
+  updateNavUser();
+  showToast('Гарлаа. Дараа уулзацгаая! 👋', 'success');
+}
+
+function handleForgot() {
+  showAuthSuccess('📧 Нууц үг сэргээх холбоос тан руу илгээгдэх болно.');
+}
+
+// ── Nav user display ─────────────────
+function updateNavUser() {
+  const guest   = document.getElementById('navGuest');
+  const pill    = document.getElementById('navUserPill');
+  const avatarEl= document.getElementById('userAvatar');
+  const labelEl = document.getElementById('userLabel');
+  const nameEl  = document.getElementById('menuUserName');
+  const emailEl = document.getElementById('menuUserEmail');
+
+  if (currentUser && currentUser !== 'guest@shb.mn') {
+    // Logged in
+    if (guest) guest.style.display = 'none';
+    if (pill)  pill.style.display  = 'flex';
+
+    const user = getUser(currentUser) || {};
+    const saved = (() => { try { return JSON.parse(localStorage.getItem(AVATAR_KEY)||'null'); } catch{ return null; } })();
+    const seed  = saved?.seed  || user.avatarSeed  || currentUser.split('@')[0];
+    const style = saved?.style || user.avatarStyle || 'avataaars';
+
+    if (avatarEl) { avatarEl.src = getAvatarUrl(seed, style); }
+    if (labelEl)  { labelEl.textContent = (user.name || currentUser.split('@')[0]).substring(0,12); }
+    if (nameEl)   { nameEl.textContent  = user.name || currentUser.split('@')[0]; }
+    if (emailEl)  { emailEl.textContent = currentUser; }
+  } else {
+    // Guest
+    if (guest) guest.style.display = 'flex';
+    if (pill)  pill.style.display  = 'none';
+  }
+}
+
+// ── Avatar picker (profile edit) ─────
+let _pickerSelected = null;
+
+function openAvatarPicker(e) {
+  if (e) e.stopPropagation();
+  const grid = document.getElementById('avatarGrid');
+  if (!grid) return;
+
+  // Get current
+  const saved = (() => { try { return JSON.parse(localStorage.getItem(AVATAR_KEY)||'null'); } catch{ return null; } })();
+  const curSeed  = saved?.seed  || 'default';
+  const curStyle = saved?.style || 'avataaars';
+  _pickerSelected = { seed: curSeed, style: curStyle };
+
+  // Build grid: 4 styles × 5 seeds = 20 options
+  grid.innerHTML = '';
+  const picks = [];
+  AVATAR_STYLES.slice(0,4).forEach(style => {
+    AVATAR_SEEDS.slice(0,5).forEach(seed => picks.push({seed, style}));
+  });
+
+  picks.forEach(({seed, style}) => {
+    const div = document.createElement('div');
+    const isCur = seed === curSeed && style === curStyle;
+    div.className = 'avatar-opt' + (isCur ? ' selected' : '');
+    div.onclick = () => {
+      document.querySelectorAll('.avatar-opt').forEach(d => d.classList.remove('selected'));
+      div.classList.add('selected');
+      _pickerSelected = {seed, style};
+    };
+    const img = document.createElement('img');
+    img.src = getAvatarUrl(seed, style);
+    img.alt = seed;
+    div.appendChild(img);
+    grid.appendChild(div);
+  });
+
+  document.getElementById('avatarModal').classList.remove('hidden');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeAvatarPicker() {
+  document.getElementById('avatarModal').classList.add('hidden');
+  document.body.style.overflow = '';
+}
+
+function confirmAvatar() {
+  if (!_pickerSelected) { closeAvatarPicker(); return; }
+  localStorage.setItem(AVATAR_KEY, JSON.stringify(_pickerSelected));
+  // Also update in user record
+  if (currentUser) {
+    saveUser(currentUser, { avatarSeed: _pickerSelected.seed, avatarStyle: _pickerSelected.style });
+  }
+  updateNavUser();
+  closeAvatarPicker();
+  showToast('✅ Профайл дүрс шинэчлэгдлээ!', 'success');
+}
+
 
 /* ════════════════════════════════════
    TRAINING SECTION
