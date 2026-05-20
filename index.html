@@ -503,9 +503,12 @@ footer .copy{color:rgba(255,255,255,.2)}
 <nav>
   <div class="nav-in">
     <div class="brand" onclick="showSec('home')">
-      <div class="brand-icon">
-        <img src="https://raw.githubusercontent.com/tuult764-crypto/sonirholtoi-hel-bichig-/main/logo.png" alt="Лого"
-          onerror="this.parentElement.innerHTML='<span style=\'font-size:20px\'>📖</span>'">
+      <div class="brand-icon" id="brandIconWrap">
+        <img id="navLogo"
+          src="https://raw.githubusercontent.com/tuult764-crypto/sonirholtoi-hel-bichig-/main/logo.png"
+          alt="Лого"
+          style="width:34px;height:34px;object-fit:contain;display:block"
+          onerror="handleLogoError(this)">
       </div>
       Сонирхолтой хэл бичиг
     </div>
@@ -1315,7 +1318,11 @@ footer .copy{color:rgba(255,255,255,.2)}
     <div>
       <div class="footer-brand">
         <div style="width:40px;height:40px;border-radius:10px;background:#1c1917;border:1px solid rgba(255,255,255,.1);display:flex;align-items:center;justify-content:center;overflow:hidden;flex-shrink:0">
-          <img src="https://raw.githubusercontent.com/tuult764-crypto/sonirholtoi-hel-bichig-/main/logo.png" alt="Лого" style="width:36px;height:36px;object-fit:contain" onerror="this.parentElement.innerHTML='<span style=\'font-size:18px\'>📖</span>'">
+          <img id="footerLogo"
+            src="https://raw.githubusercontent.com/tuult764-crypto/sonirholtoi-hel-bichig-/main/logo.png"
+            alt="Лого"
+            style="width:36px;height:36px;object-fit:contain;display:block"
+            onerror="handleLogoError(this)">
         </div>
         Сонирхолтой хэл бичиг
       </div>
@@ -1359,7 +1366,53 @@ let _currentCourseType = '';
 /* ════════════════════════════════════
    INIT
 ════════════════════════════════════ */
+/* ════════════════════════════════════
+   LOGO — GitHub-аас найдвартай ачаалах
+════════════════════════════════════ */
+const LOGO_URL = 'https://raw.githubusercontent.com/tuult764-crypto/sonirholtoi-hel-bichig-/main/logo.png';
+
+// Лого ачааллагдахгүй бол дахин оролдоно (3 удаа)
+function loadLogoWithRetry(imgEl, attempt) {
+  if (!imgEl) return;
+  attempt = attempt || 1;
+  const ts = Date.now();
+  const url = LOGO_URL + '?v=' + ts;
+
+  imgEl.onload = function() {
+    imgEl.style.display = 'block';
+  };
+  imgEl.onerror = function() {
+    if (attempt < 3) {
+      setTimeout(() => loadLogoWithRetry(imgEl, attempt + 1), 1500);
+    } else {
+      handleLogoError(imgEl);
+    }
+  };
+  imgEl.src = url;
+}
+
+function handleLogoError(imgEl) {
+  // Зураг олдохгүй бол emoji fallback
+  const wrap = imgEl.parentElement;
+  if (!wrap) return;
+  const size = imgEl.id === 'navLogo' ? '20px' : '18px';
+  imgEl.style.display = 'none';
+  if (!wrap.querySelector('.logo-fallback')) {
+    const span = document.createElement('span');
+    span.className = 'logo-fallback';
+    span.style.cssText = `font-size:${size};line-height:1`;
+    span.textContent = '📖';
+    wrap.appendChild(span);
+  }
+}
+
 document.addEventListener('DOMContentLoaded',()=>{
+  // Лого зургуудыг retry-тай ачаална
+  const navLogo    = document.getElementById('navLogo');
+  const footerLogo = document.getElementById('footerLogo');
+  if (navLogo)    loadLogoWithRetry(navLogo,    1);
+  if (footerLogo) loadLogoWithRetry(footerLogo, 1);
+
   const saved = localStorage.getItem(AUTH_KEY);
   currentUser = saved || '';
   updateNavUser();
