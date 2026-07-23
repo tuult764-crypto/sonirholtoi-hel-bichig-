@@ -1,865 +1,671 @@
-<!DOCTYPE html>
-<html lang="mn">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Сонирхолтой хэл бичиг</title>
-<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css">
-</head>
-<body>
+/* ══════════════════════════════════════════════════════
+   СОНИРХОЛТОЙ ХЭЛ БИЧИГ — ҮНДСЭН ФАЙЛ
+   ------------------------------------------------------
+   Агуулга:
+     1. Хувьсагч (өнгө, сүүдэр)
+     2. Reset ба үндсэн загвар
+     3. Навигацийн цэс (нүүр самбар + гар утасны цэс)
+     4. Анимаци
+     5. Эхлэл хэсэг (Hero)
+     6. Статистик
+     7. Тоглоомын танхим
+     8. Судоку
+     9. Үг хайх тоглоом
+    10. Монгол унших дасгал
+    11. Морин уралдаан
+    12. Дэлгүүр
+    13. Онлайн сургалт
+    14. Нэвтрэх/бүртгүүлэх цонх
+    15. Зурган профайл сонгох цонх
+    16. Төлбөрийн цонхнууд
+    17. Мэдэгдэл (toast)
+    18. Хөл (footer)
+    19. Хариу үзэмж (responsive)
+    20. Хэвлэх формат
+   ══════════════════════════════════════════════════════ */
 
-<!-- NAV -->
-<nav>
-  <div class="nav-in">
-    <div class="brand" onclick="showSec('home')">
-      <div class="brand-icon" id="brandIconWrap">
-        <img id="navLogo"
-          src="https://raw.githubusercontent.com/tuult764-crypto/sonirholtoi-hel-bichig-/main/logo.png"
-          alt="Лого"
-          style="width:34px;height:34px;object-fit:contain;display:block"
-          onerror="handleLogoError(this)">
-      </div>
-      Сонирхолтой хэл бичиг
-    </div>
-    <div class="nav-links">
-      <button class="nav-btn" onclick="showSec('home')">🏠 Нүүр</button>
-      <button class="nav-btn" onclick="showSec('games')">🎮 Тоглоом</button>
-      <button class="nav-btn" onclick="showSec('training')">🎓 Сургалт</button>
-      <button class="nav-btn" onclick="showSec('shop')">🛒 Дэлгүүр</button>
-    </div>
-    <button class="hamburger" id="hamburger" onclick="toggleMobileNav()" aria-label="Цэс">
-  <span></span><span></span><span></span>
-</button>
-    <div class="nav-right">
-      <button class="cart-btn" onclick="openCart()">🛒<span id="cartBadge" class="cart-badge">0</span></button>
+/* ──────────────────────────────────────────────────────
+   1. ХУВЬСАГЧ
+   ────────────────────────────────────────────────────── */
+:root {
+  --amber: #d97706;
+  --amber-l: rgba(217,119,6,0.12);
+  --amber-d: #b45309;
+  --green: #059669;
+  --blue: #2563eb;
+  --purple: #7c3aed;
+  --red: #dc2626;
+  --surface: #fafaf9;
+  --surface2: #f5f0e8;
+  --dark: #1c1917;
+  --mid: #57534e;
+  --muted: #a8a29e;
+  --border: #e7e5e4;
+  --white: #ffffff;
+  --shadow: 0 4px 24px rgba(0,0,0,0.08);
+}
 
-      <!-- Guest: нэвтрэх / бүртгүүлэх товч -->
-      <div id="navGuest" style="display:flex;gap:6px;align-items:center">
-        <button class="btn-g" style="padding:8px 16px;font-size:12px" onclick="openAuth('login')">Нэвтрэх</button>
-        <button class="btn-p" style="padding:8px 16px;font-size:12px" onclick="openAuth('reg')">Бүртгүүлэх</button>
-      </div>
+/* ──────────────────────────────────────────────────────
+   2. RESET БА ҮНДСЭН ЗАГВАР
+   Гарчиг: Montserrat (албан ёсны, тод)
+   Үндсэн текст: Manrope (уншихад ая тухтай)
+   ────────────────────────────────────────────────────── */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'Manrope',sans-serif;background:var(--surface);color:var(--dark);min-height:100vh}
+h1,h2,h3,.baloo{font-family:'Montserrat',sans-serif}
 
-      <!-- Logged in: user pill -->
-      <div class="user-pill" id="navUserPill" style="display:none">
-        <div id="userAvatarWrap" onclick="openAvatarPicker(event)" title="Профайл зураг солих" style="position:relative;cursor:pointer">
-          <img id="userAvatar" src="https://api.dicebear.com/7.x/avataaars/svg?seed=default" alt="" style="width:28px;height:28px;border-radius:50%;object-fit:cover;border:2px solid var(--amber)">
-          <div style="position:absolute;bottom:-2px;right:-2px;width:12px;height:12px;background:var(--amber);border-radius:50%;border:1.5px solid #fff;display:flex;align-items:center;justify-content:center;font-size:7px">✏️</div>
-        </div>
-        <span id="userLabel" style="max-width:80px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">...</span>
-        <div class="user-menu">
-          <div style="padding:12px 15px;border-bottom:1px solid var(--border)">
-            <div style="font-size:11px;font-weight:800;color:var(--dark)" id="menuUserName">—</div>
-            <div style="font-size:10px;color:var(--muted);margin-top:2px" id="menuUserEmail">—</div>
-          </div>
-          <button onclick="openAvatarPicker(event)">🖼 Профайл зураг солих</button>
-          <button onclick="showSec('library')">📚 Миний сан</button>
-          <button onclick="showSec('training')">🎓 Сургалт</button>
-          <button onclick="openCart()">🛒 Сагс</button>
-          <hr>
-          <button class="logout" onclick="logout()">↩ Гарах</button>
-        </div>
-      </div>
-    </div>
-  </div>
-</nav>
+/* ──────────────────────────────────────────────────────
+   3. НАВИГАЦИЙН ЦЭС
+   ────────────────────────────────────────────────────── */
+/* ── NAV ── */
+nav{position:sticky;top:0;z-index:50;background:rgba(250,250,249,0.94);backdrop-filter:blur(16px);border-bottom:1px solid var(--border)}
+.nav-in{max-width:1200px;margin:0 auto;padding:0 20px;height:62px;display:flex;align-items:center;justify-content:space-between;gap:16px}
+.brand{display:flex;align-items:center;gap:10px;cursor:pointer;font-family:'Montserrat',sans-serif;font-weight:800;font-size:17px;color:var(--amber);text-decoration:none}
+.brand-icon{width:38px;height:38px;border-radius:10px;background:var(--amber-l);border:1px solid rgba(217,119,6,.18);display:flex;align-items:center;justify-content:center;overflow:hidden;flex-shrink:0}
+.brand-icon img{width:34px;height:34px;object-fit:contain}
+.nav-links{display:flex;align-items:center;gap:2px}
+.nav-btn{background:none;border:none;cursor:pointer;font-family:'Manrope',sans-serif;font-weight:700;font-size:13px;color:var(--mid);padding:8px 16px;border-radius:10px;transition:all .15s}
+.nav-btn:hover,.nav-btn.active{background:var(--amber-l);color:var(--amber)}
+.nav-right{display:flex;align-items:center;gap:10px}
+.cart-btn{position:relative;cursor:pointer;background:none;border:none;font-size:20px;padding:6px}
+.cart-badge{position:absolute;top:-4px;right:-6px;background:var(--amber);color:#fff;font-size:9px;font-weight:700;min-width:18px;height:18px;border-radius:9px;display:flex;align-items:center;justify-content:center;padding:0 4px}
+.user-pill{display:flex;align-items:center;gap:8px;background:var(--surface2);border:1px solid var(--border);border-radius:99px;padding:5px 14px 5px 7px;cursor:pointer;font-size:12px;font-weight:700;position:relative}
+.user-pill img{width:24px;height:24px;border-radius:50%;object-fit:cover}
+.user-menu{display:none;position:absolute;top:calc(100% + 8px);right:0;width:175px;background:#fff;border:1px solid var(--border);border-radius:14px;box-shadow:0 8px 32px rgba(0,0,0,0.12);overflow:hidden;z-index:100}
+.user-pill:hover .user-menu{display:block}
+.user-menu button{display:block;width:100%;text-align:left;padding:11px 15px;font-size:12px;font-weight:600;border:none;background:none;cursor:pointer;color:var(--dark);font-family:'Manrope',sans-serif;transition:background .12s}
+.user-menu button:hover{background:var(--surface2)}
+.user-menu hr{border:none;border-top:1px solid var(--border)}
+.user-menu .logout{color:var(--red)}
+.btn-p{background:var(--amber);color:#fff;border:none;border-radius:99px;padding:9px 22px;font-family:'Manrope',sans-serif;font-size:12px;font-weight:700;cursor:pointer;box-shadow:0 4px 14px rgba(217,119,6,.30);transition:all .15s}
+.btn-p:hover{transform:translateY(-1px);box-shadow:0 6px 18px rgba(217,119,6,.40)}
+.btn-g{background:none;border:2px solid var(--amber);color:var(--amber);border-radius:99px;padding:9px 22px;font-family:'Manrope',sans-serif;font-size:12px;font-weight:700;cursor:pointer;transition:all .15s}
+.btn-g:hover{background:var(--amber-l)}
 
-  <div class="mobile-nav" id="mobileNav">
-  <button class="nav-btn" onclick="showSec('home');closeMobileNav()">🏠 Нүүр</button>
-  <button class="nav-btn" onclick="showSec('games');closeMobileNav()">🎮 Тоглоом</button>
-  <button class="nav-btn" onclick="showSec('training');closeMobileNav()">🎓 Сургалт</button>
-  <button class="nav-btn" onclick="showSec('shop');closeMobileNav()">🛒 Дэлгүүр</button>
-</div>
-<main>
+main{max-width:1200px;margin:0 auto;padding:32px 20px}
+.sec{display:none}.sec.active{display:block}
 
-<!-- HOME -->
-<section id="homeSection" class="sec active">
-  <div class="hero">
-    <div>
-      <span class="hero-tag">Монгол хэл бичгийн цахим систем</span>
-      <h1>Хэл бичгийг<br><span class="shimmer">сонирхолтойгоор</span> сур</h1>
-      <p>Орчин үеийн тоглоомын аргаар эх хэлээ төгс эзэмшицгээе. Судоку, үг хайх, монгол бичиг, морин уралдаан — бүгд нэгдсэн.</p>
-      <div class="hero-btns">
-        <button class="btn-p" onclick="showSec('games')">🎮 Тоглоом эхлэх</button>
-        <button class="btn-g" onclick="showSec('training')">🎓 Сургалтууд</button>
-      </div>
-    </div>
-    <div class="hero-cards">
-      <div class="hero-card" style="background:#fff7ed;border-color:#fde68a" onclick="showSec('games')"><div class="icon">🎮</div><h3>Тоглоом</h3></div>
-      <div class="hero-card" style="background:#f0fdf4;border-color:#bbf7d0" onclick="showSec('shop')"><div class="icon">🛒</div><h3>Дэлгүүр</h3></div>
-      <div class="hero-card" style="background:#eff6ff;border-color:#c7deff" onclick="showSec('training')"><div class="icon">🎓</div><h3>Сургалт</h3></div>
-      <div class="hero-card" style="background:#fdf4ff;border-color:#e9d5ff" onclick="showSec('library')"><div class="icon">📚</div><h3>Миний сан</h3></div>
-    </div>
-  </div>
+/* ── Гар утасны цэс (hamburger) ── */
+  /* ══ HAMBURGER MENU ══ */
+.hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;background:none;border:none;padding:8px;border-radius:10px;transition:background .15s}
+.hamburger:hover{background:var(--amber-l)}
+.hamburger span{display:block;width:22px;height:2.5px;background:var(--dark);border-radius:99px;transition:all .25s}
+.hamburger.open span:nth-child(1){transform:translateY(7.5px) rotate(45deg)}
+.hamburger.open span:nth-child(2){opacity:0;transform:scaleX(0)}
+.hamburger.open span:nth-child(3){transform:translateY(-7.5px) rotate(-45deg)}
+.mobile-nav{display:none;position:fixed;top:54px;left:0;right:0;background:rgba(250,250,249,0.98);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);z-index:49;padding:12px 16px 16px;box-shadow:0 8px 32px rgba(0,0,0,.10)}
+@keyframes slideDown{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:translateY(0)}}
+.mobile-nav.open{display:block;animation:slideDown .2s ease-out}
+.mobile-nav .nav-btn{display:flex;width:100%;padding:12px 14px;font-size:14px;border-radius:12px;margin-bottom:4px}
 
-  <div class="stats">
-    <div><div class="stat-num" style="color:#fbbf24">4+</div><div class="stat-lbl">Тоглоом</div></div>
-    <div><div class="stat-num" style="color:#60a5fa">4</div><div class="stat-lbl">Сургалт</div></div>
-    <div><div class="stat-num" style="color:#4ade80">50</div><div class="stat-lbl">Морин уралдаан</div></div>
-    <div><div class="stat-num" style="color:#c084fc">1</div><div class="stat-lbl">Туул Багш</div></div>
-  </div>
+/* ── ANIMATIONS ── */
+@keyframes shimmer{0%{background-position:-200% 0}100%{background-position:200% 0}}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes slideUp{from{transform:translateY(50px);opacity:0}to{transform:translateY(0);opacity:1}}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@keyframes gallop{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
+.slide-up{animation:slideUp .35s ease-out}
 
-  <h2 class="sec-title">Шинэ материалууд</h2>
-  <div id="dashGrid" class="prod-grid"></div>
-</section>
+/* ── HERO ── */
+.hero{display:grid;grid-template-columns:1fr 1fr;gap:56px;align-items:center;margin-bottom:72px;padding-top:16px}
 
-<!-- GAMES LOBBY -->
-<section id="gamesSection" class="sec">
-  <button class="page-back" onclick="showSec('home')">← Буцах</button>
-  <h2 class="sec-title">🎮 Тоглоомын булан</h2>
-  <div class="game-grid">
-    <div class="game-card" onclick="showSec('sudoku')">
-      <span class="game-badge badge-free">Үнэгүй</span>
-      <div class="game-icon" style="background:#fef3c7">🔢</div>
-      <h3>Монгол Судоку</h3>
-      <p>Монгол тоогоор тоглох өвөрмөц судоку тоглоом. Тоглох үнэгүй, хэвлэхэд эрх шаардлагатай.</p>
-    </div>
-    <div class="game-card" onclick="showSec('wordsearch')">
-      <span class="game-badge badge-free">Үнэгүй</span>
-      <div class="game-icon" style="background:#f0fdf4">🔍</div>
-      <h3>Үгийг олоорой</h3>
-      <p>Монгол хэлний үгсийг тор дотроос хайж, зураасаар тэмдэглэ.</p>
-    </div>
-    <div class="game-card" onclick="showSec('reading')">
-      <span class="game-badge badge-paid">5 үнэгүй</span>
-      <div class="game-icon" style="background:#ede9fe">📜</div>
-      <h3>Монгол бичиг унших</h3>
-      <p>Тоо орхиод буусан монгол бичгийн эхийг нөхөж унш.</p>
-    </div>
-    <div class="game-card" onclick="showSec('horse')">
-      <span class="game-badge badge-new">Шинэ!</span>
-      <div class="game-icon" style="background:#fdf4ff">🐎</div>
-      <h3>Морь уралдъя</h3>
-      <p>Шагайн дүрмээр 2 тоглогч өрсөлдөнө. 50 алхам хүрнэ.</p>
-    </div>
-  </div>
-</section>
+.hero-tag{display:inline-block;background:#fef3c7;color:var(--amber-d);padding:5px 16px;border-radius:99px;font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase}
+.hero h1{font-size:clamp(34px,5vw,56px);font-weight:800;line-height:1.1;margin-top:18px}
+.shimmer{background:linear-gradient(90deg,var(--amber),#f59e0b,var(--amber));background-size:200% 100%;-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;animation:shimmer 3s infinite linear}
+.hero p{font-size:15px;color:var(--mid);margin-top:16px;line-height:1.75}
+.hero-btns{display:flex;gap:12px;margin-top:28px;flex-wrap:wrap}
+.hero-cards{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.hero-card{padding:22px;border-radius:22px;cursor:pointer;border:2px solid transparent;transition:transform .2s,box-shadow .2s;text-align:center}
+.hero-card:hover{transform:translateY(-4px);box-shadow:var(--shadow)}
+.hero-card .icon{font-size:34px;margin-bottom:8px}
+.hero-card h3{font-weight:700;font-size:14px}
 
-<!-- SUDOKU -->
-<section id="sudokuSection" class="sec">
-  <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:20px">
-    <div>
-      <button class="page-back" style="margin-bottom:6px" onclick="showSec('games')">← Буцах</button>
-      <h2 style="font-size:20px;font-weight:800;font-family:'Baloo 2',cursive">🔢 Монгол Судоку</h2>
-      <p style="font-size:11px;color:var(--mid)">Тоглох үнэгүй · Хэвлэхэд эрх шаардлагатай</p>
-    </div>
-    <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
-      <div style="display:flex;align-items:center;gap:8px;background:#fef3c7;border:1.5px solid #fcd34d;border-radius:99px;padding:6px 14px;font-size:12px;font-weight:700;color:var(--amber-d)">
-        🖨 <span id="creditCount">0</span> хуудас эрхтэй
-        <button style="font-size:10px;color:var(--blue);text-decoration:underline;background:none;border:none;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif;font-weight:600" onclick="refreshCredits()" id="refreshCreditBtn">⟳ Шинэчлэх</button>
-      </div>
-      <button class="btn-p" onclick="initSudoku()">🔄 Шинэ</button>
-    </div>
-  </div>
-  <div class="sudoku-layout">
-    <div class="sudoku-wrap"><div id="sudokuGrid" class="sudoku-grid"></div></div>
-    <div style="display:flex;flex-direction:column;gap:12px">
-      <div class="panel">
-        <h4>Тооны удирдамж</h4>
-        <div class="guide-grid">
-          <div class="guide-cell">1→᠑</div><div class="guide-cell">2→᠒</div><div class="guide-cell">3→᠓</div>
-          <div class="guide-cell">4→᠔</div><div class="guide-cell">5→᠕</div><div class="guide-cell">6→᠖</div>
-          <div class="guide-cell">7→᠗</div><div class="guide-cell">8→᠘</div><div class="guide-cell">9→᠙</div>
-        </div>
-        <p class="guide-hint">1–9 тоо дарахад автоматаар монгол тоонд хөрвөнө.</p>
-      </div>
-      <div class="action-btns">
-        <button class="action-btn btn-new2" onclick="initSudoku()">🔄 Шинэ тоглоом</button>
-        <button class="action-btn btn-check2" onclick="checkSudoku()">✅ Шалгах</button>
-        <button class="action-btn btn-solve2" onclick="solveSudoku()">💡 Шийдэл</button>
-        <button class="action-btn btn-print2" onclick="handlePrint()">🖨 А4 хэвлэх</button>
-      </div>
-      <div class="print-sec">
-        <div class="psec-title">ХЭВЛЭХ ЭРХ <a href="#" onclick="refreshCredits();return false">Шинэчлэх</a></div>
-        <div class="free-banner">
-          <div class="free-title">1-Р ХУУДАС ҮНЭГҮЙ!</div>
-          <div class="free-desc">Нэг хуудас (4 судоку) үнэгүй хэвлэх боломжтой</div>
-          <button class="btn-free-p" onclick="printFree()">ҮНЭГҮЙ ХЭВЛЭХ</button>
-        </div>
-        <div class="pkgs">
-          <div class="pkg" onclick="buyPackage(5,3000)"><div class="pkg-n">5</div><div class="pkg-lbl">хуудас</div><div class="pkg-p">3,000₮</div></div>
-          <div class="pkg pop" onclick="buyPackage(10,5000)"><div class="pkg-badge">АЛДАРТАЙ</div><div class="pkg-n">10</div><div class="pkg-lbl">хуудас</div><div class="pkg-p">5,000₮</div></div>
-          <div class="pkg" onclick="buyPackage(15,7000)"><div class="pkg-n">15</div><div class="pkg-lbl">хуудас</div><div class="pkg-p">7,000₮</div></div>
-        </div>
-        <div class="pkgs">
-          <div class="pkg" onclick="buyPackage(20,9000)"><div class="pkg-n">20</div><div class="pkg-lbl">хуудас</div><div class="pkg-p">9,000₮</div></div>
-          <div class="pkg" onclick="buyPackage(25,11000)"><div class="pkg-n">25</div><div class="pkg-lbl">хуудас</div><div class="pkg-p">11,000₮</div></div>
-          <div class="pkg deal" onclick="buyPackage(30,12000)"><div class="pkg-badge">ХЯМДРАЛ!</div><div class="pkg-n">30</div><div class="pkg-lbl">хуудас</div><div class="pkg-p">12,000₮</div></div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
+/* ── STATS ── */
+.stats{background:var(--dark);border-radius:28px;padding:36px;display:grid;grid-template-columns:repeat(4,1fr);gap:20px;text-align:center;margin-bottom:56px}
 
-<!-- WORD SEARCH -->
-<section id="wordsearchSection" class="sec">
-  <button class="page-back" onclick="showSec('games')">← Буцах</button>
-  <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:20px">
-    <div>
-      <h2 style="font-size:20px;font-weight:800;font-family:'Baloo 2',cursive">🔍 Үгийг олоорой</h2>
-    </div>
-    <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
-      <select id="wsCatSel" onchange="wsLoadPage()" style="padding:8px 12px;border:1.5px solid var(--border);border-radius:11px;font-family:'Plus Jakarta Sans',sans-serif;font-size:12px;font-weight:600;outline:none;background:#fff;cursor:pointer">
-        <option value="1">📖 Хуудас 1</option><option value="2">📖 Хуудас 2</option>
-        <option value="3">📖 Хуудас 3</option><option value="4">📖 Хуудас 4</option>
-        <option value="5">📖 Хуудас 5</option>
-      </select>
-      <button class="btn-p" onclick="wsLoadPage()">🔄 Шинэчлэх</button>
-    </div>
-  </div>
-  <div id="wsLoading" style="text-align:center;padding:48px">
-    <div style="width:36px;height:36px;border:3px solid var(--border);border-top-color:var(--amber);border-radius:50%;animation:spin .8s linear infinite;margin:0 auto 14px"></div>
-    <p style="font-size:12px;font-weight:600;color:var(--mid)">Номын хуудас татаж байна…</p>
-  </div>
-  <div id="wsNoPdf" style="display:none;max-width:480px;margin:0 auto;text-align:center;padding:40px 20px">
-    <div style="font-size:52px;margin-bottom:16px">📄</div>
-    <h3 style="font-size:17px;font-weight:800;margin-bottom:10px">PDF файл бэлэн болоогүй байна</h3>
-    <p style="font-size:12px;color:var(--mid);line-height:1.7;margin-bottom:20px">GitHub дээрх <strong>wordsearch.pdf</strong> файлыг байршуулсны дараа тоглоом автоматаар идэвхжинэ.</p>
-    <button class="btn-p" style="margin-top:18px" onclick="showSec('shop')">🛒 Дэлгүүрт очих</button>
-  </div>
-  <div id="wsGameArea" style="display:none">
-    <div style="display:grid;grid-template-columns:1fr 220px;gap:20px;align-items:start">
-      <div>
-        <div id="wsFoundCount" style="font-size:12px;font-weight:700;color:var(--mid);margin-bottom:10px"></div>
-        <div id="wsImgWrap" style="position:relative;display:inline-block;max-width:100%;border:2px solid var(--border);border-radius:16px;overflow:hidden;cursor:crosshair;box-shadow:0 4px 20px rgba(0,0,0,0.10)">
-          <img id="wsBgImg" src="" alt="Үгийг олоорой" style="display:block;max-width:100%;height:auto;user-select:none;-webkit-user-drag:none">
-          <svg id="wsOverlaySvg" style="position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none" xmlns="http://www.w3.org/2000/svg">
-            <g id="wsFoundLines"></g>
-            <line id="wsActiveLine" x1="0" y1="0" x2="0" y2="0" stroke="rgba(37,99,235,0.55)" stroke-width="18" stroke-linecap="round" stroke-dasharray="0" style="display:none"/>
-          </svg>
-          <div id="wsClickLayer" style="position:absolute;top:0;left:0;width:100%;height:100%;cursor:crosshair"></div>
-        </div>
-        <p style="font-size:10px;color:var(--muted);margin-top:8px">💡 Эхний үсгийг дараад сүүлчийн үсгийг дар</p>
-      </div>
-      <div style="display:flex;flex-direction:column;gap:10px">
-        <div class="word-list"><h4>🎯 Олох үгс</h4><div id="wordListEl"></div></div>
-        <div id="wsCatInfo" style="background:#f0fdf4;border:1px solid #a7f3d0;border-radius:12px;padding:12px;font-size:10px;color:#065f46;line-height:1.5"></div>
-        <button class="btn-p" style="font-size:11px;padding:9px" onclick="wsReset()">🔄 Дахин эхлэх</button>
-      </div>
-    </div>
-  </div>
-</section>
+.stat-num{font-size:30px;font-weight:800;font-family:'Montserrat',sans-serif}
+.stat-lbl{font-size:10px;font-weight:600;letter-spacing:.1em;opacity:.5;text-transform:uppercase;color:#fff}
 
-<!-- MONGOLIAN READING -->
-<section id="readingSection" class="sec">
-  <button class="page-back" onclick="showSec('games')">← Буцах</button>
-  <h2 style="font-size:20px;font-weight:800;font-family:'Baloo 2',cursive;margin-bottom:6px">📜 Монгол бичиг унших</h2>
-  <p style="font-size:11px;color:var(--mid);margin-bottom:20px">Тоо орхиод буусан нүдийг зөв үгээр нөхөөрэй</p>
-  <div class="read-game">
-    <div class="read-score">
-      <div class="score-box"><div class="score-num" id="readScore">0</div><div class="score-lbl">Оноо</div></div>
-      <div style="width:1px;height:36px;background:var(--border)"></div>
-      <div class="score-box"><div class="score-num" id="readQ">1</div><div class="score-lbl">Асуулт</div></div>
-      <div style="width:1px;height:36px;background:var(--border)"></div>
-      <div class="score-box"><div class="score-num" id="readTotal">5</div><div class="score-lbl">Нийт</div></div>
-      <div style="flex:1"></div>
-      <button class="btn-p" onclick="startReading()" style="font-size:12px;padding:8px 18px">🔄 Дахин</button>
-    </div>
-    <div class="progress-bar"><div class="progress-fill" id="readProgress" style="width:0%"></div></div>
-    <div class="text-display">
-      <div class="text-title" id="readTitle">— — —</div>
-      <div class="text-content" id="readContent"></div>
-    </div>
-    <div class="options-grid" id="readOptions"></div>
-    <div id="readLockMsg" class="lock-msg" style="display:none">
-      <p>🔒 Үнэгүй 3 даалгавар дууслаа.<br>Үлдсэн даалгавруудыг тоглохын тулд дэлгүүрээс "Монгол бичиг унших" багцыг худалдаж аваарай.</p>
-      <button class="btn-p" onclick="showSec('shop')">🛒 Дэлгүүрт очих</button>
-    </div>
-  </div>
-</section>
+/* ── SECTION TITLE ── */
+.sec-title{font-size:26px;font-weight:800;margin-bottom:24px}
 
-<!-- HORSE RACE -->
-<section id="horseSection" class="sec">
-  <button class="page-back" onclick="showSec('games')">← Буцах</button>
-  <h2 style="font-size:20px;font-weight:800;font-family:'Baloo 2',cursive;margin-bottom:4px">🐎 Морь уралдъя</h2>
-  <p style="font-size:11px;color:var(--mid);margin-bottom:20px">Шагайн дүрмээр тоглоно · 1–4 тоглогч · 50 алхам хүрнэ</p>
-  <div id="horseSetup" style="max-width:480px;margin:0 auto">
-    <div style="background:#fff;border:1.5px solid var(--border);border-radius:22px;padding:28px">
-      <h3 style="font-size:16px;font-weight:800;margin-bottom:20px;text-align:center">🎮 Тоглогчийн тоо сонгоно уу</h3>
-      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:24px">
-        <button class="horse-cnt-btn active" id="hcBtn1" onclick="selectPlayerCount(1)" style="padding:16px 6px;border:2px solid var(--amber);border-radius:14px;background:var(--amber-l);cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:14px;color:var(--amber-d);transition:all .15s"><div style="font-size:24px;margin-bottom:4px">👤</div>1</button>
-        <button class="horse-cnt-btn" id="hcBtn2" onclick="selectPlayerCount(2)" style="padding:16px 6px;border:2px solid var(--border);border-radius:14px;background:#fff;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:14px;color:var(--mid);transition:all .15s"><div style="font-size:24px;margin-bottom:4px">👥</div>2</button>
-        <button class="horse-cnt-btn" id="hcBtn3" onclick="selectPlayerCount(3)" style="padding:16px 6px;border:2px solid var(--border);border-radius:14px;background:#fff;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:14px;color:var(--mid);transition:all .15s"><div style="font-size:24px;margin-bottom:4px">👨‍👩‍👦</div>3</button>
-        <button class="horse-cnt-btn" id="hcBtn4" onclick="selectPlayerCount(4)" style="padding:16px 6px;border:2px solid var(--border);border-radius:14px;background:#fff;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:14px;color:var(--mid);transition:all .15s"><div style="font-size:24px;margin-bottom:4px">👨‍👩‍👧‍👦</div>4</button>
-      </div>
-      <div id="playerNamesWrap" style="margin-bottom:20px"></div>
-      <div style="background:#fef9f0;border:1px solid #fde68a;border-radius:12px;padding:12px;font-size:11px;color:#92400e;line-height:1.7;margin-bottom:20px">
-        <strong>Дүрэм:</strong> 4 бэрх=4 алхам · 3 морь=3 · 2 морь=2 · 1 морь=1 · 0 морь=1<br>
-        Нэмэлт асуулт зөв хариулбал +2 алхам нэмнэ. 🎯
-      </div>
-      <button class="btn-p" style="width:100%;padding:14px;font-size:14px" onclick="startHorseGame()">🐎 Тоглоом эхлэх</button>
-    </div>
-  </div>
-  <div id="horseGame" class="horse-game" style="display:none">
-    <div class="race-track" id="raceTrack"></div>
-    <div class="race-status">
-      <div style="font-size:13px;font-weight:800" id="turnLabel">— — —</div>
-      <div id="scoreRow" class="player-score-row"></div>
-      <button onclick="resetHorse()" style="background:none;border:1.5px solid var(--border);border-radius:10px;padding:6px 14px;font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;font-weight:700;cursor:pointer;color:var(--mid)">🔄 Дахин</button>
-    </div>
-    <div class="race-controls">
-      <div class="player-panel">
-        <h4 id="curPlayerLabel">🎲 Шагай буулгах</h4>
-        <div class="shagai-display" id="shagaiDisplay">
-          <div class="shagai">?</div><div class="shagai">?</div><div class="shagai">?</div><div class="shagai">?</div>
-        </div>
-        <div class="roll-result" id="rollResult">Шагайгаа буулгана уу!</div>
-        <button class="btn-roll" id="rollBtn" onclick="rollShagai()">🎲 Шагай буулгах</button>
-      </div>
-      <div class="q-panel" id="bonusPanel">
-        <h4>💡 Нэмэлт асуулт (+2 алхам)</h4>
-        <div class="q-text" id="qText">Шагайгаа буулгасны дараа нэмэлт асуулт гарч ирнэ.</div>
-        <div class="q-opts" id="qOpts"></div>
-      </div>
-    </div>
-    <div class="winner-banner" id="winnerBanner">
-      <h3 id="winnerText">🏆 Ялагч!</h3>
-      <p id="winnerSub">Маш сайн тоглолоо!</p>
-      <button class="btn-p" style="margin-top:14px" onclick="resetHorse()">🔄 Дахин тоглох</button>
-    </div>
-  </div>
-</section>
+/* ── GAME LOBBY ── */
+.game-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:18px;margin-bottom:40px}
+.game-card{background:#fff;border:1.5px solid var(--border);border-radius:24px;padding:28px;cursor:pointer;transition:all .2s;position:relative;overflow:hidden}
+.game-card::before{content:'';position:absolute;inset:0;opacity:0;background:linear-gradient(135deg,rgba(217,119,6,.06),transparent);transition:opacity .2s}
+.game-card:hover{transform:translateY(-4px);box-shadow:0 10px 36px rgba(0,0,0,.10);border-color:var(--amber)}
+.game-card:hover::before{opacity:1}
+.game-icon{width:56px;height:56px;border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:26px;margin-bottom:18px}
+.game-card h3{font-size:17px;font-weight:800;margin-bottom:8px}
+.game-card p{font-size:12px;color:var(--mid);line-height:1.6}
+.game-badge{position:absolute;top:14px;right:14px;padding:3px 11px;border-radius:99px;font-size:9px;font-weight:700}
+.badge-free{background:#d1fae5;color:#065f46}
+.badge-paid{background:#fef3c7;color:#92400e}
+.badge-new{background:#ede9fe;color:#5b21b6}
 
-<!-- ═══════════════════════════════════════
-     ONLINE TRAINING SECTION — Онлайн сургалт
-════════════════════════════════════════ -->
-<section id="trainingSection" class="sec">
-  <button class="page-back" onclick="showSec('home')">← Буцах</button>
+/* ── PAGE BACK ── */
+.page-back{background:none;border:none;cursor:pointer;font-family:'Manrope',sans-serif;font-size:11px;font-weight:700;color:var(--amber);text-transform:uppercase;letter-spacing:.08em;display:flex;align-items:center;gap:6px;margin-bottom:24px;padding:0}
 
-  <!-- Hero -->
-  <div class="training-hero">
-    <div class="training-hero-text">
-      <div class="training-hero-tag">🎓 Онлайн сургалт</div>
-      <h2>Мэргэжлийн<br>багштай хамтран суралц</h2>
-      <p>Монгол хэл, бичиг, уншлагын мэргэжлийн сургалтууд. Гэрийнхээ тухтай орчинд, өөрийн хурдаар.</p>
-    </div>
-    <div class="training-hero-emoji">🏫</div>
-  </div>
+/* ── SUDOKU ── */
+.sudoku-layout{display:grid;grid-template-columns:1fr 280px;gap:22px;align-items:start}
 
-  <!-- Stats -->
-  <div class="training-stats">
-    <div class="tr-stat"><div class="tr-stat-num">4</div><div class="tr-stat-lbl">Сургалт</div></div>
-    <div class="tr-stat"><div class="tr-stat-num">1</div><div class="tr-stat-lbl">Мэргэжлийн багш</div></div>
-    <div class="tr-stat"><div class="tr-stat-num">7/7</div><div class="tr-stat-lbl">Долоо хоног</div></div>
-    <div class="tr-stat"><div class="tr-stat-num">1 сар</div><div class="tr-stat-lbl">Хугацаа</div></div>
-  </div>
+.sudoku-wrap{display:flex;justify-content:center}
+.sudoku-grid{display:grid;grid-template-columns:repeat(9,1fr);border:2.5px solid var(--dark);background:var(--dark);width:min(calc(100vw - 48px),388px);aspect-ratio:1}
+.sudoku-cell{width:100%;aspect-ratio:1;text-align:center;font-size:clamp(13px,3vw,19px);font-weight:700;font-family:'Manrope',sans-serif;border:0;outline:none;cursor:text;background:#fff;color:var(--dark);border-right:1px solid #ccc;border-bottom:1px solid #ccc;transition:background .1s}
+.sudoku-cell:focus{background:#fef9f0}
+.sudoku-cell.readonly{background:#fef3c7;cursor:default;font-weight:900}
+.sudoku-cell.error{background:#fee2e2!important}
+.sudoku-cell.border-r{border-right:2.5px solid var(--dark)}
+.sudoku-cell.border-b{border-bottom:2.5px solid var(--dark)}
+.panel{background:#fff;border:1px solid var(--border);border-radius:18px;padding:16px}
+.panel h4{font-weight:800;font-size:13px;margin-bottom:10px}
+.guide-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:5px}
+.guide-cell{background:var(--surface2);border-radius:7px;padding:6px 3px;text-align:center;font-size:11px;font-weight:700;color:var(--green)}
+.guide-hint{font-size:10px;color:#999;margin-top:8px;font-style:italic;line-height:1.5}
+.action-btns{display:flex;flex-direction:column;gap:7px}
+.action-btn{display:flex;align-items:center;gap:8px;padding:11px 15px;border:none;border-radius:13px;cursor:pointer;font-family:'Manrope',sans-serif;font-size:12px;font-weight:700;transition:all .15s;width:100%}
+.action-btn:hover{transform:translateY(-1px)}
+.btn-new2{background:#f0fdf4;color:var(--green);border:1.5px solid #a7f3d0}
+.btn-check2{background:var(--green);color:#fff}
+.btn-solve2{background:var(--amber);color:#fff}
+.btn-print2{background:var(--dark);color:#fff}
+.print-sec{margin-top:8px}
+.psec-title{font-size:13px;font-weight:800;margin-bottom:10px;display:flex;justify-content:space-between;align-items:center}
+.psec-title a{font-size:10px;color:var(--blue);text-decoration:none;font-weight:700}
+.free-banner{background:var(--surface2);border:1.5px solid #fcd34d;border-radius:16px;padding:14px;text-align:center;margin-bottom:10px}
+.free-title{font-size:12px;font-weight:800;color:var(--amber);margin-bottom:3px}
+.free-desc{font-size:10px;color:var(--mid);margin-bottom:8px;line-height:1.5}
+.btn-free-p{background:var(--dark);color:#fff;border:none;border-radius:11px;padding:9px 18px;font-family:'Manrope',sans-serif;font-size:11px;font-weight:800;cursor:pointer;width:100%;transition:all .15s}
+.btn-free-p:hover{background:#292524}
+.pkgs{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-bottom:8px}
+.pkg{border:2px solid var(--border);border-radius:13px;padding:10px 5px;text-align:center;cursor:pointer;transition:all .18s;position:relative;background:#fff}
+.pkg:hover{border-color:var(--green);transform:translateY(-2px);box-shadow:0 4px 14px rgba(5,150,105,.15)}
+.pkg.pop{border-color:var(--green);background:var(--green);color:#fff}
+.pkg.deal{border-color:#92400e;background:#92400e;color:#fff}
+.pkg-badge{position:absolute;top:-8px;left:50%;transform:translateX(-50%);background:#fbbf24;color:var(--dark);font-size:8px;font-weight:800;padding:2px 8px;border-radius:99px;white-space:nowrap}
+.pkg-n{font-size:24px;font-weight:800;font-family:'Montserrat',sans-serif;color:var(--green);line-height:1}
+.pkg.pop .pkg-n,.pkg.deal .pkg-n{color:#fff}
+.pkg-lbl{font-size:8px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;opacity:.65;margin:2px 0 4px}
+.pkg-p{font-size:11px;font-weight:800;color:var(--amber)}
+.pkg.pop .pkg-p{color:#d1fae5}
+.pkg.deal .pkg-p{color:#fde68a}
 
-  <!-- Filter -->
-  <div class="training-filter">
-    <button class="tr-flt-btn active" onclick="filterTraining('all',this)">Бүгд</button>
-    <button class="tr-flt-btn" onclick="filterTraining('writing',this)">✍️ Бичиг</button>
-    <button class="tr-flt-btn" onclick="filterTraining('homework',this)">📝 Гэрийн даалгавар</button>
-    <button class="tr-flt-btn" onclick="filterTraining('reading',this)">📖 Унших</button>
-    <button class="tr-flt-btn" onclick="filterTraining('script',this)">ᠮᠣᠩᠭᠣᠯ ᠪᠢᠴᠢᢉ</button>
-  </div>
+/* ── WORD SEARCH ── */
+.ws-layout{display:grid;grid-template-columns:1fr 220px;gap:20px;align-items:start}
 
-  <!-- Course Grid -->
-  <div class="course-grid" id="courseGrid">
+.ws-grid-wrap{overflow:auto}
+.ws-grid{display:grid;gap:3px;width:fit-content;margin:0 auto}
+.ws-cell{width:36px;height:36px;border-radius:8px;background:#fff;border:1.5px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:800;cursor:pointer;transition:all .12s;user-select:none;font-family:'Montserrat',sans-serif}
+.ws-cell:hover{border-color:var(--amber);background:var(--amber-l)}
+.ws-cell.sel{background:rgba(37,99,235,.15);border-color:var(--blue)}
+.ws-cell.found{background:rgba(5,150,105,.15);border-color:var(--green);color:var(--green)}
+.ws-cell.found.sel{background:rgba(5,150,105,.25)}
+.word-list{background:#fff;border:1px solid var(--border);border-radius:16px;padding:16px}
+.word-list h4{font-size:13px;font-weight:800;margin-bottom:12px}
+.word-item{display:flex;align-items:center;gap:8px;padding:7px 0;font-size:12px;font-weight:700;border-bottom:1px solid var(--border)}
+.word-item:last-child{border-bottom:none}
+.word-item.done{text-decoration:line-through;color:var(--green);opacity:.65}
+.ws-check{width:16px;height:16px;border-radius:50%;border:2px solid var(--border);flex-shrink:0}
+.word-item.done .ws-check{background:var(--green);border-color:var(--green)}
 
-    <!-- Card 1: Алдаагүй бичиж сурцгаая -->
-    <div class="course-card" data-cat="writing" onclick="openCourseDetail('writing')">
-      <div class="course-card-top">
-        <div class="course-tag-row">
-          <span class="course-tag tag-free">Цөөн суралцагч</span>
-          <div class="stars">
-            <span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span>
-            <span class="rating-count">(12)</span>
-          </div>
-        </div>
-        <div class="course-icon-wrap" style="background:#fef3c7">✍️</div>
-        <h3>Алдаагүй бичиж сурцгаая</h3>
-        <p class="course-desc">Тасралтгүй 21 хоногийн сургалт. Цээж бичиг бичүүлж, алдааг дараа өдөр нь засан тохирох дүрмийн бичлэг илгээнэ. Нэмэлт ажлын хуудас өгч, даалгавар шалган дахин цээж бичгээр дуусгана.</p>
-        <div class="course-meta">
-          <div class="meta-chip"><span>📅</span> 21 хоног тасралтгүй</div>
-          <div class="meta-chip"><span>👤</span> Макс 10 суралцагч</div>
-          <div class="meta-chip"><span>🔞</span> Насны хязгааргүй</div>
-          <div class="meta-chip"><span>🎬</span> Видео бичлэг</div>
-        </div>
-        <div style="background:#fef9f0;border-radius:12px;padding:10px 12px;font-size:11px;color:#92400e;line-height:1.7">
-          📌 <strong>Хэрхэн явагдах вэ:</strong> Цээж бичиг → Алдаа засах → Дүрмийн бичлэг → Ажлын хуудас → Шалгалт → Дахин цээж бичиг<br>
-          ⚠️ 10-аас хэтрэхгүй тоотой бүлэг. Суудал хязгаарлагдмал!
-        </div>
-      </div>
-      <div class="course-card-foot">
-        <div>
-          <div class="course-price">50,000₮</div>
-          <div class="course-price-sub">21 хоногийн бүрэн сургалт</div>
-        </div>
-        <button class="btn-enroll amber-btn" onclick="event.stopPropagation();openCourseDetail('writing')">Бүртгүүлэх →</button>
-      </div>
-    </div>
+/* ── MONGOLIAN READING ── */
+.read-game{max-width:720px;margin:0 auto}
+.text-display{background:#fff;border:1.5px solid var(--border);border-radius:20px;padding:28px;margin-bottom:20px;min-height:200px;position:relative}
+.text-title{font-size:13px;font-weight:800;color:var(--amber);margin-bottom:12px;text-transform:uppercase;letter-spacing:.08em}
+.text-content{font-size:16px;line-height:2.2;color:var(--dark);font-family:'Montserrat',sans-serif}
+.text-content .blank{display:inline-block;min-width:80px;height:2px;background:var(--dark);vertical-align:bottom;margin:0 4px;position:relative}
+.text-content .blank::after{content:attr(data-num);position:absolute;bottom:4px;left:0;font-size:10px;color:var(--mid)}
+.options-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:20px}
+.option-btn{padding:12px 16px;border:2px solid var(--border);border-radius:14px;background:#fff;cursor:pointer;font-family:'Manrope',sans-serif;font-size:13px;font-weight:700;text-align:left;transition:all .15s}
+.option-btn:hover{border-color:var(--amber);background:var(--amber-l)}
+.option-btn.correct{border-color:var(--green);background:#f0fdf4;color:var(--green)}
+.option-btn.wrong{border-color:var(--red);background:#fef2f2;color:var(--red)}
+.progress-bar{background:var(--border);border-radius:99px;height:6px;margin-bottom:20px;overflow:hidden}
+.progress-fill{height:100%;background:linear-gradient(90deg,var(--amber),var(--green));border-radius:99px;transition:width .4s ease}
+.read-score{display:flex;align-items:center;gap:16px;background:#fff;border:1px solid var(--border);border-radius:14px;padding:14px 18px;margin-bottom:16px}
+.score-box{text-align:center}
+.score-num{font-size:22px;font-weight:800;font-family:'Montserrat',sans-serif;color:var(--amber)}
+.score-lbl{font-size:10px;font-weight:700;color:var(--mid);text-transform:uppercase;letter-spacing:.06em}
+.lock-msg{background:#fef9f0;border:1.5px solid #fde68a;border-radius:16px;padding:20px;text-align:center;margin-top:16px}
+.lock-msg p{font-size:13px;color:var(--amber-d);font-weight:600;line-height:1.7;margin-bottom:14px}
 
-    <!-- Card 2: Гэрийн даалгавар багштай -->
-    <div class="course-card featured" data-cat="homework" onclick="openCourseDetail('homework')">
-      <div class="ribbon">АЛДАРТАЙ</div>
-      <div class="course-card-top">
-        <div class="course-tag-row">
-          <span class="course-tag tag-popular" id="hwRegTag">🔥 Эрэлттэй</span>
-          <div class="stars">
-            <span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span>
-            <span class="rating-count">(28)</span>
-          </div>
-        </div>
-        <div class="course-icon-wrap" style="background:#fdf4ff">📝</div>
-        <h3>Монгол хэлний гэрийн даалгаврын сургалт багштай хамтран</h3>
-        <p class="course-desc">Онлайн ганцаарчилсан Meet уулзалт. Анги болон хичээлийн цагаа бүртгүүлж, багш цагт нь тохирох суудал олгоно.</p>
+/* ── HORSE RACE ── */
+.horse-game{max-width:900px;margin:0 auto}
+.race-track{background:linear-gradient(135deg,#166534,#15803d);border-radius:20px;padding:20px;margin-bottom:20px;position:relative;overflow:hidden}
+.race-track::before{content:'';position:absolute;inset:0;background:repeating-linear-gradient(90deg,rgba(255,255,255,.03) 0,rgba(255,255,255,.03) 1px,transparent 1px,transparent 60px)}
+.track-lane{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid rgba(255,255,255,.1)}
+.track-lane:last-child{border-bottom:none}
+.lane-label{color:rgba(255,255,255,.7);font-size:11px;font-weight:700;width:60px;flex-shrink:0;text-align:right}
+.lane-track{flex:1;position:relative;height:44px;background:rgba(0,0,0,.2);border-radius:10px;overflow:hidden}
+.lane-bg-stripes{position:absolute;inset:0;background:repeating-linear-gradient(90deg,rgba(255,255,255,.04) 0,rgba(255,255,255,.04) 10%,transparent 10%,transparent 20%)}
+.horse-pos{position:absolute;top:50%;transform:translateY(-50%);transition:left .6s cubic-bezier(.34,1.56,.64,1);font-size:22px;line-height:1;cursor:default}
+.finish-line{position:absolute;right:0;top:0;bottom:0;width:3px;background:repeating-linear-gradient(180deg,#fff 0,#fff 6px,#e11d48 6px,#e11d48 12px)}
+.finish-flag{position:absolute;right:-10px;top:-8px;font-size:16px}
+.lane-pos-num{position:absolute;right:6px;top:50%;transform:translateY(-50%);color:rgba(255,255,255,.4);font-size:10px;font-weight:700}
+.race-controls{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px}
 
-        <!-- REGISTRATION WINDOW STATUS -->
-        <div id="hwRegStatus" style="border-radius:12px;padding:10px 12px;font-size:11px;line-height:1.6;margin-bottom:10px;background:#f5f0e8;color:var(--mid)">
-          Бүртгэлийн хугацааг тооцоолж байна...
-        </div>
+.player-panel{background:#fff;border:1.5px solid var(--border);border-radius:18px;padding:18px}
+.player-panel h4{font-size:14px;font-weight:800;margin-bottom:14px;display:flex;align-items:center;gap:8px}
+.shagai-display{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+.shagai{width:40px;height:40px;border-radius:10px;border:2px solid var(--border);background:var(--surface2);display:flex;align-items:center;justify-content:center;font-size:20px;transition:all .3s}
+.shagai.rolled{animation:rollIn .4s ease-out}
+@keyframes rollIn{0%{transform:rotate(-180deg) scale(.5);opacity:0}100%{transform:rotate(0) scale(1);opacity:1}}
+.roll-result{font-size:12px;font-weight:700;color:var(--mid);margin-bottom:12px;min-height:20px}
+.roll-result span{color:var(--amber);font-weight:800}
+.btn-roll{width:100%;padding:12px;border:none;border-radius:12px;background:linear-gradient(135deg,var(--amber),var(--amber-d));color:#fff;font-family:'Manrope',sans-serif;font-size:14px;font-weight:800;cursor:pointer;transition:all .2s;box-shadow:0 4px 14px rgba(217,119,6,.3)}
+.btn-roll:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 8px 20px rgba(217,119,6,.4)}
+.btn-roll:disabled{opacity:.5;cursor:default;transform:none}
+.q-panel{background:#fff;border:1.5px solid var(--border);border-radius:18px;padding:18px;margin-bottom:16px}
+.q-panel h4{font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.08em;color:var(--purple);margin-bottom:10px}
+.q-text{font-size:14px;font-weight:700;line-height:1.6;margin-bottom:14px;color:var(--dark)}
+.q-opts{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.q-opt{padding:10px 12px;border:1.5px solid var(--border);border-radius:11px;background:#fff;cursor:pointer;font-family:'Manrope',sans-serif;font-size:12px;font-weight:700;text-align:left;transition:all .15s}
+.q-opt:hover{border-color:var(--purple);background:rgba(124,58,237,.06)}
+.q-opt.correct2{border-color:var(--green);background:#f0fdf4;color:var(--green)}
+.q-opt.wrong2{border-color:var(--red);background:#fef2f2;color:var(--red)}
+.race-status{background:#fff;border:1px solid var(--border);border-radius:14px;padding:14px 18px;margin-bottom:16px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px}
+.player-score-row{display:flex;align-items:center;gap:12px}
+.p-score{text-align:center;background:var(--surface2);border-radius:10px;padding:8px 14px}
+.p-score-num{font-size:20px;font-weight:800;font-family:'Montserrat',sans-serif}
+.p-score-lbl{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--mid)}
+.winner-banner{display:none;background:linear-gradient(135deg,#fef3c7,#fde68a);border:2px solid #fcd34d;border-radius:20px;padding:24px;text-align:center;margin-top:16px;animation:fadeIn .5s ease}
+.winner-banner h3{font-size:22px;font-weight:800;font-family:'Montserrat',sans-serif;color:var(--amber-d);margin-bottom:8px}
+.winner-banner p{font-size:13px;color:var(--mid)}
 
-        <div class="course-meta">
-          <div class="meta-chip"><span>📅</span> Да·Мя·Лх·Пү·Ба хичээл</div>
-          <div class="meta-chip"><span>✏️</span> Бямба·Нямд бүртгэл</div>
-          <div class="meta-chip"><span>👤</span> Цагт 2 сурагч</div>
-        </div>
-        <div style="margin-bottom:10px">
-          <div style="font-size:11px;font-weight:800;color:var(--mid);margin-bottom:7px">🕐 Хичээлийн цагийн сонголт:</div>
-          <div style="display:flex;gap:7px;flex-wrap:wrap">
-            <span style="background:#1c1917;color:#fff;border-radius:10px;padding:5px 13px;font-size:10px;font-weight:800">19:00</span>
-            <span style="background:#1c1917;color:#fff;border-radius:10px;padding:5px 13px;font-size:10px;font-weight:800">20:00</span>
-            <span style="background:#1c1917;color:#fff;border-radius:10px;padding:5px 13px;font-size:10px;font-weight:800">21:00</span>
-            <span style="background:#fee2e2;color:#991b1b;border-radius:10px;padding:5px 13px;font-size:10px;font-weight:800">Дүүрсэн бол 🔒</span>
-          </div>
-        </div>
-        <div style="background:#fef9f0;border-radius:12px;padding:10px 12px;font-size:11px;color:#92400e;line-height:1.7">
-          📌 <strong>7 хоног бүрийн Бямба, Нямд бүртгэл авна.</strong> Бүртгэхдээ анги болон хичээлийн цагаа оруулна. Багш цагийг үзээд зөвшөөрвөл баталгаажна.<br>⚠️ Цаг бүрд <strong>2 сурагч</strong> л. Дүүрсэн цаг автоматаар хаагдана.
-        </div>
-      </div>
-      <div class="course-card-foot">
-        <div>
-          <div class="course-price">1цагийн үнэ 10,000₮</div>
-          <div class="course-price-sub">Анхны хямдралтай үнэ / сар</div>
-        </div>
-        <button class="btn-enroll amber-btn" id="hwEnrollBtn" onclick="event.stopPropagation();handleHomeworkEnroll()">Бүртгүүлэх →</button>
-      </div>
-    </div>
+/* ── SHOP ── */
+.shop-filter{display:flex;gap:5px;background:#fff;border:1px solid var(--border);padding:4px;border-radius:12px;margin-bottom:22px;width:fit-content}
+.flt-btn{padding:7px 16px;border-radius:9px;border:none;cursor:pointer;font-family:'Manrope',sans-serif;font-size:11px;font-weight:700;background:none;color:var(--mid);transition:all .12s}
+.flt-btn.active{background:var(--amber-l);color:var(--amber-d)}
+.prod-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:18px}
+.prod-card{background:#fff;border:1px solid var(--border);border-radius:22px;overflow:hidden;transition:all .2s}
+.prod-card:hover{box-shadow:0 8px 28px rgba(0,0,0,.09);transform:translateY(-3px)}
+.prod-img{height:170px;background:#f5ede0;display:flex;align-items:center;justify-content:center;font-size:48px;position:relative;overflow:hidden}
+.prod-badge{position:absolute;top:10px;left:10px;background:rgba(255,255,255,.92);padding:3px 10px;border-radius:99px;font-size:9px;font-weight:700}
+.prod-body{padding:16px}
+.prod-title{font-weight:700;font-size:13px;margin-bottom:12px;color:var(--dark)}
+.prod-foot{display:flex;align-items:center;justify-content:space-between}
+.prod-price{font-weight:800;font-size:14px;color:var(--amber)}
+.add-cart{width:34px;height:34px;border-radius:9px;background:var(--amber-l);border:none;cursor:pointer;font-size:15px;display:flex;align-items:center;justify-content:center;transition:all .15s}
+.add-cart:hover{background:var(--amber)}
 
-    <!-- Card 3: Унших чадвар -->
-    <div class="course-card" data-cat="reading" onclick="openCourseDetail('reading')">
-      <div class="course-card-top">
-        <div class="course-tag-row">
-          <span class="course-tag tag-new">🆕 Шинэ</span>
-          <div class="stars">
-            <span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star empty">★</span>
-            <span class="rating-count">(7)</span>
-          </div>
-        </div>
-        <div class="course-icon-wrap" style="background:#f0fdf4">📖</div>
-        <h3>Унших чадвараа сайжруулцгаая</h3>
-        <p class="course-desc">Meet уулзалт · 21 хоног тасралтгүй. Насны ангиллаар бүртгэнэ — ангилал тус бүрт 3 сурагч. Хурдан уншиж яриулах, зогсолттой мэдэрч унших, гол санааг тайлбарлах арга эзэмшинэ.</p>
-        <div class="age-badges">
-          <span class="age-badge">6–9 нас</span>
-          <span class="age-badge">10–13 нас</span>
-          <span class="age-badge">14–17 нас</span>
-          <span class="age-badge">18+ нас</span>
-        </div>
-        <div class="course-meta">
-          <div class="meta-chip"><span>📅</span> 21 хоног Meet</div>
-          <div class="meta-chip"><span>👥</span> Ангилалт бүрт 3 суралцагч</div>
-          <div class="meta-chip"><span>🗣</span> Ярих · Мэдрэх · Тайлбар</div>
-        </div>
-        <div style="background:#f0fdf4;border-radius:12px;padding:10px 12px;font-size:11px;color:#065f46;line-height:1.7">
-          📚 <strong>Хэрхэн явагдах:</strong> Хурдан унших → Дахин уншиж ярих → Зогсолттой мэдэрч унших → Гол санааг тайлбарлах<br>
-          ⚠️ Насны ангилал тус бүрт <strong>3 сурагч</strong> л. Дүүрсэн бол хаагдана.
-        </div>
-      </div>
-      <div class="course-card-foot">
-        <div>
-          <div class="course-price">99,000₮</div>
-          <div class="course-price-sub">21 хоног · насны ангиллаар</div>
-        </div>
-        <button class="btn-enroll green-btn" onclick="event.stopPropagation();openCourseDetail('reading')">Бүртгүүлэх →</button>
-      </div>
-    </div>
+/* ══════════════════════════════════
+   ONLINE TRAINING SECTION
+══════════════════════════════════ */
 
-    <!-- Card 4: Үндэсний бичиг -->
-    <div class="course-card" data-cat="script" onclick="openCourseDetail('script')">
-      <div class="ribbon">20% CASHBACK</div>
-      <div class="course-card-top">
-        <div class="course-tag-row">
-          <span class="course-tag tag-limited" id="scriptRegTag">⏳ Бүртгэл шалгаж байна...</span>
-          <div class="stars">
-            <span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span>
-            <span class="rating-count">(19)</span>
-          </div>
-        </div>
-        <div class="course-icon-wrap" style="background:#ede9fe">ᠮ</div>
-        <h3>Үндэсний бичгийн анхан шатны сургалт</h3>
-        <p class="course-desc">Meet уулзалт · Анхан шатны сургалт. Сургалтын материал болон эх бүгд сургалтаас гарна. Макс 10 суралцагч.</p>
-
-        <!-- CLASS START INFO -->
-        <div style="background:linear-gradient(135deg,#5b21b6,#7c3aed);border-radius:14px;padding:14px;margin-bottom:10px">
-          <div style="font-size:10px;font-weight:700;color:rgba(255,255,255,.6);text-transform:uppercase;letter-spacing:.1em;margin-bottom:6px">🗓 Анги эхлэх хугацаа</div>
-          <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px">
-            <div>
-              <div style="font-size:17px;font-weight:800;color:#fff">2026 оны 5 сарын 18</div>
-              <div style="font-size:12px;color:rgba(255,255,255,.7);margin-top:2px">Орой 19:00 цагт · Google Meet</div>
-            </div>
-            <div id="scriptCountdown" style="background:rgba(0,0,0,.25);border-radius:10px;padding:8px 12px;text-align:center;min-width:80px">
-              <div style="font-size:18px;font-weight:800;color:#fbbf24;font-family:'Baloo 2',cursive" id="cdDisplay">--:--:--</div>
-              <div style="font-size:9px;color:rgba(255,255,255,.5);margin-top:1px">үлдсэн хугацаа</div>
-            </div>
-          </div>
-        </div>
-
-        <div class="course-meta">
-          <div class="meta-chip"><span>💻</span> Meet уулзалт</div>
-          <div class="meta-chip"><span>👤</span> Макс 10 суралцагч</div>
-          <div class="meta-chip"><span>ᠠ</span> Анхан шат</div>
-          <div class="meta-chip"><span>📄</span> Материал дотроос</div>
-        </div>
-
-        <!-- Cashback banner -->
-        <div style="background:linear-gradient(135deg,#1c1917,#292524);border-radius:14px;padding:14px;margin-bottom:10px;position:relative;overflow:hidden">
-          <div style="position:absolute;top:-10px;right:-10px;font-size:48px;opacity:.1">🎁</div>
-          <div style="font-size:11px;font-weight:800;color:#fbbf24;margin-bottom:5px;letter-spacing:.06em">🎁 20% CASHBACK УРАМШУУЛАЛ</div>
-          <div style="font-size:10px;color:rgba(255,255,255,.7);line-height:1.7">Нэг ч өдөр тасалдалгүй өгсөн даалгаврыг бүрэн гүйцэт хийж, хичээлийн үед дүрсээ асааж ярьсан тохиолдолд <strong style="color:#fbbf24">19,800₮ буцаагдана!</strong></div>
-        </div>
-
-        <div style="background:#ede9fe;border-radius:12px;padding:10px 12px;font-size:11px;color:#5b21b6;line-height:1.6">
-          ✅ Сургалтын материал болон эх бүгд хичээлийн явцад багшаас гарна. Тусгайлан худалдаж авах шаардлагагүй.
-        </div>
-        <div class="course-progress"><div class="course-progress-fill" style="width:68%"></div></div>
-        <div style="font-size:10px;color:var(--muted);margin-top:4px">Суудлын тоо хязгаартай</div>
-      </div>
-      <div class="course-card-foot">
-        <div>
-          <div class="course-price">99,000₮</div>
-          <div class="course-price-sub">Cashback-тэй бол 79,200₮</div>
-        </div>
-        <button class="btn-enroll" style="background:var(--purple);color:#fff" onclick="event.stopPropagation();openCourseDetail('script')">Бүртгүүлэх →</button>
-      </div>
-    </div>
-
-  </div><!-- /course-grid -->
-
-  <!-- Testimonials -->
-  <div class="testimonials">
-    <h3>💬 Суралцагчдын сэтгэгдэл</h3>
-    <div class="testi-grid">
-      <div class="testi-card">
-        <div class="testi-stars">★★★★★</div>
-        <div class="testi-text">"Хүүхэд минь монгол бичигт дуртай болсон. Багш маш тайлбарлах чадвартай, тавтай заадаг."</div>
-        <div class="testi-author">
-          <div class="testi-avatar" style="background:#d97706">Д</div>
-          <div><div class="testi-name">Дэлгэрмаа</div><div class="testi-role">Эцэг эх · Улаанбаатар</div></div>
-        </div>
-      </div>
-      <div class="testi-card">
-        <div class="testi-stars">★★★★★</div>
-        <div class="testi-text">"Гэрийн даалгаврын тусламж маш хэрэгтэй болсон. Хүүхэдтэйгээ хамт суухгүйгээр даалгавраа дуусгадаг болсон."</div>
-        <div class="testi-author">
-          <div class="testi-avatar" style="background:#059669">Б</div>
-          <div><div class="testi-name">Батзориг</div><div class="testi-role">Эцэг эх · Дархан</div></div>
-        </div>
-      </div>
-      <div class="testi-card">
-        <div class="testi-stars">★★★★☆</div>
-        <div class="testi-text">"Унших сургалт маш их тус болсон. Хүүхэд минь одоо уншихаасаа зугатдаггүй болсон, аяндаа сонирхдог болсон."</div>
-        <div class="testi-author">
-          <div class="testi-avatar" style="background:#7c3aed">О</div>
-          <div><div class="testi-name">Оюунцэцэг</div><div class="testi-role">Эцэг эх · Эрдэнэт</div></div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- SHOP -->
-<section id="shopSection" class="sec">
-  <button class="page-back" onclick="showSec('home')">← Буцах</button>
-  <div style="display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:12px;margin-bottom:20px">
-    <h2 class="sec-title" style="margin-bottom:0">🛒 Цахим дэлгүүр</h2>
-    <div class="shop-filter">
-      <button class="flt-btn active" onclick="filterShop('all',this)">Бүгд</button>
-      <button class="flt-btn" onclick="filterShop('Төлбөртэй',this)">Төлбөртэй</button>
-      <button class="flt-btn" onclick="filterShop('Үнэгүй',this)">Үнэгүй</button>
-    </div>
-  </div>
-  <div id="shopGrid" class="prod-grid"></div>
-</section>
-
-<!-- LIBRARY -->
-<section id="librarySection" class="sec">
-  <button class="page-back" onclick="showSec('home')">← Буцах</button>
-  <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:24px">
-    <h2 class="sec-title" style="margin-bottom:0">📚 Миний сан</h2>
-    <button class="btn-p" onclick="loadLibrary()" style="font-size:11px;padding:7px 18px">🔄 Шинэчлэх</button>
-  </div>
-  <div id="libStatus" style="display:none;background:#fef3c7;border:1px solid #fcd34d;border-radius:14px;padding:12px 18px;margin-bottom:18px;font-size:12px;color:var(--amber-d);font-weight:600"></div>
-  <div id="libraryGrid" class="prod-grid">
-    <div style="grid-column:1/-1;text-align:center;padding:56px;color:#bbb">
-      <div style="font-size:44px;margin-bottom:12px">📭</div>
-      <p style="font-size:13px;font-weight:600">Нэвтэрсний дараа таны худалдан авсан бүтээгдэхүүн энд харагдана.</p>
-      <button class="btn-p" style="margin-top:18px" onclick="showSec('shop')">Дэлгүүрт очих</button>
-    </div>
-  </div>
-</section>
-
-</main>
-
-<!-- PREVIEW MODAL -->
-<div id="previewModal" class="hidden" style="position:fixed;inset:0;z-index:60;background:rgba(0,0,0,.55);display:flex;align-items:flex-end;justify-content:center" onclick="if(event.target===this)closePreviewModal()">
-  <div style="background:#fff;width:100%;max-width:520px;border-radius:24px 24px 0 0;padding:24px;max-height:92vh;overflow-y:auto;animation:slideUp .35s ease-out">
-    <div id="previewModalBody"></div>
-  </div>
-</div>
-
-<!-- COURSE DETAIL MODAL -->
-<div id="courseModal" class="course-modal-overlay hidden" onclick="if(event.target===this)closeCourseModal()">
-  <div class="course-modal">
-    <div class="cm-header">
-      <button class="cm-close" onclick="closeCourseModal()">✕</button>
-      <div id="cmHeaderContent"></div>
-    </div>
-    <div class="cm-body" id="cmBody"></div>
-  </div>
-</div>
-
-<!-- COURSE ENROLL PAY MODAL -->
-<div id="coursePayModal" class="course-pay-overlay hidden">
-  <div class="course-pay-card">
-    <div id="cpStep1">
-      <div class="cp-top">
-        <div class="cp-icon">💳</div>
-        <h3 id="cpTitle">Сургалтад бүртгүүлэх</h3>
-        <p id="cpSubtitle">Доорх дансанд шилжүүлэг хийнэ үү</p>
-      </div>
-      <div class="cp-body">
-        <div class="cp-amt" id="cpAmt">Тохируулга</div>
-        <div class="cp-amt-sub" id="cpAmtSub">Бүртгүүлсний дараа багш холбоо барина</div>
-        <div class="qr-box"><img src="https://raw.githubusercontent.com/tuult764-crypto/sonirholtoi-hel-bichig-/main/qr.png" alt="QR" onerror="this.style.display='none';this.nextSibling.style.display='flex'"><span style="display:none;font-size:44px">🔲</span></div>
-        <div class="bank-info"><div class="bank-num">ХАС БАНК: 5006069631</div><div class="bank-name">МӨНХДАЛАЙ ТУУЛ</div></div>
-        <div class="bank-note">⚠️ Гүйлгээний <strong>утга</strong> дээр:<br><em>И-мэйл · Сургалтын нэр · Хүссэн цаг</em><br>жш: <em>tanii@gmail.com · Гэрийн даалгавар · 19:00</em></div>
-        <button class="pay-next" onclick="cpGoStep2()">✅ Төлбөр төллөө → Дараах</button>
-        <button class="pay-close-lnk" onclick="closeCoursePayModal()">Хаах</button>
-      </div>
-    </div>
-    <div id="cpStep2" style="display:none">
-      <div class="cp-top">
-        <div class="cp-icon">📧</div>
-        <h3>Бүртгэлийн мэдээлэл</h3>
-        <p>Бүх талбарыг бөглөнө үү</p>
-      </div>
-      <div class="cp-body">
-        <input id="cpName" class="modal-field" type="text" placeholder="Таны нэр (суралцагчийн нэр)">
-        <input id="cpEmail" class="modal-field" type="email" placeholder="И-мэйл хаяг (tanii@gmail.com)">
-        <input id="cpPhone" class="modal-field" type="tel" placeholder="Утасны дугаар">
-        <input id="cpGrade" class="modal-field" type="text" placeholder="Анги (жш: 3-р анги, 9-р анги, насанд хүрэгч)">
-        <input id="cpChildAge" class="modal-field" type="text" placeholder="Нас (жш: 10 нас, 35 нас)">
-        <!-- Time slot picker - homework only -->
-        <div id="cpTimeWrap" style="margin-bottom:12px;display:none">
-          <div style="font-size:11px;font-weight:800;color:var(--mid);margin-bottom:8px">🕐 Хичээлийн цагаа сонгоно уу <span style="color:var(--red);font-size:9px">(заавал)</span></div>
-          <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-bottom:6px">
-            <button class="cp-time-btn" data-time="19:00" onclick="selectTimeSlot(this)" style="padding:12px 6px;border:2px solid var(--border);border-radius:12px;background:#fff;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif;font-size:13px;font-weight:800;text-align:center;transition:all .15s;color:var(--mid)">19:00</button>
-            <button class="cp-time-btn" data-time="20:00" onclick="selectTimeSlot(this)" style="padding:12px 6px;border:2px solid var(--border);border-radius:12px;background:#fff;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif;font-size:13px;font-weight:800;text-align:center;transition:all .15s;color:var(--mid)">20:00</button>
-            <button class="cp-time-btn" data-time="21:00" onclick="selectTimeSlot(this)" style="padding:12px 6px;border:2px solid var(--border);border-radius:12px;background:#fff;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif;font-size:13px;font-weight:800;text-align:center;transition:all .15s;color:var(--mid)">21:00</button>
-          </div>
-          <div style="font-size:9px;color:var(--muted);line-height:1.5">⚠️ Цаг бүрт 2 сурагч л бүртгэгдэнэ. Цаг нь дүүрсэн бол багш мэдэгдэнэ.</div>
-        </div>
-        <div id="cpSchedWrap" style="margin-bottom:10px;display:none">
-          <div style="font-size:11px;font-weight:700;color:var(--mid);margin-bottom:8px">📆 Хүссэн өдрүүд:</div>
-          <div class="sched-select-wrap">
-            <button class="sched-sel-btn" onclick="toggleSchedBtn(this)">Даваа</button>
-            <button class="sched-sel-btn" onclick="toggleSchedBtn(this)">Мягмар</button>
-            <button class="sched-sel-btn" onclick="toggleSchedBtn(this)">Лхагва</button>
-            <button class="sched-sel-btn" onclick="toggleSchedBtn(this)">Пүрэв</button>
-            <button class="sched-sel-btn" onclick="toggleSchedBtn(this)">Баасан</button>
-          </div>
-        </div>
-        <input id="cpNote" class="modal-field" type="text" placeholder="Нэмэлт тайлбар (заавал биш)">
-        <div style="background:#f0fdf4;border-radius:11px;padding:11px;margin-bottom:12px;font-size:10px;color:#166534;line-height:1.6">📞 Бүртгэл баталгаажсаны дараа багш тан руу <strong>24 цагийн дотор</strong> холбоо барина.</div>
-        <button id="cpSubmitBtn" class="pay-next" onclick="cpSubmit()">🚀 Бүртгэл илгээх</button>
-        <button class="pay-close-lnk" onclick="cpGoStep1()">← Буцах</button>
-      </div>
-    </div>
-    <div id="cpStep3" style="display:none;padding:28px 22px;text-align:center">
-      <div style="font-size:44px;margin-bottom:10px">🎉</div>
-      <div style="font-size:16px;font-weight:800;color:var(--green);margin-bottom:6px">Бүртгэл амжилттай!</div>
-      <div style="font-size:11px;color:var(--mid);line-height:1.7;margin-bottom:14px">Таны бүртгэл хүлээн авагдлаа.<br>Багш <strong id="cpConfirmName" style="color:var(--amber)"></strong><br>тан руу удахгүй холбоо барина.</div>
-      <div style="background:#f0fdf4;border-radius:11px;padding:11px;font-size:10px;color:#166534;margin-bottom:14px;line-height:1.5">⏱ <strong>24 цагийн дотор</strong> холбоо барина.<br>Асуух зүйл: <strong>sonirholtoihelbichig@gmail.com</strong></div>
-      <button class="pay-next" onclick="closeCoursePayModal()">✓ Хаах</button>
-    </div>
-  </div>
-</div>
-
-<!-- SUDOKU PAY MODAL -->
-<div id="sudokuPayModal" class="pay-overlay hidden">
-  <div class="sp-modal-card">
-    <div id="spStep1">
-      <div class="sp-top"><div class="si">💳</div><h3>Хэвлэх эрх худалдаж авах</h3><p id="spPkgLabel"></p></div>
-      <div class="sp-body">
-        <div class="sp-amt" id="spAmtEl"></div>
-        <div class="qr-box"><img src="https://raw.githubusercontent.com/tuult764-crypto/sonirholtoi-hel-bichig-/main/qr.png" alt="QR" onerror="this.style.display='none';this.nextSibling.style.display='flex'"><span style="display:none;font-size:44px">🔲</span></div>
-        <div class="bank-info"><div class="bank-num">ХАС БАНК: 5006069631</div><div class="bank-name">МӨНХДАЛАЙ ТУУЛ</div></div>
-        <div class="bank-note">⚠️ Гүйлгээний <strong>утга</strong> дээр и-мэйл хаягаа бичнэ үү!</div>
-        <button class="pay-next" onclick="spGoStep2()">✅ Төлбөр төллөө → Дараах</button>
-        <button class="pay-close-lnk" onclick="closeSudokuPay()">Хаах</button>
-      </div>
-    </div>
-    <div id="spStep2" style="display:none">
-      <div class="sp-top"><div class="si">📧</div><h3>И-мэйл хаягаа оруулна уу</h3><p>Баталгаажсаны дараа илгээнэ</p></div>
-      <div class="sp-body">
-        <input id="spEmail" class="modal-field" type="email" placeholder="tanii@gmail.com">
-        <input id="spNote" class="modal-field" type="text" placeholder="Нэмэлт тайлбар (заавал биш)">
-        <div style="background:#f0fdf4;border-radius:11px;padding:11px;margin-bottom:12px;font-size:10px;color:#166534;line-height:1.6">📦 Захиалга баталгаажсаны дараа <strong>24 цагийн дотор</strong> эрхийн код хүлээн авна.</div>
-        <button id="spSubmitBtn" class="pay-next" onclick="spSubmit()">🚀 Захиалга илгээх</button>
-        <button class="pay-close-lnk" onclick="spGoStep1()">← Буцах</button>
-      </div>
-    </div>
-    <div id="spStep3" style="display:none;padding:28px 22px;text-align:center">
-      <div style="font-size:44px;margin-bottom:10px">🎉</div>
-      <div style="font-size:16px;font-weight:800;color:var(--green);margin-bottom:6px">Захиалга амжилттай!</div>
-      <div style="font-size:11px;color:var(--mid);line-height:1.7;margin-bottom:14px">Төлбөр шалгагдсаны дараа<br><strong id="spConfirmEmail" style="color:var(--amber)"></strong><br>хаяг руу мэдэгдэл илгээнэ.</div>
-      <div style="background:#f0fdf4;border-radius:11px;padding:11px;font-size:10px;color:#166534;margin-bottom:14px;line-height:1.5">⏱ <strong>1–24 цагийн дотор</strong> хүргэгдэнэ.<br>Асуух зүйл: <strong>sonirholtoihelbichig@gmail.com</strong></div>
-      <button class="pay-next" style="margin-bottom:8px" onclick="closeSudokuPay();refreshCredits()">⟳ Эрх шинэчлэх</button>
-      <button class="pay-close-lnk" onclick="closeSudokuPay()">Хаах</button>
-    </div>
-  </div>
-</div>
-
-<!-- SHOP PAY MODAL -->
-<div id="payModal" class="pay-overlay hidden">
-  <div class="pay-card">
-    <div id="payStep1">
-      <div class="pay-top">
-        <div class="lbl">Нийт дүн</div>
-        <div id="payAmount" class="amt">0₮</div>
-        <div id="payItemList" style="margin-top:8px;font-size:10px;opacity:.65;line-height:1.8"></div>
-      </div>
-      <div class="pay-body">
-        <div class="qr-box"><img src="https://raw.githubusercontent.com/tuult764-crypto/sonirholtoi-hel-bichig-/main/qr.png" alt="QR" onerror="this.style.display='none';this.nextSibling.style.display='flex'"><span style="display:none;font-size:52px">🔲</span></div>
-        <div class="bank-info"><div class="bank-num">ХАС БАНК: 5006069631</div><div class="bank-name">МӨНХДАЛАЙ ТУУЛ</div></div>
-        <div class="bank-note">⚠️ Гүйлгээний <strong>утга</strong> дээр и-мэйл хаягаа заавал бичнэ үү!</div>
-        <button class="pay-next" onclick="goToStep2()">✅ Төлбөр төллөө → Дараах</button>
-        <button class="pay-close-lnk" onclick="closePayment()">Хаах</button>
-      </div>
-    </div>
-    <div id="payStep2" style="display:none">
-      <div class="pay-top" style="padding:22px 26px">
-        <div style="font-size:26px;margin-bottom:7px">📧</div>
-        <div style="font-size:14px;font-weight:800">И-мэйл хаягаа оруулна уу</div>
-        <div style="font-size:10px;opacity:.6;margin-top:5px">Худалдан авсан файлыг энэ хаяг руу илгээнэ</div>
-      </div>
-      <div class="pay-body">
-        <input id="payEmail" type="email" class="modal-field" style="padding:13px 15px;font-size:13px;margin-bottom:9px" placeholder="tanii@gmail.com">
-        <input id="payNote" type="text" class="modal-field" style="padding:11px 15px;font-size:12px;margin-bottom:14px" placeholder="Нэмэлт тайлбар (заавал биш)">
-        <div style="background:#f0fdf4;border-radius:11px;padding:11px 13px;margin-bottom:14px;font-size:11px;color:#166534;line-height:1.6">📦 Захиалга баталгаажсаны дараа та <strong>24 цагийн дотор</strong> файлаа и-мэйлээр хүлээн авна.</div>
-        <button id="submitOrderBtn" class="pay-next" onclick="submitOrder()">🚀 Захиалга илгээх</button>
-        <button class="pay-close-lnk" onclick="goToStep1()">← Буцах</button>
-      </div>
-    </div>
-    <div id="payStep3" style="display:none;text-align:center;padding:42px 26px">
-      <div style="font-size:52px;margin-bottom:14px">🎉</div>
-      <div style="font-size:18px;font-weight:800;color:var(--green);margin-bottom:8px">Захиалга амжилттай!</div>
-      <div style="font-size:12px;color:var(--mid);line-height:1.7;margin-bottom:20px">Таны захиалга бүртгэгдлээ.<br>Төлбөр шалгагдсаны дараа файлыг<br><strong id="confirmEmail" style="color:var(--amber)"></strong><br>хаяг руу илгээнэ.</div>
-      <div style="background:#f0fdf4;border-radius:13px;padding:13px;font-size:11px;color:#166534;margin-bottom:18px">⏱ Ихэвчлэн <strong>1-24 цагийн дотор</strong> хүргэгдэнэ.<br>Асуух зүйл: <strong>sonirholtoihelbichig@gmail.com</strong></div>
-      <button class="pay-next" onclick="closePayment()">✓ Хаах</button>
-    </div>
-  </div>
-</div>
-
-<!-- AUTH MODAL — Right panel -->
-<div id="authModal" class="auth-overlay hidden" onclick="if(event.target===this)closeAuth()">
-  <div class="auth-panel">
-
-    <!-- Header -->
-    <div class="auth-panel-head">
-      <button class="auth-panel-close" onclick="closeAuth()">✕</button>
-      <div class="auth-logo-row">
-        <div class="auth-logo-icon">📖</div>
-        <div class="auth-logo-name">Сонирхолтой хэл бичиг</div>
-      </div>
-      <div class="auth-tabs-row">
-        <button class="auth-tab-btn active" id="tabLogin" onclick="switchTab('login')">🔑 Нэвтрэх</button>
-        <button class="auth-tab-btn" id="tabReg" onclick="switchTab('reg')">✨ Бүртгүүлэх</button>
-      </div>
-    </div>
-
-    <!-- Body -->
-    <div class="auth-body">
-
-      <!-- Error/success messages -->
-      <div class="auth-error" id="authError"></div>
-      <div class="auth-success" id="authSuccess"></div>
-
-      <!-- Login fields -->
-      <div id="loginFields">
-        <div class="auth-section-title">И-мэйл хаяг</div>
-        <input id="authEmail" class="auth-input" type="email" placeholder="tanii@gmail.com" autocomplete="email">
-        <div class="auth-section-title">Нууц үг</div>
-        <input id="authPass" class="auth-input" type="password" placeholder="Нууц үгээ оруулна уу" autocomplete="current-password">
-        <button class="auth-submit-btn" onclick="handleAuth()">🔑 Нэвтрэх</button>
-        <button class="auth-forgot-btn" onclick="handleForgot()">Нууц үг мартсан уу?</button>
-      </div>
-
-      <!-- Register fields -->
-      <div id="regFields" style="display:none">
-        <div class="auth-section-title">Таны нэр</div>
-        <input id="regName" class="auth-input" type="text" placeholder="Овог нэр" autocomplete="name">
-        <div class="auth-section-title">И-мэйл хаяг</div>
-        <input id="regEmail" class="auth-input" type="email" placeholder="tanii@gmail.com" autocomplete="email">
-        <div class="auth-section-title">Нууц үг</div>
-        <input id="regPass" class="auth-input" type="password" placeholder="Хамгийн багадаа 6 тэмдэгт" autocomplete="new-password">
-        <input id="regPass2" class="auth-input" type="password" placeholder="Нууц үгээ давтана уу" autocomplete="new-password">
-
-        <!-- Avatar choose -->
-        <div class="auth-section-title">Профайл дүрс сонгох</div>
-        <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-bottom:14px" id="regAvatarGrid"></div>
-
-        <button class="auth-submit-btn" style="background:var(--green);box-shadow:0 4px 16px rgba(5,150,105,.35)" onclick="handleRegister()">✨ Бүртгүүлэх</button>
-      </div>
-
-    </div>
-  </div>
-</div>
-
-<!-- AVATAR PICKER MODAL -->
-<div id="avatarModal" class="avatar-overlay hidden" onclick="if(event.target===this)closeAvatarPicker()">
-  <div class="avatar-modal">
-    <div class="avatar-modal-head">
-      <h3>🖼 Профайл дүрс сонгох</h3>
-      <button class="avatar-close" onclick="closeAvatarPicker()">✕</button>
-    </div>
-    <div class="avatar-grid" id="avatarGrid"></div>
-    <div class="avatar-modal-foot">
-      <button class="avatar-cancel" onclick="closeAvatarPicker()">Болих</button>
-      <button class="avatar-confirm" onclick="confirmAvatar()">✅ Сонгох</button>
-    </div>
-  </div>
-</div>
+/* Hero banner */
+.training-hero{background:linear-gradient(135deg,#1c1917 0%,#292524 60%,#1c1917 100%);border-radius:28px;padding:44px 40px;margin-bottom:40px;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:space-between;gap:24px}
+.training-hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 80% 50%,rgba(217,119,6,.18) 0%,transparent 60%)}
+.training-hero-text{position:relative;z-index:1}
+.training-hero-tag{display:inline-block;background:rgba(217,119,6,.2);color:#fbbf24;padding:4px 14px;border-radius:99px;font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;border:1px solid rgba(217,119,6,.3);margin-bottom:14px}
+.training-hero h2{font-size:32px;font-weight:800;color:#fff;line-height:1.2;font-family:'Montserrat',sans-serif}
+.training-hero p{font-size:13px;color:rgba(255,255,255,.6);margin-top:10px;line-height:1.7;max-width:480px}
+.training-hero-emoji{font-size:80px;opacity:.9;position:relative;z-index:1;flex-shrink:0;animation:gallop 2.5s ease-in-out infinite}
 
 
-<footer>
-  <div class="footer-in">
-    <div>
-      <div class="footer-brand">
-        <div style="width:40px;height:40px;border-radius:10px;background:#ffffff;border:1px solid rgba(255,255,255,.25);...">
-          <img id="footerLogo"
-            src="https://raw.githubusercontent.com/tuult764-crypto/sonirholtoi-hel-bichig-/main/logo.png"
-            alt="Лого"
-            style="width:36px;height:36px;object-fit:contain;display:block"
-            onerror="handleLogoError(this)">
-        </div>
-        Сонирхолтой хэл бичиг
-      </div>
-      <p>Монгол хэл, Үндэсний бичиг, Уран зохиолын хичээлийг хүн бүрт хүртээмжтэй, сонирхолтой байдлаар хүргэх цахим платформ.</p>
-    </div>
-    <div class="f-contact">
-      <h4>Холбоо барих</h4>
-      <div>📧 sonirholtoihelbichig@gmail.com</div>
-      <div>🔵 Facebook: Сонирхолтой хэл бичиг</div>
-      <div>📸 Instagram: @sonirholtoi_hel</div>
-    </div>
-    <div style="text-align:right"><div class="copy">© 2026 Бүх эрх хуулиар хамгаалагдсан.</div></div>
-  </div>
-</footer>
+/* Filter tabs */
+.training-filter{display:flex;gap:6px;background:#fff;border:1px solid var(--border);padding:5px;border-radius:14px;margin-bottom:28px;width:fit-content;flex-wrap:wrap}
+.tr-flt-btn{padding:8px 18px;border-radius:10px;border:none;cursor:pointer;font-family:'Manrope',sans-serif;font-size:12px;font-weight:700;background:none;color:var(--mid);transition:all .15s}
+.tr-flt-btn.active{background:var(--dark);color:#fff}
+.tr-flt-btn:hover:not(.active){background:var(--surface2);color:var(--dark)}
 
-<div id="toast"></div>
-<div id="printArea"></div>
+/* Course grid */
+.course-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:22px}
 
-<script src="script.js"></script>
-</body>
-</html>
+/* Course card */
+.course-card{background:#fff;border:1.5px solid var(--border);border-radius:24px;overflow:hidden;cursor:pointer;transition:all .22s;position:relative;display:flex;flex-direction:column}
+.course-card:hover{transform:translateY(-5px);box-shadow:0 14px 40px rgba(0,0,0,.11);border-color:transparent}
+.course-card.featured{border-color:var(--amber)}
+.course-card-top{padding:28px 24px 20px;flex:1}
+.course-tag-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
+.course-tag{padding:4px 12px;border-radius:99px;font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:.1em}
+.tag-new{background:#ede9fe;color:#5b21b6}
+.tag-popular{background:#fef3c7;color:#92400e}
+.tag-free{background:#d1fae5;color:#065f46}
+.tag-limited{background:#fee2e2;color:#991b1b}
+.course-icon-wrap{width:60px;height:60px;border-radius:18px;display:flex;align-items:center;justify-content:center;font-size:30px;margin-bottom:16px;flex-shrink:0}
+.course-card h3{font-size:17px;font-weight:800;line-height:1.3;margin-bottom:8px;font-family:'Montserrat',sans-serif}
+.course-card .course-desc{font-size:12px;color:var(--mid);line-height:1.7;margin-bottom:16px}
+.course-meta{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px}
+.meta-chip{display:flex;align-items:center;gap:5px;background:var(--surface2);border-radius:99px;padding:4px 12px;font-size:10px;font-weight:700;color:var(--mid)}
+.meta-chip span{font-size:12px}
+.course-card-foot{padding:16px 24px;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;background:#fafaf9}
+.course-price{font-size:18px;font-weight:800;font-family:'Montserrat',sans-serif;color:var(--amber)}
+.course-price.free-price{color:var(--green)}
+.course-price-sub{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-top:1px}
+.btn-enroll{background:var(--dark);color:#fff;border:none;border-radius:12px;padding:10px 20px;font-family:'Manrope',sans-serif;font-size:12px;font-weight:700;cursor:pointer;transition:all .15s;white-space:nowrap}
+.btn-enroll:hover{background:#292524;transform:translateY(-1px)}
+.btn-enroll.amber-btn{background:var(--amber);box-shadow:0 4px 14px rgba(217,119,6,.3)}
+.btn-enroll.amber-btn:hover{box-shadow:0 6px 18px rgba(217,119,6,.4)}
+.btn-enroll.green-btn{background:var(--green)}
+
+/* Rating stars */
+.stars{display:flex;align-items:center;gap:3px;font-size:11px}
+.star{color:#fbbf24}
+.star.empty{color:#e7e5e4}
+.rating-count{font-size:10px;color:var(--muted);margin-left:4px;font-weight:600}
+
+/* Progress bar in card */
+.course-progress{background:var(--border);border-radius:99px;height:4px;overflow:hidden;margin-top:10px}
+.course-progress-fill{height:100%;border-radius:99px;background:linear-gradient(90deg,var(--amber),var(--green))}
+
+/* Age badges */
+.age-badges{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:8px}
+.age-badge{background:#eff6ff;color:#1d4ed8;padding:3px 10px;border-radius:99px;font-size:9px;font-weight:800;border:1px solid #bfdbfe}
+
+/* Schedule chips for homework */
+.schedule-chips{display:flex;gap:5px;flex-wrap:wrap}
+.sched-chip{background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:4px 10px;font-size:9px;font-weight:700;color:var(--mid);cursor:pointer;transition:all .15s}
+.sched-chip:hover,.sched-chip.sel{background:var(--dark);color:#fff;border-color:var(--dark)}
+
+/* Featured ribbon */
+.ribbon{position:absolute;top:16px;right:-8px;background:var(--amber);color:#fff;font-size:9px;font-weight:800;padding:4px 14px 4px 10px;letter-spacing:.08em;clip-path:polygon(0 0,100% 0,88% 50%,100% 100%,0 100%)}
+
+/* Course detail modal */
+.course-modal-overlay{position:fixed;inset:0;z-index:60;background:rgba(0,0,0,.6);display:flex;align-items:flex-end;justify-content:center}
+.course-modal-overlay.hidden{display:none}
+.course-modal{background:#fff;width:100%;max-width:620px;border-radius:28px 28px 0 0;padding:0;max-height:90vh;overflow-y:auto;animation:slideUp .35s ease-out}
+.cm-header{background:var(--dark);padding:32px 28px 24px;position:relative;border-radius:28px 28px 0 0}
+.cm-close{position:absolute;top:16px;right:16px;background:rgba(255,255,255,.12);border:none;border-radius:50%;width:32px;height:32px;color:#fff;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.cm-body{padding:28px}
+.cm-features{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:24px}
+.cm-feature{display:flex;align-items:flex-start;gap:10px;background:var(--surface2);border-radius:14px;padding:14px}
+.cm-feature .cf-icon{font-size:20px;flex-shrink:0}
+.cm-feature .cf-text{font-size:11px;font-weight:700;color:var(--dark);line-height:1.5}
+.cm-feature .cf-sub{font-size:10px;color:var(--mid);font-weight:500;margin-top:2px}
+.enroll-form{background:var(--surface2);border-radius:18px;padding:20px;margin-top:20px}
+.enroll-form h4{font-size:14px;font-weight:800;margin-bottom:14px}
+.enroll-field{width:100%;padding:12px 14px;background:#fff;border:1.5px solid transparent;border-radius:12px;font-size:13px;font-family:'Manrope',sans-serif;outline:none;margin-bottom:10px;transition:border-color .12s}
+.enroll-field:focus{border-color:var(--amber)}
+.enroll-submit{width:100%;padding:14px;background:var(--amber);color:#fff;border:none;border-radius:14px;font-size:14px;font-weight:800;cursor:pointer;font-family:'Manrope',sans-serif;box-shadow:0 5px 18px rgba(217,119,6,.3);transition:all .15s}
+.enroll-submit:hover{transform:translateY(-1px)}
+.sched-select-wrap{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:10px}
+.sched-sel-btn{padding:8px 4px;border:1.5px solid var(--border);border-radius:10px;background:#fff;cursor:pointer;font-family:'Manrope',sans-serif;font-size:10px;font-weight:700;text-align:center;transition:all .15s;color:var(--mid)}
+.sched-sel-btn.active{border-color:var(--amber);background:var(--amber-l);color:var(--amber-d)}
+
+/* Testimonials */
+.testimonials{margin-top:48px}
+.testimonials h3{font-size:18px;font-weight:800;margin-bottom:18px;font-family:'Montserrat',sans-serif}
+.testi-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px}
+.testi-card{background:#fff;border:1px solid var(--border);border-radius:18px;padding:18px}
+.testi-stars{margin-bottom:8px}
+.testi-text{font-size:12px;color:var(--mid);line-height:1.7;margin-bottom:12px;font-style:italic}
+.testi-author{display:flex;align-items:center;gap:8px}
+.testi-avatar{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:800;color:#fff;flex-shrink:0}
+.testi-name{font-size:11px;font-weight:700}
+.testi-role{font-size:10px;color:var(--muted)}
+
+/* Stats bar */
+.training-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:36px}
+
+.tr-stat{background:#fff;border:1px solid var(--border);border-radius:18px;padding:18px;text-align:center}
+.tr-stat-num{font-size:26px;font-weight:800;font-family:'Montserrat',sans-serif;color:var(--amber)}
+.tr-stat-lbl{font-size:10px;font-weight:700;color:var(--mid);text-transform:uppercase;letter-spacing:.08em;margin-top:3px}
+
+/* ── AUTH MODAL — Right slide-in ── */
+.auth-overlay{position:fixed;inset:0;z-index:60;background:rgba(0,0,0,.5);display:flex;align-items:stretch;justify-content:flex-end;backdrop-filter:blur(4px)}
+.auth-overlay.hidden{display:none}
+.auth-panel{background:#fff;width:100%;max-width:400px;height:100%;overflow-y:auto;display:flex;flex-direction:column;animation:slideInRight .3s cubic-bezier(.4,0,.2,1)}
+@keyframes slideInRight{from{transform:translateX(100%);opacity:0}to{transform:translateX(0);opacity:1}}
+.auth-panel-head{background:var(--dark);padding:28px 24px 24px;position:relative;flex-shrink:0}
+.auth-panel-close{position:absolute;top:16px;right:16px;background:rgba(255,255,255,.12);border:none;border-radius:50%;width:32px;height:32px;color:#fff;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .15s}
+.auth-panel-close:hover{background:rgba(255,255,255,.22)}
+.auth-logo-row{display:flex;align-items:center;gap:10px;margin-bottom:20px}
+.auth-logo-icon{width:36px;height:36px;border-radius:9px;background:var(--amber);display:flex;align-items:center;justify-content:center;font-size:18px}
+.auth-logo-name{font-family:'Montserrat',sans-serif;font-weight:800;font-size:14px;color:#fff}
+.auth-tabs-row{display:flex;gap:0;background:rgba(255,255,255,.1);border-radius:12px;padding:4px}
+.auth-tab-btn{flex:1;padding:9px 6px;border:none;border-radius:9px;cursor:pointer;font-family:'Manrope',sans-serif;font-size:13px;font-weight:700;background:none;color:rgba(255,255,255,.6);transition:all .18s}
+.auth-tab-btn.active{background:#fff;color:var(--dark);box-shadow:0 2px 8px rgba(0,0,0,.15)}
+.auth-body{padding:24px;flex:1}
+.auth-section-title{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:10px;margin-top:18px}
+.auth-section-title:first-child{margin-top:0}
+.auth-input{width:100%;padding:13px 15px;background:var(--surface2);border:1.5px solid transparent;border-radius:13px;font-size:13px;font-family:'Manrope',sans-serif;outline:none;margin-bottom:10px;transition:all .15s;color:var(--dark)}
+.auth-input:focus{border-color:var(--amber);background:#fff;box-shadow:0 0 0 3px rgba(217,119,6,.1)}
+.auth-input::placeholder{color:var(--muted)}
+.auth-submit-btn{width:100%;padding:15px;background:var(--amber);color:#fff;border:none;border-radius:13px;font-size:14px;font-weight:800;cursor:pointer;font-family:'Manrope',sans-serif;box-shadow:0 4px 16px rgba(217,119,6,.35);transition:all .18s;margin-top:6px}
+.auth-submit-btn:hover{transform:translateY(-2px);box-shadow:0 8px 22px rgba(217,119,6,.42)}
+.auth-divider{text-align:center;font-size:11px;color:var(--muted);margin:14px 0;position:relative}
+.auth-divider::before,.auth-divider::after{content:'';position:absolute;top:50%;width:42%;height:1px;background:var(--border)}
+.auth-divider::before{left:0}.auth-divider::after{right:0}
+.auth-forgot-btn{display:block;text-align:center;font-size:11px;color:var(--blue);background:none;border:none;cursor:pointer;font-family:'Manrope',sans-serif;font-weight:600;margin-top:10px;text-decoration:underline}
+.auth-error{background:#fef2f2;border:1px solid #fecaca;border-radius:10px;padding:10px 13px;font-size:11px;color:var(--red);font-weight:600;margin-bottom:10px;display:none}
+.auth-success{background:#f0fdf4;border:1px solid #a7f3d0;border-radius:10px;padding:10px 13px;font-size:11px;color:#065f46;font-weight:600;margin-bottom:10px;display:none}
+
+/* Avatar picker modal */
+.avatar-overlay{position:fixed;inset:0;z-index:90;background:rgba(0,0,0,.6);display:flex;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(4px)}
+.avatar-overlay.hidden{display:none}
+.avatar-modal{background:#fff;border-radius:24px;width:100%;max-width:480px;max-height:80vh;overflow:hidden;display:flex;flex-direction:column;animation:slideUp .3s ease-out}
+.avatar-modal-head{padding:20px 22px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+.avatar-modal-head h3{font-size:16px;font-weight:800;font-family:'Montserrat',sans-serif}
+.avatar-close{background:#f5f5f5;border:none;border-radius:50%;width:30px;height:30px;font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.avatar-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;padding:18px;overflow-y:auto;flex:1}
+.avatar-opt{width:100%;aspect-ratio:1;border-radius:16px;border:3px solid transparent;cursor:pointer;overflow:hidden;transition:all .18s;background:var(--surface2);display:flex;align-items:center;justify-content:center}
+.avatar-opt:hover{border-color:var(--amber);transform:scale(1.06)}
+.avatar-opt.selected{border-color:var(--amber);box-shadow:0 0 0 3px rgba(217,119,6,.25)}
+.avatar-opt img{width:100%;height:100%;object-fit:cover}
+.avatar-modal-foot{padding:14px 22px;border-top:1px solid var(--border);display:flex;gap:10px}
+.avatar-confirm{flex:2;padding:12px;background:var(--amber);color:#fff;border:none;border-radius:12px;font-size:13px;font-weight:800;cursor:pointer;font-family:'Manrope',sans-serif}
+.avatar-cancel{flex:1;padding:12px;background:var(--surface2);color:var(--mid);border:none;border-radius:12px;font-size:13px;font-weight:700;cursor:pointer;font-family:'Manrope',sans-serif}
+
+
+/* ── PAY MODAL ── */
+.pay-overlay{position:fixed;inset:0;z-index:70;background:rgba(0,0,0,.75);display:flex;align-items:center;justify-content:center;padding:18px}
+.pay-overlay.hidden{display:none}
+.pay-card{background:#fff;width:100%;max-width:360px;border-radius:24px;overflow:hidden;max-height:90vh;overflow-y:auto}
+.pay-top{background:var(--dark);padding:28px;text-align:center;color:#fff}
+.pay-top .lbl{font-size:10px;text-transform:uppercase;letter-spacing:.12em;opacity:.5;margin-bottom:5px}
+.pay-top .amt{font-size:32px;font-weight:800;font-family:'Montserrat',sans-serif}
+.pay-body{padding:24px}
+.qr-box{width:160px;height:160px;margin:0 auto 16px;border:2px solid var(--border);border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:52px;background:#f8f8f8;overflow:hidden}
+.qr-box img{width:100%;height:100%;object-fit:contain}
+.bank-info{text-align:center;margin-bottom:14px}
+.bank-num{font-size:16px;font-weight:800;margin-bottom:3px}
+.bank-name{font-size:11px;color:var(--mid)}
+.bank-note{background:#fef3c7;color:var(--amber-d);font-size:10px;font-weight:700;padding:9px 12px;border-radius:11px;text-align:center;margin-bottom:16px;line-height:1.5}
+.pay-next{width:100%;padding:14px;background:var(--green);color:#fff;border:none;border-radius:14px;font-size:13px;font-weight:800;cursor:pointer;font-family:'Manrope',sans-serif;transition:all .15s;margin-bottom:8px}
+.pay-next:hover{background:#047857}
+.pay-close-lnk{width:100%;padding:9px;background:none;border:none;font-size:11px;color:#aaa;cursor:pointer;font-family:'Manrope',sans-serif}
+.modal-field{width:100%;padding:11px 13px;border:1.5px solid var(--border);border-radius:11px;font-size:12px;font-family:'Manrope',sans-serif;outline:none;margin-bottom:9px;transition:border-color .12s}
+.modal-field:focus{border-color:var(--amber)}
+
+/* ── SUDOKU PAY MODAL ── */
+.sp-modal-card{background:#fff;border-radius:22px;width:100%;max-width:380px;max-height:90vh;overflow-y:auto}
+.sp-top{background:var(--dark);padding:22px;border-radius:22px 22px 0 0;text-align:center;color:#fff}
+.sp-top .si{font-size:28px;margin-bottom:6px}
+.sp-top h3{font-size:15px;font-weight:800}
+.sp-top p{font-size:10px;opacity:.6;margin-top:3px}
+.sp-body{padding:20px}
+.sp-amt{text-align:center;font-size:28px;font-weight:800;font-family:'Montserrat',sans-serif;color:var(--amber);margin-bottom:16px}
+
+/* ── COURSE ENROLL PAY MODAL ── */
+.course-pay-overlay{position:fixed;inset:0;z-index:80;background:rgba(0,0,0,.75);display:flex;align-items:center;justify-content:center;padding:18px}
+.course-pay-overlay.hidden{display:none}
+.course-pay-card{background:#fff;width:100%;max-width:380px;border-radius:24px;overflow:hidden;max-height:90vh;overflow-y:auto}
+.cp-top{background:var(--dark);padding:26px;text-align:center;color:#fff}
+.cp-top .cp-icon{font-size:36px;margin-bottom:8px}
+.cp-top h3{font-size:16px;font-weight:800}
+.cp-top p{font-size:10px;opacity:.6;margin-top:3px;line-height:1.5}
+.cp-body{padding:22px}
+.cp-amt{text-align:center;font-size:30px;font-weight:800;font-family:'Montserrat',sans-serif;color:var(--amber);margin-bottom:4px}
+.cp-amt-sub{text-align:center;font-size:10px;color:var(--mid);margin-bottom:18px}
+
+/* ── TOAST ── */
+#toast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%);z-index:200;padding:11px 26px;border-radius:99px;font-size:12px;font-weight:700;font-family:'Manrope',sans-serif;pointer-events:none;opacity:0;transition:opacity .25s;white-space:nowrap;max-width:90vw}
+#toast.show{opacity:1}
+#toast.success{background:var(--dark);color:#fff}
+#toast.error{background:var(--red);color:#fff}
+/* Generic hidden helper */
+.hidden{display:none!important}
+
+/* ── FOOTER ── */
+footer{background:linear-gradient(135deg,#1c1917,#0c0a09);color:#fff;margin-top:72px;padding:56px 20px}
+.footer-in{max-width:1200px;margin:0 auto;display:grid;grid-template-columns:repeat(3,1fr);gap:40px}
+
+.footer-brand{font-size:18px;font-weight:800;color:var(--amber);margin-bottom:10px;font-family:'Montserrat',sans-serif;display:flex;align-items:center;gap:10px}
+footer p,footer div{font-size:12px;color:rgba(255,255,255,.45);line-height:1.8}
+footer h4{font-weight:700;font-size:13px;margin-bottom:12px;color:rgba(255,255,255,.8)}
+.f-contact div{margin-bottom:5px}
+footer .copy{color:rgba(255,255,255,.2)}
+
+/* ── 18b. ХЭВЛЭХ ХЭСГИЙН КОНТЕЙНЕР ── */
+#printArea{display:none}
+
+
+::-webkit-scrollbar{width:5px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--border);border-radius:99px}
+
+/* ══════════════════════════════════════════
+   RESPONSIVE STYLES — эвхэгдэх цэс, layout тохиргоо
+   (Жижигээс том рүү эрэмбэлэв)
+══════════════════════════════════════════ */
+
+/* ── max-width:400px ── */
+@media(max-width:400px){
+  .hero h1{font-size:24px}
+  .game-grid{grid-template-columns:1fr}
+  .prod-grid{grid-template-columns:1fr}
+  .pkgs{grid-template-columns:repeat(2,1fr)}
+  .options-grid{grid-template-columns:1fr}
+  .q-opts{grid-template-columns:1fr}
+}
+
+/* ── max-width:600px ── */
+@media(max-width:600px){
+.stats{grid-template-columns:repeat(2,1fr)}
+.race-controls{grid-template-columns:1fr}
+.footer-in{grid-template-columns:1fr;gap:28px}
+}
+
+/* ── max-width:640px ── */
+@media(max-width:640px){
+.ws-layout{grid-template-columns:1fr}
+.training-hero{padding:28px 22px;flex-direction:column}.training-hero-emoji{font-size:52px}
+.training-stats{grid-template-columns:repeat(2,1fr)}
+  .nav-in{padding:0 12px;height:54px}
+  .nav-btn{font-size:11px;padding:6px 10px}
+  main{padding:18px 12px}
+  .hero h1{font-size:28px}
+  .stats{padding:22px 14px;border-radius:20px}
+}
+
+/* ── max-width:680px ── */
+@media(max-width:680px){
+.sudoku-layout{grid-template-columns:1fr}
+}
+
+/* ── max-width:768px ── */
+@media(max-width:768px){
+  .nav-in{height:54px;padding:0 14px;gap:10px}
+  .nav-links{display:none!important}
+  .hamburger{display:flex}
+  .brand{font-size:13px;gap:7px}
+  .brand-icon{width:32px;height:32px;border-radius:8px}
+  .brand-icon img{width:28px;height:28px}
+  #navGuest .btn-g,#navGuest .btn-p{padding:7px 11px!important;font-size:11px!important}
+  main{padding:16px 14px}
+  .hero{grid-template-columns:1fr;gap:20px;margin-bottom:36px;padding-top:8px}
+  .hero h1{font-size:clamp(26px,7vw,36px);margin-top:12px}
+  .hero p{font-size:13px;margin-top:12px}
+  .hero-btns{gap:8px;margin-top:18px}
+  .hero-btns .btn-p,.hero-btns .btn-g{padding:10px 18px;font-size:12px;flex:1;text-align:center}
+  .hero-cards{grid-template-columns:repeat(2,1fr);gap:8px}
+  .hero-card{padding:14px 10px;border-radius:16px}
+  .hero-card .icon{font-size:26px;margin-bottom:5px}
+  .hero-card h3{font-size:12px}
+  .stats{padding:20px 14px;border-radius:20px;grid-template-columns:repeat(2,1fr);gap:14px;margin-bottom:36px}
+  .stat-num{font-size:24px}
+  .sec-title{font-size:20px;margin-bottom:18px}
+  .game-grid{grid-template-columns:1fr 1fr;gap:12px}
+  .game-card{padding:18px 14px;border-radius:18px}
+  .game-card h3{font-size:14px}
+  .game-card p{font-size:11px}
+  .game-icon{width:42px;height:42px;font-size:20px;border-radius:12px;margin-bottom:12px}
+  .sudoku-layout{grid-template-columns:1fr;gap:16px}
+  .sudoku-grid{width:min(calc(100vw - 28px),360px)}
+  .action-btns{flex-direction:row;flex-wrap:wrap;gap:7px}
+  .action-btn{flex:1 1 calc(50% - 7px)}
+  .pkgs{grid-template-columns:repeat(3,1fr);gap:6px}
+  .pkg-n{font-size:18px}
+  #wsGameArea > div{grid-template-columns:1fr!important}
+  .ws-cell{width:30px;height:30px;font-size:12px}
+  .text-display{padding:18px}
+  .text-content{font-size:14px;line-height:2}
+  .options-grid{grid-template-columns:1fr 1fr;gap:8px}
+  .option-btn{padding:10px 12px;font-size:12px}
+  .read-score{flex-wrap:wrap;gap:10px;padding:12px 14px}
+  .race-controls{grid-template-columns:1fr;gap:12px}
+  .q-opts{grid-template-columns:1fr 1fr;gap:6px}
+  .training-hero{padding:22px 18px;flex-direction:column;gap:14px;border-radius:20px;margin-bottom:24px}
+  .training-hero h2{font-size:22px}
+  .training-hero p{font-size:12px}
+  .training-hero-emoji{font-size:44px;align-self:flex-start}
+  .training-stats{grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:24px}
+  .tr-stat{padding:14px 10px;border-radius:14px}
+  .tr-stat-num{font-size:20px}
+  .training-filter{overflow-x:auto;-webkit-overflow-scrolling:touch;padding-bottom:4px;scrollbar-width:none;width:100%}
+  .training-filter::-webkit-scrollbar{display:none}
+  .tr-flt-btn{white-space:nowrap;padding:7px 14px;font-size:11px}
+  .course-grid{grid-template-columns:1fr;gap:16px}
+  .course-card-top{padding:20px 18px 16px}
+  .course-card h3{font-size:15px}
+  .course-card .course-desc{font-size:11px}
+  .course-card-foot{padding:14px 18px;flex-wrap:wrap;gap:10px}
+  .btn-enroll{width:100%;text-align:center;padding:11px 16px}
+  .course-price{font-size:16px}
+  .meta-chip{font-size:9px;padding:3px 10px}
+  .testi-grid{grid-template-columns:1fr;gap:12px}
+  .prod-grid{grid-template-columns:repeat(2,1fr);gap:12px}
+  .prod-img{height:130px}
+  .prod-body{padding:12px}
+  .prod-title{font-size:12px;margin-bottom:8px}
+  .shop-filter{overflow-x:auto;width:100%;scrollbar-width:none}
+  .shop-filter::-webkit-scrollbar{display:none}
+  .auth-panel{max-width:100%;border-radius:0}
+  .course-modal{border-radius:20px 20px 0 0}
+  .cm-features{grid-template-columns:1fr 1fr;gap:8px}
+  .cm-feature{padding:10px}
+  footer{padding:36px 16px;margin-top:48px}
+  .footer-in{grid-template-columns:1fr;gap:24px}
+  .footer-in>div:last-child{text-align:left}
+.hero{grid-template-columns:1fr;gap:28px}
+}
+
+/* ── min-width:769px ба max-width:1024px ── */
+@media(min-width:769px) and (max-width:1024px){
+  main{padding:24px 18px}
+  .hero{gap:32px}
+  .hero h1{font-size:clamp(28px,4vw,44px)}
+  .sudoku-layout{grid-template-columns:1fr 240px;gap:16px}
+  .course-grid{grid-template-columns:repeat(2,1fr);gap:18px}
+  .training-hero{padding:32px 28px}
+  .training-hero h2{font-size:26px}
+  .game-grid{grid-template-columns:repeat(2,1fr)}
+  .prod-grid{grid-template-columns:repeat(3,1fr)}
+  .testi-grid{grid-template-columns:repeat(2,1fr)}
+  .footer-in{grid-template-columns:repeat(2,1fr);gap:28px}
+}
+
+/* ── min-width:1025px ── */
+@media(min-width:1025px){
+  .course-grid{grid-template-columns:repeat(2,1fr)}
+}
+/* ── ХЭВЛЭХ ФОРМАТ (А4) ── */
+@media print{
+  body>*:not(#printArea){display:none!important}
+  #printArea{display:block!important}
+  @page{size:A4 portrait;margin:8mm}
+  .pg{display:grid;grid-template-columns:1fr 1fr;grid-template-rows:auto 1fr 1fr;gap:4mm;width:194mm;height:279mm;padding:3mm;page-break-after:always}
+  .pg:last-child{page-break-after:avoid}
+  .pg-hdr{grid-column:1/-1;display:flex;align-items:center;gap:7pt;border-bottom:1.5pt solid #1c1917;padding-bottom:3mm;margin-bottom:1mm}
+  .pg-hdr-t{font-size:9pt;font-weight:900;color:#1c1917;font-family:'Montserrat',sans-serif}
+  .pg-hdr-s{font-size:7pt;color:#57534e;font-weight:600;letter-spacing:.08em;text-transform:uppercase}
+  .pp{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2mm}
+  .pp-t{font-size:7pt;font-weight:700;text-align:center;color:#1c1917}
+  .pt{border-collapse:collapse;border:2.5px solid #1c1917}
+  .pt td{width:8.5mm;height:8.5mm;text-align:center;vertical-align:middle;font-size:10pt;font-weight:700;border:.5px solid #aaa;color:#1c1917}
+  .pt td.br{border-right:2.5px solid #1c1917}
+  .pt td.bb{border-bottom:2.5px solid #1c1917}
+  .pt td.gv{background:#fef3c7;font-weight:900}
+  .pp-g{font-size:7pt;text-align:center;color:#57534e}
+}
