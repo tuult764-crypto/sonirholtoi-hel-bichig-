@@ -384,39 +384,106 @@ const COURSE_DATA = {
     icon:'📖',
     color:'#f0fdf4',
     title:'Унших чадвараа сайжруулцгаая',
-    subtitle:'99,000₮ · 21 хоног Meet · Ангилалт бүрт 3 суралцагч',
-    desc:'Meet уулзалт · 21 хоног тасралтгүй. Насны ангиллаар бүртгэнэ — ангилал тус бүрт 3 сурагч л, дүүрвэл хаагдана. Хурдан уншиж яриулах, эхийг дахин уншиж мэдэрч унших, зогсолттой ойлгомжтой унших, гол санааг тайлбарлах арга эзэмшинэ. Аргачлалыг дотоодод хадгалдаг тул зөвхөн хичээлийн явцад эзэмшинэ.',
-    features:[
-      {icon:'⚡', text:'Хурдан унших', sub:'Яриулах дасгалтай'},
-      {icon:'🔄', text:'Дахин уншиж ярих', sub:'Ойлголтоо бататгана'},
-      {icon:'❤️', text:'Мэдэрч унших', sub:'Зогсолттой, ойлгомжтой'},
-      {icon:'💬', text:'Гол санаа тайлбарлах', sub:'Бусдад хүргэх чадвар'},
-    ],
-    hasSchedule: false,
-    hasAge: true,
-    priceNote:'99,000₮ — 21 хоногийн Meet сургалт',
-    priceFull:'99,000₮',
-    priceSub:'21 хоног · насны ангиллаар'
+    hasMode: true,
+    modes: {
+      online: {
+        subtitle:'99,000₮ · 21 хоног Meet · Ангилалт бүрт 3 суралцагч',
+        desc:'Meet уулзалт · 21 хоног тасралтгүй. Насны ангиллаар бүртгэнэ — ангилал тус бүрт 3 сурагч л, дүүрвэл хаагдана. Хурдан уншиж яриулах, эхийг дахин уншиж мэдэрч унших, зогсолттой ойлгомжтой унших, гол санааг тайлбарлах арга эзэмшинэ.',
+        features:[
+          {icon:'⚡', text:'Хурдан унших', sub:'Яриулах дасгалтай'},
+          {icon:'🔄', text:'Дахин уншиж ярих', sub:'Ойлголтоо бататгана'},
+          {icon:'❤️', text:'Мэдэрч унших', sub:'Зогсолттой, ойлгомжтой'},
+          {icon:'💬', text:'Гол санаа тайлбарлах', sub:'Бусдад хүргэх чадвар'},
+        ],
+        hasSchedule:false, hasAge:true, location:null,
+        priceNote:'99,000₮ — 21 хоногийн Meet сургалт',
+        priceFull:'99,000₮',
+        priceSub:'21 хоног · насны ангиллаар'
+      },
+      onsite: {
+        subtitle:'200,000₮/сар · Танхим · Да·Лх·Ба',
+        desc:'Танхим дээр биечлэн явагдах сургалт. Долоо хоногт 3 удаа — Даваа, Лхагва, Баасан гарагуудад хичээллэнэ. Хурдан уншиж яриулах, зогсолттой мэдэрч унших, гол санааг тайлбарлах арга эзэмшинэ.',
+        features:[
+          {icon:'📍', text:'Танхим дээр', sub:'Биечлэн ирж суух'},
+          {icon:'📅', text:'Да·Лх·Ба', sub:'7 хоногт 3 удаа'},
+          {icon:'🗓', text:'Эхлэх: 07.27', sub:'13:00–15:00 цагт'},
+          {icon:'💬', text:'Гол санаа тайлбарлах', sub:'Бусдад хүргэх чадвар'},
+        ],
+        hasSchedule:false, hasAge:false,
+        location:'Peace Mall оффисын хаалгаар ороод 9 давхарт, 903 тоот — "Эрдмийн Гүүр" сургалтын танхимд',
+        priceNote:'200,000₮/сар — Танхимын сургалт',
+        priceFull:'200,000₮',
+        priceSub:'сард · Да·Лх·Ба 13:00–15:00'
+      }
+    }
   },
   script: {
     icon:'ᠮ',
     color:'#ede9fe',
     title:'Үндэсний бичгийн анхан шатны сургалт',
-    subtitle:'99,000₮ · Meet уулзалт · Макс 10 суралцагч · 20% Cashback',
-    desc:'Meet уулзалт · Анхан шатны сургалт. Сургалтын материал болон эх бүгд хичээлийн явцад багшаас гарна — тусгайлан худалдаж авах шаардлагагүй. Макс 10 суралцагч. Нэг ч өдөр тасалдалгүй даалгавраа бүрэн гүйцэт хийж, хичээлийн үед дүрсээ асааж ярьсан тохиолдолд 20% cashback буцаагдана!',
-    features:[
-      {icon:'💻', text:'Meet уулзалт', sub:'Онлайн бүлгийн хичээл'},
-      {icon:'📄', text:'Материал бүгд дотроос', sub:'Тусгай зардал байхгүй'},
-      {icon:'👤', text:'Макс 10 суралцагч', sub:'Цөөн, анхаарал хангалттай'},
-      {icon:'🎁', text:'20% Cashback', sub:'Тасралтгүй идэвхтэй бол'},
-    ],
-    hasSchedule: false,
-    hasAge: false,
-    priceNote:'99,000₮ — Cashback-тэй бол 79,200₮',
-    priceFull:'99,000₮',
-    priceSub:'Cashback-тэй бол 79,200₮'
+    hasMode: true,
+    modes: {
+      online: {
+        subtitle:'99,000₮ · Meet уулзалт · Макс 10 суралцагч · 20% Cashback',
+        desc:'Meet уулзалт · Анхан шатны сургалт. Сургалтын материал болон эх бүгд хичээлийн явцад багшаас гарна — тусгайлан худалдаж авах шаардлагагүй. Макс 10 суралцагч. Нэг ч өдөр тасалдалгүй даалгавраа бүрэн гүйцэт хийж, хичээлийн үед дүрсээ асааж ярьсан тохиолдолд 20% cashback буцаагдана!',
+        features:[
+          {icon:'💻', text:'Meet уулзалт', sub:'Онлайн бүлгийн хичээл'},
+          {icon:'📄', text:'Материал бүгд дотроос', sub:'Тусгай зардал байхгүй'},
+          {icon:'👤', text:'Макс 10 суралцагч', sub:'Цөөн, анхаарал хангалттай'},
+          {icon:'🎁', text:'20% Cashback', sub:'Тасралтгүй идэвхтэй бол'},
+        ],
+        hasSchedule:false, hasAge:false, location:null,
+        priceNote:'99,000₮ — Cashback-тэй бол 79,200₮',
+        priceFull:'99,000₮',
+        priceSub:'Cashback-тэй бол 79,200₮'
+      },
+      onsite: {
+        subtitle:'250,000₮ (урьдчилгаа 50,000₮) · Танхим · 21 өдөр',
+        desc:'Танхим дээр биечлэн явагдах анхан шатны сургалт. Тасралтгүй 21 өдрийн турш хичээллэнэ. Макс 10 суралцагч.',
+        features:[
+          {icon:'📍', text:'Танхим дээр', sub:'Биечлэн ирж суух'},
+          {icon:'📅', text:'Тасралтгүй 21 өдөр', sub:'Эхлэх: 07.27'},
+          {icon:'🕐', text:'10:00–12:00 / 15:30–17:30', sub:'Цагийн сонголт'},
+          {icon:'👤', text:'Макс 10 суралцагч', sub:'Цөөн, анхаарал хангалттай'},
+        ],
+        hasSchedule:false, hasAge:false,
+        location:'Peace Mall оффисын хаалгаар ороод 9 давхарт, 903 тоот — "Эрдмийн Гүүр" сургалтын танхимд',
+        priceNote:'250,000₮ — Урьдчилгаа 50,000₮',
+        priceFull:'250,000₮',
+        priceSub:'Урьдчилгаа 50,000₮ · 21 өдөр'
+      }
+    }
   }
 };
+
+/* ── Course mode toggle (Онлайн / Танхим) ── */
+const courseMode = { reading:'online', script:'online' };
+
+function setCourseMode(type, mode, btnEl) {
+  courseMode[type] = mode;
+  const card = btnEl.closest('.course-card');
+  if (!card) return;
+
+  card.querySelectorAll('.mode-btn').forEach(b=>b.classList.remove('active'));
+  btnEl.classList.add('active');
+
+  card.querySelectorAll('.mode-block').forEach(b=>{
+    b.classList.toggle('active', b.dataset.modeBlock === mode);
+  });
+
+  const d = COURSE_DATA[type];
+  const m = d && d.modes ? d.modes[mode] : null;
+  if (m) {
+    const priceEl = document.getElementById(`${type}-price`);
+    const subEl   = document.getElementById(`${type}-priceSub`);
+    if (priceEl) priceEl.textContent = m.priceFull || m.priceNote;
+    if (subEl)   subEl.textContent   = m.priceSub || '';
+  }
+
+  // Cashback ribbon only makes sense for the online Script class
+  const ribbon = document.getElementById('scriptRibbon');
+  if (ribbon && type === 'script') ribbon.style.display = (mode === 'online') ? '' : 'none';
+}
 
 function filterTraining(cat, btn) {
   document.querySelectorAll('.tr-flt-btn').forEach(b=>b.classList.remove('active'));
@@ -429,8 +496,9 @@ function filterTraining(cat, btn) {
 
 function openCourseDetail(type) {
   _currentCourseType = type;
-  const d = COURSE_DATA[type];
-  if(!d) return;
+  const raw = COURSE_DATA[type];
+  if(!raw) return;
+  const d = raw.hasMode ? {...raw, ...raw.modes[courseMode[type]||'online']} : raw;
 
   document.getElementById('cmHeaderContent').innerHTML = `
     <div style="display:flex;align-items:center;gap:14px">
@@ -453,7 +521,13 @@ function openCourseDetail(type) {
       <div style="background:#fef9f0;border-radius:10px;padding:9px 12px;font-size:10px;color:#92400e;margin-top:8px;line-height:1.5">⚠️ Ангилалт бүрт <strong>3 сурагч</strong> л. Дүүрсэн бол тухайн ангилал хаагдана.</div>
     </div>` : '';
 
-  const cashbackSection = (type==='script') ? `
+  const locationSection = d.location ? `
+    <div style="display:flex;align-items:flex-start;gap:10px;background:#eff6ff;border:1px solid #bfdbfe;border-radius:14px;padding:14px;margin-bottom:16px">
+      <span style="font-size:20px">📍</span>
+      <div style="font-size:12px;color:#1d4ed8;line-height:1.7"><strong>Хаяг:</strong> ${d.location}</div>
+    </div>` : '';
+
+  const cashbackSection = (type==='script' && courseMode.script==='online') ? `
     <div style="background:linear-gradient(135deg,#1c1917,#292524);border-radius:16px;padding:18px;margin-bottom:16px">
       <div style="font-size:12px;font-weight:800;color:#fbbf24;margin-bottom:8px">🎁 20% CASHBACK УРАМШУУЛАЛ</div>
       <div style="font-size:11px;color:rgba(255,255,255,.75);line-height:1.8;margin-bottom:10px">Дараах 2 нөхцөлийг давхар биелүүлсэн тохиолдолд <strong style="color:#fbbf24">19,800₮</strong> буцаагдана:</div>
@@ -489,6 +563,7 @@ function openCourseDetail(type) {
       ${d.features.map(f=>`<div class="cm-feature"><div class="cf-icon">${f.icon}</div><div><div class="cf-text">${f.text}</div><div class="cf-sub">${f.sub}</div></div></div>`).join('')}
     </div>
     ${ageSection}
+    ${locationSection}
     ${cashbackSection}
     ${schedSection}
     <div style="background:#1c1917;border-radius:14px;padding:16px;margin-bottom:16px;display:flex;align-items:center;justify-content:space-between">
@@ -508,9 +583,11 @@ function closeCourseModal() {
 /* ── COURSE ENROLL PAY MODAL ── */
 function openCoursePayModal(type) {
   _currentCourseType = type;
-  const d = COURSE_DATA[type];
-  if(!d) return;
-  document.getElementById('cpTitle').textContent = d.title;
+  const raw = COURSE_DATA[type];
+  if(!raw) return;
+  const d = raw.hasMode ? {...raw, ...raw.modes[courseMode[type]||'online']} : raw;
+  const modeLabel = raw.hasMode ? (courseMode[type]==='onsite' ? ' (Танхим)' : ' (Онлайн)') : '';
+  document.getElementById('cpTitle').textContent = d.title + modeLabel;
   document.getElementById('cpSubtitle').textContent = d.priceSub || d.subtitle;
   document.getElementById('cpAmt').textContent = d.priceFull || d.priceNote;
   document.getElementById('cpEmail').value = currentUser !== 'guest@shb.mn' ? currentUser : '';
@@ -563,7 +640,9 @@ async function cpSubmit() {
 
   const schedDays = [...document.querySelectorAll('.sched-sel-btn.active')].map(b=>b.textContent).join(', ');
   const timeSlot  = [...document.querySelectorAll('.cp-time-btn.active')].map(b=>b.dataset.time).join(', ') || '';
-  const d = COURSE_DATA[_currentCourseType]||{};
+  const raw = COURSE_DATA[_currentCourseType]||{};
+  const d = raw.hasMode ? {...raw, ...raw.modes[courseMode[_currentCourseType]||'online']} : raw;
+  const modeLabel = raw.hasMode ? (courseMode[_currentCourseType]==='onsite' ? 'Танхим' : 'Онлайн') : '';
 
   const btn = document.getElementById('cpSubmitBtn');
   btn.disabled=true;btn.textContent='⏳ Илгээж байна...';
@@ -573,9 +652,9 @@ async function cpSubmit() {
       body:JSON.stringify({
         action:'submitOrder',
         email,
-        note:`Сургалт: ${d.title} | Нэр: ${name} | Утас: ${phone} | Нас: ${age} | Анги: ${grade} | Хуваарь: ${schedDays} | Цаг: ${timeSlot} | ${note}`,
+        note:`Сургалт: ${d.title}${modeLabel?' ('+modeLabel+')':''} | Нэр: ${name} | Утас: ${phone} | Нас: ${age} | Анги: ${grade} | Хуваарь: ${schedDays} | Цаг: ${timeSlot} | ${note}`,
         total: d.priceFull ? parseInt(d.priceFull.replace(/[^0-9]/g,'')) : 0,
-        items:`Сургалтын бүртгэл: ${d.title} — ${d.priceFull||''}`,
+        items:`Сургалтын бүртгэл: ${d.title}${modeLabel?' ('+modeLabel+')':''} — ${d.priceFull||''}`,
         date:new Date().toLocaleString('mn-MN')
       })
     });
