@@ -590,15 +590,29 @@ function openCoursePayModal(type) {
   document.getElementById('cpTitle').textContent = d.title + modeLabel;
   document.getElementById('cpSubtitle').textContent = d.priceSub || d.subtitle;
   document.getElementById('cpAmt').textContent = d.priceFull || d.priceNote;
-  document.getElementById('cpEmail').value = currentUser !== 'guest@shb.mn' ? currentUser : '';
+
+  // Quick facts (address / schedule / time) pulled straight from course data
+  const factsEl = document.getElementById('cpFacts');
+  if (factsEl) {
+    if (d.features && d.features.length) {
+      factsEl.innerHTML = d.features.slice(0,4).map(f =>
+        `<div class="cp-fact">${f.icon} <b>${f.text}</b><span>${f.sub||''}</span></div>`
+      ).join('');
+    } else {
+      factsEl.innerHTML = '';
+    }
+  }
+
   // Show/hide schedule picker
   const sw = document.getElementById('cpSchedWrap');
   if(sw) sw.style.display = d.hasSchedule ? 'block' : 'none';
   // Show/hide time slot picker (homework only)
   const tw = document.getElementById('cpTimeWrap');
   if(tw) tw.style.display = (type==='homework') ? 'block' : 'none';
-  // Reset time slot selections
+  // Reset time slot / schedule selections
   document.querySelectorAll('.cp-time-btn').forEach(b=>b.classList.remove('active'));
+  document.querySelectorAll('.sched-sel-btn').forEach(b=>b.classList.remove('active'));
+
   cpGoStep1();
   document.getElementById('coursePayModal').classList.remove('hidden');
 }
@@ -608,8 +622,8 @@ function closeCoursePayModal() {
   cpGoStep1();
 }
 
-function cpGoStep1(){['cpStep1','cpStep2','cpStep3'].forEach((id,i)=>document.getElementById(id).style.display=i===0?'':'none');}
-function cpGoStep2(){['cpStep1','cpStep2','cpStep3'].forEach((id,i)=>document.getElementById(id).style.display=i===1?'':'none');}
+function cpGoStep1(){document.getElementById('cpStep1').style.display='';document.getElementById('cpStep3').style.display='none';}
+function cpGoDone(){document.getElementById('cpStep1').style.display='none';document.getElementById('cpStep3').style.display='';}
 
 function toggleSchedBtn(btn){btn.classList.toggle('active');}
 
@@ -627,23 +641,21 @@ function selectTimeSlot(btn) {
   btn.style.color='var(--amber-d)';
 }
 
-async function cpSubmit() {
-  const name  = document.getElementById('cpName').value.trim();
-  const email = document.getElementById('cpEmail').value.trim();
-  const phone = document.getElementById('cpPhone').value.trim();
-  const age   = document.getElementById('cpChildAge').value.trim();
-  const note  = document.getElementById('cpNote').value.trim();
-  const grade = document.getElementById('cpGrade') ? document.getElementById('cpGrade').value.trim() : '';
-
-  if(!name){showToast('Нэрээ оруулна уу','error');return;}
-  if(!email||!email.includes('@')){showToast('Зөв и-мэйл хаяг оруулна уу','error');return;}
-
+async function cpConfirmPaid() {
   const schedDays = [...document.querySelectorAll('.sched-sel-btn.active')].map(b=>b.textContent).join(', ');
   const timeSlot  = [...document.querySelectorAll('.cp-time-btn.active')].map(b=>b.dataset.time).join(', ') || '';
   const raw = COURSE_DATA[_currentCourseType]||{};
   const d = raw.hasMode ? {...raw, ...raw.modes[courseMode[_currentCourseType]||'online']} : raw;
   const modeLabel = raw.hasMode ? (courseMode[_currentCourseType]==='onsite' ? 'Танхим' : 'Онлайн') : '';
 
+  // Homework requires an explicit time slot before confirming
+  const tw = document.getElementById('cpTimeWrap');
+  if (tw && tw.style.display !== 'none' && !timeSlot) {
+    showToast('Хичээллэх цагаа сонгоно уу', 'error');
+    return;
+  }
+
+  const email = currentUser !== 'guest@shb.mn' ? currentUser : '';
   const btn = document.getElementById('cpSubmitBtn');
   btn.disabled=true;btn.textContent='⏳ Илгээж байна...';
 
@@ -652,19 +664,19 @@ async function cpSubmit() {
       body:JSON.stringify({
         action:'submitOrder',
         email,
-        note:`Сургалт: ${d.title}${modeLabel?' ('+modeLabel+')':''} | Нэр: ${name} | Утас: ${phone} | Нас: ${age} | Анги: ${grade} | Хуваарь: ${schedDays} | Цаг: ${timeSlot} | ${note}`,
+        note:`Сургалт: ${d.title}${modeLabel?' ('+modeLabel+')':''} | Хуваарь: ${schedDays} | Цаг: ${timeSlot}`,
         total: d.priceFull ? parseInt(d.priceFull.replace(/[^0-9]/g,'')) : 0,
         items:`Сургалтын бүртгэл: ${d.title}${modeLabel?' ('+modeLabel+')':''} — ${d.priceFull||''}`,
         date:new Date().toLocaleString('mn-MN')
       })
     });
-    document.getElementById('cpConfirmName').textContent = name;
-    ['cpStep1','cpStep2','cpStep3'].forEach((id,i)=>document.getElementById(id).style.display=i===2?'':'none');
-    showToast('Бүртгэл амжилттай илгээгдлээ!','success');
+    cpGoDone();
+    showToast('Баталгаажлаа!','success');
   } catch(e) {
     showToast('Сүлжээний алдаа. Дахин оролдоно уу.','error');
+  } finally {
+    btn.disabled=false;btn.textContent='✅ Төлбөрөө хийлээ';
   }
-  btn.disabled=false;btn.textContent='🚀 Бүртгэл илгээх';
 }
 
 /* ════════════════════════════════════
