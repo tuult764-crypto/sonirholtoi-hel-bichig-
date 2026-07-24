@@ -88,7 +88,7 @@ function showSec(name){
   const el=document.getElementById(name+'Section');
   if(el){el.classList.add('active');window.scrollTo(0,0);}
   document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
-  const labels={'home':'Нүүр','games':'Тоглоом','training':'Сургалт','shop':'Дэлгүүр'};
+  const labels={'home':'Нүүр','games':'Тоглоом','training':'Сургалт','shop':'Дэлгүүр','about':'Багшийн тухай'};
   if(labels[name]){document.querySelectorAll('.nav-btn').forEach(b=>{if(b.textContent.includes(labels[name]))b.classList.add('active');});}
   if(name==='library')loadLibrary();
 }
@@ -1077,7 +1077,7 @@ function updateHomeworkUI() {
     regEl.style.background = '#fef9f0';
     regEl.style.color = '#92400e';
     regEl.innerHTML = `🔒 <strong>Бүртгэл одоогоор хаалттай</strong><br>
-      Дараагийн бүртгэл: ${formatDate(w.open)} 00:00 цагт нээгдэнэ<br>
+      Дараагийн бүртгэл: ${formatDate(w.open)} 2026.08.01ний 00:00 цагт нээгдэнэ<br>
       <span style="font-size:10px;opacity:.8">${days > 0 ? days+'өдөр ' : ''}${pad2(hrs)}:${pad2(mins)} үлдсэн · 7 хоног бүрийн Бямба·Нямд</span>`;
 
     tagEl.textContent = '🔒 Бүртгэл хаалттай';
