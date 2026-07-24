@@ -1077,7 +1077,7 @@ function updateHomeworkUI() {
     regEl.style.background = '#fef9f0';
     regEl.style.color = '#92400e';
     regEl.innerHTML = `🔒 <strong>Бүртгэл одоогоор хаалттай</strong><br>
-      Дараагийн бүртгэл: ${formatDate(w.open)} 2026.08.01ний 00:00 цагт нээгдэнэ<br>
+      Дараагийн бүртгэл: ${formatDate(w.open)} 00:00 цагт нээгдэнэ<br>
       <span style="font-size:10px;opacity:.8">${days > 0 ? days+'өдөр ' : ''}${pad2(hrs)}:${pad2(mins)} үлдсэн · 7 хоног бүрийн Бямба·Нямд</span>`;
 
     tagEl.textContent = '🔒 Бүртгэл хаалттай';
