@@ -85,20 +85,52 @@
         <button class="btn-p" onclick="showSec('games')">🎮 Тоглоом эхлэх</button>
         <button class="btn-g" onclick="showSec('training')">🎓 Сургалтууд</button>
       </div>
+      <div class="hero-trust">
+        <img src="https://raw.githubusercontent.com/tuult764-crypto/sonirholtoi-hel-bichig-/main/teacher.png" alt="Багш М.Туул" onerror="this.style.display='none'">
+        <div class="hero-trust-text"><strong>Багш М.Туул</strong> — Монгол хэл, үндэсний бичгийн 10+ жилийн туршлагатай багш</div>
+      </div>
     </div>
-    <div class="hero-cards">
-      <div class="hero-card" style="background:#f7f1e8;border-color:#e6d8c3" onclick="showSec('games')"><div class="icon">🎮</div><h3>Тоглоом</h3></div>
-      <div class="hero-card" style="background:#f2ede4;border-color:#ddd3c2" onclick="showSec('shop')"><div class="icon">🛒</div><h3>Дэлгүүр</h3></div>
-      <div class="hero-card" style="background:#f7f1e8;border-color:#e6d8c3" onclick="showSec('training')"><div class="icon">🎓</div><h3>Сургалт</h3></div>
-      <div class="hero-card" style="background:#f2ede4;border-color:#ddd3c2" onclick="showSec('library')"><div class="icon">📚</div><h3>Миний сан</h3></div>
+    <div class="hero-visual">
+      <div class="hero-float-chip top">🏆 Олимпиадын амжилт</div>
+      <svg viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="150" cy="150" r="125" style="fill:var(--amber-l)"/>
+        <path d="M60 190 Q150 165 240 190 L240 210 Q150 185 60 210 Z" style="fill:var(--amber)"/>
+        <path d="M60 190 Q150 165 150 165 L150 145 Q60 170 60 190 Z" style="fill:#fff;opacity:.85"/>
+        <path d="M240 190 Q150 165 150 165 L150 145 Q240 170 240 190 Z" style="fill:#fff;opacity:.7"/>
+        <line x1="150" y1="165" x2="150" y2="145" style="stroke:var(--amber-d);stroke-width:2"/>
+        <g transform="translate(150,95)">
+          <polygon points="-45,10 0,-15 45,10 0,32" style="fill:var(--dark)"/>
+          <rect x="-14" y="30" width="28" height="18" rx="4" style="fill:var(--dark)"/>
+          <circle cx="42" cy="18" r="4" style="fill:var(--amber-d)"/>
+          <line x1="42" y1="18" x2="42" y2="40" style="stroke:var(--amber-d);stroke-width:2"/>
+        </g>
+        <text x="222" y="245" font-size="46" style="fill:var(--purple);opacity:.55" font-family="Montserrat, sans-serif">ᠮ</text>
+        <g transform="translate(75,235) rotate(-25)">
+          <rect x="0" y="0" width="70" height="12" rx="3" style="fill:var(--amber-d)"/>
+          <polygon points="70,0 86,6 70,12" style="fill:var(--amber)"/>
+          <rect x="-8" y="0" width="8" height="12" style="fill:#8a8378"/>
+        </g>
+        <circle cx="55" cy="70" r="5" style="fill:var(--amber)"/>
+        <circle cx="245" cy="95" r="4" style="fill:var(--purple);opacity:.5"/>
+        <circle cx="230" cy="60" r="3" style="fill:var(--amber-d)"/>
+      </svg>
+      <div class="hero-float-chip bottom">🎓 10+ жилийн туршлага</div>
     </div>
   </div>
 
+  <div class="quick-nav-title">Хаанаас эхлэх вэ?</div>
+  <div class="hero-cards">
+    <div class="hero-card" style="background:#f7f1e8;border-color:#e6d8c3" onclick="showSec('games')"><div class="icon">🎮</div><h3>Тоглоом</h3></div>
+    <div class="hero-card" style="background:#f2ede4;border-color:#ddd3c2" onclick="showSec('shop')"><div class="icon">🛒</div><h3>Дэлгүүр</h3></div>
+    <div class="hero-card" style="background:#f7f1e8;border-color:#e6d8c3" onclick="showSec('training')"><div class="icon">🎓</div><h3>Сургалт</h3></div>
+    <div class="hero-card" style="background:#f2ede4;border-color:#ddd3c2" onclick="showSec('library')"><div class="icon">📚</div><h3>Миний сан</h3></div>
+  </div>
+
   <div class="stats">
-    <div><div class="stat-num" style="color:#fbbf24">4+</div><div class="stat-lbl">Тоглоом</div></div>
-    <div><div class="stat-num" style="color:#60a5fa">4</div><div class="stat-lbl">Сургалт</div></div>
-    <div><div class="stat-num" style="color:#4ade80">50</div><div class="stat-lbl">Морин уралдаан</div></div>
-    <div><div class="stat-num" style="color:#c084fc">1</div><div class="stat-lbl">Туул Багш</div></div>
+    <div><div class="stat-num" style="color:var(--amber)">4+</div><div class="stat-lbl">Тоглоом</div></div>
+    <div><div class="stat-num" style="color:var(--blue)">4</div><div class="stat-lbl">Сургалт</div></div>
+    <div><div class="stat-num" style="color:var(--green)">50</div><div class="stat-lbl">Морин уралдаан</div></div>
+    <div><div class="stat-num" style="color:var(--purple)">1</div><div class="stat-lbl">Туул Багш</div></div>
   </div>
 
   <h2 class="sec-title">Шинэ материалууд</h2>
@@ -349,10 +381,10 @@
   <!-- Filter -->
   <div class="training-filter">
     <button class="tr-flt-btn active" onclick="filterTraining('all',this)">Бүгд</button>
-    <button class="tr-flt-btn" onclick="filterTraining('writing',this)">✍️ Бичих</button>
-    <button class="tr-flt-btn" onclick="filterTraining('homework',this)">📝 Даалгавар</button>
+    <button class="tr-flt-btn" onclick="filterTraining('writing',this)">✍️ Бичиг</button>
+    <button class="tr-flt-btn" onclick="filterTraining('homework',this)">📝 Гэрийн даалгавар</button>
     <button class="tr-flt-btn" onclick="filterTraining('reading',this)">📖 Унших</button>
-    <button class="tr-flt-btn" onclick="filterTraining('script',this)">Үндэсний бичиг</button>
+    <button class="tr-flt-btn" onclick="filterTraining('script',this)">ᠮᠣᠩᠭᠣᠯ ᠪᠢᠴᠢᢉ</button>
   </div>
 
   <!-- Course Grid -->
@@ -391,7 +423,7 @@
       </div>
     </div>
 
-    <!-- Card 2: Монгол хэлний даалгавраа багштай хамт -->
+    <!-- Card 2: Гэрийн даалгавар багштай -->
     <div class="course-card featured" data-cat="homework" onclick="openCourseDetail('homework')">
       <div class="ribbon">АЛДАРТАЙ</div>
       <div class="course-card-top">
@@ -403,7 +435,7 @@
           </div>
         </div>
         <div class="course-icon-wrap" style="background:#fdf4ff">📝</div>
-        <h3>Монгол хэлний бүх төрлийн даалгавраа багштай хамтран хийцгээе</h3>
+        <h3>Монгол хэлний гэрийн даалгаврын сургалт багштай хамтран</h3>
         <p class="course-desc">Онлайн ганцаарчилсан Meet уулзалт. Анги болон хичээлийн цагаа бүртгүүлж, багш цагт нь тохирох суудал олгоно.</p>
 
         <!-- REGISTRATION WINDOW STATUS -->
@@ -419,9 +451,9 @@
         <div style="margin-bottom:10px">
           <div style="font-size:14px;font-weight:800;color:var(--mid);margin-bottom:7px">🕐 Хичээлийн цагийн сонголт:</div>
           <div style="display:flex;gap:7px;flex-wrap:wrap">
-            <span style="background:#1c1917;color:#fff;border-radius:10px;padding:5px 13px;font-size:13px;font-weight:800">18:00</span>
             <span style="background:#1c1917;color:#fff;border-radius:10px;padding:5px 13px;font-size:13px;font-weight:800">19:00</span>
             <span style="background:#1c1917;color:#fff;border-radius:10px;padding:5px 13px;font-size:13px;font-weight:800">20:00</span>
+            <span style="background:#1c1917;color:#fff;border-radius:10px;padding:5px 13px;font-size:13px;font-weight:800">21:00</span>
             <span style="background:#fee2e2;color:#991b1b;border-radius:10px;padding:5px 13px;font-size:13px;font-weight:800">Дүүрсэн бол 🔒</span>
           </div>
         </div>
@@ -458,7 +490,7 @@
 
         <!-- ONLINE -->
         <div class="mode-block active" data-mode-block="online">
-          <p class="course-desc">Meet уулзалт · 14 хоног тасралтгүй. Насны ангиллаар бүртгэнэ — ангилал тус бүрт 3 сурагч. Хурдан уншиж яриулах, зогсолттой мэдэрч унших, гол санааг тайлбарлах арга эзэмшинэ.</p>
+          <p class="course-desc">Meet уулзалт · 21 хоног тасралтгүй. Насны ангиллаар бүртгэнэ — ангилал тус бүрт 3 сурагч. Хурдан уншиж яриулах, зогсолттой мэдэрч унших, гол санааг тайлбарлах арга эзэмшинэ.</p>
           <div class="age-badges">
             <span class="age-badge">6–9 нас</span>
             <span class="age-badge">10–13 нас</span>
@@ -466,8 +498,8 @@
             <span class="age-badge">18+ нас</span>
           </div>
           <div class="course-meta">
-            <div class="meta-chip"><span>📅</span> 14 хоног Meet</div>
-            <div class="meta-chip"><span>👥</span> Ангилал бүрд 3 суралцагч</div>
+            <div class="meta-chip"><span>📅</span> 21 хоног Meet</div>
+            <div class="meta-chip"><span>👥</span> Ангилалт бүрт 3 суралцагч</div>
             <div class="meta-chip"><span>🗣</span> Ярих · Мэдрэх · Тайлбар</div>
           </div>
           <div style="background:#f0fdf4;border-radius:12px;padding:10px 12px;font-size:14px;color:#065f46;line-height:1.7">
@@ -486,7 +518,7 @@
             <div class="meta-chip"><span>🕐</span> 13:00–15:00</div>
           </div>
           <div style="background:#f0fdf4;border-radius:12px;padding:10px 12px;font-size:14px;color:#065f46;line-height:1.7">
-            📚 <strong>Хэрхэн явагдах:</strong> Хурдан унших → Дахин уншиж ярих → Зогсолттой мэдэрч унших → Үгийн утгыг танин мэдэх- Гол санааг тайлбарлах, ойлгох<br>
+            📚 <strong>Хэрхэн явагдах:</strong> Хурдан унших → Дахин уншиж ярих → Зогсолттой мэдэрч унших → Гол санааг тайлбарлах<br>
             📍 Танхим дээр биечлэн ирж суух шаардлагатай.
           </div>
         </div>
@@ -505,7 +537,7 @@
       <div class="ribbon" id="scriptRibbon">20% CASHBACK</div>
       <div class="course-card-top">
         <div class="course-tag-row">
-          <span class="course-tag tag-limited" id="scriptRegTag">⏳ Бүртгэл явагдаж байна...</span>
+          <span class="course-tag tag-limited" id="scriptRegTag">⏳ Бүртгэл шалгаж байна...</span>
           <div class="stars">
             <span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span>
             <span class="rating-count">(19)</span>
@@ -528,7 +560,7 @@
             <div style="font-size:13px;font-weight:700;color:rgba(255,255,255,.6);text-transform:uppercase;letter-spacing:.1em;margin-bottom:6px">🗓 Анги эхлэх хугацаа</div>
             <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px">
               <div>
-                <div style="font-size:17px;font-weight:800;color:#fff">Дараагийн анги 2026 оны 8 сарын 1</div>
+                <div style="font-size:17px;font-weight:800;color:#fff">2026 оны 5 сарын 18</div>
                 <div style="font-size:15px;color:rgba(255,255,255,.7);margin-top:2px">Орой 19:00 цагт · Google Meet</div>
               </div>
               <div id="scriptCountdown" style="background:rgba(0,0,0,.25);border-radius:10px;padding:8px 12px;text-align:center;min-width:80px">
@@ -593,25 +625,25 @@
     <div class="testi-grid">
       <div class="testi-card">
         <div class="testi-stars">★★★★★</div>
-        <div class="testi-text">"Хүүхэд минь монгол бичигт дуртай болсон. Багш маш сайн сурагчтай харилцаж ажилладаг."</div>
+        <div class="testi-text">"Хүүхэд минь монгол бичигт дуртай болсон. Багш маш тайлбарлах чадвартай, тавтай заадаг."</div>
         <div class="testi-author">
-          <div class="testi-avatar" style="background:#d97706">Д</div>
+          <div class="testi-avatar" style="background:var(--amber)">Д</div>
           <div><div class="testi-name">Дэлгэрмаа</div><div class="testi-role">Эцэг эх · Улаанбаатар</div></div>
         </div>
       </div>
       <div class="testi-card">
         <div class="testi-stars">★★★★★</div>
-        <div class="testi-text">"Гэрийн даалгаврын тусламж маш хэрэгтэй ч их ажилтай. Харин энэ сургалт даалгаврын асуудлыг шийдсэн. Бас хүүхэд маань надтай хамт суухгүйгээр даалгавраа дуусгадаг болсон."</div>
+        <div class="testi-text">"Гэрийн даалгаврын тусламж маш хэрэгтэй болсон. Хүүхэдтэйгээ хамт суухгүйгээр даалгавраа дуусгадаг болсон."</div>
         <div class="testi-author">
-          <div class="testi-avatar" style="background:#059669">Б</div>
+          <div class="testi-avatar" style="background:var(--green)">Б</div>
           <div><div class="testi-name">Батзориг</div><div class="testi-role">Эцэг эх · Дархан</div></div>
         </div>
       </div>
       <div class="testi-card">
         <div class="testi-stars">★★★★☆</div>
-        <div class="testi-text">"Унших сургалт маш их тус болсон. Хүүхэд минь одоо уншихаасаа зугтдаггүй болсон, аяндаа сонирхдог болсон."</div>
+        <div class="testi-text">"Унших сургалт маш их тус болсон. Хүүхэд минь одоо уншихаасаа зугатдаггүй болсон, аяндаа сонирхдог болсон."</div>
         <div class="testi-author">
-          <div class="testi-avatar" style="background:#7c3aed">О</div>
+          <div class="testi-avatar" style="background:var(--purple)">О</div>
           <div><div class="testi-name">Оюунцэцэг</div><div class="testi-role">Эцэг эх · Эрдэнэт</div></div>
         </div>
       </div>
@@ -646,22 +678,22 @@
     </div>
   </div>
 
-  <div class="about-section-title">✨ Бүтээл, санаачилга</div>
+  <div class="about-section-title">✨ Бүтээл, санаачлага</div>
   <div class="about-grid">
     <div class="about-card">
       <div class="about-card-icon">💻</div>
       <div class="about-card-title">Сонирхолтой хэл бичиг</div>
-      <div class="about-card-text">Энэхүү цахим хуудсыг үүсгэн хөгжүүлсэн — тоглоом, сургалт, дасгал ажлыг нэг дор нэгтгэсэн Монгол хэлний цахим платформ.</div>
+      <div class="about-card-text">Энэхүү цахим хуудсыг өөрийн гараар үүсгэн хөгжүүлсэн — тоглоом, сургалт, дасгал ажлыг нэг дор нэгтгэсэн Монгол хэлний цахим платформ.</div>
     </div>
     <div class="about-card">
       <div class="about-card-icon">📘</div>
       <div class="about-card-title">"Үгийг олоорой" 1–5 цуврал</div>
-      <div class="about-card-text">Дасгал ажлын сургалтын материалыг өөрөө боловсруулж гаргасан 5 цуврал дасгалын дэвтэр.</div>
+      <div class="about-card-text">Дасгал ажлын сургалтын материалыг өөрөө боловсруулж гаргасан 5 дэвтэрийн цуврал.</div>
     </div>
     <div class="about-card">
       <div class="about-card-icon">🧭</div>
       <div class="about-card-title">"ТҮШИГ" 5 тулгуурт арга зүй</div>
-      <div class="about-card-text">Олон жилийн туршлагад үндэслэн өөрийн санаачлан боловсруулсан, 5 тулгуурт суралцах арга зүй дээр тулгуурлан хичээллэдэг.</div>
+      <div class="about-card-text">Олон жилийн туршлагадаа үндэслэн өөрөө санаачлан боловсруулсан, 5 тулгуурт суралцах арга зүй дээр тулгуурлан хичээллэдэг.</div>
     </div>
   </div>
 
@@ -733,36 +765,20 @@
       <div class="cp-body">
         <div class="cp-amt" id="cpAmt">Тохируулга</div>
         <div class="cp-amt-sub" id="cpAmtSub">Бүртгүүлсний дараа багш холбоо барина</div>
-        <div class="qr-box"><img src="https://raw.githubusercontent.com/tuult764-crypto/sonirholtoi-hel-bichig-/main/qr.png" alt="QR" onerror="this.style.display='none';this.nextSibling.style.display='flex'"><span style="display:none;font-size:44px">🔲</span></div>
-        <div class="bank-info"><div class="bank-num">ХАС БАНК: 5006069631</div><div class="bank-name">МӨНХДАЛАЙ ТУУЛ</div></div>
-        <div class="bank-note">⚠️ Гүйлгээний <strong>утга</strong> дээр:<br><em>И-мэйл · Сургалтын нэр · Хүссэн цаг</em><br>жш: <em>tanii@gmail.com · Гэрийн даалгавар · 19:00</em></div>
-        <button class="pay-next" onclick="cpGoStep2()">✅ Төлбөр төллөө → Дараах</button>
-        <button class="pay-close-lnk" onclick="closeCoursePayModal()">Хаах</button>
-      </div>
-    </div>
-    <div id="cpStep2" style="display:none">
-      <div class="cp-top">
-        <div class="cp-icon">📧</div>
-        <h3>Бүртгэлийн мэдээлэл</h3>
-        <p>Бүх талбарыг бөглөнө үү</p>
-      </div>
-      <div class="cp-body">
-        <input id="cpName" class="modal-field" type="text" placeholder="Таны нэр (суралцагчийн нэр)">
-        <input id="cpEmail" class="modal-field" type="email" placeholder="И-мэйл хаяг (tanii@gmail.com)">
-        <input id="cpPhone" class="modal-field" type="tel" placeholder="Утасны дугаар">
-        <input id="cpGrade" class="modal-field" type="text" placeholder="Анги (жш: 3-р анги, 9-р анги, насанд хүрэгч)">
-        <input id="cpChildAge" class="modal-field" type="text" placeholder="Нас (жш: 10 нас, 35 нас)">
+
+        <div class="cp-quickfacts" id="cpFacts"></div>
+
         <!-- Time slot picker - homework only -->
-        <div id="cpTimeWrap" style="margin-bottom:12px;display:none">
+        <div id="cpTimeWrap" style="margin-bottom:14px;display:none">
           <div style="font-size:14px;font-weight:800;color:var(--mid);margin-bottom:8px">🕐 Хичээлийн цагаа сонгоно уу <span style="color:var(--red);font-size:12px">(заавал)</span></div>
           <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-bottom:6px">
-            <button class="cp-time-btn" data-time="19:00" onclick="selectTimeSlot(this)" style="padding:12px 6px;border:2px solid var(--border);border-radius:12px;background:#fff;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif;font-size:16px;font-weight:800;text-align:center;transition:all .15s;color:var(--mid)">19:00</button>
-            <button class="cp-time-btn" data-time="20:00" onclick="selectTimeSlot(this)" style="padding:12px 6px;border:2px solid var(--border);border-radius:12px;background:#fff;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif;font-size:16px;font-weight:800;text-align:center;transition:all .15s;color:var(--mid)">20:00</button>
-            <button class="cp-time-btn" data-time="21:00" onclick="selectTimeSlot(this)" style="padding:12px 6px;border:2px solid var(--border);border-radius:12px;background:#fff;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif;font-size:16px;font-weight:800;text-align:center;transition:all .15s;color:var(--mid)">21:00</button>
+            <button class="cp-time-btn" data-time="19:00" onclick="selectTimeSlot(this)" style="padding:12px 6px;border:2px solid var(--border);border-radius:12px;background:#fff;cursor:pointer;font-family:'Manrope',sans-serif;font-size:16px;font-weight:800;text-align:center;transition:all .15s;color:var(--mid)">19:00</button>
+            <button class="cp-time-btn" data-time="20:00" onclick="selectTimeSlot(this)" style="padding:12px 6px;border:2px solid var(--border);border-radius:12px;background:#fff;cursor:pointer;font-family:'Manrope',sans-serif;font-size:16px;font-weight:800;text-align:center;transition:all .15s;color:var(--mid)">20:00</button>
+            <button class="cp-time-btn" data-time="21:00" onclick="selectTimeSlot(this)" style="padding:12px 6px;border:2px solid var(--border);border-radius:12px;background:#fff;cursor:pointer;font-family:'Manrope',sans-serif;font-size:16px;font-weight:800;text-align:center;transition:all .15s;color:var(--mid)">21:00</button>
           </div>
-          <div style="font-size:12px;color:var(--muted);line-height:1.5">⚠️ Цаг бүрд 2 сурагч л бүртгэгдэнэ. Цаг нь дүүрсэн бол багш мэдэгдэнэ.</div>
+          <div style="font-size:12px;color:var(--muted);line-height:1.5">⚠️ Цаг бүрт 2 сурагч л бүртгэгдэнэ. Цаг нь дүүрсэн бол багш мэдэгдэнэ.</div>
         </div>
-        <div id="cpSchedWrap" style="margin-bottom:10px;display:none">
+        <div id="cpSchedWrap" style="margin-bottom:14px;display:none">
           <div style="font-size:14px;font-weight:700;color:var(--mid);margin-bottom:8px">📆 Хүссэн өдрүүд:</div>
           <div class="sched-select-wrap">
             <button class="sched-sel-btn" onclick="toggleSchedBtn(this)">Даваа</button>
@@ -772,17 +788,29 @@
             <button class="sched-sel-btn" onclick="toggleSchedBtn(this)">Баасан</button>
           </div>
         </div>
-        <input id="cpNote" class="modal-field" type="text" placeholder="Нэмэлт тайлбар (заавал биш)">
-        <div style="background:#f0fdf4;border-radius:11px;padding:11px;margin-bottom:12px;font-size:13px;color:#166534;line-height:1.6">📞 Бүртгэл баталгаажсаны дараа багш тан руу <strong>24 цагийн дотор</strong> холбоо барина.</div>
-        <button id="cpSubmitBtn" class="pay-next" onclick="cpSubmit()">🚀 Бүртгэл илгээх</button>
-        <button class="pay-close-lnk" onclick="cpGoStep1()">← Буцах</button>
+
+        <div class="qr-box"><img src="https://raw.githubusercontent.com/tuult764-crypto/sonirholtoi-hel-bichig-/main/qr.png" alt="QR" onerror="this.style.display='none';this.nextSibling.style.display='flex'"><span style="display:none;font-size:52px">🔲</span></div>
+        <div class="bank-info"><div class="bank-num">ХАС БАНК: 5006069631</div><div class="bank-name">МӨНХДАЛАЙ ТУУЛ</div></div>
+        <div class="bank-note">⚠️ Гүйлгээний <strong>утга</strong> дээр:<br><em>И-мэйл · Сургалтын нэр · Хүссэн цаг</em><br>жш: <em>tanii@gmail.com · Гэрийн даалгавар · 19:00</em></div>
+
+        <div class="cp-teacher">
+          <img src="https://raw.githubusercontent.com/tuult764-crypto/sonirholtoi-hel-bichig-/main/teacher.png" alt="Багш" onerror="this.style.display='none'">
+          <div class="cp-teacher-info">
+            <div class="cp-teacher-name">Багш М.Туул</div>
+            <div class="cp-teacher-role">Асуух зүйл байвал шууд холбогдоорой</div>
+            <a class="cp-teacher-call" href="tel:89993835">📞 8999-3835</a>
+          </div>
+        </div>
+
+        <button id="cpSubmitBtn" class="pay-next" onclick="cpConfirmPaid()">✅ Төлбөрөө хийлээ</button>
+        <button class="pay-close-lnk" onclick="closeCoursePayModal()">Хаах</button>
       </div>
     </div>
     <div id="cpStep3" style="display:none;padding:28px 22px;text-align:center">
       <div style="font-size:44px;margin-bottom:10px">🎉</div>
-      <div style="font-size:16px;font-weight:800;color:var(--green);margin-bottom:6px">Бүртгэл амжилттай!</div>
-      <div style="font-size:14px;color:var(--mid);line-height:1.7;margin-bottom:14px">Таны бүртгэл хүлээн авагдлаа.<br>Багш <strong id="cpConfirmName" style="color:var(--amber)"></strong><br>тан руу удахгүй холбоо барина.</div>
-      <div style="background:#f0fdf4;border-radius:11px;padding:11px;font-size:13px;color:#166534;margin-bottom:14px;line-height:1.5">⏱ <strong>24 цагийн дотор</strong> холбоо барина.<br>Асуух зүйл: <strong>sonirholtoihelbichig@gmail.com</strong></div>
+      <div style="font-size:16px;font-weight:800;color:var(--green);margin-bottom:6px">Баталгаажлаа!</div>
+      <div style="font-size:14px;color:var(--mid);line-height:1.7;margin-bottom:14px">Таны бүртгэл хүлээн авагдлаа.<br>Багш <strong style="color:var(--amber)">М.Туул</strong><br>гүйлгээг шалгаад тан руу удахгүй холбоо барина.</div>
+      <div style="background:var(--amber-l);border-radius:11px;padding:11px;font-size:13px;color:var(--amber-d);margin-bottom:14px;line-height:1.5">📞 Асуух зүйл байвал: <strong>8999-3835</strong><br>эсвэл <strong>sonirholtoihelbichig@gmail.com</strong></div>
       <button class="pay-next" onclick="closeCoursePayModal()">✓ Хаах</button>
     </div>
   </div>
