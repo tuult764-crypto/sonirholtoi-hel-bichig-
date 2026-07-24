@@ -27,6 +27,7 @@
       <button class="nav-btn" onclick="showSec('games')">🎮 Тоглоом</button>
       <button class="nav-btn" onclick="showSec('training')">🎓 Сургалт</button>
       <button class="nav-btn" onclick="showSec('shop')">🛒 Дэлгүүр</button>
+      <button class="nav-btn" onclick="showSec('about')">👩‍🏫 Багшийн тухай</button>
     </div>
     <button class="hamburger" id="hamburger" onclick="toggleMobileNav()" aria-label="Цэс">
   <span></span><span></span><span></span>
@@ -36,8 +37,8 @@
 
       <!-- Guest: нэвтрэх / бүртгүүлэх товч -->
       <div id="navGuest" style="display:flex;gap:6px;align-items:center">
-        <button class="btn-g" style="padding:8px 16px;font-size:12px" onclick="openAuth('login')">Нэвтрэх</button>
-        <button class="btn-p" style="padding:8px 16px;font-size:12px" onclick="openAuth('reg')">Бүртгүүлэх</button>
+        <button class="btn-g" style="padding:8px 16px;font-size:15px" onclick="openAuth('login')">Нэвтрэх</button>
+        <button class="btn-p" style="padding:8px 16px;font-size:15px" onclick="openAuth('reg')">Бүртгүүлэх</button>
       </div>
 
       <!-- Logged in: user pill -->
@@ -49,8 +50,8 @@
         <span id="userLabel" style="max-width:80px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">...</span>
         <div class="user-menu">
           <div style="padding:12px 15px;border-bottom:1px solid var(--border)">
-            <div style="font-size:11px;font-weight:800;color:var(--dark)" id="menuUserName">—</div>
-            <div style="font-size:10px;color:var(--muted);margin-top:2px" id="menuUserEmail">—</div>
+            <div style="font-size:14px;font-weight:800;color:var(--dark)" id="menuUserName">—</div>
+            <div style="font-size:13px;color:var(--muted);margin-top:2px" id="menuUserEmail">—</div>
           </div>
           <button onclick="openAvatarPicker(event)">🖼 Профайл зураг солих</button>
           <button onclick="showSec('library')">📚 Миний сан</button>
@@ -69,6 +70,7 @@
   <button class="nav-btn" onclick="showSec('games');closeMobileNav()">🎮 Тоглоом</button>
   <button class="nav-btn" onclick="showSec('training');closeMobileNav()">🎓 Сургалт</button>
   <button class="nav-btn" onclick="showSec('shop');closeMobileNav()">🛒 Дэлгүүр</button>
+  <button class="nav-btn" onclick="showSec('about');closeMobileNav()">👩‍🏫 Багшийн тухай</button>
 </div>
 <main>
 
@@ -85,10 +87,10 @@
       </div>
     </div>
     <div class="hero-cards">
-      <div class="hero-card" style="background:#fff7ed;border-color:#fde68a" onclick="showSec('games')"><div class="icon">🎮</div><h3>Тоглоом</h3></div>
-      <div class="hero-card" style="background:#f0fdf4;border-color:#bbf7d0" onclick="showSec('shop')"><div class="icon">🛒</div><h3>Дэлгүүр</h3></div>
-      <div class="hero-card" style="background:#eff6ff;border-color:#c7deff" onclick="showSec('training')"><div class="icon">🎓</div><h3>Сургалт</h3></div>
-      <div class="hero-card" style="background:#fdf4ff;border-color:#e9d5ff" onclick="showSec('library')"><div class="icon">📚</div><h3>Миний сан</h3></div>
+      <div class="hero-card" style="background:#f7f1e8;border-color:#e6d8c3" onclick="showSec('games')"><div class="icon">🎮</div><h3>Тоглоом</h3></div>
+      <div class="hero-card" style="background:#f2ede4;border-color:#ddd3c2" onclick="showSec('shop')"><div class="icon">🛒</div><h3>Дэлгүүр</h3></div>
+      <div class="hero-card" style="background:#f7f1e8;border-color:#e6d8c3" onclick="showSec('training')"><div class="icon">🎓</div><h3>Сургалт</h3></div>
+      <div class="hero-card" style="background:#f2ede4;border-color:#ddd3c2" onclick="showSec('library')"><div class="icon">📚</div><h3>Миний сан</h3></div>
     </div>
   </div>
 
@@ -141,12 +143,12 @@
     <div>
       <button class="page-back" style="margin-bottom:6px" onclick="showSec('games')">← Буцах</button>
       <h2 style="font-size:20px;font-weight:800;font-family:'Baloo 2',cursive">🔢 Монгол Судоку</h2>
-      <p style="font-size:11px;color:var(--mid)">Тоглох үнэгүй · Хэвлэхэд эрх шаардлагатай</p>
+      <p style="font-size:14px;color:var(--mid)">Тоглох үнэгүй · Хэвлэхэд эрх шаардлагатай</p>
     </div>
     <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
-      <div style="display:flex;align-items:center;gap:8px;background:#fef3c7;border:1.5px solid #fcd34d;border-radius:99px;padding:6px 14px;font-size:12px;font-weight:700;color:var(--amber-d)">
+      <div style="display:flex;align-items:center;gap:8px;background:#fef3c7;border:1.5px solid #fcd34d;border-radius:99px;padding:6px 14px;font-size:15px;font-weight:700;color:var(--amber-d)">
         🖨 <span id="creditCount">0</span> хуудас эрхтэй
-        <button style="font-size:10px;color:var(--blue);text-decoration:underline;background:none;border:none;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif;font-weight:600" onclick="refreshCredits()" id="refreshCreditBtn">⟳ Шинэчлэх</button>
+        <button style="font-size:13px;color:var(--blue);text-decoration:underline;background:none;border:none;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif;font-weight:600" onclick="refreshCredits()" id="refreshCreditBtn">⟳ Шинэчлэх</button>
       </div>
       <button class="btn-p" onclick="initSudoku()">🔄 Шинэ</button>
     </div>
@@ -199,7 +201,7 @@
       <h2 style="font-size:20px;font-weight:800;font-family:'Baloo 2',cursive">🔍 Үгийг олоорой</h2>
     </div>
     <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
-      <select id="wsCatSel" onchange="wsLoadPage()" style="padding:8px 12px;border:1.5px solid var(--border);border-radius:11px;font-family:'Plus Jakarta Sans',sans-serif;font-size:12px;font-weight:600;outline:none;background:#fff;cursor:pointer">
+      <select id="wsCatSel" onchange="wsLoadPage()" style="padding:8px 12px;border:1.5px solid var(--border);border-radius:11px;font-family:'Plus Jakarta Sans',sans-serif;font-size:15px;font-weight:600;outline:none;background:#fff;cursor:pointer">
         <option value="1">📖 Хуудас 1</option><option value="2">📖 Хуудас 2</option>
         <option value="3">📖 Хуудас 3</option><option value="4">📖 Хуудас 4</option>
         <option value="5">📖 Хуудас 5</option>
@@ -209,18 +211,18 @@
   </div>
   <div id="wsLoading" style="text-align:center;padding:48px">
     <div style="width:36px;height:36px;border:3px solid var(--border);border-top-color:var(--amber);border-radius:50%;animation:spin .8s linear infinite;margin:0 auto 14px"></div>
-    <p style="font-size:12px;font-weight:600;color:var(--mid)">Номын хуудас татаж байна…</p>
+    <p style="font-size:15px;font-weight:600;color:var(--mid)">Номын хуудас татаж байна…</p>
   </div>
   <div id="wsNoPdf" style="display:none;max-width:480px;margin:0 auto;text-align:center;padding:40px 20px">
     <div style="font-size:52px;margin-bottom:16px">📄</div>
     <h3 style="font-size:17px;font-weight:800;margin-bottom:10px">PDF файл бэлэн болоогүй байна</h3>
-    <p style="font-size:12px;color:var(--mid);line-height:1.7;margin-bottom:20px">GitHub дээрх <strong>wordsearch.pdf</strong> файлыг байршуулсны дараа тоглоом автоматаар идэвхжинэ.</p>
+    <p style="font-size:15px;color:var(--mid);line-height:1.7;margin-bottom:20px">GitHub дээрх <strong>wordsearch.pdf</strong> файлыг байршуулсны дараа тоглоом автоматаар идэвхжинэ.</p>
     <button class="btn-p" style="margin-top:18px" onclick="showSec('shop')">🛒 Дэлгүүрт очих</button>
   </div>
   <div id="wsGameArea" style="display:none">
     <div style="display:grid;grid-template-columns:1fr 220px;gap:20px;align-items:start">
       <div>
-        <div id="wsFoundCount" style="font-size:12px;font-weight:700;color:var(--mid);margin-bottom:10px"></div>
+        <div id="wsFoundCount" style="font-size:15px;font-weight:700;color:var(--mid);margin-bottom:10px"></div>
         <div id="wsImgWrap" style="position:relative;display:inline-block;max-width:100%;border:2px solid var(--border);border-radius:16px;overflow:hidden;cursor:crosshair;box-shadow:0 4px 20px rgba(0,0,0,0.10)">
           <img id="wsBgImg" src="" alt="Үгийг олоорой" style="display:block;max-width:100%;height:auto;user-select:none;-webkit-user-drag:none">
           <svg id="wsOverlaySvg" style="position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none" xmlns="http://www.w3.org/2000/svg">
@@ -229,12 +231,12 @@
           </svg>
           <div id="wsClickLayer" style="position:absolute;top:0;left:0;width:100%;height:100%;cursor:crosshair"></div>
         </div>
-        <p style="font-size:10px;color:var(--muted);margin-top:8px">💡 Эхний үсгийг дараад сүүлчийн үсгийг дар</p>
+        <p style="font-size:13px;color:var(--muted);margin-top:8px">💡 Эхний үсгийг дараад сүүлчийн үсгийг дар</p>
       </div>
       <div style="display:flex;flex-direction:column;gap:10px">
         <div class="word-list"><h4>🎯 Олох үгс</h4><div id="wordListEl"></div></div>
-        <div id="wsCatInfo" style="background:#f0fdf4;border:1px solid #a7f3d0;border-radius:12px;padding:12px;font-size:10px;color:#065f46;line-height:1.5"></div>
-        <button class="btn-p" style="font-size:11px;padding:9px" onclick="wsReset()">🔄 Дахин эхлэх</button>
+        <div id="wsCatInfo" style="background:#f0fdf4;border:1px solid #a7f3d0;border-radius:12px;padding:12px;font-size:13px;color:#065f46;line-height:1.5"></div>
+        <button class="btn-p" style="font-size:14px;padding:9px" onclick="wsReset()">🔄 Дахин эхлэх</button>
       </div>
     </div>
   </div>
@@ -244,7 +246,7 @@
 <section id="readingSection" class="sec">
   <button class="page-back" onclick="showSec('games')">← Буцах</button>
   <h2 style="font-size:20px;font-weight:800;font-family:'Baloo 2',cursive;margin-bottom:6px">📜 Монгол бичиг унших</h2>
-  <p style="font-size:11px;color:var(--mid);margin-bottom:20px">Тоо орхиод буусан нүдийг зөв үгээр нөхөөрэй</p>
+  <p style="font-size:14px;color:var(--mid);margin-bottom:20px">Тоо орхиод буусан нүдийг зөв үгээр нөхөөрэй</p>
   <div class="read-game">
     <div class="read-score">
       <div class="score-box"><div class="score-num" id="readScore">0</div><div class="score-lbl">Оноо</div></div>
@@ -253,7 +255,7 @@
       <div style="width:1px;height:36px;background:var(--border)"></div>
       <div class="score-box"><div class="score-num" id="readTotal">5</div><div class="score-lbl">Нийт</div></div>
       <div style="flex:1"></div>
-      <button class="btn-p" onclick="startReading()" style="font-size:12px;padding:8px 18px">🔄 Дахин</button>
+      <button class="btn-p" onclick="startReading()" style="font-size:15px;padding:8px 18px">🔄 Дахин</button>
     </div>
     <div class="progress-bar"><div class="progress-fill" id="readProgress" style="width:0%"></div></div>
     <div class="text-display">
@@ -272,7 +274,7 @@
 <section id="horseSection" class="sec">
   <button class="page-back" onclick="showSec('games')">← Буцах</button>
   <h2 style="font-size:20px;font-weight:800;font-family:'Baloo 2',cursive;margin-bottom:4px">🐎 Морь уралдъя</h2>
-  <p style="font-size:11px;color:var(--mid);margin-bottom:20px">Шагайн дүрмээр тоглоно · 1–4 тоглогч · 50 алхам хүрнэ</p>
+  <p style="font-size:14px;color:var(--mid);margin-bottom:20px">Шагайн дүрмээр тоглоно · 1–4 тоглогч · 50 алхам хүрнэ</p>
   <div id="horseSetup" style="max-width:480px;margin:0 auto">
     <div style="background:#fff;border:1.5px solid var(--border);border-radius:22px;padding:28px">
       <h3 style="font-size:16px;font-weight:800;margin-bottom:20px;text-align:center">🎮 Тоглогчийн тоо сонгоно уу</h3>
@@ -283,7 +285,7 @@
         <button class="horse-cnt-btn" id="hcBtn4" onclick="selectPlayerCount(4)" style="padding:16px 6px;border:2px solid var(--border);border-radius:14px;background:#fff;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:14px;color:var(--mid);transition:all .15s"><div style="font-size:24px;margin-bottom:4px">👨‍👩‍👧‍👦</div>4</button>
       </div>
       <div id="playerNamesWrap" style="margin-bottom:20px"></div>
-      <div style="background:#fef9f0;border:1px solid #fde68a;border-radius:12px;padding:12px;font-size:11px;color:#92400e;line-height:1.7;margin-bottom:20px">
+      <div style="background:#fef9f0;border:1px solid #fde68a;border-radius:12px;padding:12px;font-size:14px;color:#92400e;line-height:1.7;margin-bottom:20px">
         <strong>Дүрэм:</strong> 4 бэрх=4 алхам · 3 морь=3 · 2 морь=2 · 1 морь=1 · 0 морь=1<br>
         Нэмэлт асуулт зөв хариулбал +2 алхам нэмнэ. 🎯
       </div>
@@ -293,9 +295,9 @@
   <div id="horseGame" class="horse-game" style="display:none">
     <div class="race-track" id="raceTrack"></div>
     <div class="race-status">
-      <div style="font-size:13px;font-weight:800" id="turnLabel">— — —</div>
+      <div style="font-size:16px;font-weight:800" id="turnLabel">— — —</div>
       <div id="scoreRow" class="player-score-row"></div>
-      <button onclick="resetHorse()" style="background:none;border:1.5px solid var(--border);border-radius:10px;padding:6px 14px;font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;font-weight:700;cursor:pointer;color:var(--mid)">🔄 Дахин</button>
+      <button onclick="resetHorse()" style="background:none;border:1.5px solid var(--border);border-radius:10px;padding:6px 14px;font-family:'Plus Jakarta Sans',sans-serif;font-size:14px;font-weight:700;cursor:pointer;color:var(--mid)">🔄 Дахин</button>
     </div>
     <div class="race-controls">
       <div class="player-panel">
@@ -347,10 +349,10 @@
   <!-- Filter -->
   <div class="training-filter">
     <button class="tr-flt-btn active" onclick="filterTraining('all',this)">Бүгд</button>
-    <button class="tr-flt-btn" onclick="filterTraining('writing',this)">✍️ Бичиг</button>
-    <button class="tr-flt-btn" onclick="filterTraining('homework',this)">📝 Гэрийн даалгавар</button>
+    <button class="tr-flt-btn" onclick="filterTraining('writing',this)">✍️ Бичих</button>
+    <button class="tr-flt-btn" onclick="filterTraining('homework',this)">📝 Даалгавар</button>
     <button class="tr-flt-btn" onclick="filterTraining('reading',this)">📖 Унших</button>
-    <button class="tr-flt-btn" onclick="filterTraining('script',this)">ᠮᠣᠩᠭᠣᠯ ᠪᠢᠴᠢᢉ</button>
+    <button class="tr-flt-btn" onclick="filterTraining('script',this)">Үндэсний бичиг</button>
   </div>
 
   <!-- Course Grid -->
@@ -375,7 +377,7 @@
           <div class="meta-chip"><span>🔞</span> Насны хязгааргүй</div>
           <div class="meta-chip"><span>🎬</span> Видео бичлэг</div>
         </div>
-        <div style="background:#fef9f0;border-radius:12px;padding:10px 12px;font-size:11px;color:#92400e;line-height:1.7">
+        <div style="background:#fef9f0;border-radius:12px;padding:10px 12px;font-size:14px;color:#92400e;line-height:1.7">
           📌 <strong>Хэрхэн явагдах вэ:</strong> Цээж бичиг → Алдаа засах → Дүрмийн бичлэг → Ажлын хуудас → Шалгалт → Дахин цээж бичиг<br>
           ⚠️ 10-аас хэтрэхгүй тоотой бүлэг. Суудал хязгаарлагдмал!
         </div>
@@ -389,7 +391,7 @@
       </div>
     </div>
 
-    <!-- Card 2: Гэрийн даалгавар багштай -->
+    <!-- Card 2: Монгол хэлний даалгавраа багштай хамт -->
     <div class="course-card featured" data-cat="homework" onclick="openCourseDetail('homework')">
       <div class="ribbon">АЛДАРТАЙ</div>
       <div class="course-card-top">
@@ -401,11 +403,11 @@
           </div>
         </div>
         <div class="course-icon-wrap" style="background:#fdf4ff">📝</div>
-        <h3>Монгол хэлний гэрийн даалгаврын сургалт багштай хамтран</h3>
+        <h3>Монгол хэлний бүх төрлийн даалгавраа багштай хамтран хийцгээе</h3>
         <p class="course-desc">Онлайн ганцаарчилсан Meet уулзалт. Анги болон хичээлийн цагаа бүртгүүлж, багш цагт нь тохирох суудал олгоно.</p>
 
         <!-- REGISTRATION WINDOW STATUS -->
-        <div id="hwRegStatus" style="border-radius:12px;padding:10px 12px;font-size:11px;line-height:1.6;margin-bottom:10px;background:#f5f0e8;color:var(--mid)">
+        <div id="hwRegStatus" style="border-radius:12px;padding:10px 12px;font-size:14px;line-height:1.6;margin-bottom:10px;background:#f5f0e8;color:var(--mid)">
           Бүртгэлийн хугацааг тооцоолж байна...
         </div>
 
@@ -415,15 +417,15 @@
           <div class="meta-chip"><span>👤</span> Цагт 2 сурагч</div>
         </div>
         <div style="margin-bottom:10px">
-          <div style="font-size:11px;font-weight:800;color:var(--mid);margin-bottom:7px">🕐 Хичээлийн цагийн сонголт:</div>
+          <div style="font-size:14px;font-weight:800;color:var(--mid);margin-bottom:7px">🕐 Хичээлийн цагийн сонголт:</div>
           <div style="display:flex;gap:7px;flex-wrap:wrap">
-            <span style="background:#1c1917;color:#fff;border-radius:10px;padding:5px 13px;font-size:10px;font-weight:800">19:00</span>
-            <span style="background:#1c1917;color:#fff;border-radius:10px;padding:5px 13px;font-size:10px;font-weight:800">20:00</span>
-            <span style="background:#1c1917;color:#fff;border-radius:10px;padding:5px 13px;font-size:10px;font-weight:800">21:00</span>
-            <span style="background:#fee2e2;color:#991b1b;border-radius:10px;padding:5px 13px;font-size:10px;font-weight:800">Дүүрсэн бол 🔒</span>
+            <span style="background:#1c1917;color:#fff;border-radius:10px;padding:5px 13px;font-size:13px;font-weight:800">18:00</span>
+            <span style="background:#1c1917;color:#fff;border-radius:10px;padding:5px 13px;font-size:13px;font-weight:800">19:00</span>
+            <span style="background:#1c1917;color:#fff;border-radius:10px;padding:5px 13px;font-size:13px;font-weight:800">20:00</span>
+            <span style="background:#fee2e2;color:#991b1b;border-radius:10px;padding:5px 13px;font-size:13px;font-weight:800">Дүүрсэн бол 🔒</span>
           </div>
         </div>
-        <div style="background:#fef9f0;border-radius:12px;padding:10px 12px;font-size:11px;color:#92400e;line-height:1.7">
+        <div style="background:#fef9f0;border-radius:12px;padding:10px 12px;font-size:14px;color:#92400e;line-height:1.7">
           📌 <strong>7 хоног бүрийн Бямба, Нямд бүртгэл авна.</strong> Бүртгэхдээ анги болон хичээлийн цагаа оруулна. Багш цагийг үзээд зөвшөөрвөл баталгаажна.<br>⚠️ Цаг бүрд <strong>2 сурагч</strong> л. Дүүрсэн цаг автоматаар хаагдана.
         </div>
       </div>
@@ -456,7 +458,7 @@
 
         <!-- ONLINE -->
         <div class="mode-block active" data-mode-block="online">
-          <p class="course-desc">Meet уулзалт · 21 хоног тасралтгүй. Насны ангиллаар бүртгэнэ — ангилал тус бүрт 3 сурагч. Хурдан уншиж яриулах, зогсолттой мэдэрч унших, гол санааг тайлбарлах арга эзэмшинэ.</p>
+          <p class="course-desc">Meet уулзалт · 14 хоног тасралтгүй. Насны ангиллаар бүртгэнэ — ангилал тус бүрт 3 сурагч. Хурдан уншиж яриулах, зогсолттой мэдэрч унших, гол санааг тайлбарлах арга эзэмшинэ.</p>
           <div class="age-badges">
             <span class="age-badge">6–9 нас</span>
             <span class="age-badge">10–13 нас</span>
@@ -464,11 +466,11 @@
             <span class="age-badge">18+ нас</span>
           </div>
           <div class="course-meta">
-            <div class="meta-chip"><span>📅</span> 21 хоног Meet</div>
-            <div class="meta-chip"><span>👥</span> Ангилалт бүрт 3 суралцагч</div>
+            <div class="meta-chip"><span>📅</span> 14 хоног Meet</div>
+            <div class="meta-chip"><span>👥</span> Ангилал бүрд 3 суралцагч</div>
             <div class="meta-chip"><span>🗣</span> Ярих · Мэдрэх · Тайлбар</div>
           </div>
-          <div style="background:#f0fdf4;border-radius:12px;padding:10px 12px;font-size:11px;color:#065f46;line-height:1.7">
+          <div style="background:#f0fdf4;border-radius:12px;padding:10px 12px;font-size:14px;color:#065f46;line-height:1.7">
             📚 <strong>Хэрхэн явагдах:</strong> Хурдан унших → Дахин уншиж ярих → Зогсолттой мэдэрч унших → Гол санааг тайлбарлах<br>
             ⚠️ Насны ангилал тус бүрт <strong>3 сурагч</strong> л. Дүүрсэн бол хаагдана.
           </div>
@@ -483,8 +485,8 @@
             <div class="meta-chip"><span>🗓</span> Эхлэх: 07.27</div>
             <div class="meta-chip"><span>🕐</span> 13:00–15:00</div>
           </div>
-          <div style="background:#f0fdf4;border-radius:12px;padding:10px 12px;font-size:11px;color:#065f46;line-height:1.7">
-            📚 <strong>Хэрхэн явагдах:</strong> Хурдан унших → Дахин уншиж ярих → Зогсолттой мэдэрч унших → Гол санааг тайлбарлах<br>
+          <div style="background:#f0fdf4;border-radius:12px;padding:10px 12px;font-size:14px;color:#065f46;line-height:1.7">
+            📚 <strong>Хэрхэн явагдах:</strong> Хурдан унших → Дахин уншиж ярих → Зогсолттой мэдэрч унших → Үгийн утгыг танин мэдэх- Гол санааг тайлбарлах, ойлгох<br>
             📍 Танхим дээр биечлэн ирж суух шаардлагатай.
           </div>
         </div>
@@ -503,7 +505,7 @@
       <div class="ribbon" id="scriptRibbon">20% CASHBACK</div>
       <div class="course-card-top">
         <div class="course-tag-row">
-          <span class="course-tag tag-limited" id="scriptRegTag">⏳ Бүртгэл шалгаж байна...</span>
+          <span class="course-tag tag-limited" id="scriptRegTag">⏳ Бүртгэл явагдаж байна...</span>
           <div class="stars">
             <span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span>
             <span class="rating-count">(19)</span>
@@ -523,15 +525,15 @@
 
           <!-- CLASS START INFO -->
           <div style="background:linear-gradient(135deg,#5b21b6,#7c3aed);border-radius:14px;padding:14px;margin-bottom:10px">
-            <div style="font-size:10px;font-weight:700;color:rgba(255,255,255,.6);text-transform:uppercase;letter-spacing:.1em;margin-bottom:6px">🗓 Анги эхлэх хугацаа</div>
+            <div style="font-size:13px;font-weight:700;color:rgba(255,255,255,.6);text-transform:uppercase;letter-spacing:.1em;margin-bottom:6px">🗓 Анги эхлэх хугацаа</div>
             <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px">
               <div>
-                <div style="font-size:17px;font-weight:800;color:#fff">2026 оны 5 сарын 18</div>
-                <div style="font-size:12px;color:rgba(255,255,255,.7);margin-top:2px">Орой 19:00 цагт · Google Meet</div>
+                <div style="font-size:17px;font-weight:800;color:#fff">Дараагийн анги 2026 оны 8 сарын 1</div>
+                <div style="font-size:15px;color:rgba(255,255,255,.7);margin-top:2px">Орой 19:00 цагт · Google Meet</div>
               </div>
               <div id="scriptCountdown" style="background:rgba(0,0,0,.25);border-radius:10px;padding:8px 12px;text-align:center;min-width:80px">
                 <div style="font-size:18px;font-weight:800;color:#fbbf24;font-family:'Montserrat',sans-serif" id="cdDisplay">--:--:--</div>
-                <div style="font-size:9px;color:rgba(255,255,255,.5);margin-top:1px">үлдсэн хугацаа</div>
+                <div style="font-size:12px;color:rgba(255,255,255,.5);margin-top:1px">үлдсэн хугацаа</div>
               </div>
             </div>
           </div>
@@ -546,15 +548,15 @@
           <!-- Cashback banner -->
           <div style="background:linear-gradient(135deg,#1c1917,#292524);border-radius:14px;padding:14px;margin-bottom:10px;position:relative;overflow:hidden">
             <div style="position:absolute;top:-10px;right:-10px;font-size:48px;opacity:.1">🎁</div>
-            <div style="font-size:11px;font-weight:800;color:#fbbf24;margin-bottom:5px;letter-spacing:.06em">🎁 20% CASHBACK УРАМШУУЛАЛ</div>
-            <div style="font-size:10px;color:rgba(255,255,255,.7);line-height:1.7">Нэг ч өдөр тасалдалгүй өгсөн даалгаврыг бүрэн гүйцэт хийж, хичээлийн үед дүрсээ асааж ярьсан тохиолдолд <strong style="color:#fbbf24">19,800₮ буцаагдана!</strong></div>
+            <div style="font-size:14px;font-weight:800;color:#fbbf24;margin-bottom:5px;letter-spacing:.06em">🎁 20% CASHBACK УРАМШУУЛАЛ</div>
+            <div style="font-size:13px;color:rgba(255,255,255,.7);line-height:1.7">Нэг ч өдөр тасалдалгүй өгсөн даалгаврыг бүрэн гүйцэт хийж, хичээлийн үед дүрсээ асааж ярьсан тохиолдолд <strong style="color:#fbbf24">19,800₮ буцаагдана!</strong></div>
           </div>
 
-          <div style="background:#ede9fe;border-radius:12px;padding:10px 12px;font-size:11px;color:#5b21b6;line-height:1.6">
+          <div style="background:#ede9fe;border-radius:12px;padding:10px 12px;font-size:14px;color:#5b21b6;line-height:1.6">
             ✅ Сургалтын материал болон эх бүгд хичээлийн явцад багшаас гарна. Тусгайлан худалдаж авах шаардлагагүй.
           </div>
           <div class="course-progress"><div class="course-progress-fill" style="width:68%"></div></div>
-          <div style="font-size:10px;color:var(--muted);margin-top:4px">Суудлын тоо хязгаартай</div>
+          <div style="font-size:13px;color:var(--muted);margin-top:4px">Суудлын тоо хязгаартай</div>
         </div>
 
         <!-- ONSITE (ТАНХИМ) -->
@@ -567,7 +569,7 @@
             <div class="meta-chip"><span>🕐</span> 10:00–12:00 / 15:30–17:30</div>
             <div class="meta-chip"><span>👤</span> Макс 10 суралцагч</div>
           </div>
-          <div style="background:#ede9fe;border-radius:12px;padding:10px 12px;font-size:11px;color:#5b21b6;line-height:1.6">
+          <div style="background:#ede9fe;border-radius:12px;padding:10px 12px;font-size:14px;color:#5b21b6;line-height:1.6">
             ✅ Сургалтын материал болон эх бүгд хичээлийн явцад багшаас гарна. Тусгайлан худалдаж авах шаардлагагүй.<br>
             📍 Танхим дээр биечлэн ирж суух шаардлагатай.
           </div>
@@ -591,7 +593,7 @@
     <div class="testi-grid">
       <div class="testi-card">
         <div class="testi-stars">★★★★★</div>
-        <div class="testi-text">"Хүүхэд минь монгол бичигт дуртай болсон. Багш маш тайлбарлах чадвартай, тавтай заадаг."</div>
+        <div class="testi-text">"Хүүхэд минь монгол бичигт дуртай болсон. Багш маш сайн сурагчтай харилцаж ажилладаг."</div>
         <div class="testi-author">
           <div class="testi-avatar" style="background:#d97706">Д</div>
           <div><div class="testi-name">Дэлгэрмаа</div><div class="testi-role">Эцэг эх · Улаанбаатар</div></div>
@@ -599,7 +601,7 @@
       </div>
       <div class="testi-card">
         <div class="testi-stars">★★★★★</div>
-        <div class="testi-text">"Гэрийн даалгаврын тусламж маш хэрэгтэй болсон. Хүүхэдтэйгээ хамт суухгүйгээр даалгавраа дуусгадаг болсон."</div>
+        <div class="testi-text">"Гэрийн даалгаврын тусламж маш хэрэгтэй ч их ажилтай. Харин энэ сургалт даалгаврын асуудлыг шийдсэн. Бас хүүхэд маань надтай хамт суухгүйгээр даалгавраа дуусгадаг болсон."</div>
         <div class="testi-author">
           <div class="testi-avatar" style="background:#059669">Б</div>
           <div><div class="testi-name">Батзориг</div><div class="testi-role">Эцэг эх · Дархан</div></div>
@@ -607,13 +609,64 @@
       </div>
       <div class="testi-card">
         <div class="testi-stars">★★★★☆</div>
-        <div class="testi-text">"Унших сургалт маш их тус болсон. Хүүхэд минь одоо уншихаасаа зугатдаггүй болсон, аяндаа сонирхдог болсон."</div>
+        <div class="testi-text">"Унших сургалт маш их тус болсон. Хүүхэд минь одоо уншихаасаа зугтдаггүй болсон, аяндаа сонирхдог болсон."</div>
         <div class="testi-author">
           <div class="testi-avatar" style="background:#7c3aed">О</div>
           <div><div class="testi-name">Оюунцэцэг</div><div class="testi-role">Эцэг эх · Эрдэнэт</div></div>
         </div>
       </div>
     </div>
+  </div>
+</section>
+
+<!-- ABOUT / БАГШИЙН ТУХАЙ -->
+<section id="aboutSection" class="sec">
+  <button class="page-back" onclick="showSec('home')">← Буцах</button>
+
+  <div class="about-hero">
+    <div class="about-photo-wrap">
+      <img class="about-photo"
+        src="https://raw.githubusercontent.com/tuult764-crypto/sonirholtoi-hel-bichig-/main/teacher.png"
+        alt="Багш М.Туул"
+        onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+      <div class="about-photo-fallback" style="display:none">👩‍🏫</div>
+    </div>
+    <div>
+      <div class="about-name">М.Туул</div>
+      <div class="about-role">Монгол хэл, уран зохиол, Үндэсний бичгийн багш</div>
+      <p class="about-bio">
+        Монгол хэл, уран зохиол болон үндэсний бичгийн чиглэлээр мэргэжлээрээ <strong>10 гаруй жил</strong> ажилласан туршлагатай багш. Өөрийн сонирхлоор уран бийрээр хичээллэдэг бөгөөд мөн <strong>хиймэл оюун ухааны багш</strong> юм. Өөрөө болон дадлагажуулсан шавь нар нь Монгол хэлний олимпиадад <strong>2, 3-р байр</strong> эзэлж байсан удаатай.
+      </p>
+      <div class="about-badges">
+        <span class="about-badge">🎓 10+ жилийн туршлага</span>
+        <span class="about-badge">🤖 Хиймэл оюун ухааны багш</span>
+        <span class="about-badge">🏆 Олимпиадын амжилттай шавь нар</span>
+        <span class="about-badge">🖌 Уран бийр</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="about-section-title">✨ Бүтээл, санаачилга</div>
+  <div class="about-grid">
+    <div class="about-card">
+      <div class="about-card-icon">💻</div>
+      <div class="about-card-title">Сонирхолтой хэл бичиг</div>
+      <div class="about-card-text">Энэхүү цахим хуудсыг үүсгэн хөгжүүлсэн — тоглоом, сургалт, дасгал ажлыг нэг дор нэгтгэсэн Монгол хэлний цахим платформ.</div>
+    </div>
+    <div class="about-card">
+      <div class="about-card-icon">📘</div>
+      <div class="about-card-title">"Үгийг олоорой" 1–5 цуврал</div>
+      <div class="about-card-text">Дасгал ажлын сургалтын материалыг өөрөө боловсруулж гаргасан 5 цуврал дасгалын дэвтэр.</div>
+    </div>
+    <div class="about-card">
+      <div class="about-card-icon">🧭</div>
+      <div class="about-card-title">"ТҮШИГ" 5 тулгуурт арга зүй</div>
+      <div class="about-card-text">Олон жилийн туршлагад үндэслэн өөрийн санаачлан боловсруулсан, 5 тулгуурт суралцах арга зүй дээр тулгуурлан хичээллэдэг.</div>
+    </div>
+  </div>
+
+  <div style="text-align:center;margin-top:36px">
+    <button class="btn-p" onclick="showSec('training')">🎓 Сургалтууд руу очих →</button>
   </div>
 </section>
 
@@ -636,13 +689,13 @@
   <button class="page-back" onclick="showSec('home')">← Буцах</button>
   <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:24px">
     <h2 class="sec-title" style="margin-bottom:0">📚 Миний сан</h2>
-    <button class="btn-p" onclick="loadLibrary()" style="font-size:11px;padding:7px 18px">🔄 Шинэчлэх</button>
+    <button class="btn-p" onclick="loadLibrary()" style="font-size:14px;padding:7px 18px">🔄 Шинэчлэх</button>
   </div>
-  <div id="libStatus" style="display:none;background:#fef3c7;border:1px solid #fcd34d;border-radius:14px;padding:12px 18px;margin-bottom:18px;font-size:12px;color:var(--amber-d);font-weight:600"></div>
+  <div id="libStatus" style="display:none;background:#fef3c7;border:1px solid #fcd34d;border-radius:14px;padding:12px 18px;margin-bottom:18px;font-size:15px;color:var(--amber-d);font-weight:600"></div>
   <div id="libraryGrid" class="prod-grid">
     <div style="grid-column:1/-1;text-align:center;padding:56px;color:#bbb">
       <div style="font-size:44px;margin-bottom:12px">📭</div>
-      <p style="font-size:13px;font-weight:600">Нэвтэрсний дараа таны худалдан авсан бүтээгдэхүүн энд харагдана.</p>
+      <p style="font-size:16px;font-weight:600">Нэвтэрсний дараа таны худалдан авсан бүтээгдэхүүн энд харагдана.</p>
       <button class="btn-p" style="margin-top:18px" onclick="showSec('shop')">Дэлгүүрт очих</button>
     </div>
   </div>
@@ -701,16 +754,16 @@
         <input id="cpChildAge" class="modal-field" type="text" placeholder="Нас (жш: 10 нас, 35 нас)">
         <!-- Time slot picker - homework only -->
         <div id="cpTimeWrap" style="margin-bottom:12px;display:none">
-          <div style="font-size:11px;font-weight:800;color:var(--mid);margin-bottom:8px">🕐 Хичээлийн цагаа сонгоно уу <span style="color:var(--red);font-size:9px">(заавал)</span></div>
+          <div style="font-size:14px;font-weight:800;color:var(--mid);margin-bottom:8px">🕐 Хичээлийн цагаа сонгоно уу <span style="color:var(--red);font-size:12px">(заавал)</span></div>
           <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-bottom:6px">
-            <button class="cp-time-btn" data-time="19:00" onclick="selectTimeSlot(this)" style="padding:12px 6px;border:2px solid var(--border);border-radius:12px;background:#fff;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif;font-size:13px;font-weight:800;text-align:center;transition:all .15s;color:var(--mid)">19:00</button>
-            <button class="cp-time-btn" data-time="20:00" onclick="selectTimeSlot(this)" style="padding:12px 6px;border:2px solid var(--border);border-radius:12px;background:#fff;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif;font-size:13px;font-weight:800;text-align:center;transition:all .15s;color:var(--mid)">20:00</button>
-            <button class="cp-time-btn" data-time="21:00" onclick="selectTimeSlot(this)" style="padding:12px 6px;border:2px solid var(--border);border-radius:12px;background:#fff;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif;font-size:13px;font-weight:800;text-align:center;transition:all .15s;color:var(--mid)">21:00</button>
+            <button class="cp-time-btn" data-time="19:00" onclick="selectTimeSlot(this)" style="padding:12px 6px;border:2px solid var(--border);border-radius:12px;background:#fff;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif;font-size:16px;font-weight:800;text-align:center;transition:all .15s;color:var(--mid)">19:00</button>
+            <button class="cp-time-btn" data-time="20:00" onclick="selectTimeSlot(this)" style="padding:12px 6px;border:2px solid var(--border);border-radius:12px;background:#fff;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif;font-size:16px;font-weight:800;text-align:center;transition:all .15s;color:var(--mid)">20:00</button>
+            <button class="cp-time-btn" data-time="21:00" onclick="selectTimeSlot(this)" style="padding:12px 6px;border:2px solid var(--border);border-radius:12px;background:#fff;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif;font-size:16px;font-weight:800;text-align:center;transition:all .15s;color:var(--mid)">21:00</button>
           </div>
-          <div style="font-size:9px;color:var(--muted);line-height:1.5">⚠️ Цаг бүрт 2 сурагч л бүртгэгдэнэ. Цаг нь дүүрсэн бол багш мэдэгдэнэ.</div>
+          <div style="font-size:12px;color:var(--muted);line-height:1.5">⚠️ Цаг бүрд 2 сурагч л бүртгэгдэнэ. Цаг нь дүүрсэн бол багш мэдэгдэнэ.</div>
         </div>
         <div id="cpSchedWrap" style="margin-bottom:10px;display:none">
-          <div style="font-size:11px;font-weight:700;color:var(--mid);margin-bottom:8px">📆 Хүссэн өдрүүд:</div>
+          <div style="font-size:14px;font-weight:700;color:var(--mid);margin-bottom:8px">📆 Хүссэн өдрүүд:</div>
           <div class="sched-select-wrap">
             <button class="sched-sel-btn" onclick="toggleSchedBtn(this)">Даваа</button>
             <button class="sched-sel-btn" onclick="toggleSchedBtn(this)">Мягмар</button>
@@ -720,7 +773,7 @@
           </div>
         </div>
         <input id="cpNote" class="modal-field" type="text" placeholder="Нэмэлт тайлбар (заавал биш)">
-        <div style="background:#f0fdf4;border-radius:11px;padding:11px;margin-bottom:12px;font-size:10px;color:#166534;line-height:1.6">📞 Бүртгэл баталгаажсаны дараа багш тан руу <strong>24 цагийн дотор</strong> холбоо барина.</div>
+        <div style="background:#f0fdf4;border-radius:11px;padding:11px;margin-bottom:12px;font-size:13px;color:#166534;line-height:1.6">📞 Бүртгэл баталгаажсаны дараа багш тан руу <strong>24 цагийн дотор</strong> холбоо барина.</div>
         <button id="cpSubmitBtn" class="pay-next" onclick="cpSubmit()">🚀 Бүртгэл илгээх</button>
         <button class="pay-close-lnk" onclick="cpGoStep1()">← Буцах</button>
       </div>
@@ -728,8 +781,8 @@
     <div id="cpStep3" style="display:none;padding:28px 22px;text-align:center">
       <div style="font-size:44px;margin-bottom:10px">🎉</div>
       <div style="font-size:16px;font-weight:800;color:var(--green);margin-bottom:6px">Бүртгэл амжилттай!</div>
-      <div style="font-size:11px;color:var(--mid);line-height:1.7;margin-bottom:14px">Таны бүртгэл хүлээн авагдлаа.<br>Багш <strong id="cpConfirmName" style="color:var(--amber)"></strong><br>тан руу удахгүй холбоо барина.</div>
-      <div style="background:#f0fdf4;border-radius:11px;padding:11px;font-size:10px;color:#166534;margin-bottom:14px;line-height:1.5">⏱ <strong>24 цагийн дотор</strong> холбоо барина.<br>Асуух зүйл: <strong>sonirholtoihelbichig@gmail.com</strong></div>
+      <div style="font-size:14px;color:var(--mid);line-height:1.7;margin-bottom:14px">Таны бүртгэл хүлээн авагдлаа.<br>Багш <strong id="cpConfirmName" style="color:var(--amber)"></strong><br>тан руу удахгүй холбоо барина.</div>
+      <div style="background:#f0fdf4;border-radius:11px;padding:11px;font-size:13px;color:#166534;margin-bottom:14px;line-height:1.5">⏱ <strong>24 цагийн дотор</strong> холбоо барина.<br>Асуух зүйл: <strong>sonirholtoihelbichig@gmail.com</strong></div>
       <button class="pay-next" onclick="closeCoursePayModal()">✓ Хаах</button>
     </div>
   </div>
@@ -754,7 +807,7 @@
       <div class="sp-body">
         <input id="spEmail" class="modal-field" type="email" placeholder="tanii@gmail.com">
         <input id="spNote" class="modal-field" type="text" placeholder="Нэмэлт тайлбар (заавал биш)">
-        <div style="background:#f0fdf4;border-radius:11px;padding:11px;margin-bottom:12px;font-size:10px;color:#166534;line-height:1.6">📦 Захиалга баталгаажсаны дараа <strong>24 цагийн дотор</strong> эрхийн код хүлээн авна.</div>
+        <div style="background:#f0fdf4;border-radius:11px;padding:11px;margin-bottom:12px;font-size:13px;color:#166534;line-height:1.6">📦 Захиалга баталгаажсаны дараа <strong>24 цагийн дотор</strong> эрхийн код хүлээн авна.</div>
         <button id="spSubmitBtn" class="pay-next" onclick="spSubmit()">🚀 Захиалга илгээх</button>
         <button class="pay-close-lnk" onclick="spGoStep1()">← Буцах</button>
       </div>
@@ -762,8 +815,8 @@
     <div id="spStep3" style="display:none;padding:28px 22px;text-align:center">
       <div style="font-size:44px;margin-bottom:10px">🎉</div>
       <div style="font-size:16px;font-weight:800;color:var(--green);margin-bottom:6px">Захиалга амжилттай!</div>
-      <div style="font-size:11px;color:var(--mid);line-height:1.7;margin-bottom:14px">Төлбөр шалгагдсаны дараа<br><strong id="spConfirmEmail" style="color:var(--amber)"></strong><br>хаяг руу мэдэгдэл илгээнэ.</div>
-      <div style="background:#f0fdf4;border-radius:11px;padding:11px;font-size:10px;color:#166534;margin-bottom:14px;line-height:1.5">⏱ <strong>1–24 цагийн дотор</strong> хүргэгдэнэ.<br>Асуух зүйл: <strong>sonirholtoihelbichig@gmail.com</strong></div>
+      <div style="font-size:14px;color:var(--mid);line-height:1.7;margin-bottom:14px">Төлбөр шалгагдсаны дараа<br><strong id="spConfirmEmail" style="color:var(--amber)"></strong><br>хаяг руу мэдэгдэл илгээнэ.</div>
+      <div style="background:#f0fdf4;border-radius:11px;padding:11px;font-size:13px;color:#166534;margin-bottom:14px;line-height:1.5">⏱ <strong>1–24 цагийн дотор</strong> хүргэгдэнэ.<br>Асуух зүйл: <strong>sonirholtoihelbichig@gmail.com</strong></div>
       <button class="pay-next" style="margin-bottom:8px" onclick="closeSudokuPay();refreshCredits()">⟳ Эрх шинэчлэх</button>
       <button class="pay-close-lnk" onclick="closeSudokuPay()">Хаах</button>
     </div>
@@ -777,7 +830,7 @@
       <div class="pay-top">
         <div class="lbl">Нийт дүн</div>
         <div id="payAmount" class="amt">0₮</div>
-        <div id="payItemList" style="margin-top:8px;font-size:10px;opacity:.65;line-height:1.8"></div>
+        <div id="payItemList" style="margin-top:8px;font-size:13px;opacity:.65;line-height:1.8"></div>
       </div>
       <div class="pay-body">
         <div class="qr-box"><img src="https://raw.githubusercontent.com/tuult764-crypto/sonirholtoi-hel-bichig-/main/qr.png" alt="QR" onerror="this.style.display='none';this.nextSibling.style.display='flex'"><span style="display:none;font-size:52px">🔲</span></div>
@@ -791,12 +844,12 @@
       <div class="pay-top" style="padding:22px 26px">
         <div style="font-size:26px;margin-bottom:7px">📧</div>
         <div style="font-size:14px;font-weight:800">И-мэйл хаягаа оруулна уу</div>
-        <div style="font-size:10px;opacity:.6;margin-top:5px">Худалдан авсан файлыг энэ хаяг руу илгээнэ</div>
+        <div style="font-size:13px;opacity:.6;margin-top:5px">Худалдан авсан файлыг энэ хаяг руу илгээнэ</div>
       </div>
       <div class="pay-body">
-        <input id="payEmail" type="email" class="modal-field" style="padding:13px 15px;font-size:13px;margin-bottom:9px" placeholder="tanii@gmail.com">
-        <input id="payNote" type="text" class="modal-field" style="padding:11px 15px;font-size:12px;margin-bottom:14px" placeholder="Нэмэлт тайлбар (заавал биш)">
-        <div style="background:#f0fdf4;border-radius:11px;padding:11px 13px;margin-bottom:14px;font-size:11px;color:#166534;line-height:1.6">📦 Захиалга баталгаажсаны дараа та <strong>24 цагийн дотор</strong> файлаа и-мэйлээр хүлээн авна.</div>
+        <input id="payEmail" type="email" class="modal-field" style="padding:13px 15px;font-size:16px;margin-bottom:9px" placeholder="tanii@gmail.com">
+        <input id="payNote" type="text" class="modal-field" style="padding:11px 15px;font-size:15px;margin-bottom:14px" placeholder="Нэмэлт тайлбар (заавал биш)">
+        <div style="background:#f0fdf4;border-radius:11px;padding:11px 13px;margin-bottom:14px;font-size:14px;color:#166534;line-height:1.6">📦 Захиалга баталгаажсаны дараа та <strong>24 цагийн дотор</strong> файлаа и-мэйлээр хүлээн авна.</div>
         <button id="submitOrderBtn" class="pay-next" onclick="submitOrder()">🚀 Захиалга илгээх</button>
         <button class="pay-close-lnk" onclick="goToStep1()">← Буцах</button>
       </div>
@@ -804,8 +857,8 @@
     <div id="payStep3" style="display:none;text-align:center;padding:42px 26px">
       <div style="font-size:52px;margin-bottom:14px">🎉</div>
       <div style="font-size:18px;font-weight:800;color:var(--green);margin-bottom:8px">Захиалга амжилттай!</div>
-      <div style="font-size:12px;color:var(--mid);line-height:1.7;margin-bottom:20px">Таны захиалга бүртгэгдлээ.<br>Төлбөр шалгагдсаны дараа файлыг<br><strong id="confirmEmail" style="color:var(--amber)"></strong><br>хаяг руу илгээнэ.</div>
-      <div style="background:#f0fdf4;border-radius:13px;padding:13px;font-size:11px;color:#166534;margin-bottom:18px">⏱ Ихэвчлэн <strong>1-24 цагийн дотор</strong> хүргэгдэнэ.<br>Асуух зүйл: <strong>sonirholtoihelbichig@gmail.com</strong></div>
+      <div style="font-size:15px;color:var(--mid);line-height:1.7;margin-bottom:20px">Таны захиалга бүртгэгдлээ.<br>Төлбөр шалгагдсаны дараа файлыг<br><strong id="confirmEmail" style="color:var(--amber)"></strong><br>хаяг руу илгээнэ.</div>
+      <div style="background:#f0fdf4;border-radius:13px;padding:13px;font-size:14px;color:#166534;margin-bottom:18px">⏱ Ихэвчлэн <strong>1-24 цагийн дотор</strong> хүргэгдэнэ.<br>Асуух зүйл: <strong>sonirholtoihelbichig@gmail.com</strong></div>
       <button class="pay-next" onclick="closePayment()">✓ Хаах</button>
     </div>
   </div>
