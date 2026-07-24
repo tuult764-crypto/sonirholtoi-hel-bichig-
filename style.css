@@ -353,6 +353,15 @@ main{max-width:1200px;margin:0 auto;padding:32px 20px}
 .age-badges{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:8px}
 .age-badge{background:#eff6ff;color:#1d4ed8;padding:3px 10px;border-radius:99px;font-size:9px;font-weight:800;border:1px solid #bfdbfe}
 
+/* Online / Танхим mode toggle (course cards with both formats) */
+.mode-toggle{display:flex;background:var(--surface2);border-radius:12px;padding:4px;gap:4px;margin-bottom:14px}
+.mode-btn{flex:1;border:none;background:transparent;border-radius:9px;padding:8px 10px;font-family:'Manrope',sans-serif;font-size:11px;font-weight:800;color:var(--muted);cursor:pointer;transition:all .15s;display:flex;align-items:center;justify-content:center;gap:5px}
+.mode-btn.active{background:#fff;color:var(--dark);box-shadow:0 2px 8px rgba(0,0,0,.08)}
+.mode-block{display:none}
+.mode-block.active{display:block}
+.onsite-location{display:flex;align-items:flex-start;gap:8px;background:#eff6ff;border:1px solid #bfdbfe;border-radius:12px;padding:10px 12px;font-size:11px;color:#1d4ed8;line-height:1.6;margin-bottom:10px}
+.onsite-location span{font-size:15px;flex-shrink:0}
+
 /* Schedule chips for homework */
 .schedule-chips{display:flex;gap:5px;flex-wrap:wrap}
 .sched-chip{background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:4px 10px;font-size:9px;font-weight:700;color:var(--mid);cursor:pointer;transition:all .15s}
@@ -517,7 +526,7 @@ footer .copy{color:rgba(255,255,255,.2)}
 
 /* ══════════════════════════════════════════
    RESPONSIVE STYLES — эвхэгдэх цэс, layout тохиргоо
-   (Жижгээс том рүү эрэмбэлэв)
+   (Жижигээс том рүү эрэмбэлэв)
 ══════════════════════════════════════════ */
 
 /* ── max-width:400px ── */
