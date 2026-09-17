@@ -991,6 +991,149 @@
 <div id="toast"></div>
 <div id="printArea"></div>
 
+<!-- ══════════════════════════════════════════════════════
+     AI БАГШ — ХӨВӨГЧ ЧАТ ВИДЖЕТ
+════════════════════════════════════════════════════════ -->
+<style>
+#aiTeacherBtn{
+  position:fixed;bottom:24px;right:24px;z-index:150;
+  width:60px;height:60px;border-radius:50%;
+  background:var(--amber);color:#fff;border:none;cursor:pointer;
+  font-size:26px;display:flex;align-items:center;justify-content:center;
+  box-shadow:0 8px 24px rgba(184,118,63,.4);
+  transition:transform .2s;
+}
+#aiTeacherBtn:hover{transform:scale(1.06)}
+#aiTeacherBadge{
+  position:absolute;top:-4px;right:-4px;background:var(--green);
+  color:#fff;font-size:11px;font-weight:800;border-radius:99px;
+  padding:2px 7px;font-family:'Manrope',sans-serif;
+}
+
+#aiTeacherPanel{
+  position:fixed;bottom:96px;right:24px;z-index:150;
+  width:360px;max-width:calc(100vw - 32px);height:480px;max-height:70vh;
+  background:#fff;border-radius:20px;box-shadow:0 16px 48px rgba(0,0,0,.18);
+  display:none;flex-direction:column;overflow:hidden;
+  font-family:'Manrope',sans-serif;
+}
+#aiTeacherPanel.open{display:flex}
+
+.ait-head{
+  background:var(--dark);color:#fff;padding:16px 18px;
+  display:flex;align-items:center;gap:10px;flex-shrink:0;
+}
+.ait-head .ait-avatar{
+  width:36px;height:36px;border-radius:50%;background:var(--amber-l);
+  display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;
+}
+.ait-head .ait-title{font-family:'Montserrat',sans-serif;font-weight:700;font-size:15px}
+.ait-head .ait-sub{font-size:12px;opacity:.6}
+.ait-close{margin-left:auto;background:rgba(255,255,255,.12);border:none;
+  color:#fff;width:28px;height:28px;border-radius:50%;cursor:pointer;font-size:14px}
+
+.ait-body{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:10px;background:var(--surface)}
+.ait-msg{max-width:82%;padding:10px 13px;border-radius:14px;font-size:14px;line-height:1.6}
+.ait-msg.bot{background:#fff;border:1px solid var(--border);align-self:flex-start;border-bottom-left-radius:4px}
+.ait-msg.user{background:var(--amber);color:#fff;align-self:flex-end;border-bottom-right-radius:4px}
+.ait-msg.typing{color:var(--muted);font-style:italic}
+
+.ait-foot{display:flex;gap:8px;padding:12px;border-top:1px solid var(--border);flex-shrink:0;background:#fff}
+.ait-input{flex:1;border:1.5px solid var(--border);border-radius:99px;padding:10px 15px;
+  font-size:14px;font-family:'Manrope',sans-serif;outline:none;transition:border-color .15s}
+.ait-input:focus{border-color:var(--amber)}
+.ait-send{background:var(--amber);color:#fff;border:none;border-radius:50%;
+  width:38px;height:38px;flex-shrink:0;cursor:pointer;font-size:16px;
+  display:flex;align-items:center;justify-content:center}
+.ait-send:disabled{opacity:.5;cursor:default}
+
+@media(max-width:480px){
+  #aiTeacherPanel{right:12px;bottom:88px;width:calc(100vw - 24px)}
+  #aiTeacherBtn{right:16px;bottom:16px}
+}
+</style>
+
+<button id="aiTeacherBtn" onclick="toggleAiTeacher()" title="AI Багшаас асуух">
+  🎓<span id="aiTeacherBadge" class="hidden">AI</span>
+</button>
+
+<div id="aiTeacherPanel">
+  <div class="ait-head">
+    <div class="ait-avatar">🎓</div>
+    <div>
+      <div class="ait-title">AI Багш</div>
+      <div class="ait-sub">Хэл, бичиг, дүрмийн талаар асуугаарай</div>
+    </div>
+    <button class="ait-close" onclick="toggleAiTeacher()">✕</button>
+  </div>
+  <div class="ait-body" id="aiTeacherBody">
+    <div class="ait-msg bot">Сайн байна уу! 👋 Би "AI Багш" — Монгол хэл, бичиг, дүрмийн талаар асуултад тань туслахад бэлэн байна. Юу мэдэхийг хүсэж байна вэ?</div>
+  </div>
+  <div class="ait-foot">
+    <input id="aiTeacherInput" class="ait-input" type="text" placeholder="Асуултаа бичнэ үү..." onkeydown="if(event.key==='Enter')sendAiTeacherMsg()">
+    <button class="ait-send" id="aiTeacherSendBtn" onclick="sendAiTeacherMsg()">➤</button>
+  </div>
+</div>
+
+<script>
+/* ── AI БАГШ — ЧАТ ЛОГИК ── */
+const AIT_API_URL = '/api/chat'; // сервер дээрх endpoint
+let aiTeacherHistory = []; // {role:'user'|'assistant', content:'...'}
+let aiTeacherOpen = false;
+
+function toggleAiTeacher(){
+  aiTeacherOpen = !aiTeacherOpen;
+  document.getElementById('aiTeacherPanel').classList.toggle('open', aiTeacherOpen);
+  const badge = document.getElementById('aiTeacherBadge');
+  if(aiTeacherOpen && badge) badge.classList.add('hidden');
+  if(aiTeacherOpen) document.getElementById('aiTeacherInput').focus();
+}
+
+function aitAppendMsg(text, who){
+  const body = document.getElementById('aiTeacherBody');
+  const div = document.createElement('div');
+  div.className = 'ait-msg ' + who;
+  div.textContent = text;
+  body.appendChild(div);
+  body.scrollTop = body.scrollHeight;
+  return div;
+}
+
+async function sendAiTeacherMsg(){
+  const input = document.getElementById('aiTeacherInput');
+  const text = input.value.trim();
+  if(!text) return;
+  const sendBtn = document.getElementById('aiTeacherSendBtn');
+
+  aitAppendMsg(text, 'user');
+  aiTeacherHistory.push({role:'user', content:text});
+  input.value = '';
+  sendBtn.disabled = true;
+
+  const typingEl = aitAppendMsg('AI Багш бичиж байна...', 'bot typing');
+
+  try{
+    const resp = await fetch(AIT_API_URL, {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ messages: aiTeacherHistory })
+    });
+    const data = await resp.json();
+    typingEl.remove();
+
+    if(!resp.ok) throw new Error(data.error || 'Алдаа гарлаа');
+
+    const reply = data.reply || 'Уучлаарай, хариулт ирсэнгүй.';
+    aitAppendMsg(reply, 'bot');
+    aiTeacherHistory.push({role:'assistant', content: reply});
+  }catch(e){
+    typingEl.remove();
+    aitAppendMsg('⚠️ Холболтын алдаа гарлаа. Дахин оролдоно уу.', 'bot');
+  }
+  sendBtn.disabled = false;
+}
+</script>
+
 <script src="script.js"></script>
 </body>
-</html>
+</html>м
