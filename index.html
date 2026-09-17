@@ -80,14 +80,14 @@
     <div>
       <span class="hero-tag">Монгол хэл бичгийн цахим систем</span>
       <h1>Хэл бичгийг<br><span class="shimmer">сонирхолтойгоор</span> сур</h1>
-      <p>Орчин үеийн тоглоомын аргаар эх хэлээ төгс эзэмшицгээе. Судоку, үг хайх, монгол бичиг, морин уралдаан — бүгд нэгдсэн.</p>
+      <p>Орчин үеийн тоглоомын аргаар эх хэлээ төгс эзэмшицгээе. Судоку, үг хайх, монгол бичиг, морин уралдаан — бүгд нэг дор.</p>
       <div class="hero-btns">
         <button class="btn-p" onclick="showSec('games')">🎮 Тоглоом эхлэх</button>
         <button class="btn-g" onclick="showSec('training')">🎓 Сургалтууд</button>
       </div>
       <div class="hero-trust">
         <img src="https://raw.githubusercontent.com/tuult764-crypto/sonirholtoi-hel-bichig-/main/teacher.png" alt="Багш М.Туул" onerror="this.style.display='none'">
-        <div class="hero-trust-text"><strong>Багш М.Туул</strong> — Монгол хэл, үндэсний бичгийн 10+ жилийн туршлагатай багш</div>
+        <div class="hero-trust-text"><strong>Багш М.Туул</strong> — 10+ жилийн туршлагатай багш</div>
       </div>
     </div>
     <div class="hero-visual">
@@ -365,174 +365,124 @@
     <div class="training-hero-text">
       <div class="training-hero-tag">🎓 Онлайн сургалт</div>
       <h2>Мэргэжлийн<br>багштай хамтран суралц</h2>
-      <p>Монгол хэл, бичиг, уншлагын мэргэжлийн сургалтууд. Гэрийнхээ тухтай орчинд, өөрийн хурдаар.</p>
+      <p>Монгол хэл, уран зохиол, үндэсний бичиг болон бусад хичээлийн мэргэжлийн сургалтууд. Гэрийнхээ тухтай орчинд, эсвэл танхимд.</p>
     </div>
     <div class="training-hero-emoji">🏫</div>
   </div>
 
   <!-- Stats -->
   <div class="training-stats">
-    <div class="tr-stat"><div class="tr-stat-num">4</div><div class="tr-stat-lbl">Сургалт</div></div>
+    <div class="tr-stat"><div class="tr-stat-num">4</div><div class="tr-stat-lbl">Бүлэг</div></div>
     <div class="tr-stat"><div class="tr-stat-num">1</div><div class="tr-stat-lbl">Мэргэжлийн багш</div></div>
-    <div class="tr-stat"><div class="tr-stat-num">7/7</div><div class="tr-stat-lbl">Долоо хоног</div></div>
-    <div class="tr-stat"><div class="tr-stat-num">1 сар</div><div class="tr-stat-lbl">Хугацаа</div></div>
+    <div class="tr-stat"><div class="tr-stat-num">2</div><div class="tr-stat-lbl">Хэлбэр: Онлайн/Танхим</div></div>
+    <div class="tr-stat"><div class="tr-stat-num">10</div><div class="tr-stat-lbl">Ангид хамгийн ихдээ</div></div>
   </div>
 
   <!-- Filter -->
   <div class="training-filter">
     <button class="tr-flt-btn active" onclick="filterTraining('all',this)">Бүгд</button>
-    <button class="tr-flt-btn" onclick="filterTraining('writing',this)">✍️ Бичиг</button>
-    <button class="tr-flt-btn" onclick="filterTraining('homework',this)">📝 Гэрийн даалгавар</button>
-    <button class="tr-flt-btn" onclick="filterTraining('reading',this)">📖 Унших</button>
+    <button class="tr-flt-btn" onclick="filterTraining('mongol',this)">🗣 Монгол хэл</button>
+    <button class="tr-flt-btn" onclick="filterTraining('literature',this)">📚 Уран зохиол</button>
     <button class="tr-flt-btn" onclick="filterTraining('script',this)">ᠮᠣᠩᠭᠣᠯ ᠪᠢᠴᠢᢉ</button>
+    <button class="tr-flt-btn" onclick="filterTraining('other',this)">📝 Монгол хэл + бусад</button>
   </div>
 
   <!-- Course Grid -->
   <div class="course-grid" id="courseGrid">
 
-    <!-- Card 1: Алдаагүй бичиж сурцгаая -->
-    <div class="course-card" data-cat="writing" onclick="openCourseDetail('writing')">
-      <div class="course-card-top">
-        <div class="course-tag-row">
-          <span class="course-tag tag-free">Цөөн суралцагч</span>
-          <div class="stars">
-            <span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span>
-            <span class="rating-count">(12)</span>
-          </div>
-        </div>
-        <div class="course-icon-wrap" style="background:#fef3c7">✍️</div>
-        <h3>Алдаагүй бичиж сурцгаая</h3>
-        <p class="course-desc">Тасралтгүй 21 хоногийн сургалт. Цээж бичиг бичүүлж, алдааг дараа өдөр нь засан тохирох дүрмийн бичлэг илгээнэ. Нэмэлт ажлын хуудас өгч, даалгавар шалган дахин цээж бичгээр дуусгана.</p>
-        <div class="course-meta">
-          <div class="meta-chip"><span>📅</span> 21 хоног тасралтгүй</div>
-          <div class="meta-chip"><span>👤</span> Макс 10 суралцагч</div>
-          <div class="meta-chip"><span>🔞</span> Насны хязгааргүй</div>
-          <div class="meta-chip"><span>🎬</span> Видео бичлэг</div>
-        </div>
-        <div style="background:#fef9f0;border-radius:12px;padding:10px 12px;font-size:14px;color:#92400e;line-height:1.7">
-          📌 <strong>Хэрхэн явагдах вэ:</strong> Цээж бичиг → Алдаа засах → Дүрмийн бичлэг → Ажлын хуудас → Шалгалт → Дахин цээж бичиг<br>
-          ⚠️ 10-аас хэтрэхгүй тоотой бүлэг. Суудал хязгаарлагдмал!
-        </div>
-      </div>
-      <div class="course-card-foot">
-        <div>
-          <div class="course-price">50,000₮</div>
-          <div class="course-price-sub">21 хоногийн бүрэн сургалт</div>
-        </div>
-        <button class="btn-enroll amber-btn" onclick="event.stopPropagation();openCourseDetail('writing')">Бүртгүүлэх →</button>
-      </div>
-    </div>
-
-    <!-- Card 2: Гэрийн даалгавар багштай -->
-    <div class="course-card featured" data-cat="homework" onclick="openCourseDetail('homework')">
+    <!-- ═══════════════════════════════════
+         Card 1: МОНГОЛ ХЭЛ (Танхим + Онлайн)
+    ═══════════════════════════════════ -->
+    <div class="course-card featured" data-cat="mongol" onclick="openCourseDetail('mongol')">
       <div class="ribbon">АЛДАРТАЙ</div>
       <div class="course-card-top">
         <div class="course-tag-row">
-          <span class="course-tag tag-popular" id="hwRegTag">🔥 Эрэлттэй</span>
+          <span class="course-tag tag-popular">🔥 Эрэлттэй</span>
           <div class="stars">
             <span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span>
-            <span class="rating-count">(28)</span>
+            <span class="rating-count">(24)</span>
           </div>
         </div>
-        <div class="course-icon-wrap" style="background:#fdf4ff">📝</div>
-        <h3>Монгол хэлний гэрийн даалгаврын сургалт багштай хамтран</h3>
-        <p class="course-desc">Онлайн ганцаарчилсан Meet уулзалт. Анги болон хичээлийн цагаа бүртгүүлж, багш цагт нь тохирох суудал олгоно.</p>
-
-        <!-- REGISTRATION WINDOW STATUS -->
-        <div id="hwRegStatus" style="border-radius:12px;padding:10px 12px;font-size:14px;line-height:1.6;margin-bottom:10px;background:#f5f0e8;color:var(--mid)">
-          Бүртгэлийн хугацааг тооцоолж байна...
-        </div>
-
-        <div class="course-meta">
-          <div class="meta-chip"><span>📅</span> Да·Мя·Лх·Пү·Ба хичээл</div>
-          <div class="meta-chip"><span>✏️</span> Бямба·Нямд бүртгэл</div>
-          <div class="meta-chip"><span>👤</span> Цагт 2 сурагч</div>
-        </div>
-        <div style="margin-bottom:10px">
-          <div style="font-size:14px;font-weight:800;color:var(--mid);margin-bottom:7px">🕐 Хичээлийн цагийн сонголт:</div>
-          <div style="display:flex;gap:7px;flex-wrap:wrap">
-            <span style="background:#1c1917;color:#fff;border-radius:10px;padding:5px 13px;font-size:13px;font-weight:800">19:00</span>
-            <span style="background:#1c1917;color:#fff;border-radius:10px;padding:5px 13px;font-size:13px;font-weight:800">20:00</span>
-            <span style="background:#1c1917;color:#fff;border-radius:10px;padding:5px 13px;font-size:13px;font-weight:800">21:00</span>
-            <span style="background:#fee2e2;color:#991b1b;border-radius:10px;padding:5px 13px;font-size:13px;font-weight:800">Дүүрсэн бол 🔒</span>
-          </div>
-        </div>
-        <div style="background:#fef9f0;border-radius:12px;padding:10px 12px;font-size:14px;color:#92400e;line-height:1.7">
-          📌 <strong>7 хоног бүрийн Бямба, Нямд бүртгэл авна.</strong> Бүртгэхдээ анги болон хичээлийн цагаа оруулна. Багш цагийг үзээд зөвшөөрвөл баталгаажна.<br>⚠️ Цаг бүрд <strong>2 сурагч</strong> л. Дүүрсэн цаг автоматаар хаагдана.
-        </div>
-      </div>
-      <div class="course-card-foot">
-        <div>
-          <div class="course-price">1цагийн үнэ 10,000₮</div>
-          <div class="course-price-sub">Анхны хямдралтай үнэ / сар</div>
-        </div>
-        <button class="btn-enroll amber-btn" id="hwEnrollBtn" onclick="event.stopPropagation();handleHomeworkEnroll()">Бүртгүүлэх →</button>
-      </div>
-    </div>
-
-    <!-- Card 3: Унших чадвар -->
-    <div class="course-card" data-cat="reading" onclick="openCourseDetail('reading')">
-      <div class="course-card-top">
-        <div class="course-tag-row">
-          <span class="course-tag tag-new">🆕 Шинэ</span>
-          <div class="stars">
-            <span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star empty">★</span>
-            <span class="rating-count">(7)</span>
-          </div>
-        </div>
-        <div class="course-icon-wrap" style="background:#f0fdf4">📖</div>
-        <h3>Унших чадвараа сайжруулцгаая</h3>
+        <div class="course-icon-wrap" style="background:#fef3c7">🗣</div>
+        <h3>Монгол хэл — Дүрэм, найруулга, бичих чадвар</h3>
 
         <div class="mode-toggle" onclick="event.stopPropagation()">
-          <button class="mode-btn active" onclick="setCourseMode('reading','online',this)">💻 Онлайн</button>
-          <button class="mode-btn" onclick="setCourseMode('reading','onsite',this)">🏫 Танхим</button>
+          <button class="mode-btn active" onclick="setCourseMode('mongol','online',this)">💻 Онлайн</button>
+          <button class="mode-btn" onclick="setCourseMode('mongol','onsite',this)">🏫 Танхим</button>
         </div>
 
         <!-- ONLINE -->
         <div class="mode-block active" data-mode-block="online">
-          <p class="course-desc">Meet уулзалт · 21 хоног тасралтгүй. Насны ангиллаар бүртгэнэ — ангилал тус бүрт 3 сурагч. Хурдан уншиж яриулах, зогсолттой мэдэрч унших, гол санааг тайлбарлах арга эзэмшинэ.</p>
-          <div class="age-badges">
-            <span class="age-badge">6–9 нас</span>
-            <span class="age-badge">10–13 нас</span>
-            <span class="age-badge">14–17 нас</span>
-            <span class="age-badge">18+ нас</span>
-          </div>
+          <p class="course-desc">Бэлэн бичлэг хичээлүүд болон интерактив даалгавартай цахим анги. Бүх сурагчдад нээлттэй — бүртгүүлээд төлбөрөө төлмөгц шууд орж эхэлж болно.</p>
           <div class="course-meta">
-            <div class="meta-chip"><span>📅</span> 21 хоног Meet</div>
-            <div class="meta-chip"><span>👥</span> Ангилалт бүрт 3 суралцагч</div>
-            <div class="meta-chip"><span>🗣</span> Ярих · Мэдрэх · Тайлбар</div>
+            <div class="meta-chip"><span>🎬</span> Бэлэн бичлэг хичээл</div>
+            <div class="meta-chip"><span>📝</span> Интерактив даалгавар</div>
+            <div class="meta-chip"><span>🔓</span> Бүртгэл үргэлж нээлттэй</div>
           </div>
           <div style="background:#f0fdf4;border-radius:12px;padding:10px 12px;font-size:14px;color:#065f46;line-height:1.7">
-            📚 <strong>Хэрхэн явагдах:</strong> Хурдан унших → Дахин уншиж ярих → Зогсолттой мэдэрч унших → Гол санааг тайлбарлах<br>
-            ⚠️ Насны ангилал тус бүрт <strong>3 сурагч</strong> л. Дүүрсэн бол хаагдана.
+            ✅ Бүртгүүлээд мөнгөө төлсөн даруйд хичээлдээ орж эхэлнэ.<br>
+            ⏳ Багц <strong>3 сарын хугацаанд</strong> хүчинтэй. Дуусахад +5,000₮-өөр 1 сараар сунгах боломжтой.
           </div>
         </div>
 
         <!-- ONSITE (ТАНХИМ) -->
         <div class="mode-block" data-mode-block="onsite">
-          <p class="course-desc">Танхим дээр биечлэн явагдах сургалт. Долоо хоногт 3 удаа — Даваа, Лхагва, Баасан гарагуудад хичээллэнэ. Хурдан уншиж яриулах, зогсолттой мэдэрч унших, гол санааг тайлбарлах арга эзэмшинэ.</p>
+          <p class="course-desc">Танхим дээр биечлэн явагдах Монгол хэлний анги. Долоо хоногийн амралтын өдрүүдэд (Бямба, Ням) хичээллэнэ.</p>
           <div class="onsite-location"><span>📍</span> Peace Mall оффисын хаалгаар ороод 9 давхарт, 903 тоот — "Эрдмийн Гүүр" сургалтын танхимд</div>
           <div class="course-meta">
-            <div class="meta-chip"><span>📅</span> Да·Лх·Ба (7 хоногт 3 удаа)</div>
-            <div class="meta-chip"><span>🗓</span> Эхлэх: 07.27</div>
-            <div class="meta-chip"><span>🕐</span> 13:00–15:00</div>
+            <div class="meta-chip"><span>📅</span> Бямба, Ням (амралтын 2 өдөр)</div>
+            <div class="meta-chip"><span>🕐</span> 10:00–12:00 эсвэл 13:00–15:00</div>
+            <div class="meta-chip"><span>👤</span> Макс 10 суралцагч</div>
+            <div class="meta-chip"><span>🗓</span> Сар бүрийн сүүлийн 7 хоногоос бүртгэл</div>
           </div>
-          <div style="background:#f0fdf4;border-radius:12px;padding:10px 12px;font-size:14px;color:#065f46;line-height:1.7">
-            📚 <strong>Хэрхэн явагдах:</strong> Хурдан унших → Дахин уншиж ярих → Зогсолттой мэдэрч унших → Гол санааг тайлбарлах<br>
-            📍 Танхим дээр биечлэн ирж суух шаардлагатай.
+          <div style="background:#fef9f0;border-radius:12px;padding:10px 12px;font-size:14px;color:#92400e;line-height:1.7">
+            📌 Бүртгүүлэхдээ <strong>50,000₮ урьдчилгаа</strong> төлнө. Үлдсэн төлбөрөө сургалтад ирэхдээ багшид өгнө.<br>
+            ⚠️ Ангид зөвхөн <strong>10 хүүхэд</strong> л багтана. Бүртгэл сар бүрийн сүүлийн долоо хоногоос эхэлнэ.
           </div>
         </div>
       </div>
       <div class="course-card-foot">
         <div>
-          <div class="course-price" id="reading-price">99,000₮</div>
-          <div class="course-price-sub" id="reading-priceSub">21 хоног · насны ангиллаар</div>
+          <div class="course-price" id="mongol-price">30,000₮</div>
+          <div class="course-price-sub" id="mongol-priceSub">Онлайн · 3 сар хүчинтэй</div>
         </div>
-        <button class="btn-enroll green-btn" onclick="event.stopPropagation();openCourseDetail('reading')">Бүртгүүлэх →</button>
+        <button class="btn-enroll amber-btn" onclick="event.stopPropagation();openCourseDetail('mongol')">Бүртгүүлэх →</button>
       </div>
     </div>
 
-    <!-- Card 4: Үндэсний бичиг -->
+    <!-- ═══════════════════════════════════
+         Card 2: УРАН ЗОХИОЛ (Тун удахгүй)
+    ═══════════════════════════════════ -->
+    <div class="course-card" data-cat="literature" onclick="openCourseDetail('literature')">
+      <div class="course-card-top">
+        <div class="course-tag-row">
+          <span class="course-tag tag-limited">🔜 Тун удахгүй</span>
+        </div>
+        <div class="course-icon-wrap" style="background:#f0fdf4">📚</div>
+        <h3>Уран зохиолын хичээл</h3>
+        <p class="course-desc">Уншсан зохиол (аудио хичээл), уран зохиолын онолын ойлголт болон интерактив даалгавартай цахим анги.</p>
+        <div class="course-meta">
+          <div class="meta-chip"><span>🎧</span> Уншсан зохиол (аудио)</div>
+          <div class="meta-chip"><span>📖</span> Онолын ойлголт</div>
+          <div class="meta-chip"><span>📝</span> Интерактив даалгавар</div>
+        </div>
+        <div style="background:#fef9f0;border-radius:12px;padding:10px 12px;font-size:14px;color:#92400e;line-height:1.7">
+          ⏳ <strong>Энэ сургалтыг сайтар төлөвлөж байгаа тул тун удахгүй бүртгэл эхэлнэ.</strong><br>
+          📌 Төлөвлөгөө: 6–12-р ангийн уран зохиолын хичээлийн өгүүллэг, туужийг ойлгомжтой байдлаар уншиж бичлэг хийсэн <strong>аудио хичээлүүдийг</strong> хичээлдээ ашиглахад хялбар болгон гаргах болно.
+        </div>
+      </div>
+      <div class="course-card-foot">
+        <div>
+          <div class="course-price" style="color:var(--muted)">Тун удахгүй</div>
+          <div class="course-price-sub">Үнэ тодорхойгүй байна</div>
+        </div>
+        <button class="btn-enroll" style="background:var(--muted);cursor:default" onclick="event.stopPropagation()" disabled>Удахгүй</button>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════
+         Card 3: ҮНДЭСНИЙ БИЧИГ (Танхим + Онлайн)
+    ═══════════════════════════════════ -->
     <div class="course-card" data-cat="script" onclick="openCourseDetail('script')">
       <div class="ribbon" id="scriptRibbon">20% CASHBACK</div>
       <div class="course-card-top">
@@ -593,17 +543,17 @@
 
         <!-- ONSITE (ТАНХИМ) -->
         <div class="mode-block" data-mode-block="onsite">
-          <p class="course-desc">Танхим дээр биечлэн явагдах анхан шатны сургалт. Тасралтгүй 21 өдрийн турш хичээллэнэ. Макс 10 суралцагч.</p>
+          <p class="course-desc">Танхим дээр биечлэн явагдах анхан шатны сургалт. Хагас, бүтэн сайнд (Бямба, Ням) хичээллэнэ.</p>
           <div class="onsite-location"><span>📍</span> Peace Mall оффисын хаалгаар ороод 9 давхарт, 903 тоот — "Эрдмийн Гүүр" сургалтын танхимд</div>
           <div class="course-meta">
-            <div class="meta-chip"><span>📅</span> Тасралтгүй 21 өдөр</div>
-            <div class="meta-chip"><span>🗓</span> Эхлэх: 07.27</div>
-            <div class="meta-chip"><span>🕐</span> 10:00–12:00 / 15:30–17:30</div>
+            <div class="meta-chip"><span>📅</span> Бямба, Ням (амралтын 2 өдөр)</div>
+            <div class="meta-chip"><span>🕐</span> 2 цагийн хичээл</div>
             <div class="meta-chip"><span>👤</span> Макс 10 суралцагч</div>
+            <div class="meta-chip"><span>🗓</span> Сар бүрийн сүүлийн 7 хоногоос бүртгэл</div>
           </div>
-          <div style="background:#ede9fe;border-radius:12px;padding:10px 12px;font-size:14px;color:#5b21b6;line-height:1.6">
-            ✅ Сургалтын материал болон эх бүгд хичээлийн явцад багшаас гарна. Тусгайлан худалдаж авах шаардлагагүй.<br>
-            📍 Танхим дээр биечлэн ирж суух шаардлагатай.
+          <div style="background:#fef9f0;border-radius:12px;padding:10px 12px;font-size:14px;color:#92400e;line-height:1.7">
+            📌 Бүртгүүлэхдээ <strong>50,000₮ урьдчилгаа</strong> төлнө. Үлдсэн төлбөрөө сургалтад ирэхдээ багшид өгнө.<br>
+            ⚠️ Ангид зөвхөн <strong>10 хүүхэд</strong> л багтана.
           </div>
         </div>
 
@@ -614,6 +564,54 @@
           <div class="course-price-sub" id="script-priceSub">Cashback-тэй бол 79,200₮</div>
         </div>
         <button class="btn-enroll" style="background:var(--purple);color:#fff" onclick="event.stopPropagation();openCourseDetail('script')">Бүртгүүлэх →</button>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════
+         Card 4: МОНГОЛ ХЭЛ + БУСАД ХИЧЭЭЛ (Гэрийн даалгавар)
+    ═══════════════════════════════════ -->
+    <div class="course-card" data-cat="other" onclick="openCourseDetail('other')">
+      <div class="course-card-top">
+        <div class="course-tag-row">
+          <span class="course-tag tag-popular" id="hwRegTag">🔥 Эрэлттэй</span>
+          <div class="stars">
+            <span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span>
+            <span class="rating-count">(28)</span>
+          </div>
+        </div>
+        <div class="course-icon-wrap" style="background:#fdf4ff">📝</div>
+        <h3>Монгол хэл + бусад хичээлийн гэрийн даалгаврын тусламж</h3>
+        <p class="course-desc">Онлайн ганцаарчилсан Meet уулзалт. Анги болон хичээлийн цагаа бүртгүүлж, багш цагт нь тохирох суудал олгоно.</p>
+
+        <!-- REGISTRATION WINDOW STATUS -->
+        <div id="hwRegStatus" style="border-radius:12px;padding:10px 12px;font-size:14px;line-height:1.6;margin-bottom:10px;background:#f5f0e8;color:var(--mid)">
+          Бүртгэлийн хугацааг тооцоолж байна...
+        </div>
+
+        <div class="course-meta">
+          <div class="meta-chip"><span>📅</span> Да·Мя·Лх·Пү·Ба хичээл</div>
+          <div class="meta-chip"><span>✏️</span> Бямба·Нямд бүртгэл</div>
+          <div class="meta-chip"><span>👤</span> Цагт 2 сурагч</div>
+        </div>
+        <div style="margin-bottom:10px">
+          <div style="font-size:14px;font-weight:800;color:var(--mid);margin-bottom:7px">🕐 Хичээлийн цагийн сонголт:</div>
+          <div style="display:flex;gap:7px;flex-wrap:wrap">
+            <span style="background:#1c1917;color:#fff;border-radius:10px;padding:5px 13px;font-size:13px;font-weight:800">19:00</span>
+            <span style="background:#1c1917;color:#fff;border-radius:10px;padding:5px 13px;font-size:13px;font-weight:800">20:00</span>
+            <span style="background:#1c1917;color:#fff;border-radius:10px;padding:5px 13px;font-size:13px;font-weight:800">21:00</span>
+            <span style="background:#fee2e2;color:#991b1b;border-radius:10px;padding:5px 13px;font-size:13px;font-weight:800">Дүүрсэн бол 🔒</span>
+          </div>
+        </div>
+        <div style="background:#fef9f0;border-radius:12px;padding:10px 12px;font-size:14px;color:#92400e;line-height:1.7">
+          📌 <strong>7 хоног бүрийн Бямба, Нямд бүртгэл авна.</strong> Бүртгэхдээ анги болон хичээлийн цагаа оруулна. Багш цагийг үзээд зөвшөөрвөл баталгаажна.<br>⚠️ Цаг бүрд <strong>2 сурагч</strong> л. Дүүрсэн цаг автоматаар хаагдана.
+        </div>
+      </div>
+      <div class="course-card-foot">
+        <div>
+          <div class="course-price">1цагийн үнэ 10,000₮</div>
+          <div class="course-price-sub">Анхны хямдралтай үнэ / сар</div>
+        </div>
+        <button class="btn-enroll amber-btn" id="hwEnrollBtn" onclick="event.stopPropagation();handleHomeworkEnroll()">Бүртгүүлэх →</button>
       </div>
     </div>
 
@@ -1067,7 +1065,7 @@
     <button class="ait-close" onclick="toggleAiTeacher()">✕</button>
   </div>
   <div class="ait-body" id="aiTeacherBody">
-    <div class="ait-msg bot">Сайн байна уу! 👋 Би "AI Багш" — Монгол хэл, бичиг, дүрмийн талаар асуултад тань туслахад бэлэн байна. Юу мэдэхийг хүсэж байна вэ?</div>
+    <div class="ait-msg bot">Сайн байна уу! 👋 Би "AI монгол хэлний багш" — Монгол хэл, бичиг, дүрмийн талаар асуултад тань туслахад бэлэн байна. Юу мэдэхийг хүсэж байна вэ?</div>
   </div>
   <div class="ait-foot">
     <input id="aiTeacherInput" class="ait-input" type="text" placeholder="Асуултаа бичнэ үү..." onkeydown="if(event.key==='Enter')sendAiTeacherMsg()">
@@ -1136,4 +1134,4 @@ async function sendAiTeacherMsg(){
 
 <script src="script.js"></script>
 </body>
-</html>м
+</html>
