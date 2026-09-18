@@ -342,80 +342,63 @@ function confirmAvatar() {
 
 /* ════════════════════════════════════
    TRAINING SECTION
+   4 бүлэг: Монгол хэл / Уран зохиол / Үндэсний бичиг / Монгол хэл+бусад
 ════════════════════════════════════ */
 const COURSE_DATA = {
-  writing: {
-    icon:'✍️',
+  mongol: {
+    icon:'🗣',
     color:'#fef3c7',
-    title:'Алдаагүй бичиж сурцгаая',
-    subtitle:'21 хоног тасралтгүй · 50,000₮ · Макс 10 суралцагч',
-    desc:'Тасралтгүй 21 хоногийн онлайн сургалт. Цээж бичиг бичүүлж, алдааг дараа өдөр нь засан тохирох дүрмийн хичээлийн бичлэг илгээнэ. Нэмэлтээр ажлын хуудас өгч, даалгавар шалган дахин цээж бичгээр хичээл дуусгана. Насны хязгааргүй.',
-    features:[
-      {icon:'📝', text:'Цээж бичиг', sub:'Алдааг дараа өдөр засна'},
-      {icon:'🎬', text:'Дүрмийн бичлэг', sub:'Тохирох дүрэм бүрт'},
-      {icon:'📄', text:'Ажлын хуудас', sub:'Нэмэлт дасгал даалгавар'},
-      {icon:'✅', text:'Шалгалт', sub:'Дахин цээж бичгээр дуусгана'},
-    ],
-    hasSchedule: false,
-    hasAge: false,
-    priceNote:'50,000₮ — 21 хоногийн бүрэн сургалт',
-    priceFull:'50,000₮',
-    priceSub:'21 хоног тасралтгүй'
-  },
-  homework: {
-    icon:'📝',
-    color:'#fdf4ff',
-    title:'Гэрийн даалгаврын сургалт багштай хамтран',
-    subtitle:'50,000₮ анхны хямдрал · Ганцаарчилсан Meet · Цагт 2 сурагч',
-    desc:'Онлайн ганцаарчилсан Meet уулзалт. Да·Мя·Лх·Пү·Ба хичээл явагдана. Бямба, Нямд бүртгэл авна. Бүртгэхдээ анги болон хичээлийн цагаа сонгоно — багш цагийг үзээд зөвшөөрвөл баталгаажна. Цаг бүрт 2 сурагч л бүртгэгдэх тул эрт бүртгүүлэхийг зөвлөнө.',
-    features:[
-      {icon:'💻', text:'Онлайн Meet', sub:'Ганцаарчилсан хичээл'},
-      {icon:'📅', text:'Да·Мя·Лх·Пү·Ба', sub:'Хичээлийн өдрүүд'},
-      {icon:'✏️', text:'Бямба·Нямд бүртгэл', sub:'Долоо хоног бүр нээнэ'},
-      {icon:'👤', text:'Цагт 2 сурагч', sub:'Дүүрсэн бол хаагдана'},
-    ],
-    hasSchedule: true,
-    hasAge: false,
-    priceNote:'50,000₮ — Анхны хямдаралтай үнэ / сар',
-    priceFull:'50,000₮',
-    priceSub:'сар / анхны хямдрал'
-  },
-  reading: {
-    icon:'📖',
-    color:'#f0fdf4',
-    title:'Унших чадвараа сайжруулцгаая',
+    title:'Монгол хэл — Дүрэм, найруулга, бичих чадвар',
     hasMode: true,
     modes: {
       online: {
-        subtitle:'99,000₮ · 21 хоног Meet · Ангилалт бүрт 3 суралцагч',
-        desc:'Meet уулзалт · 21 хоног тасралтгүй. Насны ангиллаар бүртгэнэ — ангилал тус бүрт 3 сурагч л, дүүрвэл хаагдана. Хурдан уншиж яриулах, эхийг дахин уншиж мэдэрч унших, зогсолттой ойлгомжтой унших, гол санааг тайлбарлах арга эзэмшинэ.',
+        subtitle:'30,000₮ · 3 сар хүчинтэй · Бэлэн бичлэг + Даалгавар',
+        desc:'Бэлэн бичлэг хичээлүүд болон интерактив даалгавартай цахим анги. Бүх сурагчдад нээлттэй — бүртгүүлээд төлбөрөө төлмөгц шууд орж эхэлж болно.',
         features:[
-          {icon:'⚡', text:'Хурдан унших', sub:'Яриулах дасгалтай'},
-          {icon:'🔄', text:'Дахин уншиж ярих', sub:'Ойлголтоо бататгана'},
-          {icon:'❤️', text:'Мэдэрч унших', sub:'Зогсолттой, ойлгомжтой'},
-          {icon:'💬', text:'Гол санаа тайлбарлах', sub:'Бусдад хүргэх чадвар'},
+          {icon:'🎬', text:'Бэлэн бичлэг хичээл', sub:'Хүссэн үедээ үзнэ'},
+          {icon:'📝', text:'Интерактив даалгавар', sub:'Хичээл бүрийн дараа'},
+          {icon:'🔓', text:'Нээлттэй бүртгэл', sub:'Үргэлж бүртгүүлж болно'},
+          {icon:'⏳', text:'3 сар хүчинтэй', sub:'+5,000₮-өөр 1 сар сунгана'},
         ],
-        hasSchedule:false, hasAge:true, location:null,
-        priceNote:'99,000₮ — 21 хоногийн Meet сургалт',
-        priceFull:'99,000₮',
-        priceSub:'21 хоног · насны ангиллаар'
+        hasSchedule:false, hasAge:false, location:null,
+        priceNote:'30,000₮ — 3 сарын багц',
+        priceFull:'30,000₮',
+        priceSub:'Онлайн · 3 сар хүчинтэй'
       },
       onsite: {
-        subtitle:'200,000₮/сар · Танхим · Да·Лх·Ба',
-        desc:'Танхим дээр биечлэн явагдах сургалт. Долоо хоногт 3 удаа — Даваа, Лхагва, Баасан гарагуудад хичээллэнэ. Хурдан уншиж яриулах, зогсолттой мэдэрч унших, гол санааг тайлбарлах арга эзэмшинэ.',
+        subtitle:'200,000₮ · Танхим · Бямба, Ням',
+        desc:'Танхим дээр биечлэн явагдах Монгол хэлний анги. Долоо хоногийн амралтын өдрүүдэд (Бямба, Ням) хичээллэнэ. Бүртгэл сар бүрийн сүүлийн долоо хоногоос эхэлнэ.',
         features:[
           {icon:'📍', text:'Танхим дээр', sub:'Биечлэн ирж суух'},
-          {icon:'📅', text:'Да·Лх·Ба', sub:'7 хоногт 3 удаа'},
-          {icon:'🗓', text:'Эхлэх: 07.27', sub:'13:00–15:00 цагт'},
-          {icon:'💬', text:'Гол санаа тайлбарлах', sub:'Бусдад хүргэх чадвар'},
+          {icon:'📅', text:'Бямба, Ням', sub:'Амралтын 2 өдөр'},
+          {icon:'🕐', text:'10:00–12:00 / 13:00–15:00', sub:'2 цагийн хичээл'},
+          {icon:'👤', text:'Макс 10 суралцагч', sub:'Цөөн, анхаарал хангалттай'},
         ],
         hasSchedule:false, hasAge:false,
         location:'Peace Mall оффисын хаалгаар ороод 9 давхарт, 903 тоот — "Эрдмийн Гүүр" сургалтын танхимд',
-        priceNote:'200,000₮/сар — Танхимын сургалт',
+        priceNote:'200,000₮ — Урьдчилгаа 50,000₮',
         priceFull:'200,000₮',
-        priceSub:'сард · Да·Лх·Ба 13:00–15:00'
+        priceSub:'Урьдчилгаа 50,000₮ · үлдсэнийг ирэхдээ багшид өгнө'
       }
     }
+  },
+  literature: {
+    icon:'📚',
+    color:'#f0fdf4',
+    title:'Уран зохиолын хичээл',
+    comingSoon: true,
+    subtitle:'🔜 Тун удахгүй бүртгэл эхэлнэ',
+    desc:'Уншсан зохиол (аудио хичээл), уран зохиолын онолын ойлголт болон интерактив даалгавартай цахим анги. Энэ сургалтыг сайтар төлөвлөж байгаа тул тун удахгүй бүртгэл эхэлнэ. Төлөвлөгөө: 6–12-р ангийн уран зохиолын хичээлийн өгүүллэг, туужийг ойлгомжтой байдлаар уншиж бичлэг хийсэн аудио хичээлүүдийг гаргах болно.',
+    features:[
+      {icon:'🎧', text:'Уншсан зохиол', sub:'Аудио хичээл'},
+      {icon:'📖', text:'Онолын ойлголт', sub:'Уран зохиолын онол'},
+      {icon:'📝', text:'Интерактив даалгавар', sub:'Ойлголтоо бататгана'},
+      {icon:'🔜', text:'Тун удахгүй', sub:'Бүртгэл нээгдээгүй байна'},
+    ],
+    hasSchedule:false, hasAge:false, location:null,
+    priceNote:'Тун удахгүй',
+    priceFull:'Тун удахгүй',
+    priceSub:'Үнэ тодорхойгүй байна'
   },
   script: {
     icon:'ᠮ',
@@ -438,26 +421,44 @@ const COURSE_DATA = {
         priceSub:'Cashback-тэй бол 79,200₮'
       },
       onsite: {
-        subtitle:'250,000₮ (урьдчилгаа 50,000₮) · Танхим · 21 өдөр',
-        desc:'Танхим дээр биечлэн явагдах анхан шатны сургалт. Тасралтгүй 21 өдрийн турш хичээллэнэ. Макс 10 суралцагч.',
+        subtitle:'200,000₮ · Танхим · Бямба, Ням',
+        desc:'Танхим дээр биечлэн явагдах анхан шатны сургалт. Хагас, бүтэн сайнд (Бямба, Ням) хичээллэнэ. Бүртгэл сар бүрийн сүүлийн долоо хоногоос эхэлнэ.',
         features:[
           {icon:'📍', text:'Танхим дээр', sub:'Биечлэн ирж суух'},
-          {icon:'📅', text:'Тасралтгүй 21 өдөр', sub:'Эхлэх: 07.27'},
-          {icon:'🕐', text:'10:00–12:00 / 15:30–17:30', sub:'Цагийн сонголт'},
+          {icon:'📅', text:'Бямба, Ням', sub:'Амралтын 2 өдөр'},
+          {icon:'🕐', text:'2 цагийн хичээл', sub:'Цагийг багшаас лавлана'},
           {icon:'👤', text:'Макс 10 суралцагч', sub:'Цөөн, анхаарал хангалттай'},
         ],
         hasSchedule:false, hasAge:false,
         location:'Peace Mall оффисын хаалгаар ороод 9 давхарт, 903 тоот — "Эрдмийн Гүүр" сургалтын танхимд',
-        priceNote:'250,000₮ — Урьдчилгаа 50,000₮',
-        priceFull:'250,000₮',
-        priceSub:'Урьдчилгаа 50,000₮ · 21 өдөр'
+        priceNote:'200,000₮ — Урьдчилгаа 50,000₮',
+        priceFull:'200,000₮',
+        priceSub:'Урьдчилгаа 50,000₮ · үлдсэнийг ирэхдээ багшид өгнө'
       }
     }
+  },
+  other: {
+    icon:'📝',
+    color:'#fdf4ff',
+    title:'Монгол хэл + бусад хичээлийн гэрийн даалгаврын тусламж',
+    subtitle:'50,000₮ анхны хямдрал · Ганцаарчилсан Meet · Цагт 2 сурагч',
+    desc:'Онлайн ганцаарчилсан Meet уулзалт. Да·Мя·Лх·Пү·Ба хичээл явагдана. Бямба, Нямд бүртгэл авна. Бүртгэхдээ анги болон хичээлийн цагаа сонгоно — багш цагийг үзээд зөвшөөрвөл баталгаажна. Цаг бүрт 2 сурагч л бүртгэгдэх тул эрт бүртгүүлэхийг зөвлөнө.',
+    features:[
+      {icon:'💻', text:'Онлайн Meet', sub:'Ганцаарчилсан хичээл'},
+      {icon:'📅', text:'Да·Мя·Лх·Пү·Ба', sub:'Хичээлийн өдрүүд'},
+      {icon:'✏️', text:'Бямба·Нямд бүртгэл', sub:'Долоо хоног бүр нээнэ'},
+      {icon:'👤', text:'Цагт 2 сурагч', sub:'Дүүрсэн бол хаагдана'},
+    ],
+    hasSchedule: true,
+    hasAge: false,
+    priceNote:'50,000₮ — Анхны хямдаралтай үнэ / сар',
+    priceFull:'50,000₮',
+    priceSub:'сар / анхны хямдрал'
   }
 };
 
 /* ── Course mode toggle (Онлайн / Танхим) ── */
-const courseMode = { reading:'online', script:'online' };
+const courseMode = { mongol:'online', script:'online' };
 
 function setCourseMode(type, mode, btnEl) {
   courseMode[type] = mode;
@@ -504,8 +505,8 @@ function openCourseDetail(type) {
     <div style="display:flex;align-items:center;gap:14px">
       <div style="width:56px;height:56px;border-radius:16px;background:${d.color};display:flex;align-items:center;justify-content:center;font-size:28px;flex-shrink:0">${d.icon}</div>
       <div>
-        <div style="font-size:18px;font-weight:800;color:#fff;font-family:'Baloo 2',cursive;line-height:1.2">${d.title}</div>
-        <div style="font-size:11px;color:rgba(255,255,255,.6);margin-top:4px">${d.subtitle}</div>
+        <div style="font-size:18px;font-weight:800;color:#fff;font-family:'Montserrat',sans-serif;line-height:1.2">${d.title}</div>
+        <div style="font-size:13px;color:rgba(255,255,255,.6);margin-top:4px">${d.subtitle}</div>
       </div>
     </div>`;
 
@@ -543,7 +544,7 @@ function openCourseDetail(type) {
       </div>
     </div>` : '';
 
-  const schedSection = (type==='homework') ? `
+  const schedSection = (type==='other') ? `
     <div style="margin-bottom:20px">
       <div style="font-size:13px;font-weight:800;margin-bottom:10px">🕐 Хичээлийн цагийн сонголт</div>
       <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:10px">
@@ -557,6 +558,10 @@ function openCourseDetail(type) {
       </div>
     </div>` : '';
 
+  const enrollSection = raw.comingSoon
+    ? `<div style="background:var(--surface2);border-radius:14px;padding:16px;text-align:center;font-size:14px;color:var(--muted);font-weight:800;margin-bottom:8px">🔜 Тун удахгүй бүртгэл эхэлнэ. Хүлээнэ үү!</div>`
+    : `<button onclick="closeCourseModal();openCoursePayModal('${type}')" class="btn-p" style="width:100%;padding:14px;font-size:14px;border-radius:14px;font-weight:800">🎓 Одоо бүртгүүлэх →</button>`;
+
   document.getElementById('cmBody').innerHTML = `
     <p style="font-size:13px;color:var(--mid);line-height:1.8;margin-bottom:20px">${d.desc}</p>
     <div class="cm-features">
@@ -567,11 +572,11 @@ function openCourseDetail(type) {
     ${cashbackSection}
     ${schedSection}
     <div style="background:#1c1917;border-radius:14px;padding:16px;margin-bottom:16px;display:flex;align-items:center;justify-content:space-between">
-      <div><div style="font-size:10px;color:rgba(255,255,255,.5);text-transform:uppercase;letter-spacing:.1em;margin-bottom:3px">Үнэ</div><div style="font-size:24px;font-weight:800;color:#fbbf24;font-family:'Baloo 2',cursive">${d.priceFull||d.priceNote}</div><div style="font-size:10px;color:rgba(255,255,255,.5);margin-top:2px">${d.priceSub||''}</div></div>
+      <div><div style="font-size:10px;color:rgba(255,255,255,.5);text-transform:uppercase;letter-spacing:.1em;margin-bottom:3px">Үнэ</div><div style="font-size:24px;font-weight:800;color:#fbbf24;font-family:'Montserrat',sans-serif">${d.priceFull||d.priceNote}</div><div style="font-size:10px;color:rgba(255,255,255,.5);margin-top:2px">${d.priceSub||''}</div></div>
       <div style="font-size:32px">💳</div>
     </div>
-    <button onclick="closeCourseModal();openCoursePayModal('${type}')" class="btn-p" style="width:100%;padding:14px;font-size:14px;border-radius:14px;font-weight:800">🎓 Одоо бүртгүүлэх →</button>
-    <button onclick="closeCourseModal()" style="width:100%;padding:10px;margin-top:8px;background:none;border:none;font-size:11px;color:#aaa;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif">Хаах</button>`;
+    ${enrollSection}
+    <button onclick="closeCourseModal()" style="width:100%;padding:10px;margin-top:8px;background:none;border:none;font-size:11px;color:#aaa;cursor:pointer;font-family:'Manrope',sans-serif">Хаах</button>`;
 
   document.getElementById('courseModal').classList.remove('hidden');
 }
@@ -584,7 +589,7 @@ function closeCourseModal() {
 function openCoursePayModal(type) {
   _currentCourseType = type;
   const raw = COURSE_DATA[type];
-  if(!raw) return;
+  if(!raw || raw.comingSoon) return;
   const d = raw.hasMode ? {...raw, ...raw.modes[courseMode[type]||'online']} : raw;
   const modeLabel = raw.hasMode ? (courseMode[type]==='onsite' ? ' (Танхим)' : ' (Онлайн)') : '';
   document.getElementById('cpTitle').textContent = d.title + modeLabel;
@@ -606,9 +611,9 @@ function openCoursePayModal(type) {
   // Show/hide schedule picker
   const sw = document.getElementById('cpSchedWrap');
   if(sw) sw.style.display = d.hasSchedule ? 'block' : 'none';
-  // Show/hide time slot picker (homework only)
+  // Show/hide time slot picker (Монгол хэл + бусад хичээл only)
   const tw = document.getElementById('cpTimeWrap');
-  if(tw) tw.style.display = (type==='homework') ? 'block' : 'none';
+  if(tw) tw.style.display = (type==='other') ? 'block' : 'none';
   // Reset time slot / schedule selections
   document.querySelectorAll('.cp-time-btn').forEach(b=>b.classList.remove('active'));
   document.querySelectorAll('.sched-sel-btn').forEach(b=>b.classList.remove('active'));
@@ -648,7 +653,7 @@ async function cpConfirmPaid() {
   const d = raw.hasMode ? {...raw, ...raw.modes[courseMode[_currentCourseType]||'online']} : raw;
   const modeLabel = raw.hasMode ? (courseMode[_currentCourseType]==='onsite' ? 'Танхим' : 'Онлайн') : '';
 
-  // Homework requires an explicit time slot before confirming
+  // Монгол хэл + бусад хичээл — цаг сонгохгүй бол баталгаажуулахгүй
   const tw = document.getElementById('cpTimeWrap');
   if (tw && tw.style.display !== 'none' && !timeSlot) {
     showToast('Хичээллэх цагаа сонгоно уу', 'error');
@@ -839,11 +844,11 @@ function askPrintCount(){
   const existing=document.getElementById('printCountModal');if(existing)existing.remove();
   const cr=getCredits(),freeAvail=!isFreeUsed(),maxPages=freeAvail?Math.max(cr,1):cr;
   const modal=document.createElement('div');modal.id='printCountModal';
-  modal.style.cssText='position:fixed;inset:0;z-index:99999;background:rgba(0,0,0,.65);display:flex;align-items:center;justify-content:center;padding:18px;font-family:"Plus Jakarta Sans",sans-serif';
+  modal.style.cssText='position:fixed;inset:0;z-index:99999;background:rgba(0,0,0,.65);display:flex;align-items:center;justify-content:center;padding:18px;font-family:"Manrope",sans-serif';
   const maxBtn=Math.min(maxPages,5);
-  const btns=Array.from({length:maxBtn},(_,i)=>i+1).map(n=>`<button id="pcBtn${n}" onclick="selectPrintCount(${n})" style="width:50px;height:50px;border-radius:13px;border:2px solid #e7e5e4;background:#fff;font-size:15px;font-weight:800;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif;color:#57534e">${n}</button>`).join('');
+  const btns=Array.from({length:maxBtn},(_,i)=>i+1).map(n=>`<button id="pcBtn${n}" onclick="selectPrintCount(${n})" style="width:50px;height:50px;border-radius:13px;border:2px solid #e7e5e4;background:#fff;font-size:15px;font-weight:800;cursor:pointer;font-family:'Manrope',sans-serif;color:#57534e">${n}</button>`).join('');
   const creditInfo=cr>0?`Таны эрх: <strong>${cr} хуудас</strong>`:freeAvail?'Үнэгүй: <strong>1 хуудас</strong>':'⚠️ Эрх байхгүй';
-  modal.innerHTML=`<div style="background:#fff;border-radius:22px;padding:28px 24px;width:100%;max-width:320px;text-align:center;box-shadow:0 18px 56px rgba(0,0,0,.3)"><div style="font-size:38px;margin-bottom:10px">🖨️</div><h3 style="font-size:16px;font-weight:800;margin-bottom:7px;color:#1c1917">Хэдэн хуудас хэвлэх вэ?</h3><p style="font-size:11px;color:#57534e;margin-bottom:18px;line-height:1.6">1 хуудас = 4 судоку.<br>${creditInfo}</p><div style="display:flex;gap:7px;justify-content:center;margin-bottom:20px;flex-wrap:wrap">${btns}</div><div id="pcPreview" style="background:#fef3c7;border-radius:11px;padding:9px;font-size:11px;color:#92400e;font-weight:700;margin-bottom:16px;display:none"></div><div style="display:flex;gap:9px"><button onclick="closePrintCountModal()" style="flex:1;padding:12px;border-radius:12px;border:none;background:#f5f5f5;color:#555;font-family:'Plus Jakarta Sans',sans-serif;font-size:12px;font-weight:700;cursor:pointer">Болих</button><button id="pcConfirmBtn" onclick="confirmPrintCount()" style="flex:2;padding:12px;border-radius:12px;border:none;background:var(--amber);color:#fff;font-family:'Plus Jakarta Sans',sans-serif;font-size:12px;font-weight:800;cursor:pointer;opacity:.4;pointer-events:none">🖨️ Хэвлэх</button></div></div>`;
+  modal.innerHTML=`<div style="background:#fff;border-radius:22px;padding:28px 24px;width:100%;max-width:320px;text-align:center;box-shadow:0 18px 56px rgba(0,0,0,.3)"><div style="font-size:38px;margin-bottom:10px">🖨️</div><h3 style="font-size:16px;font-weight:800;margin-bottom:7px;color:#1c1917">Хэдэн хуудас хэвлэх вэ?</h3><p style="font-size:11px;color:#57534e;margin-bottom:18px;line-height:1.6">1 хуудас = 4 судоку.<br>${creditInfo}</p><div style="display:flex;gap:7px;justify-content:center;margin-bottom:20px;flex-wrap:wrap">${btns}</div><div id="pcPreview" style="background:#fef3c7;border-radius:11px;padding:9px;font-size:11px;color:#92400e;font-weight:700;margin-bottom:16px;display:none"></div><div style="display:flex;gap:9px"><button onclick="closePrintCountModal()" style="flex:1;padding:12px;border-radius:12px;border:none;background:#f5f5f5;color:#555;font-family:'Manrope',sans-serif;font-size:12px;font-weight:700;cursor:pointer">Болих</button><button id="pcConfirmBtn" onclick="confirmPrintCount()" style="flex:2;padding:12px;border-radius:12px;border:none;background:var(--amber);color:#fff;font-family:'Manrope',sans-serif;font-size:12px;font-weight:800;cursor:pointer;opacity:.4;pointer-events:none">🖨️ Хэвлэх</button></div></div>`;
   document.body.appendChild(modal);window._selectedPrintCount=0;
 }
 function selectPrintCount(n){if(!n||n<1)return;window._selectedPrintCount=n;[1,2,3,4,5].forEach(i=>{const b=document.getElementById('pcBtn'+i);if(!b)return;b.style.borderColor=i===n?'var(--amber)':'#e7e5e4';b.style.background=i===n?'rgba(217,119,6,.12)':'#fff';b.style.color=i===n?'var(--amber)':'#57534e';});const prev=document.getElementById('pcPreview'),btn=document.getElementById('pcConfirmBtn');if(prev){prev.style.display='block';prev.textContent=`${n} хуудас · ${n*4} судоку хэвлэгдэнэ`;}if(btn){btn.style.opacity='1';btn.style.pointerEvents='auto';}}
@@ -910,7 +915,7 @@ function wsHandleMouseMove(e){if(!wsFirstClick)return;const pos=wsGetPct(e);cons
 function wsHandleClick(e){const pos=wsGetPct(e);if(!wsFirstClick){wsFirstClick=pos;const svg=document.getElementById('wsOverlaySvg');const mark=document.createElementNS('http://www.w3.org/2000/svg','circle');mark.setAttribute('cx',pos.x+'%');mark.setAttribute('cy',pos.y+'%');mark.setAttribute('r','1.2%');mark.setAttribute('fill','rgba(37,99,235,0.5)');mark.setAttribute('class','ws-start-mark');svg.appendChild(mark);const line=document.getElementById('wsActiveLine');line.style.display='';line.setAttribute('x1',pos.x+'%');line.setAttribute('y1',pos.y+'%');line.setAttribute('x2',pos.x+'%');line.setAttribute('y2',pos.y+'%');}else{const endPos=pos;wsDrawLine(wsFirstClick,endPos);wsFirstClick=null;const line=document.getElementById('wsActiveLine');if(line)line.style.display='none';document.querySelectorAll('.ws-start-mark').forEach(m=>m.remove());wsAskWord(endPos);}}
 function wsDrawLine(start,end,color,word){const svg=document.getElementById('wsFoundLines');const line=document.createElementNS('http://www.w3.org/2000/svg','line');line.setAttribute('x1',start.x+'%');line.setAttribute('y1',start.y+'%');line.setAttribute('x2',end.x+'%');line.setAttribute('y2',end.y+'%');line.setAttribute('stroke',color||'rgba(37,99,235,0.45)');line.setAttribute('stroke-width','22');line.setAttribute('stroke-linecap','round');line.setAttribute('opacity','0.55');svg.appendChild(line);}
 const WS_LINE_COLORS=['rgba(59,130,246,0.5)','rgba(16,185,129,0.5)','rgba(245,158,11,0.5)','rgba(139,92,246,0.5)','rgba(239,68,68,0.5)','rgba(6,182,212,0.5)','rgba(236,72,153,0.5)'];
-function wsAskWord(endPos){const remaining=wsWords.filter(w=>!wsFound.includes(w));if(!remaining.length)return;const existing=document.getElementById('wsWordPickModal');if(existing)existing.remove();const modal=document.createElement('div');modal.id='wsWordPickModal';modal.style.cssText='position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,0.5);display:flex;align-items:center;justify-content:center;padding:16px;font-family:"Plus Jakarta Sans",sans-serif';const COLORS=['#3b82f6','#10b981','#f59e0b','#8b5cf6','#ef4444','#06b6d4','#ec4899'];modal.innerHTML=`<div style="background:#fff;border-radius:20px;padding:24px;width:100%;max-width:340px;box-shadow:0 16px 48px rgba(0,0,0,0.25)"><div style="font-size:14px;font-weight:800;margin-bottom:4px">✅ Ямар үг олсон бэ?</div><div style="font-size:11px;color:var(--mid);margin-bottom:16px">Олсон үгээ сонгоно уу</div><div style="display:flex;flex-direction:column;gap:7px;max-height:280px;overflow-y:auto;margin-bottom:14px">${remaining.map((w,i)=>`<button onclick="wsConfirmWord('${w}',${JSON.stringify(endPos)},${i})" style="padding:10px 14px;border:2px solid #e7e5e4;border-radius:12px;background:#fff;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif;font-size:13px;font-weight:700;text-align:left;transition:all .12s;color:#1c1917" onmouseover="this.style.borderColor='${COLORS[i%COLORS.length]}'" onmouseout="this.style.borderColor='#e7e5e4'">${w}</button>`).join('')}</div><button onclick="wsCancelWord()" style="width:100%;padding:10px;border:none;background:#f5f5f5;border-radius:11px;font-size:12px;font-weight:700;cursor:pointer;color:#57534e;font-family:'Plus Jakarta Sans',sans-serif">Болих</button></div>`;document.body.appendChild(modal);}
+function wsAskWord(endPos){const remaining=wsWords.filter(w=>!wsFound.includes(w));if(!remaining.length)return;const existing=document.getElementById('wsWordPickModal');if(existing)existing.remove();const modal=document.createElement('div');modal.id='wsWordPickModal';modal.style.cssText='position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,0.5);display:flex;align-items:center;justify-content:center;padding:16px;font-family:"Manrope",sans-serif';const COLORS=['#3b82f6','#10b981','#f59e0b','#8b5cf6','#ef4444','#06b6d4','#ec4899'];modal.innerHTML=`<div style="background:#fff;border-radius:20px;padding:24px;width:100%;max-width:340px;box-shadow:0 16px 48px rgba(0,0,0,0.25)"><div style="font-size:14px;font-weight:800;margin-bottom:4px">✅ Ямар үг олсон бэ?</div><div style="font-size:11px;color:var(--mid);margin-bottom:16px">Олсон үгээ сонгоно уу</div><div style="display:flex;flex-direction:column;gap:7px;max-height:280px;overflow-y:auto;margin-bottom:14px">${remaining.map((w,i)=>`<button onclick="wsConfirmWord('${w}',${JSON.stringify(endPos)},${i})" style="padding:10px 14px;border:2px solid #e7e5e4;border-radius:12px;background:#fff;cursor:pointer;font-family:'Manrope',sans-serif;font-size:13px;font-weight:700;text-align:left;transition:all .12s;color:#1c1917" onmouseover="this.style.borderColor='${COLORS[i%COLORS.length]}'" onmouseout="this.style.borderColor='#e7e5e4'">${w}</button>`).join('')}</div><button onclick="wsCancelWord()" style="width:100%;padding:10px;border:none;background:#f5f5f5;border-radius:11px;font-size:12px;font-weight:700;cursor:pointer;color:#57534e;font-family:'Manrope',sans-serif">Болих</button></div>`;document.body.appendChild(modal);}
 function wsConfirmWord(word,endPos,colorIdx){document.getElementById('wsWordPickModal')?.remove();const color=WS_LINE_COLORS[colorIdx%WS_LINE_COLORS.length];wsDrawLine({x:parseFloat(document.getElementById('wsActiveLine')?.getAttribute('x1')||50),y:parseFloat(document.getElementById('wsActiveLine')?.getAttribute('y1')||50)},endPos,color,word);wsFound.push(word);renderWordList();updateFoundCount();showToast(`✅ "${word}" олдлоо!`,'success');if(wsFound.length===wsWords.length)setTimeout(()=>showToast('🎉 Бүх үг олдлоо!','success'),600);}
 function wsCancelWord(){document.getElementById('wsWordPickModal')?.remove();const svg=document.getElementById('wsFoundLines');if(svg&&svg.lastChild)svg.removeChild(svg.lastChild);showToast('Шугам арилгагдлаа','error');}
 function wsResetOverlay(){const fl=document.getElementById('wsFoundLines');if(fl)fl.innerHTML='';const al=document.getElementById('wsActiveLine');if(al)al.style.display='none';document.querySelectorAll('.ws-start-mark').forEach(m=>m.remove());wsFirstClick=null;}
@@ -1049,7 +1054,7 @@ function updateScriptUI() {
   }
 }
 
-// ── Гэрийн даалгаврын бүртгэлийн цонх ──
+// ── Монгол хэл + бусад хичээл — бүртгэлийн цонх ──
 function updateHomeworkUI() {
   const now = new Date();
   const regEl    = document.getElementById('hwRegStatus');
@@ -1111,7 +1116,7 @@ function handleHomeworkEnroll() {
     showToast('🔒 ' + msg, 'error');
     return;
   }
-  openCourseDetail('homework');
+  openCourseDetail('other');
 }
 
 // Init + секунд бүр шинэчлэх
