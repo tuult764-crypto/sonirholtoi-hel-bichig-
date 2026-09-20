@@ -633,3 +633,38 @@ footer .copy{color:rgba(255,255,255,.2)}
   .pt td.gv{background:#fef3c7;font-weight:900}
   .pp-g{font-size:7pt;text-align:center;color:#57534e}
 }
+
+/* ══════════════════════════════════════════════════════
+   ХЯЛБАРШУУЛСАН СУРГАЛТЫН КАРТ / ТӨЛБӨРИЙН ЦОНХ
+   ══════════════════════════════════════════════════════ */
+.course-note{background:var(--amber-l);color:var(--amber-d);border-radius:12px;padding:9px 12px;font-size:14px;font-weight:700;line-height:1.5}
+.hw-status{border-radius:12px;padding:9px 12px;font-size:14px;line-height:1.5;margin-bottom:12px;background:var(--surface2);color:var(--mid);font-weight:600}
+.course-time-row{display:flex;align-items:center;gap:7px;flex-wrap:wrap}
+.course-time-row .lbl{font-size:14px;font-weight:700;color:var(--mid)}
+.time-pill{background:var(--dark);color:#fff;border-radius:10px;padding:4px 12px;font-size:13px;font-weight:800}
+
+/* Дэлгэрэнгүй цонх */
+.cm-loc{background:var(--surface2);border-radius:12px;padding:11px 14px;font-size:14px;color:var(--mid);line-height:1.6;margin-bottom:16px}
+.cm-note{background:var(--dark);border-radius:14px;padding:14px 16px;margin-bottom:16px;display:flex;flex-direction:column;gap:5px}
+.cm-note strong{font-size:15px;color:#fbbf24}
+.cm-note span{font-size:13px;color:rgba(255,255,255,.75);line-height:1.6}
+.cm-price{background:var(--dark);border-radius:14px;padding:16px;margin-bottom:16px;display:flex;align-items:center;justify-content:space-between}
+.cm-price-lbl{font-size:12px;color:rgba(255,255,255,.5);text-transform:uppercase;letter-spacing:.1em;margin-bottom:3px}
+.cm-price-amt{font-size:24px;font-weight:800;color:#fbbf24;font-family:'Montserrat',sans-serif}
+.cm-price-sub{font-size:13px;color:rgba(255,255,255,.55);margin-top:2px}
+
+/* Төлбөрийн цонх (сургалт) */
+.cp-pick-title{font-size:14px;font-weight:800;color:var(--mid);margin-bottom:8px}
+.cp-req{color:var(--red);font-size:12px;font-weight:700}
+.cp-time-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:7px}
+.cp-time-btn{padding:12px 6px;border:2px solid var(--border);border-radius:12px;background:#fff;cursor:pointer;font-family:'Manrope',sans-serif;font-size:16px;font-weight:800;text-align:center;transition:all .15s;color:var(--mid)}
+.cp-amt-box{background:var(--surface2);border-radius:16px;padding:14px 12px;margin-bottom:14px;text-align:center}
+.cp-amt-lbl{font-size:12px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:2px}
+.cp-amt-box .cp-amt{margin-bottom:2px}
+.cp-amt-box .cp-amt-sub{margin-bottom:0;line-height:1.5}
+.cp-amt-sub:empty{display:none}
+.qr-hint{text-align:center;font-size:13px;color:var(--mid);margin:-6px 0 12px;line-height:1.5}
+
+/* Ribbon карт дээрх од/шошготой давхцахгүй байхаар дээд зайг нэмнэ */
+.ribbon + .course-card-top{padding-top:52px}
+@media(max-width:768px){.ribbon + .course-card-top{padding-top:46px}}
