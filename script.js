@@ -344,6 +344,26 @@ function confirmAvatar() {
    TRAINING SECTION
    4 бүлэг: Монгол хэл / Уран зохиол / Үндэсний бичиг / Монгол хэл+бусад
 ════════════════════════════════════ */
+/* ── ҮНЭ ─────────────────────────────────────────────────────────
+   Бүх үнийг ЗӨВХӨН ЭНД засна. Сургалтын карт, дэлгэрэнгүй цонх,
+   төлбөрийн (QR) цонх — бүгд эндээс уншдаг тул зөрөхгүй.
+──────────────────────────────────────────────────────────────── */
+const fmtMNT = n => Number(n).toLocaleString('en-US') + '₮';
+const PRICE = {
+  mongolOnline: 30000,   // Монгол хэл · онлайн · 3 сарын багц
+  extendMonth:  5000,    // Онлайн багцыг 1 сараар сунгах
+  onsite:       200000,  // Танхимын сургалт (Монгол хэл, Үндэсний бичиг)
+  deposit:      50000,   // Танхимд бүртгүүлэхэд QR-аар төлөх урьдчилгаа
+  scriptOnline: 99000,   // Үндэсний бичиг · онлайн
+  cashbackPct:  20,      // Үндэсний бичиг онлайн — cashback хувь
+  homework:     50000    // Гэрийн даалгаврын тусламж · сар
+};
+PRICE.cashback  = PRICE.scriptOnline * PRICE.cashbackPct / 100; // 19,800₮
+PRICE.scriptNet = PRICE.scriptOnline - PRICE.cashback;           // 79,200₮
+
+const ONSITE_LOCATION = 'Peace Mall оффисын хаалгаар ороод 9 давхарт, 903 тоот — "Эрдмийн Гүүр" сургалтын танхим';
+
+// total = сургалтын нийт үнэ · payNow = QR/дансаар ОДОО шилжүүлэх дүн
 const COURSE_DATA = {
   mongol: {
     icon:'🗣',
@@ -352,22 +372,23 @@ const COURSE_DATA = {
     hasMode: true,
     modes: {
       online: {
-        subtitle:'30,000₮ · 3 сар хүчинтэй · Бэлэн бичлэг + Даалгавар',
-        desc:'Бэлэн бичлэг хичээлүүд болон интерактив даалгавартай цахим анги. Бүх сурагчдад нээлттэй — бүртгүүлээд төлбөрөө төлмөгц шууд орж эхэлж болно.',
+        subtitle:`${fmtMNT(PRICE.mongolOnline)} · Онлайн · 3 сар`,
+        desc:'Бэлэн бичлэг хичээл, интерактив даалгавартай цахим анги. Төлсөн даруйд эхэлнэ.',
         features:[
-          {icon:'🎬', text:'Бэлэн бичлэг хичээл', sub:'Хүссэн үедээ үзнэ'},
-          {icon:'📝', text:'Интерактив даалгавар', sub:'Хичээл бүрийн дараа'},
-          {icon:'🔓', text:'Нээлттэй бүртгэл', sub:'Үргэлж бүртгүүлж болно'},
-          {icon:'⏳', text:'3 сар хүчинтэй', sub:'+5,000₮-өөр 1 сар сунгана'},
+          {icon:'🎬', text:'Бичлэг хичээл', sub:'Хүссэн үедээ үзнэ'},
+          {icon:'📝', text:'Даалгавар', sub:'Хичээл бүрийн дараа'},
+          {icon:'⏳', text:'3 сар хүчинтэй', sub:`+${fmtMNT(PRICE.extendMonth)}-өөр 1 сар сунгана`},
+          {icon:'🔓', text:'Үргэлж нээлттэй', sub:'Хүссэн үедээ бүртгүүлнэ'},
         ],
         hasSchedule:false, hasAge:false, location:null,
-        priceNote:'30,000₮ — 3 сарын багц',
-        priceFull:'30,000₮',
+        total: PRICE.mongolOnline, payNow: PRICE.mongolOnline,
+        priceNote:`${fmtMNT(PRICE.mongolOnline)} — 3 сарын багц`,
+        priceFull:fmtMNT(PRICE.mongolOnline),
         priceSub:'Онлайн · 3 сар хүчинтэй'
       },
       onsite: {
-        subtitle:'200,000₮ · Танхим · Бямба, Ням',
-        desc:'Танхим дээр биечлэн явагдах Монгол хэлний анги. Долоо хоногийн амралтын өдрүүдэд (Бямба, Ням) хичээллэнэ. Бүртгэл сар бүрийн сүүлийн долоо хоногоос эхэлнэ.',
+        subtitle:`${fmtMNT(PRICE.onsite)} · Танхим · Бямба, Ням`,
+        desc:'Танхимд биечлэн хичээллэнэ. Бүртгэл сар бүрийн сүүлийн долоо хоногоос эхэлнэ (одоогийн бүртгэл 2026.09.17–09.25).',
         features:[
           {icon:'📍', text:'Танхим дээр', sub:'Биечлэн ирж суух'},
           {icon:'📅', text:'Бямба, Ням', sub:'Амралтын 2 өдөр'},
@@ -375,10 +396,11 @@ const COURSE_DATA = {
           {icon:'👤', text:'Макс 10 суралцагч', sub:'Цөөн, анхаарал хангалттай'},
         ],
         hasSchedule:false, hasAge:false,
-        location:'Peace Mall оффисын хаалгаар ороод 9 давхарт, 903 тоот — "Эрдмийн Гүүр" сургалтын танхимд',
-        priceNote:'200,000₮ — Урьдчилгаа 50,000₮',
-        priceFull:'200,000₮',
-        priceSub:'Урьдчилгаа 50,000₮ · үлдсэнийг ирэхдээ багшид өгнө'
+        location:ONSITE_LOCATION,
+        total: PRICE.onsite, payNow: PRICE.deposit,
+        priceNote:`${fmtMNT(PRICE.onsite)} — Урьдчилгаа ${fmtMNT(PRICE.deposit)}`,
+        priceFull:fmtMNT(PRICE.onsite),
+        priceSub:`Урьдчилгаа ${fmtMNT(PRICE.deposit)}`
       }
     }
   },
@@ -388,17 +410,17 @@ const COURSE_DATA = {
     title:'Уран зохиолын хичээл',
     comingSoon: true,
     subtitle:'🔜 Тун удахгүй бүртгэл эхэлнэ',
-    desc:'Уншсан зохиол (аудио хичээл), уран зохиолын онолын ойлголт болон интерактив даалгавартай цахим анги. Энэ сургалтыг сайтар төлөвлөж байгаа тул тун удахгүй бүртгэл эхэлнэ. Төлөвлөгөө: 6–12-р ангийн уран зохиолын хичээлийн өгүүллэг, туужийг ойлгомжтой байдлаар уншиж бичлэг хийсэн аудио хичээлүүдийг гаргах болно.',
+    desc:'Уншсан зохиол (аудио хичээл), онолын ойлголт, даалгавартай цахим сан. 6–12-р ангийн сурах бичгийн зохиолуудыг ойлгомжтой уншсан аудио бичлэгтэй болно.',
     features:[
       {icon:'🎧', text:'Уншсан зохиол', sub:'Аудио хичээл'},
       {icon:'📖', text:'Онолын ойлголт', sub:'Уран зохиолын онол'},
-      {icon:'📝', text:'Интерактив даалгавар', sub:'Ойлголтоо бататгана'},
-      {icon:'🔜', text:'Тун удахгүй', sub:'Бүртгэл нээгдээгүй байна'},
+      {icon:'📝', text:'Даалгавар', sub:'Ойлголтоо бататгана'},
+      {icon:'🔜', text:'Тун удахгүй', sub:'Бүртгэл нээгдээгүй'},
     ],
     hasSchedule:false, hasAge:false, location:null,
     priceNote:'Тун удахгүй',
     priceFull:'Тун удахгүй',
-    priceSub:'Үнэ тодорхойгүй байна'
+    priceSub:'Бүртгэл нээгдээгүй'
   },
   script: {
     icon:'ᠮ',
@@ -407,22 +429,24 @@ const COURSE_DATA = {
     hasMode: true,
     modes: {
       online: {
-        subtitle:'99,000₮ · Meet уулзалт · Макс 10 суралцагч · 20% Cashback',
-        desc:'Meet уулзалт · Анхан шатны сургалт. Сургалтын материал болон эх бүгд хичээлийн явцад багшаас гарна — тусгайлан худалдаж авах шаардлагагүй. Макс 10 суралцагч. Нэг ч өдөр тасалдалгүй даалгавраа бүрэн гүйцэт хийж, хичээлийн үед дүрсээ асааж ярьсан тохиолдолд 20% cashback буцаагдана!',
+        subtitle:`${fmtMNT(PRICE.scriptOnline)} · Meet · ${PRICE.cashbackPct}% Cashback`,
+        desc:'Meet уулзалтаар анхан шатны сургалт. Материалыг багш өгнө — тусад нь худалдаж авах шаардлагагүй.',
         features:[
+          {icon:'🗓', text:'2026.09.17-оос', sub:'Орой 19:00'},
           {icon:'💻', text:'Meet уулзалт', sub:'Онлайн бүлгийн хичээл'},
-          {icon:'📄', text:'Материал бүгд дотроос', sub:'Тусгай зардал байхгүй'},
+          {icon:'📄', text:'Материал багшаас', sub:'Тусгай зардалгүй'},
           {icon:'👤', text:'Макс 10 суралцагч', sub:'Цөөн, анхаарал хангалттай'},
-          {icon:'🎁', text:'20% Cashback', sub:'Тасралтгүй идэвхтэй бол'},
         ],
         hasSchedule:false, hasAge:false, location:null,
-        priceNote:'99,000₮ — Cashback-тэй бол 79,200₮',
-        priceFull:'99,000₮',
-        priceSub:'Cashback-тэй бол 79,200₮'
+        total: PRICE.scriptOnline, payNow: PRICE.scriptOnline,
+        payNote:`Нөхцөл биелвэл ${fmtMNT(PRICE.cashback)} буцаагдана`,
+        priceNote:`${fmtMNT(PRICE.scriptOnline)} — Cashback-тэй бол ${fmtMNT(PRICE.scriptNet)}`,
+        priceFull:fmtMNT(PRICE.scriptOnline),
+        priceSub:`Cashback-тэй бол ${fmtMNT(PRICE.scriptNet)}`
       },
       onsite: {
-        subtitle:'200,000₮ · Танхим · Бямба, Ням',
-        desc:'Танхим дээр биечлэн явагдах анхан шатны сургалт. Хагас, бүтэн сайнд (Бямба, Ням) хичээллэнэ. Бүртгэл сар бүрийн сүүлийн долоо хоногоос эхэлнэ.',
+        subtitle:`${fmtMNT(PRICE.onsite)} · Танхим · Бямба, Ням`,
+        desc:'Танхимд биечлэн хичээллэнэ. Бүртгэл сар бүрийн сүүлийн долоо хоногоос эхэлнэ.',
         features:[
           {icon:'📍', text:'Танхим дээр', sub:'Биечлэн ирж суух'},
           {icon:'📅', text:'Бямба, Ням', sub:'Амралтын 2 өдөр'},
@@ -430,10 +454,11 @@ const COURSE_DATA = {
           {icon:'👤', text:'Макс 10 суралцагч', sub:'Цөөн, анхаарал хангалттай'},
         ],
         hasSchedule:false, hasAge:false,
-        location:'Peace Mall оффисын хаалгаар ороод 9 давхарт, 903 тоот — "Эрдмийн Гүүр" сургалтын танхимд',
-        priceNote:'200,000₮ — Урьдчилгаа 50,000₮',
-        priceFull:'200,000₮',
-        priceSub:'Урьдчилгаа 50,000₮ · үлдсэнийг ирэхдээ багшид өгнө'
+        location:ONSITE_LOCATION,
+        total: PRICE.onsite, payNow: PRICE.deposit,
+        priceNote:`${fmtMNT(PRICE.onsite)} — Урьдчилгаа ${fmtMNT(PRICE.deposit)}`,
+        priceFull:fmtMNT(PRICE.onsite),
+        priceSub:`Урьдчилгаа ${fmtMNT(PRICE.deposit)}`
       }
     }
   },
@@ -441,24 +466,52 @@ const COURSE_DATA = {
     icon:'📝',
     color:'#fdf4ff',
     title:'Монгол хэл + бусад хичээлийн гэрийн даалгаврын тусламж',
-    subtitle:'50,000₮ анхны хямдрал · Ганцаарчилсан Meet · Цагт 2 сурагч',
-    desc:'Онлайн ганцаарчилсан Meet уулзалт. Да·Мя·Лх·Пү·Ба хичээл явагдана. Бямба, Нямд бүртгэл авна. Бүртгэхдээ анги болон хичээлийн цагаа сонгоно — багш цагийг үзээд зөвшөөрвөл баталгаажна. Цаг бүрт 2 сурагч л бүртгэгдэх тул эрт бүртгүүлэхийг зөвлөнө.',
+    subtitle:`${fmtMNT(PRICE.homework)} / сар · Ганцаарчилсан Meet · Цагт 2 сурагч`,
+    desc:'Онлайн ганцаарчилсан Meet. Даваа–Баасан хичээллэнэ, Бямба·Нямд бүртгэл авна. Цагаа сонгоод бүртгүүлнэ — багш зөвшөөрвөл баталгаажна.',
     features:[
       {icon:'💻', text:'Онлайн Meet', sub:'Ганцаарчилсан хичээл'},
-      {icon:'📅', text:'Да·Мя·Лх·Пү·Ба', sub:'Хичээлийн өдрүүд'},
+      {icon:'📅', text:'Даваа–Баасан', sub:'Хичээлийн өдрүүд'},
       {icon:'✏️', text:'Бямба·Нямд бүртгэл', sub:'Долоо хоног бүр нээнэ'},
       {icon:'👤', text:'Цагт 2 сурагч', sub:'Дүүрсэн бол хаагдана'},
     ],
     hasSchedule: true,
     hasAge: false,
-    priceNote:'50,000₮ — Анхны хямдаралтай үнэ / сар',
-    priceFull:'50,000₮',
-    priceSub:'сар / анхны хямдрал'
+    total: PRICE.homework, payNow: PRICE.homework,
+    priceNote:`${fmtMNT(PRICE.homework)} — Анхны хямдаралтай үнэ / сар`,
+    priceFull:fmtMNT(PRICE.homework),
+    priceSub:'Сар · анхны хямдрал'
   }
 };
 
+/* ── Тухайн сургалтын (горимын) үнийн мэдээлэл — карт, modal, төлбөр нэг эх сурвалжтай ── */
+function getCourseInfo(type) {
+  const raw  = COURSE_DATA[type] || {};
+  const mode = courseMode[type] || 'online';
+  const d    = raw.hasMode ? {...raw, ...raw.modes[mode]} : raw;
+  const modeLabel = raw.hasMode ? (mode === 'onsite' ? 'Танхим' : 'Онлайн') : '';
+  const total  = d.total || 0;
+  const payNow = d.payNow != null ? d.payNow : total;
+  return { d, modeLabel, total, payNow, isDeposit: payNow < total };
+}
+
 /* ── Course mode toggle (Онлайн / Танхим) ── */
 const courseMode = { mongol:'online', script:'online' };
+
+/* ── Картуудын анхны үнийг data-аас тавина (HTML-тэй зөрөхгүй) ── */
+function initCoursePrices() {
+  const set = (id, txt) => { const el = document.getElementById(id); if (el) el.textContent = txt; };
+  ['mongol','script'].forEach(t => {
+    const m = COURSE_DATA[t].modes[courseMode[t]];
+    set(`${t}-price`, m.priceFull);
+    set(`${t}-priceSub`, m.priceSub);
+  });
+  set('hw-price',    COURSE_DATA.other.priceFull);
+  set('hw-priceSub', COURSE_DATA.other.priceSub);
+  set('scriptCashbackNote', `🎁 ${PRICE.cashbackPct}% cashback — ${fmtMNT(PRICE.cashback)} буцаагдана`);
+  set('scriptRibbon', `${PRICE.cashbackPct}% CASHBACK`);
+}
+initCoursePrices();
+
 
 function setCourseMode(type, mode, btnEl) {
   courseMode[type] = mode;
@@ -499,71 +552,48 @@ function openCourseDetail(type) {
   _currentCourseType = type;
   const raw = COURSE_DATA[type];
   if(!raw) return;
-  const d = raw.hasMode ? {...raw, ...raw.modes[courseMode[type]||'online']} : raw;
+  const { d } = getCourseInfo(type);
 
   document.getElementById('cmHeaderContent').innerHTML = `
     <div style="display:flex;align-items:center;gap:14px">
       <div style="width:56px;height:56px;border-radius:16px;background:${d.color};display:flex;align-items:center;justify-content:center;font-size:28px;flex-shrink:0">${d.icon}</div>
       <div>
         <div style="font-size:18px;font-weight:800;color:#fff;font-family:'Montserrat',sans-serif;line-height:1.2">${d.title}</div>
-        <div style="font-size:13px;color:rgba(255,255,255,.6);margin-top:4px">${d.subtitle}</div>
+        <div style="font-size:14px;color:rgba(255,255,255,.65);margin-top:4px">${d.subtitle}</div>
       </div>
     </div>`;
 
   const ageSection = d.hasAge ? `
     <div style="margin-bottom:20px">
-      <div style="font-size:13px;font-weight:800;margin-bottom:10px">👶 Насны бүлэг — ангилалт бүрт 3 суралцагч</div>
+      <div style="font-size:14px;font-weight:800;margin-bottom:10px">👶 Насны бүлэг — ангилалт бүрт 3 суралцагч</div>
       <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:8px">
-        <div style="background:#eff6ff;border:1px solid #bfdbfe;border-radius:12px;padding:10px;text-align:center"><div style="font-size:13px;font-weight:800;color:#1d4ed8">6–9 нас</div><div style="font-size:9px;color:#3b82f6;margin-top:2px">Бага ангийн дунд</div></div>
-        <div style="background:#eff6ff;border:1px solid #bfdbfe;border-radius:12px;padding:10px;text-align:center"><div style="font-size:13px;font-weight:800;color:#1d4ed8">10–13 нас</div><div style="font-size:9px;color:#3b82f6;margin-top:2px">Ахлах бага анги</div></div>
-        <div style="background:#eff6ff;border:1px solid #bfdbfe;border-radius:12px;padding:10px;text-align:center"><div style="font-size:13px;font-weight:800;color:#1d4ed8">14–17 нас</div><div style="font-size:9px;color:#3b82f6;margin-top:2px">Дунд сургуулийн</div></div>
-        <div style="background:#eff6ff;border:1px solid #bfdbfe;border-radius:12px;padding:10px;text-align:center"><div style="font-size:13px;font-weight:800;color:#1d4ed8">18+ нас</div><div style="font-size:9px;color:#3b82f6;margin-top:2px">Насанд хүрэгч</div></div>
+        <div style="background:#eff6ff;border:1px solid #bfdbfe;border-radius:12px;padding:10px;text-align:center"><div style="font-size:14px;font-weight:800;color:#1d4ed8">6–9 нас</div></div>
+        <div style="background:#eff6ff;border:1px solid #bfdbfe;border-radius:12px;padding:10px;text-align:center"><div style="font-size:14px;font-weight:800;color:#1d4ed8">10–13 нас</div></div>
+        <div style="background:#eff6ff;border:1px solid #bfdbfe;border-radius:12px;padding:10px;text-align:center"><div style="font-size:14px;font-weight:800;color:#1d4ed8">14–17 нас</div></div>
+        <div style="background:#eff6ff;border:1px solid #bfdbfe;border-radius:12px;padding:10px;text-align:center"><div style="font-size:14px;font-weight:800;color:#1d4ed8">18+ нас</div></div>
       </div>
-      <div style="background:#fef9f0;border-radius:10px;padding:9px 12px;font-size:10px;color:#92400e;margin-top:8px;line-height:1.5">⚠️ Ангилалт бүрт <strong>3 сурагч</strong> л. Дүүрсэн бол тухайн ангилал хаагдана.</div>
     </div>` : '';
 
-  const locationSection = d.location ? `
-    <div style="display:flex;align-items:flex-start;gap:10px;background:#eff6ff;border:1px solid #bfdbfe;border-radius:14px;padding:14px;margin-bottom:16px">
-      <span style="font-size:20px">📍</span>
-      <div style="font-size:12px;color:#1d4ed8;line-height:1.7"><strong>Хаяг:</strong> ${d.location}</div>
-    </div>` : '';
+  const locationSection = d.location ? `<div class="cm-loc">📍 ${d.location}</div>` : '';
 
   const cashbackSection = (type==='script' && courseMode.script==='online') ? `
-    <div style="background:linear-gradient(135deg,#1c1917,#292524);border-radius:16px;padding:18px;margin-bottom:16px">
-      <div style="font-size:12px;font-weight:800;color:#fbbf24;margin-bottom:8px">🎁 20% CASHBACK УРАМШУУЛАЛ</div>
-      <div style="font-size:11px;color:rgba(255,255,255,.75);line-height:1.8;margin-bottom:10px">Дараах 2 нөхцөлийг давхар биелүүлсэн тохиолдолд <strong style="color:#fbbf24">19,800₮</strong> буцаагдана:</div>
-      <div style="display:flex;flex-direction:column;gap:7px">
-        <div style="background:rgba(255,255,255,.08);border-radius:10px;padding:9px 12px;display:flex;align-items:center;gap:10px">
-          <span style="font-size:18px">✅</span>
-          <div style="font-size:10px;color:rgba(255,255,255,.8);line-height:1.5"><strong style="color:#fff">Нэг ч өдөр тасалдалгүй</strong> сургалтаас өгсөн даалгаврыг бүрэн гүйцэт хийсэн байх</div>
-        </div>
-        <div style="background:rgba(255,255,255,.08);border-radius:10px;padding:9px 12px;display:flex;align-items:center;gap:10px">
-          <span style="font-size:18px">📹</span>
-          <div style="font-size:10px;color:rgba(255,255,255,.8);line-height:1.5">Хичээлийн үед <strong style="color:#fff">дүрсээ асааж ярьсан</strong> байх</div>
-        </div>
-      </div>
+    <div class="cm-note">
+      <strong>🎁 ${PRICE.cashbackPct}% cashback — ${fmtMNT(PRICE.cashback)} буцаагдана</strong>
+      <span>Нөхцөл: нэг ч өдөр тасалдалгүй даалгавраа бүрэн хийх · хичээлийн үед дүрсээ асааж ярих</span>
     </div>` : '';
 
   const schedSection = (type==='other') ? `
-    <div style="margin-bottom:20px">
-      <div style="font-size:13px;font-weight:800;margin-bottom:10px">🕐 Хичээлийн цагийн сонголт</div>
-      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:10px">
-        <div style="background:#1c1917;color:#fff;border-radius:12px;padding:12px 8px;text-align:center"><div style="font-size:16px;font-weight:800">19:00</div><div style="font-size:9px;opacity:.6;margin-top:3px">Орой</div></div>
-        <div style="background:#1c1917;color:#fff;border-radius:12px;padding:12px 8px;text-align:center"><div style="font-size:16px;font-weight:800">20:00</div><div style="font-size:9px;opacity:.6;margin-top:3px">Орой</div></div>
-        <div style="background:#1c1917;color:#fff;border-radius:12px;padding:12px 8px;text-align:center"><div style="font-size:16px;font-weight:800">21:00</div><div style="font-size:9px;opacity:.6;margin-top:3px">Орой</div></div>
-      </div>
-      <div style="background:#fef9f0;border-radius:10px;padding:9px 12px;font-size:10px;color:#92400e;line-height:1.6">
-        ⚠️ Цаг бүрт <strong>2 сурагч</strong> л бүртгэгдэнэ. Дүүрсэн цаг автоматаар хаагдана.<br>
-        📌 Хичээл: <strong>Да·Мя·Лх·Пү·Ба</strong> · Бүртгэл: <strong>Бямба·Нямд</strong>
-      </div>
+    <div class="course-time-row" style="margin-bottom:16px">
+      <span class="lbl">🕐 Цаг:</span>
+      <span class="time-pill">19:00</span><span class="time-pill">20:00</span><span class="time-pill">21:00</span>
     </div>` : '';
 
   const enrollSection = raw.comingSoon
-    ? `<div style="background:var(--surface2);border-radius:14px;padding:16px;text-align:center;font-size:14px;color:var(--muted);font-weight:800;margin-bottom:8px">🔜 Тун удахгүй бүртгэл эхэлнэ. Хүлээнэ үү!</div>`
-    : `<button onclick="closeCourseModal();openCoursePayModal('${type}')" class="btn-p" style="width:100%;padding:14px;font-size:14px;border-radius:14px;font-weight:800">🎓 Одоо бүртгүүлэх →</button>`;
+    ? `<div style="background:var(--surface2);border-radius:14px;padding:16px;text-align:center;font-size:15px;color:var(--muted);font-weight:800;margin-bottom:8px">🔜 Тун удахгүй бүртгэл эхэлнэ</div>`
+    : `<button onclick="closeCourseModal();openCoursePayModal('${type}')" class="btn-p" style="width:100%;padding:14px;font-size:15px;border-radius:14px;font-weight:800">🎓 Одоо бүртгүүлэх →</button>`;
 
   document.getElementById('cmBody').innerHTML = `
-    <p style="font-size:13px;color:var(--mid);line-height:1.8;margin-bottom:20px">${d.desc}</p>
+    <p style="font-size:15px;color:var(--mid);line-height:1.7;margin-bottom:18px">${d.desc}</p>
     <div class="cm-features">
       ${d.features.map(f=>`<div class="cm-feature"><div class="cf-icon">${f.icon}</div><div><div class="cf-text">${f.text}</div><div class="cf-sub">${f.sub}</div></div></div>`).join('')}
     </div>
@@ -571,12 +601,16 @@ function openCourseDetail(type) {
     ${locationSection}
     ${cashbackSection}
     ${schedSection}
-    <div style="background:#1c1917;border-radius:14px;padding:16px;margin-bottom:16px;display:flex;align-items:center;justify-content:space-between">
-      <div><div style="font-size:10px;color:rgba(255,255,255,.5);text-transform:uppercase;letter-spacing:.1em;margin-bottom:3px">Үнэ</div><div style="font-size:24px;font-weight:800;color:#fbbf24;font-family:'Montserrat',sans-serif">${d.priceFull||d.priceNote}</div><div style="font-size:10px;color:rgba(255,255,255,.5);margin-top:2px">${d.priceSub||''}</div></div>
+    <div class="cm-price">
+      <div>
+        <div class="cm-price-lbl">Үнэ</div>
+        <div class="cm-price-amt">${d.priceFull||d.priceNote}</div>
+        <div class="cm-price-sub">${d.priceSub||''}</div>
+      </div>
       <div style="font-size:32px">💳</div>
     </div>
     ${enrollSection}
-    <button onclick="closeCourseModal()" style="width:100%;padding:10px;margin-top:8px;background:none;border:none;font-size:11px;color:#aaa;cursor:pointer;font-family:'Manrope',sans-serif">Хаах</button>`;
+    <button onclick="closeCourseModal()" style="width:100%;padding:10px;margin-top:8px;background:none;border:none;font-size:14px;color:#aaa;cursor:pointer;font-family:'Manrope',sans-serif">Хаах</button>`;
 
   document.getElementById('courseModal').classList.remove('hidden');
 }
@@ -590,23 +624,20 @@ function openCoursePayModal(type) {
   _currentCourseType = type;
   const raw = COURSE_DATA[type];
   if(!raw || raw.comingSoon) return;
-  const d = raw.hasMode ? {...raw, ...raw.modes[courseMode[type]||'online']} : raw;
-  const modeLabel = raw.hasMode ? (courseMode[type]==='onsite' ? ' (Танхим)' : ' (Онлайн)') : '';
-  document.getElementById('cpTitle').textContent = d.title + modeLabel;
-  document.getElementById('cpSubtitle').textContent = d.priceSub || d.subtitle;
-  document.getElementById('cpAmt').textContent = d.priceFull || d.priceNote;
+  const { d, modeLabel, total, payNow, isDeposit } = getCourseInfo(type);
 
-  // Quick facts (address / schedule / time) pulled straight from course data
-  const factsEl = document.getElementById('cpFacts');
-  if (factsEl) {
-    if (d.features && d.features.length) {
-      factsEl.innerHTML = d.features.slice(0,4).map(f =>
-        `<div class="cp-fact">${f.icon} <b>${f.text}</b><span>${f.sub||''}</span></div>`
-      ).join('');
-    } else {
-      factsEl.innerHTML = '';
-    }
-  }
+  document.getElementById('cpTitle').textContent = d.title + (modeLabel ? ` (${modeLabel})` : '');
+  document.getElementById('cpSubtitle').textContent = 'QR уншуулж эсвэл данс руу шилжүүлнэ үү';
+
+  // QR/дансаар ОДОО шилжүүлэх дүн: урьдчилгаатай бол урьдчилгаа, бусад үед бүтэн үнэ
+  document.getElementById('cpAmtLbl').textContent = isDeposit ? 'Одоо төлөх урьдчилгаа' : 'Төлөх дүн';
+  document.getElementById('cpAmt').textContent    = fmtMNT(payNow);
+  document.getElementById('cpAmtSub').textContent = isDeposit
+    ? `Нийт ${fmtMNT(total)} · үлдэгдэл ${fmtMNT(total - payNow)}-ийг ирэхдээ багшид өгнө`
+    : (d.payNote || '');
+
+  const noteEl = document.getElementById('cpNote');
+  if (noteEl) noteEl.innerHTML = 'Гүйлгээний утга: <strong>и-мэйл · Сургалтын нэр' + (type==='other' ? ' · Цаг' : '') + '</strong>';
 
   // Show/hide schedule picker
   const sw = document.getElementById('cpSchedWrap');
@@ -615,7 +646,10 @@ function openCoursePayModal(type) {
   const tw = document.getElementById('cpTimeWrap');
   if(tw) tw.style.display = (type==='other') ? 'block' : 'none';
   // Reset time slot / schedule selections
-  document.querySelectorAll('.cp-time-btn').forEach(b=>b.classList.remove('active'));
+  document.querySelectorAll('.cp-time-btn').forEach(b=>{
+    b.classList.remove('active');
+    b.style.borderColor=''; b.style.background=''; b.style.color='';
+  });
   document.querySelectorAll('.sched-sel-btn').forEach(b=>b.classList.remove('active'));
 
   cpGoStep1();
@@ -649,9 +683,8 @@ function selectTimeSlot(btn) {
 async function cpConfirmPaid() {
   const schedDays = [...document.querySelectorAll('.sched-sel-btn.active')].map(b=>b.textContent).join(', ');
   const timeSlot  = [...document.querySelectorAll('.cp-time-btn.active')].map(b=>b.dataset.time).join(', ') || '';
-  const raw = COURSE_DATA[_currentCourseType]||{};
-  const d = raw.hasMode ? {...raw, ...raw.modes[courseMode[_currentCourseType]||'online']} : raw;
-  const modeLabel = raw.hasMode ? (courseMode[_currentCourseType]==='onsite' ? 'Танхим' : 'Онлайн') : '';
+  const { d, modeLabel, total, payNow, isDeposit } = getCourseInfo(_currentCourseType);
+  const label = d.title + (modeLabel ? ` (${modeLabel})` : '');
 
   // Монгол хэл + бусад хичээл — цаг сонгохгүй бол баталгаажуулахгүй
   const tw = document.getElementById('cpTimeWrap');
@@ -669,9 +702,10 @@ async function cpConfirmPaid() {
       body:JSON.stringify({
         action:'submitOrder',
         email,
-        note:`Сургалт: ${d.title}${modeLabel?' ('+modeLabel+')':''} | Хуваарь: ${schedDays} | Цаг: ${timeSlot}`,
-        total: d.priceFull ? parseInt(d.priceFull.replace(/[^0-9]/g,'')) : 0,
-        items:`Сургалтын бүртгэл: ${d.title}${modeLabel?' ('+modeLabel+')':''} — ${d.priceFull||''}`,
+        note:`Сургалт: ${label} | Хуваарь: ${schedDays} | Цаг: ${timeSlot}`,
+        // total = QR/дансаар яг шилжүүлсэн дүн (урьдчилгаатай бол урьдчилгаа)
+        total: payNow,
+        items:`Сургалтын бүртгэл: ${label} — төлсөн ${fmtMNT(payNow)}` + (isDeposit ? ` (урьдчилгаа, нийт ${fmtMNT(total)})` : ''),
         date:new Date().toLocaleString('mn-MN')
       })
     });
@@ -971,7 +1005,7 @@ function updateHorseUI(){horsePos.forEach((pos,i)=>{const pct=Math.min(pos/FINIS
 
 // ── Тохируулга ──────────────────────
 // Анги эхлэх цаг (Монгол цаг UTC+8)
-const CLASS_START = new Date('2026-05-18T19:00:00+08:00');
+const CLASS_START = new Date('2026-09-17T19:00:00+08:00');
 
 // Бүртгэлийн цонх: сар бүрийн хагас сайн 00:00 → бүтэн сайн 00:00
 // Монгол цаг дээр тооцоолно (UTC+8)
@@ -1072,9 +1106,7 @@ function updateHomeworkUI() {
 
     regEl.style.background = '#f0fdf4';
     regEl.style.color = '#065f46';
-    regEl.innerHTML = `✅ <strong>Бүртгэл нээлттэй байна!</strong><br>
-      Хаагдах хугацаа: ${formatDate(w.close)} · ${hrs}ц ${mins}мин үлдсэн<br>
-      <span style="font-size:10px;opacity:.8">7 хоног бүрийн Бямба·Нямд бүртгэл явагдана</span>`;
+    regEl.innerHTML = `✅ <strong>Бүртгэл нээлттэй</strong> · ${hrs}ц ${mins}мин үлдсэн`;
 
     tagEl.textContent = '🟢 Бүртгэл нээлттэй';
     tagEl.style.background = '#d1fae5';
@@ -1093,9 +1125,8 @@ function updateHomeworkUI() {
 
     regEl.style.background = '#fef9f0';
     regEl.style.color = '#92400e';
-    regEl.innerHTML = `🔒 <strong>Бүртгэл одоогоор хаалттай</strong><br>
-      Дараагийн бүртгэл: ${formatDate(w.open)} 00:00 цагт нээгдэнэ<br>
-      <span style="font-size:10px;opacity:.8">${days > 0 ? days+'өдөр ' : ''}${pad2(hrs)}:${pad2(mins)} үлдсэн · 7 хоног бүрийн Бямба·Нямд</span>`;
+    regEl.innerHTML = `🔒 <strong>Бүртгэл хаалттай</strong> · ${formatDate(w.open)} нээгдэнэ<br>
+      <span style="font-size:13px;opacity:.8">${days > 0 ? days+'өдөр ' : ''}${pad2(hrs)}:${pad2(mins)} үлдсэн</span>`;
 
     tagEl.textContent = '🔒 Бүртгэл хаалттай';
     tagEl.style.background = '#fee2e2';
