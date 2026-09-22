@@ -668,3 +668,99 @@ footer .copy{color:rgba(255,255,255,.2)}
 /* Ribbon карт дээрх од/шошготой давхцахгүй байхаар дээд зайг нэмнэ */
 .ribbon + .course-card-top{padding-top:52px}
 @media(max-width:768px){.ribbon + .course-card-top{padding-top:46px}}
+
+/* ══════════════════════════════════════════════════════
+   МОРЬ УРАЛДЪЯ 2.0 — Монгол бичгийн сургалтын тоглоом
+   ══════════════════════════════════════════════════════ */
+
+/* Өдрийн сонголтын карт */
+.hz-day-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px;margin:18px 0 22px}
+.hz-day-card{position:relative;border:1.5px solid var(--border);border-radius:16px;padding:16px 12px;background:#fff;cursor:pointer;transition:all .15s;text-align:center}
+.hz-day-card:hover{border-color:var(--amber);transform:translateY(-2px)}
+.hz-day-card.locked{cursor:not-allowed;opacity:.55}
+.hz-day-card.locked:hover{transform:none;border-color:var(--border)}
+.hz-day-card.done{border-color:var(--green);background:#f0fdf4}
+.hz-day-card.today{border-color:var(--amber);background:var(--amber-l);box-shadow:0 4px 14px rgba(184,118,63,.18)}
+.hz-day-num{font-family:'Lora',serif;font-weight:700;font-size:13px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px}
+.hz-day-title{font-size:14px;font-weight:800;color:var(--dark);line-height:1.3;margin-bottom:8px;min-height:36px}
+.hz-day-state{font-size:12px;font-weight:700}
+.hz-day-state.st-today{color:var(--amber-d)}
+.hz-day-state.st-done{color:var(--green)}
+.hz-day-state.st-locked{color:var(--muted)}
+.hz-day-icon{font-size:26px;margin-bottom:6px}
+
+.hz-testbar{text-align:center;margin-bottom:6px}
+.hz-testlink{background:none;border:none;color:var(--muted);font-size:12px;font-weight:700;cursor:pointer;text-decoration:underline;padding:4px}
+
+/* Морь 2 (миний морь vs уралдааны морь) */
+.hz-race-wrap{background:linear-gradient(135deg,#166534,#15803d);border-radius:20px;padding:18px 16px;margin-bottom:18px;position:relative;overflow:hidden}
+.hz-race-wrap::before{content:'';position:absolute;inset:0;background:repeating-linear-gradient(90deg,rgba(255,255,255,.03) 0,rgba(255,255,255,.03) 1px,transparent 1px,transparent 60px)}
+.hz-lane{display:flex;align-items:center;gap:8px;position:relative;z-index:1;margin-bottom:10px}
+.hz-lane:last-child{margin-bottom:0}
+.hz-lane-label{color:rgba(255,255,255,.85);font-size:12px;font-weight:800;width:96px;flex-shrink:0}
+.hz-lane-track{flex:1;position:relative;height:40px;background:rgba(0,0,0,.2);border-radius:10px;overflow:hidden}
+.hz-lane-track .lane-bg-stripes{position:absolute;inset:0;background:repeating-linear-gradient(90deg,rgba(255,255,255,.04) 0,rgba(255,255,255,.04) 10%,transparent 10%,transparent 20%)}
+.hz-horse{position:absolute;top:50%;transform:translateY(-50%);transition:left .7s cubic-bezier(.34,1.56,.64,1);font-size:20px;line-height:1}
+.hz-finish{position:absolute;right:4px;top:0;bottom:0;display:flex;align-items:center;font-size:16px}
+.hz-day-badge{display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,.14);color:#fff;font-size:12px;font-weight:800;padding:4px 12px;border-radius:99px;position:relative;z-index:1;margin-bottom:10px}
+
+/* Асуултын карт */
+.hz-quiz-card{background:#fff;border:1.5px solid var(--border);border-radius:20px;padding:22px;max-width:560px;margin:0 auto}
+.hz-quiz-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:8px}
+.hz-progress-mini{flex:1;height:8px;background:var(--surface2);border-radius:99px;overflow:hidden;min-width:80px}
+.hz-progress-mini-fill{height:100%;background:var(--amber);border-radius:99px;transition:width .3s}
+.hz-streak{font-size:13px;font-weight:800;color:var(--amber-d);white-space:nowrap}
+.hz-qtext{font-size:15px;font-weight:700;color:var(--mid);margin-bottom:14px;text-align:center}
+.mongol-glyph{font-size:56px;text-align:center;padding:18px 10px;background:var(--surface2);border-radius:16px;margin-bottom:16px;line-height:1;font-family:'Noto Sans Mongolian','Menk Tulgatu','Lora',serif}
+.mongol-glyph.small{font-size:36px;padding:12px}
+.hz-opts{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.hz-opts.hz-opts-1col{grid-template-columns:1fr}
+.hz-opts .option-btn{font-size:16px}
+.hz-opts .option-btn.mon-opt{font-size:28px;text-align:center;font-family:'Noto Sans Mongolian','Menk Tulgatu','Lora',serif;padding:10px}
+.hz-feedback{margin-top:14px;padding:12px 14px;border-radius:12px;font-size:14px;font-weight:700;text-align:center;display:none}
+.hz-feedback.show{display:block}
+.hz-feedback.ok{background:#f0fdf4;color:var(--green)}
+.hz-feedback.no{background:#fff7ed;color:var(--amber-d)}
+
+/* Холбоорой (matching) */
+.hz-match-wrap{display:grid;grid-template-columns:1fr 1fr;gap:24px}
+.hz-match-col{display:flex;flex-direction:column;gap:8px}
+.hz-match-item{border:1.5px solid var(--border);border-radius:12px;padding:10px 8px;background:#fff;cursor:pointer;text-align:center;font-weight:800;font-size:18px;transition:all .12s}
+.hz-match-item.mon{font-family:'Noto Sans Mongolian','Menk Tulgatu','Lora',serif;font-size:24px}
+.hz-match-item.sel{border-color:var(--amber);background:var(--amber-l)}
+.hz-match-item.matched{border-color:var(--green);background:#f0fdf4;color:var(--green);cursor:default;opacity:.75}
+.hz-match-item.bad{animation:hzShake .3s}
+@keyframes hzShake{0%,100%{transform:translateX(0)}25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}
+
+/* Үг бүтээ (build) */
+.hz-build-slot{min-height:52px;border:2px dashed var(--border);border-radius:14px;display:flex;gap:6px;align-items:center;justify-content:center;flex-wrap:wrap;padding:8px;margin-bottom:14px;background:var(--surface2)}
+.hz-tile{background:#fff;border:1.5px solid var(--border);border-radius:10px;padding:8px 14px;font-size:18px;font-weight:800;cursor:pointer;transition:all .12s}
+.hz-tile:hover{border-color:var(--amber)}
+.hz-tile.used{opacity:.3;cursor:default}
+.hz-tile-pool{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-bottom:16px}
+.hz-slot-tile{background:var(--amber-l);border:1.5px solid var(--amber);color:var(--amber-d);border-radius:10px;padding:8px 14px;font-size:18px;font-weight:800;cursor:pointer}
+
+/* Чиглэлийн сумны товч */
+.hz-arrow-btn{font-size:26px}
+
+/* Дуусгах товч */
+.hz-check-btn{width:100%;padding:13px;margin-top:6px}
+.hz-check-btn:disabled{opacity:.4;cursor:not-allowed}
+
+/* Дуусгасны дараах статистик */
+.hz-result-card{max-width:480px;margin:0 auto;background:#fff;border:1.5px solid var(--border);border-radius:22px;padding:28px;text-align:center}
+.hz-result-stars{font-size:30px;margin-bottom:10px;letter-spacing:2px}
+.hz-stat-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin:18px 0}
+.hz-stat-box{background:var(--surface2);border-radius:14px;padding:14px 8px}
+.hz-stat-box .num{font-family:'Lora',serif;font-weight:700;font-size:22px;color:var(--amber)}
+.hz-stat-box .lbl{font-size:12px;color:var(--mid);font-weight:700;margin-top:2px}
+.hz-skill-line{font-size:13px;color:var(--mid);background:var(--surface2);border-radius:12px;padding:10px 14px;margin-bottom:6px}
+
+@media(max-width:600px){
+  .hz-opts{grid-template-columns:1fr}
+  .hz-match-wrap{gap:12px}
+  .hz-stat-grid{grid-template-columns:1fr 1fr}
+  .hz-quiz-card{padding:16px}
+  .mongol-glyph{font-size:44px}
+  .hz-lane-label{width:70px;font-size:11px}
+}
