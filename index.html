@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Сонирхолтой хэл бичиг</title>
-<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800&family=Manrope:wght@400;500;600;700;800&family=Noto+Sans+Mongolian&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -164,7 +164,7 @@
       <span class="game-badge badge-new">Шинэ!</span>
       <div class="game-icon" style="background:#fdf4ff">🐎</div>
       <h3>Морь уралдъя</h3>
-      <p>Шагайн дүрмээр 2 тоглогч өрсөлдөнө. 50 алхам хүрнэ.</p>
+      <p>Өдөр тутам тоглож, монгол бичгээ сур! 14 хоногийн хөтөлбөр, 50 алхамд хүр.</p>
     </div>
   </div>
 </section>
@@ -306,50 +306,61 @@
 <section id="horseSection" class="sec">
   <button class="page-back" onclick="showSec('games')">← Буцах</button>
   <h2 style="font-size:20px;font-weight:800;font-family:'Baloo 2',cursive;margin-bottom:4px">🐎 Морь уралдъя</h2>
-  <p style="font-size:14px;color:var(--mid);margin-bottom:20px">Шагайн дүрмээр тоглоно · 1–4 тоглогч · 50 алхам хүрнэ</p>
-  <div id="horseSetup" style="max-width:480px;margin:0 auto">
-    <div style="background:#fff;border:1.5px solid var(--border);border-radius:22px;padding:28px">
-      <h3 style="font-size:16px;font-weight:800;margin-bottom:20px;text-align:center">🎮 Тоглогчийн тоо сонгоно уу</h3>
-      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:24px">
-        <button class="horse-cnt-btn active" id="hcBtn1" onclick="selectPlayerCount(1)" style="padding:16px 6px;border:2px solid var(--amber);border-radius:14px;background:var(--amber-l);cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:14px;color:var(--amber-d);transition:all .15s"><div style="font-size:24px;margin-bottom:4px">👤</div>1</button>
-        <button class="horse-cnt-btn" id="hcBtn2" onclick="selectPlayerCount(2)" style="padding:16px 6px;border:2px solid var(--border);border-radius:14px;background:#fff;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:14px;color:var(--mid);transition:all .15s"><div style="font-size:24px;margin-bottom:4px">👥</div>2</button>
-        <button class="horse-cnt-btn" id="hcBtn3" onclick="selectPlayerCount(3)" style="padding:16px 6px;border:2px solid var(--border);border-radius:14px;background:#fff;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:14px;color:var(--mid);transition:all .15s"><div style="font-size:24px;margin-bottom:4px">👨‍👩‍👦</div>3</button>
-        <button class="horse-cnt-btn" id="hcBtn4" onclick="selectPlayerCount(4)" style="padding:16px 6px;border:2px solid var(--border);border-radius:14px;background:#fff;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:14px;color:var(--mid);transition:all .15s"><div style="font-size:24px;margin-bottom:4px">👨‍👩‍👧‍👦</div>4</button>
-      </div>
-      <div id="playerNamesWrap" style="margin-bottom:20px"></div>
-      <div style="background:#fef9f0;border:1px solid #fde68a;border-radius:12px;padding:12px;font-size:14px;color:#92400e;line-height:1.7;margin-bottom:20px">
-        <strong>Дүрэм:</strong> 4 бэрх=4 алхам · 3 морь=3 · 2 морь=2 · 1 морь=1 · 0 морь=1<br>
-        Нэмэлт асуулт зөв хариулбал +2 алхам нэмнэ. 🎯
-      </div>
-      <button class="btn-p" style="width:100%;padding:14px;font-size:14px" onclick="startHorseGame()">🐎 Тоглоом эхлэх</button>
+  <p style="font-size:14px;color:var(--mid);margin-bottom:20px">Монгол бичгээ тоглонгоо сурцгаая! · Өдөр бүр 5–15 минут · 50 алхамд хүр</p>
+
+  <!-- ӨДРИЙН СОНГОЛТ -->
+  <div id="horseSetup" style="max-width:760px;margin:0 auto">
+    <div id="hzRaceMini" style="margin-bottom:18px"></div>
+    <h3 style="font-size:16px;font-weight:800;margin-bottom:4px;text-align:center">📅 Өдрөө сонгоод даалгавраа хий</h3>
+    <p style="font-size:13px;color:var(--muted);text-align:center;margin-bottom:6px">14 хоногийн хөтөлбөр — өдөр бүр нэг шинэ түвшин нээгдэнэ</p>
+    <div id="hzDayGrid" class="hz-day-grid"></div>
+    <div class="hz-testbar">
+      <button class="hz-testlink" id="hzTestBtn" onclick="hzToggleDevUnlock()">🔧 Туршилтын горим: бүх өдрийг нээх/хаах</button>
     </div>
   </div>
-  <div id="horseGame" class="horse-game" style="display:none">
-    <div class="race-track" id="raceTrack"></div>
-    <div class="race-status">
-      <div style="font-size:16px;font-weight:800" id="turnLabel">— — —</div>
-      <div id="scoreRow" class="player-score-row"></div>
-      <button onclick="resetHorse()" style="background:none;border:1.5px solid var(--border);border-radius:10px;padding:6px 14px;font-family:'Plus Jakarta Sans',sans-serif;font-size:14px;font-weight:700;cursor:pointer;color:var(--mid)">🔄 Дахин</button>
-    </div>
-    <div class="race-controls">
-      <div class="player-panel">
-        <h4 id="curPlayerLabel">🎲 Шагай буулгах</h4>
-        <div class="shagai-display" id="shagaiDisplay">
-          <div class="shagai">?</div><div class="shagai">?</div><div class="shagai">?</div><div class="shagai">?</div>
-        </div>
-        <div class="roll-result" id="rollResult">Шагайгаа буулгана уу!</div>
-        <button class="btn-roll" id="rollBtn" onclick="rollShagai()">🎲 Шагай буулгах</button>
+
+  <!-- ТОГЛООМ (АСУУЛТ) -->
+  <div id="horseGame" class="horse-game" style="display:none;max-width:640px;margin:0 auto">
+    <div class="hz-race-wrap">
+      <div class="hz-day-badge" id="hzDayBadge">Өдөр 1</div>
+      <div class="hz-lane">
+        <div class="hz-lane-label">🐎 Миний морь</div>
+        <div class="hz-lane-track"><div class="lane-bg-stripes"></div><div class="hz-horse" id="hzMyHorse" style="left:1%">🐎</div><div class="hz-finish">🏁</div></div>
       </div>
-      <div class="q-panel" id="bonusPanel">
-        <h4>💡 Нэмэлт асуулт (+2 алхам)</h4>
-        <div class="q-text" id="qText">Шагайгаа буулгасны дараа нэмэлт асуулт гарч ирнэ.</div>
-        <div class="q-opts" id="qOpts"></div>
+      <div class="hz-lane">
+        <div class="hz-lane-label">🐴 Уралдааны морь</div>
+        <div class="hz-lane-track"><div class="lane-bg-stripes"></div><div class="hz-horse" id="hzRivalHorse" style="left:1%">🐴</div><div class="hz-finish">🏁</div></div>
       </div>
     </div>
-    <div class="winner-banner" id="winnerBanner">
-      <h3 id="winnerText">🏆 Ялагч!</h3>
-      <p id="winnerSub">Маш сайн тоглолоо!</p>
-      <button class="btn-p" style="margin-top:14px" onclick="resetHorse()">🔄 Дахин тоглох</button>
+
+    <div class="hz-quiz-card" id="hzQuizCard">
+      <div class="hz-quiz-top">
+        <div class="hz-progress-mini"><div class="hz-progress-mini-fill" id="hzProgFill" style="width:0%"></div></div>
+        <div class="hz-streak" id="hzStreak">🔥 0</div>
+      </div>
+      <div id="hzQuestionArea"></div>
+      <div class="hz-feedback" id="hzFeedback"></div>
+    </div>
+
+    <button class="page-back" style="margin-top:16px" onclick="hzExitQuiz()">← Өдрийн жагсаалт руу буцах</button>
+  </div>
+
+  <!-- ӨДРИЙН ДҮН -->
+  <div id="hzResultScreen" style="display:none;max-width:480px;margin:0 auto">
+    <div class="hz-result-card">
+      <div style="font-size:40px;margin-bottom:6px" id="hzResultEmoji">🏆</div>
+      <h3 style="font-size:20px;font-weight:800;font-family:'Lora',serif;margin-bottom:4px" id="hzResultTitle">Баяр хүргэе!</h3>
+      <p style="font-size:14px;color:var(--mid)" id="hzResultSub">Өнөөдрийн ахиц</p>
+      <div class="hz-result-stars" id="hzResultStars">⭐⭐⭐⭐☆</div>
+      <div class="hz-stat-grid">
+        <div class="hz-stat-box"><div class="num" id="hzStatCorrect">0/10</div><div class="lbl">🎯 Зөв хариулт</div></div>
+        <div class="hz-stat-box"><div class="num" id="hzStatScore">0</div><div class="lbl">🏆 Оноо</div></div>
+        <div class="hz-stat-box"><div class="num" id="hzStatSteps">0</div><div class="lbl">🐎 Морь явсан алхам</div></div>
+        <div class="hz-stat-box"><div class="num" id="hzStatStreak">0</div><div class="lbl">🔥 Дараалсан зөв</div></div>
+      </div>
+      <div class="hz-skill-line" id="hzSkillLine">📚 Өнөөдөр давтсан: —</div>
+      <p style="font-size:14px;font-weight:700;color:var(--amber-d);margin:14px 0 4px">Маргааш дахин уулзъя! 👋</p>
+      <button class="btn-p" style="width:100%;margin-top:8px" onclick="hzBackToDays()">📅 Өдрийн жагсаалт руу</button>
     </div>
   </div>
 </section>
