@@ -76,7 +76,7 @@ document.addEventListener('DOMContentLoaded',()=>{
   initSudoku();
   startWordSearch();
   startReading();
-  selectPlayerCount(1);
+  initHorseLearning();
   updateCreditUI();
 });
 
@@ -978,25 +978,497 @@ function renderReadText(q){let html=q.text;for(let i=0;i<q.blanks.length;i++)htm
 function renderReadOptions(q,bIdx){const opts=q.options[bIdx];document.getElementById('readOptions').innerHTML=opts.map(o=>`<button class="option-btn" onclick="selectReadOption('${o}',${bIdx})">${o}</button>`).join('');}
 function selectReadOption(chosen,bIdx){const q=READ_DATA[readIdx],correct=q.blanks[bIdx];const btns=document.querySelectorAll('.option-btn');btns.forEach(b=>{b.disabled=true;if(b.textContent===correct)b.classList.add('correct');else if(b.textContent===chosen&&chosen!==correct)b.classList.add('wrong');});const blanks=document.querySelectorAll('.blank');if(blanks[bIdx])blanks[bIdx].textContent=chosen;if(chosen===correct)readScore++;document.getElementById('readScore').textContent=readScore;setTimeout(()=>{readBlankIdx++;if(readBlankIdx<q.blanks.length){renderReadOptions(q,readBlankIdx);}else{readIdx++;document.getElementById('readQ').textContent=Math.min(readIdx+1,READ_FREE);document.getElementById('readProgress').style.width=((readIdx/READ_FREE)*100)+'%';setTimeout(()=>showReadQuestion(),600);}},1000);}
 
-/* ════════════════════════════════════
-   HORSE RACE
-════════════════════════════════════ */
-const PLAYER_COLORS=[{emoji:'🔴',color:'#dc2626',bg:'#fef2f2',name:'1-р тоглогч'},{emoji:'🔵',color:'#2563eb',bg:'#eff6ff',name:'2-р тоглогч'},{emoji:'🟢',color:'#059669',bg:'#f0fdf4',name:'3-р тоглогч'},{emoji:'🟡',color:'#d97706',bg:'#fffbeb',name:'4-р тоглогч'}];
-const SHAGAI_FACES={'Хонь':'🟢','Ямаа':'🟡','Тэмээ':'🔵','Морь':'🔴'};
-const SHAGAI_KEYS=Object.keys(SHAGAI_FACES);
-const BONUS_QUESTIONS=[{q:'Монгол улсын нийслэл хот аль вэ?',opts:['Улаанбаатар','Эрдэнэт','Дархан','Мурэн'],ans:0},{q:'"Хонь" монгол бичгээр хэд дэх үсгээс эхэлдэг вэ?',opts:['Х','О','Н','Ь'],ans:0},{q:'Монгол цагаан сар ямар саруудад тохиодог вэ?',opts:['1-2 сар','3-4 сар','5-6 сар','11-12 сар'],ans:0},{q:'Шагайн тоглоомд "дөрвөн бэрх" гэж юу вэ?',opts:['4 морь','4 ижил тал','4 хонь','4 тэмээ'],ans:1},{q:'Монгол хэлэнд хэдэн эгшиг байдаг вэ?',opts:['7','9','11','5'],ans:1},{q:'"Цагаан" монгол хэлэнд юуг илэрхийлдэг вэ?',opts:['Өнгө','Мал','Байгаль','Тэнгэр'],ans:0},{q:'Монгол бичиг ямар чиглэлд бичигддэг вэ?',opts:['Дээрээс доош','Зүүнээс баруун','Баруунаас зүүн','Доороос дээш'],ans:0},{q:'Оньсого: "Өглөө 4 хөлтэй, өдөр 2 хөлтэй, орой 3 хөлтэй"?',opts:['Хүн','Морь','Муур','Нохой'],ans:0},{q:'"Нохой" үгэнд хэдэн үсэг байна вэ?',opts:['4','5','3','6'],ans:0},{q:'Монгол нутгийн ямар мал хамгийн их тоотой вэ?',opts:['Хонь','Ямаа','Үхэр','Морь'],ans:0}];
-let horsePlayerCount=1,horsePlayerNames=['Тоглогч 1'],horsePos=[0],horseTurn=0,horseRolled=false,horseLastRoll=0,currentQuestion=null,questionAnswered=false,gameOver=false;
-const FINISH=50;
-function selectPlayerCount(n){horsePlayerCount=n;document.querySelectorAll('.horse-cnt-btn').forEach((b,i)=>{const sel=i+1===n;b.style.borderColor=sel?'var(--amber)':'var(--border)';b.style.background=sel?'var(--amber-l)':'#fff';b.style.color=sel?'var(--amber-d)':'var(--mid)';});const wrap=document.getElementById('playerNamesWrap');if(!wrap)return;if(n===1){wrap.innerHTML='';return;}wrap.innerHTML=`<p style="font-size:11px;font-weight:700;color:var(--mid);margin-bottom:10px;text-transform:uppercase;letter-spacing:.06em">Тоглогчдын нэр (заавал биш)</p>`+Array.from({length:n},(_,i)=>`<div style="display:flex;align-items:center;gap:10px;margin-bottom:8px"><span style="font-size:18px">${PLAYER_COLORS[i].emoji}</span><input id="pname${i}" class="modal-field" type="text" placeholder="${PLAYER_COLORS[i].name}" style="margin:0;flex:1"></div>`).join('');}
-function startHorseGame(){horsePlayerNames=Array.from({length:horsePlayerCount},(_,i)=>{const el=document.getElementById('pname'+i);return el?.value?.trim()||PLAYER_COLORS[i].name;});horsePos=Array(horsePlayerCount).fill(0);horseTurn=0;horseRolled=false;horseLastRoll=0;currentQuestion=null;questionAnswered=false;gameOver=false;document.getElementById('horseSetup').style.display='none';document.getElementById('horseGame').style.display='block';document.getElementById('winnerBanner').style.display='none';document.getElementById('rollBtn').disabled=false;document.getElementById('qText').textContent='Шагайгаа буулгасны дараа нэмэлт асуулт гарч ирнэ.';document.getElementById('qOpts').innerHTML='';document.getElementById('rollResult').textContent='Шагайгаа буулгана уу!';const shagais=document.getElementById('shagaiDisplay');if(shagais)shagais.innerHTML='<div class="shagai">?</div><div class="shagai">?</div><div class="shagai">?</div><div class="shagai">?</div>';buildTrack();updateHorseUI();}
-function buildTrack(){const track=document.getElementById('raceTrack');if(!track)return;track.innerHTML=horsePlayerNames.map((name,i)=>`<div class="track-lane"><div class="lane-label" style="color:rgba(255,255,255,.85);font-size:10px">${PLAYER_COLORS[i].emoji} ${name}</div><div class="lane-track"><div class="lane-bg-stripes"></div><div class="horse-pos" id="horse${i}" style="left:1%">${PLAYER_COLORS[i].emoji}</div><div class="finish-line"><span class="finish-flag">🏁</span></div><div class="lane-pos-num" id="pos${i}Label">0</div></div></div>`).join('');}
-function resetHorse(){document.getElementById('horseSetup').style.display='block';document.getElementById('horseGame').style.display='none';horsePos=[0];horseTurn=0;gameOver=false;horseRolled=false;selectPlayerCount(horsePlayerCount);}
-function rollShagai(){if(gameOver||horseRolled)return;horseRolled=true;document.getElementById('rollBtn').disabled=true;const results=Array.from({length:4},()=>SHAGAI_KEYS[Math.floor(Math.random()*4)]);const disp=document.getElementById('shagaiDisplay');if(disp){disp.innerHTML='';results.forEach((r,i)=>{const el=document.createElement('div');el.className='shagai rolled';el.style.animationDelay=(i*.1)+'s';el.textContent=SHAGAI_FACES[r];disp.appendChild(el);});}const counts={};results.forEach(r=>counts[r]=(counts[r]||0)+1);let move=0;if(Object.keys(counts).length===1){const face=Object.keys(counts)[0];move=face==='Морь'?4:face==='Тэмээ'?3:4;document.getElementById('rollResult').innerHTML=`<span>Дөрвөн ${face}! +${move} алхам 🎉</span>`;}else{move=Object.keys(counts).length;document.getElementById('rollResult').innerHTML=`${results.map(r=>SHAGAI_FACES[r]).join(' ')} → <span>+${move} алхам</span>`;}if(move===0)move=1;horseLastRoll=move;setTimeout(()=>{horsePos[horseTurn]=Math.min(FINISH,horsePos[horseTurn]+move);updateHorseUI();if(horsePos[horseTurn]>=FINISH){endGame(horseTurn);return;}showBonusQuestion();},800);}
-function showBonusQuestion(){const q=BONUS_QUESTIONS[Math.floor(Math.random()*BONUS_QUESTIONS.length)];currentQuestion=q;questionAnswered=false;document.getElementById('qText').textContent=q.q;document.getElementById('qOpts').innerHTML=q.opts.map((o,i)=>`<button class="q-opt" onclick="answerBonus(${i})">${o}</button>`).join('');}
-function answerBonus(idx){if(questionAnswered)return;questionAnswered=true;const btns=document.querySelectorAll('.q-opt');btns.forEach(b=>b.disabled=true);const correct=currentQuestion.ans;btns[correct].classList.add('correct2');if(idx!==correct)btns[idx].classList.add('wrong2');if(idx===correct){showToast('+2 нэмэлт алхам! 🎉','success');setTimeout(()=>{horsePos[horseTurn]=Math.min(FINISH,horsePos[horseTurn]+2);updateHorseUI();if(horsePos[horseTurn]>=FINISH){endGame(horseTurn);return;}nextTurn();},1000);}else{showToast('Буруу хариулт!','error');setTimeout(()=>nextTurn(),1000);}}
-function nextTurn(){horseTurn=(horseTurn+1)%horsePlayerCount;horseRolled=false;questionAnswered=false;currentQuestion=null;document.getElementById('qText').textContent='Шагайгаа буулгасны дараа нэмэлт асуулт гарч ирнэ.';document.getElementById('qOpts').innerHTML='';document.getElementById('rollBtn').disabled=false;updateHorseUI();}
-function endGame(winner){gameOver=true;document.getElementById('rollBtn').disabled=true;document.getElementById('winnerBanner').style.display='block';const wname=horsePlayerNames[winner]||PLAYER_COLORS[winner].name;document.getElementById('winnerText').textContent=`🏆 ${PLAYER_COLORS[winner].emoji} ${wname} ялагч боллоо!`;document.getElementById('winnerSub').textContent=`${FINISH} алхам туулж финишэд хүрлээ!`;showToast('Уралдаан дууслаа! 🎉','success');}
-function updateHorseUI(){horsePos.forEach((pos,i)=>{const pct=Math.min(pos/FINISH*92,92);const h=document.getElementById('horse'+i);if(h)h.style.left=pct+'%';const pl=document.getElementById('pos'+i+'Label');if(pl)pl.textContent=pos;});const sr=document.getElementById('scoreRow');if(sr)sr.innerHTML=horsePlayerNames.map((name,i)=>`<div class="p-score"><div class="p-score-num" style="color:${PLAYER_COLORS[i].color}">${horsePos[i]||0}</div><div class="p-score-lbl">${PLAYER_COLORS[i].emoji} ${name}</div></div>${i<horsePlayerNames.length-1?'<div style="font-size:18px">⚡</div>':''}`).join('');const tname=horsePlayerNames[horseTurn]||PLAYER_COLORS[horseTurn].name;document.getElementById('turnLabel').textContent=gameOver?'🏁 Тоглоом дууслаа':`${PLAYER_COLORS[horseTurn].emoji} ${tname}-ийн ээлж`;const cp=document.getElementById('curPlayerLabel');if(cp)cp.textContent=`🎲 ${PLAYER_COLORS[horseTurn].emoji} ${tname}: Шагай буулгах`;}
+/* ════════════════════════════════════════════════════════════
+   МОРЬ УРАЛДЪЯ 2.0 — "Анхан шатны үндэсний бичгийн сургалт"-ын
+   өдөр тутмын бие даалтын үндсэн тоглоом.
+
+   БҮТЭЦ:
+   1) Сургалтын өгөгдөл (HZ_VOWELS, HZ_CONSONANTS, HZ_PROGRAM, HZ_WORDS)
+      — эдгээрийг ЗӨВХӨН энд өөрчилбөл бүх тоглоом дагаж өөрчлөгдөнө.
+   2) 14 хоногийн эрхийн систем (localStorage-д хадгална)
+   3) Асуулт үүсгэгч функцүүд (11 төрөл)
+   4) Тоглоомын engine (асуулт харуулах → хариулт шалгах → морь гүйлгэх)
+   5) Дүнгийн дэлгэц
+════════════════════════════════════════════════════════════ */
+
+/* ---------- 1) СУРГАЛТЫН ӨГӨГДӨЛ (ЭНД ӨӨРЧИЛЖ БОЛНО) ---------- */
+
+// Эгшиг үсгүүд: {кирилл, монгол бичгийн үсэг, латин галиг}
+const HZ_VOWELS=[
+  {cyr:'А',mon:'ᠠ',lat:'a'},{cyr:'Э',mon:'ᠡ',lat:'e'},{cyr:'И',mon:'ᠢ',lat:'i'},
+  {cyr:'О',mon:'ᠣ',lat:'o'},{cyr:'У',mon:'ᠤ',lat:'u'},{cyr:'Ө',mon:'ᠥ',lat:'ö'},{cyr:'Ү',mon:'ᠦ',lat:'ü'}
+];
+// Гийгүүлэгч үсгүүд — сургалтын дарааллаар бүлэглэсэн
+const HZ_CONS={
+  L3:[{cyr:'Н',mon:'ᠨ',lat:'n'},{cyr:'М',mon:'ᠮ',lat:'m'},{cyr:'Л',mon:'ᠯ',lat:'l'}],
+  L4:[{cyr:'НГ',mon:'ᠩ',lat:'ng'},{cyr:'Б',mon:'ᠪ',lat:'b'},{cyr:'Г',mon:'ᠭ',lat:'g'},{cyr:'Р',mon:'ᠷ',lat:'r'}],
+  L5:[{cyr:'Ш',mon:'ᠱ',lat:'sh'},{cyr:'С',mon:'ᠰ',lat:'s'},{cyr:'Д',mon:'ᠳ',lat:'d'},{cyr:'Т',mon:'ᠲ',lat:'t'}],
+  L6:[{cyr:'Ц',mon:'ᠼ',lat:'ts'},{cyr:'Ч',mon:'ᠴ',lat:'ch'}],
+  L7:[{cyr:'З',mon:'ᠽ',lat:'z'},{cyr:'Ж',mon:'ᠵ',lat:'j'}]
+};
+const HZ_ALL_CONS=[...HZ_CONS.L3,...HZ_CONS.L4,...HZ_CONS.L5,...HZ_CONS.L6,...HZ_CONS.L7];
+
+// Кирилл үгсийн банк (нөхөж бичих, үг бүтээх, унших дасгалд ашиглана — ганц үетэй, энгийн үгс)
+const HZ_WORDS={
+  byFirstLetter:{Н:['нар','ном'],М:['мал','мод'],Л:['лаа'],Б:['бор','бух'],Г:['гал','гар'],Р:['рам'],
+    Ш:['шил'],С:['сар','сум'],Д:['дал','дэл'],Т:['тал','тэг'],Ц:['цас'],Ч:['час'],З:['зам'],Ж:['жин']},
+  monosyllables:['ном','гар','нар','сар','мал','гал','тал','дал','бор','мод','сум','зам']
+};
+
+// 14 хоногийн хөтөлбөр — өдөр бүрийн шинэ чадвар. ЭНД ӨӨРЧЛӨХ БОЛОМЖТОЙ.
+const HZ_PROGRAM=[
+  {day:1, title:'Зурлага',              skill:'stroke',   icon:'✏️'},
+  {day:2, title:'Эгшиг',                skill:'vowel',    icon:'🔤'},
+  {day:3, title:'Н, М, Л',              skill:'cons',     icon:'🔡', letters:['Н','М','Л']},
+  {day:4, title:'Н, М, Л давталт',      skill:'consRev',  icon:'🔁', letters:['Н','М','Л']},
+  {day:5, title:'НГ, Б, Г',             skill:'cons',     icon:'🔡', letters:['НГ','Б','Г']},
+  {day:6, title:'Р, Ш, С',              skill:'cons',     icon:'🔡', letters:['Р','Ш','С']},
+  {day:7, title:'Д, Т',                 skill:'consRev',  icon:'🔁', letters:['Д','Т']},
+  {day:8, title:'Ц, Ч',                 skill:'cons',     icon:'🔡', letters:['Ц','Ч']},
+  {day:9, title:'З, Ж',                 skill:'consRev',  icon:'🔁', letters:['З','Ж']},
+  {day:10,title:'Үе',                   skill:'syllable', icon:'🧩'},
+  {day:11,title:'Нэг үетэй үг',         skill:'word',      icon:'📝'},
+  {day:12,title:'Галиг',                skill:'translit', icon:'🔠'},
+  {day:13,title:'Хөрвүүлэг',            skill:'convert',   icon:'🔄'},
+  {day:14,title:'Нэгтгэсэн сорил',      skill:'mixed',     icon:'🏆'}
+];
+
+const HZ_FINISH=50;              // Замын нийт алхам
+const HZ_Q_PER_DAY=10;           // Өдөрт хэдэн асуулт
+const HZ_FAST_SEC=6;             // Хэдэн секундэд багтвал "хурдан" бонус өгөх
+const HZ_STORE_KEY='shb_horse_progress_v2';
+const HZ_RIVAL_STEP_EVERY=2;     // Уралдааны морь X асуулт тутамд 1 алхам урагшилна
+
+/* ---------- 2) 14 ХОНОГИЙН ЭРХИЙН СИСТЕМ ---------- */
+// Хожим бүртгэлтэй сурагчийн 14 хоногийн эрхтэй холбогдоход зориулж
+// startDate/endDate/currentDay/completedDays бүтцийг ашигласан.
+let hzState=null;
+
+function hzDefaultState(){
+  const now=Date.now();
+  return {
+    startDate: now,
+    endDate: now + 14*86400000,
+    currentDay: 1,
+    completedDays: [],     // [1,2,3,...]
+    myPos: 0,              // "Миний морь"-ний нийт алхам (0..HZ_FINISH)
+    rivalPos: 0,           // "Уралдааны морь"-ний нийт алхам
+    devUnlockAll: false,   // Туршилтын горим — бүх өдрийг нээх
+    lastResult: null
+  };
+}
+function hzLoad(){
+  try{ const raw=localStorage.getItem(HZ_STORE_KEY); if(!raw) return hzDefaultState();
+    const s=JSON.parse(raw); return Object.assign(hzDefaultState(),s);
+  }catch{ return hzDefaultState(); }
+}
+function hzSave(){ try{ localStorage.setItem(HZ_STORE_KEY, JSON.stringify(hzState)); }catch{} }
+
+// Өнөөдрийг хүртэл хэдэн өдөр нээгдэх ёстойг тооцно (бодит хуанлийн өдрөөр)
+function hzAllowedDay(){
+  if(hzState.devUnlockAll) return HZ_PROGRAM.length;
+  const elapsed=Math.floor((Date.now()-hzState.startDate)/86400000);
+  return Math.max(1, Math.min(HZ_PROGRAM.length, elapsed+1));
+}
+// Тухайн өдрийн төлөв: 'done' | 'today' | 'tomorrow' | 'locked'
+function hzDayStatus(day){
+  if(hzState.completedDays.includes(day)) return 'done';
+  const allowed=hzAllowedDay();
+  if(day<=allowed) return 'today';
+  if(day===allowed+1) return 'tomorrow';
+  return 'locked';
+}
+function hzToggleDevUnlock(){ hzState.devUnlockAll=!hzState.devUnlockAll; hzSave(); renderHorseHome();
+  showToast(hzState.devUnlockAll?'Туршилтын горим: бүх өдөр нээлттэй':'Туршилтын горим унтарлаа','success'); }
+
+/* ---------- 3) ЖИЖИГ ТУСЛАХ ФУНКЦҮҮД ---------- */
+function hzShuffle(a){const b=a.slice();for(let i=b.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[b[i],b[j]]=[b[j],b[i]];}return b;}
+function hzPick(a){return a[Math.floor(Math.random()*a.length)];}
+function hzSample(a,n){return hzShuffle(a).slice(0,Math.min(n,a.length));}
+function hzLetterByCyr(cyr){return HZ_ALL_CONS.find(l=>l.cyr===cyr);}
+
+// Тухайн өдрийг хүртэл сурсан бүх гийгүүлэгчийн жагсаалт (давталт/холилдсон асуултад ашиглана)
+function hzCumulativeConsUpTo(day){
+  const introducedByDay3=['Н','М','Л'],introducedByDay5=[...introducedByDay3,'НГ','Б','Г'],
+    introducedByDay6=[...introducedByDay5,'Р','Ш','С'],introducedByDay7=introducedByDay6,
+    introducedByDay8=[...introducedByDay6,'Ц','Ч'],introducedByDay9=[...introducedByDay8,'З','Ж'];
+  let cyrList=[];
+  if(day>=9) cyrList=introducedByDay9; else if(day>=8) cyrList=introducedByDay8;
+  else if(day>=6) cyrList=introducedByDay6; else if(day>=5) cyrList=introducedByDay5;
+  else if(day>=3) cyrList=introducedByDay3;
+  return cyrList.map(hzLetterByCyr).filter(Boolean);
+}
+function hzDistractorPool(exclude){
+  return HZ_ALL_CONS.filter(l=>!exclude.some(e=>e.cyr===l.cyr));
+}
+
+/* ---------- 4) ЗУРЛАГЫН SVG (Түвшин 1) ---------- */
+const HZ_STROKES=[
+  {key:'vert', name:'Босоо гол зурлага', svg:'<line x1="50" y1="12" x2="50" y2="88" stroke="var(--amber-d)" stroke-width="7" stroke-linecap="round"/>'},
+  {key:'diagL', name:'Налуу зурлага (зүүн тийш)', svg:'<line x1="25" y1="15" x2="75" y2="85" stroke="var(--amber-d)" stroke-width="7" stroke-linecap="round"/>'},
+  {key:'diagR', name:'Налуу зурлага (баруун тийш)', svg:'<line x1="75" y1="15" x2="25" y2="85" stroke="var(--amber-d)" stroke-width="7" stroke-linecap="round"/>'},
+  {key:'hook', name:'Тохой (муруй) зурлага', svg:'<path d="M35,15 C35,55 75,55 65,85" stroke="var(--amber-d)" stroke-width="7" fill="none" stroke-linecap="round"/>'},
+  {key:'dot', name:'Цэг', svg:'<circle cx="50" cy="50" r="9" fill="var(--amber-d)"/>'}
+];
+function hzStrokeSVG(s,big){return `<svg viewBox="0 0 100 100" width="${big?90:60}" height="${big?90:60}">${s.svg}</svg>`;}
+
+/* ---------- 5) АСУУЛТ ҮҮСГЭГЧ ФУНКЦҮҮД ---------- */
+// Бүх генератор {kind, ...} хэлбэрийн объект буцаана. kind: 'mcq' | 'match' | 'build'
+
+function hzGenStrokeFind(){
+  const target=hzPick(HZ_STROKES);
+  const others=hzSample(HZ_STROKES.filter(s=>s.key!==target.key),3);
+  const opts=hzShuffle([target,...others]);
+  return {kind:'mcq', qtext:`"${target.name}"-ыг ол.`, glyph:null,
+    options:opts.map(o=>hzStrokeSVG(o)), optType:'svg', correctIdx:opts.findIndex(o=>o.key===target.key)};
+}
+function hzGenStrokeDirection(){
+  const dirs=['Дээрээс доош','Зүүнээс баруун','Баруунаас зүүн','Доороос дээш'];
+  return {kind:'mcq', qtext:'Монгол бичгийн үндсэн зурлагыг ямар чиглэлд татдаг вэ?',
+    glyph:hzStrokeSVG(HZ_STROKES[0],true), optType:'text', options:dirs, correctIdx:0};
+}
+function hzGenVowelRecognize(){
+  const target=hzPick(HZ_VOWELS); const distr=hzSample(HZ_VOWELS.filter(v=>v.cyr!==target.cyr),3);
+  const opts=hzShuffle([target,...distr]);
+  return {kind:'mcq', qtext:'Энэ ямар эгшиг үсэг вэ?', glyph:target.mon, glyphClass:'',
+    optType:'text', options:opts.map(o=>o.cyr), correctIdx:opts.findIndex(o=>o.cyr===target.cyr)};
+}
+function hzGenVowelReverse(){
+  const target=hzPick(HZ_VOWELS); const distr=hzSample(HZ_VOWELS.filter(v=>v.cyr!==target.cyr),3);
+  const opts=hzShuffle([target,...distr]);
+  return {kind:'mcq', qtext:`"${target.cyr}" эгшгийг монгол бичгээр ол.`, glyph:null,
+    optType:'mon', options:opts.map(o=>o.mon), correctIdx:opts.findIndex(o=>o.cyr===target.cyr)};
+}
+function hzGenLetterRecognize(pool){
+  const target=hzPick(pool); const distr=hzSample(hzDistractorPool([target]),3);
+  const opts=hzShuffle([target,...distr]);
+  return {kind:'mcq', qtext:'Энэ ямар үсэг вэ?', glyph:target.mon,
+    optType:'text', options:opts.map(o=>o.cyr), correctIdx:opts.findIndex(o=>o.cyr===target.cyr)};
+}
+function hzGenLetterReverse(pool){
+  const target=hzPick(pool); const distr=hzSample(hzDistractorPool([target]),3);
+  const opts=hzShuffle([target,...distr]);
+  return {kind:'mcq', qtext:`"${target.cyr}" үсгийг монгол бичгээр ол.`, glyph:null,
+    optType:'mon', options:opts.map(o=>o.mon), correctIdx:opts.findIndex(o=>o.cyr===target.cyr)};
+}
+function hzGenLetterMatch(pool){
+  const n=Math.min(4,Math.max(3,pool.length));
+  const items=hzSample(pool.length>=n?pool:HZ_ALL_CONS,n);
+  const left=hzShuffle(items.map(x=>({key:x.cyr,val:x.mon,type:'mon'})));
+  const right=hzShuffle(items.map(x=>({key:x.cyr,val:x.cyr,type:'text'})));
+  return {kind:'match', qtext:'Монгол бичгийн үсэг ба кирилл үсгийг холбоорой.', left, right};
+}
+function hzGenFillMissing(pool){
+  const cands=pool.map(l=>({letter:l, words:HZ_WORDS.byFirstLetter[l.cyr]||[]})).filter(c=>c.words.length);
+  if(!cands.length) return hzGenLetterRecognize(pool);
+  const c=hzPick(cands); const word=hzPick(c.words);
+  const blanked='_'+word.slice(1);
+  const distr=hzSample(hzDistractorPool([c.letter]),3).map(l=>l.cyr.toLowerCase());
+  const opts=hzShuffle([c.letter.cyr.toLowerCase(),...distr]);
+  return {kind:'mcq', qtext:`Дутуу үсгийг нөхөж бич: "${blanked}"`, glyph:null, wordDisplay:blanked,
+    optType:'text', options:opts, correctIdx:opts.findIndex(o=>o===c.letter.cyr.toLowerCase())};
+}
+function hzSylCyr(c,v){return (c.cyr.toLowerCase()+v.cyr.toLowerCase());}
+function hzGenSyllableRead(pool){
+  const c=hzPick(pool), v=hzPick(HZ_VOWELS); const correct=hzSylCyr(c,v);
+  const distrSet=new Set([correct]); const opts=[correct];
+  while(opts.length<4){
+    const rc=Math.random()<0.5?hzPick(pool):c, rv=Math.random()<0.5?hzPick(HZ_VOWELS):v;
+    const s=hzSylCyr(rc,rv); if(!distrSet.has(s)){distrSet.add(s);opts.push(s);}
+  }
+  const shuffled=hzShuffle(opts);
+  return {kind:'mcq', qtext:'Энэ авиалбарыг хэрхэн уншихыг сонго.', glyph:c.mon+v.mon,
+    optType:'text', options:shuffled, correctIdx:shuffled.indexOf(correct)};
+}
+function hzGenTranslit(pool){
+  const c=hzPick(pool), v=hzPick(HZ_VOWELS); const correct=c.lat+v.lat;
+  const distrSet=new Set([correct]); const opts=[correct];
+  while(opts.length<4){
+    const rc=Math.random()<0.5?hzPick(pool):c, rv=Math.random()<0.5?hzPick(HZ_VOWELS):v;
+    const s=rc.lat+rv.lat; if(!distrSet.has(s)){distrSet.add(s);opts.push(s);}
+  }
+  const shuffled=hzShuffle(opts);
+  return {kind:'mcq', qtext:'Латин галигаар зөв бичсэнийг сонго.', glyph:c.mon+v.mon,
+    optType:'text', options:shuffled, correctIdx:shuffled.indexOf(correct)};
+}
+function hzGenConvert(pool){
+  const c1=hzPick(pool), v=hzPick(HZ_VOWELS), c2=hzPick(pool);
+  const correct=(c1.cyr.toLowerCase()+v.cyr.toLowerCase()+c2.cyr.toLowerCase());
+  const distrSet=new Set([correct]); const opts=[correct];
+  while(opts.length<4){
+    const rc1=hzPick(pool), rv=hzPick(HZ_VOWELS), rc2=hzPick(pool);
+    const s=rc1.cyr.toLowerCase()+rv.cyr.toLowerCase()+rc2.cyr.toLowerCase();
+    if(!distrSet.has(s)){distrSet.add(s);opts.push(s);}
+  }
+  const shuffled=hzShuffle(opts);
+  return {kind:'mcq', qtext:'Монгол бичгийг кирилл рүү зөв хөрвүүлсэнийг сонго.', glyph:c1.mon+v.mon+c2.mon,
+    optType:'text', options:shuffled, correctIdx:shuffled.indexOf(correct)};
+}
+function hzGenWordBuild(){
+  const word=hzPick(HZ_WORDS.monosyllables);
+  const letters=word.split('');
+  const extra=hzSample('абвгдежзийклмнопрстуфхцчшщыьэюя'.split('').filter(x=>!letters.includes(x)), Math.max(0,5-letters.length));
+  return {kind:'build', qtext:`Дараах үсгүүдээс "${word.length}" үсэгтэй үг бүтээ:`, target:word, tiles:hzShuffle([...letters,...extra])};
+}
+function hzGenWordRead(){
+  const word=hzPick(HZ_WORDS.monosyllables);
+  const distr=hzSample(HZ_WORDS.monosyllables.filter(w=>w!==word),3);
+  const opts=hzShuffle([word,...distr]);
+  return {kind:'mcq', qtext:'Дуудлагаар нь тааруулан зөв үгийг сонго:', glyph:null, wordDisplay:word.toUpperCase(),
+    optType:'text', options:opts, correctIdx:opts.indexOf(word)};
+}
+function hzGenListen(){
+  const word=hzPick(HZ_WORDS.monosyllables);
+  const distr=hzSample(HZ_WORDS.monosyllables.filter(w=>w!==word),3);
+  const opts=hzShuffle([word,...distr]);
+  return {kind:'mcq', qtext:'Сонсоод зөв бичигдсэн үгийг сонго:', glyph:null, speak:word,
+    optType:'text', options:opts, correctIdx:opts.indexOf(word)};
+}
+function hzSpeak(text){
+  try{
+    if(!('speechSynthesis' in window)) return false;
+    const u=new SpeechSynthesisUtterance(text);
+    u.lang='mn-MN'; u.rate=0.85;
+    window.speechSynthesis.cancel(); window.speechSynthesis.speak(u);
+    return true;
+  }catch{ return false; }
+}
+
+/* Өдрийн асуултын төрлийг сонгож жагсаалт үүсгэнэ */
+function hzBuildQuestions(day){
+  const prog=HZ_PROGRAM.find(p=>p.day===day)||HZ_PROGRAM[0];
+  const cumPool=hzCumulativeConsUpTo(day);
+  const dayLetters=(prog.letters||[]).map(hzLetterByCyr).filter(Boolean);
+  const focusPool=dayLetters.length?dayLetters:cumPool;
+  let gens=[];
+  switch(prog.skill){
+    case 'stroke':
+      gens=[hzGenStrokeFind,hzGenStrokeFind,hzGenStrokeDirection];break;
+    case 'vowel':
+      gens=[()=>hzGenVowelRecognize(),()=>hzGenVowelReverse()];break;
+    case 'cons':
+      gens=[()=>hzGenLetterRecognize(focusPool),()=>hzGenLetterReverse(focusPool)];break;
+    case 'consRev':
+      gens=[()=>hzGenLetterRecognize(focusPool),()=>hzGenLetterReverse(focusPool),
+            ()=>hzGenLetterMatch(cumPool.length?cumPool:focusPool),()=>hzGenFillMissing(cumPool.length?cumPool:focusPool)];break;
+    case 'syllable':
+      gens=[()=>hzGenSyllableRead(cumPool)];break;
+    case 'word':
+      gens=[hzGenWordBuild,hzGenWordRead,hzGenListen];break;
+    case 'translit':
+      gens=[()=>hzGenTranslit(cumPool)];break;
+    case 'convert':
+      gens=[()=>hzGenConvert(cumPool)];break;
+    case 'mixed':
+    default:
+      gens=[()=>hzGenLetterRecognize(cumPool.length?cumPool:HZ_ALL_CONS),()=>hzGenLetterReverse(cumPool.length?cumPool:HZ_ALL_CONS),
+            ()=>hzGenSyllableRead(cumPool.length?cumPool:HZ_ALL_CONS),()=>hzGenTranslit(cumPool.length?cumPool:HZ_ALL_CONS),
+            ()=>hzGenConvert(cumPool.length?cumPool:HZ_ALL_CONS),hzGenWordRead,hzGenListen,
+            ()=>hzGenLetterMatch(cumPool.length?cumPool:HZ_ALL_CONS)];
+  }
+  const qs=[];
+  for(let i=0;i<HZ_Q_PER_DAY;i++) qs.push(hzPick(gens)());
+  return qs;
+}
+
+/* ---------- 6) ТОГЛООМЫН ENGINE ---------- */
+let hzQuiz=null; // {day, questions, idx, correct, streak, maxStreak, fast, tStart, answered, matchSel, buildSlots}
+
+function initHorseLearning(){ hzState=hzLoad(); renderHorseHome(); }
+
+function renderHorseHome(){
+  document.getElementById('horseSetup').style.display='block';
+  document.getElementById('horseGame').style.display='none';
+  document.getElementById('hzResultScreen').style.display='none';
+  const mini=document.getElementById('hzRaceMini'); if(mini) mini.innerHTML=hzRaceHTML(false);
+  const grid=document.getElementById('hzDayGrid');
+  grid.innerHTML=HZ_PROGRAM.map(p=>{
+    const st=hzDayStatus(p.day);
+    const stLabel={done:'✅ Дууссан',today:'▶️ Өнөөдрийн даалгавар',tomorrow:'🔒 Маргааш нээгдэнэ',locked:'🔒 Түгжээтэй'}[st];
+    const stClass={done:'done',today:'today',tomorrow:'locked',locked:'locked'}[st];
+    const clickable=(st==='done'||st==='today');
+    return `<div class="hz-day-card ${stClass}" ${clickable?`onclick="hzStartDay(${p.day})"`:''}>
+      <div class="hz-day-icon">${p.icon}</div>
+      <div class="hz-day-num">Өдөр ${p.day}</div>
+      <div class="hz-day-title">${p.title}</div>
+      <div class="hz-day-state st-${stClass==='today'?'today':(stClass==='done'?'done':'locked')}">${stLabel}</div>
+    </div>`;
+  }).join('');
+}
+
+function hzRaceHTML(withBadge,day){
+  const myPct=Math.min(hzState.myPos/HZ_FINISH*92,92), rivalPct=Math.min(hzState.rivalPos/HZ_FINISH*92,92);
+  return `<div class="hz-race-wrap">
+    ${withBadge?`<div class="hz-day-badge" id="hzDayBadge">Өдөр ${day} — ${(HZ_PROGRAM.find(p=>p.day===day)||{}).title||''}</div>`:''}
+    <div class="hz-lane"><div class="hz-lane-label">🐎 Миний морь</div>
+      <div class="hz-lane-track"><div class="lane-bg-stripes"></div><div class="hz-horse" id="hzMyHorse" style="left:${myPct}%">🐎</div><div class="hz-finish">🏁</div></div></div>
+    <div class="hz-lane"><div class="hz-lane-label">🐴 Уралдааны морь</div>
+      <div class="hz-lane-track"><div class="lane-bg-stripes"></div><div class="hz-horse" id="hzRivalHorse" style="left:${rivalPct}%">🐴</div><div class="hz-finish">🏁</div></div></div>
+  </div>`;
+}
+
+function hzStartDay(day){
+  hzQuiz={day, questions:hzBuildQuestions(day), idx:0, correct:0, streak:0, maxStreak:0, fast:0, tStart:0, answered:false};
+  document.getElementById('horseSetup').style.display='none';
+  document.getElementById('horseGame').style.display='block';
+  document.getElementById('hzResultScreen').style.display='none';
+  // морь замын хэсгийг шинэчилж байрлуулна
+  document.querySelector('#horseGame .hz-race-wrap').outerHTML=hzRaceHTML(true,day);
+  hzRenderQuestion();
+}
+function hzExitQuiz(){ hzQuiz=null; renderHorseHome(); }
+function hzBackToDays(){ renderHorseHome(); }
+
+function hzRenderQuestion(){
+  const q=hzQuiz.questions[hzQuiz.idx];
+  hzQuiz.answered=false; hzQuiz.tStart=Date.now();
+  document.getElementById('hzProgFill').style.width=((hzQuiz.idx)/HZ_Q_PER_DAY*100)+'%';
+  document.getElementById('hzStreak').textContent='🔥 '+hzQuiz.streak;
+  const fb=document.getElementById('hzFeedback'); fb.className='hz-feedback'; fb.textContent='';
+  const area=document.getElementById('hzQuestionArea');
+
+  if(q.kind==='mcq'){
+    let glyphHTML='';
+    if(q.glyph) glyphHTML=`<div class="mongol-glyph">${q.glyph}</div>`;
+    if(q.wordDisplay) glyphHTML+=`<div class="hz-qtext" style="font-size:22px;font-weight:800;color:var(--dark)">${q.wordDisplay}</div>`;
+    const optClass=q.optType==='mon'?'option-btn mon-opt':'option-btn';
+    const optsHTML=q.options.map((o,i)=>`<button class="${optClass}" onclick="hzAnswerMCQ(${i})">${o}</button>`).join('');
+    area.innerHTML=`<div class="hz-qtext">${q.qtext}</div>${glyphHTML}<div class="hz-opts">${optsHTML}</div>`;
+    if(q.speak){ setTimeout(()=>hzSpeak(q.speak),200); area.insertAdjacentHTML('afterbegin',`<div style="text-align:center;margin-bottom:8px"><button class="btn-g" style="padding:7px 16px;font-size:13px" onclick="hzSpeak('${q.speak}')">🔊 Дахин сонсох</button></div>`); }
+  } else if(q.kind==='match'){
+    hzQuiz.matchSel=null; hzQuiz.matchedKeys=new Set();
+    area.innerHTML=`<div class="hz-qtext">${q.qtext}</div><div class="hz-match-wrap">
+      <div class="hz-match-col" id="hzMatchLeft">${q.left.map((it,i)=>`<div class="hz-match-item ${it.type==='mon'?'mon':''}" data-side="L" data-i="${i}" onclick="hzMatchClick('L',${i})">${it.val}</div>`).join('')}</div>
+      <div class="hz-match-col" id="hzMatchRight">${q.right.map((it,i)=>`<div class="hz-match-item ${it.type==='mon'?'mon':''}" data-side="R" data-i="${i}" onclick="hzMatchClick('R',${i})">${it.val}</div>`).join('')}</div>
+    </div>`;
+  } else if(q.kind==='build'){
+    hzQuiz.buildAns=[];
+    area.innerHTML=`<div class="hz-qtext">${q.qtext}</div>
+      <div class="hz-build-slot" id="hzBuildSlot"></div>
+      <div class="hz-tile-pool" id="hzTilePool">${q.tiles.map((t,i)=>`<div class="hz-tile" id="hzTile${i}" onclick="hzBuildTap(${i})">${t}</div>`).join('')}</div>
+      <button class="btn-p hz-check-btn" id="hzBuildCheck" onclick="hzBuildCheck()" disabled>✅ Шалгах</button>`;
+  }
+}
+
+function hzFinishQuestion(isCorrect,fast){
+  hzQuiz.answered=true;
+  const fb=document.getElementById('hzFeedback');
+  let steps=0;
+  if(isCorrect){
+    hzQuiz.correct++; hzQuiz.streak++; hzQuiz.maxStreak=Math.max(hzQuiz.maxStreak,hzQuiz.streak);
+    steps=fast?2:1; if(fast) hzQuiz.fast++;
+    hzState.myPos=Math.min(HZ_FINISH,hzState.myPos+steps);
+    fb.className='hz-feedback show ok'; fb.textContent=fast?'Мундаг! Хурдан бөгөөд зөв! 🎉 (+2 алхам)':'Зөв! 🎉 (+1 алхам)';
+    showToast(hzPick(['Зөв! 🎉','Мундаг!','Чи зөв танилаа!','Бараг барианд орлоо!']), 'success');
+  }else{
+    hzQuiz.streak=0;
+    fb.className='hz-feedback show no'; fb.textContent='Дахин нэг хараад үзье! 💛';
+  }
+  // Уралдааны морь тогтмол хурдтай урагшилна
+  if((hzQuiz.idx+1)%HZ_RIVAL_STEP_EVERY===0) hzState.rivalPos=Math.min(HZ_FINISH,hzState.rivalPos+1);
+  hzSave();
+  hzUpdateRaceHorses();
+  setTimeout(()=>{
+    hzQuiz.idx++;
+    if(hzQuiz.idx>=HZ_Q_PER_DAY) hzFinishDay(); else hzRenderQuestion();
+  },1200);
+}
+function hzUpdateRaceHorses(){
+  const my=document.getElementById('hzMyHorse'), rival=document.getElementById('hzRivalHorse');
+  if(my) my.style.left=Math.min(hzState.myPos/HZ_FINISH*92,92)+'%';
+  if(rival) rival.style.left=Math.min(hzState.rivalPos/HZ_FINISH*92,92)+'%';
+}
+
+function hzAnswerMCQ(idx){
+  if(hzQuiz.answered) return;
+  const q=hzQuiz.questions[hzQuiz.idx];
+  const btns=document.querySelectorAll('#hzQuestionArea .option-btn');
+  btns.forEach(b=>b.disabled=true);
+  const isCorrect=idx===q.correctIdx;
+  if(btns[q.correctIdx]) btns[q.correctIdx].classList.add('correct');
+  if(!isCorrect && btns[idx]) btns[idx].classList.add('wrong');
+  const elapsed=(Date.now()-hzQuiz.tStart)/1000;
+  hzFinishQuestion(isCorrect, isCorrect && elapsed<=HZ_FAST_SEC);
+}
+function hzMatchClick(side,i){
+  if(hzQuiz.answered) return;
+  const q=hzQuiz.questions[hzQuiz.idx];
+  const item=(side==='L'?q.left:q.right)[i];
+  if(hzQuiz.matchedKeys.has(item.key+side)) return;
+  const el=document.querySelector(`.hz-match-item[data-side="${side}"][data-i="${i}"]`);
+  if(!hzQuiz.matchSel){ hzQuiz.matchSel={side,i,key:item.key}; el.classList.add('sel'); return; }
+  if(hzQuiz.matchSel.side===side){ // ижил талаас өөр сонголт хийвэл сэлгэнэ
+    document.querySelector(`.hz-match-item[data-side="${side}"][data-i="${hzQuiz.matchSel.i}"]`)?.classList.remove('sel');
+    hzQuiz.matchSel={side,i,key:item.key}; el.classList.add('sel'); return;
+  }
+  const firstEl=document.querySelector(`.hz-match-item[data-side="${hzQuiz.matchSel.side}"][data-i="${hzQuiz.matchSel.i}"]`);
+  if(hzQuiz.matchSel.key===item.key){
+    el.classList.remove('sel'); el.classList.add('matched'); firstEl.classList.add('matched');
+    hzQuiz.matchedKeys.add(item.key+'L'); hzQuiz.matchedKeys.add(item.key+'R');
+    hzQuiz.matchSel=null;
+    const totalPairs=q.left.length;
+    if(hzQuiz.matchedKeys.size>=totalPairs*2){ hzFinishQuestion(true, false); }
+  }else{
+    el.classList.add('bad'); firstEl.classList.add('bad');
+    setTimeout(()=>{el.classList.remove('bad','sel');firstEl.classList.remove('bad','sel');},350);
+    hzQuiz.matchSel=null;
+    hzQuiz._matchMiss=(hzQuiz._matchMiss||0)+1;
+    if(hzQuiz._matchMiss>=3) hzFinishQuestion(false,false);
+  }
+}
+function hzBuildTap(i){
+  if(hzQuiz.answered) return;
+  const q=hzQuiz.questions[hzQuiz.idx];
+  const tileEl=document.getElementById('hzTile'+i);
+  if(tileEl.classList.contains('used')) return;
+  tileEl.classList.add('used');
+  hzQuiz.buildAns.push({letter:q.tiles[i], tileIdx:i});
+  const slot=document.getElementById('hzBuildSlot');
+  slot.innerHTML=hzQuiz.buildAns.map((a,k)=>`<div class="hz-slot-tile" onclick="hzBuildRemove(${k})">${a.letter}</div>`).join('');
+  document.getElementById('hzBuildCheck').disabled=hzQuiz.buildAns.length!==q.target.length;
+}
+function hzBuildRemove(k){
+  if(hzQuiz.answered) return;
+  const q=hzQuiz.questions[hzQuiz.idx];
+  const removed=hzQuiz.buildAns.splice(k,1)[0];
+  document.getElementById('hzTile'+removed.tileIdx).classList.remove('used');
+  const slot=document.getElementById('hzBuildSlot');
+  slot.innerHTML=hzQuiz.buildAns.map((a,i2)=>`<div class="hz-slot-tile" onclick="hzBuildRemove(${i2})">${a.letter}</div>`).join('');
+  document.getElementById('hzBuildCheck').disabled=hzQuiz.buildAns.length!==q.target.length;
+}
+function hzBuildCheck(){
+  if(hzQuiz.answered) return;
+  const q=hzQuiz.questions[hzQuiz.idx];
+  const built=hzQuiz.buildAns.map(a=>a.letter).join('');
+  document.getElementById('hzBuildCheck').disabled=true;
+  hzFinishQuestion(built===q.target, false);
+}
+
+function hzFinishDay(){
+  const day=hzQuiz.day;
+  if(!hzState.completedDays.includes(day)) hzState.completedDays.push(day);
+  hzState.currentDay=Math.max(hzState.currentDay, Math.min(HZ_PROGRAM.length, day+1));
+  hzState.lastResult={day, correct:hzQuiz.correct, total:HZ_Q_PER_DAY, maxStreak:hzQuiz.maxStreak, fast:hzQuiz.fast};
+  hzSave();
+  const pct=hzQuiz.correct/HZ_Q_PER_DAY;
+  const stars=pct>=0.9?5:pct>=0.7?4:pct>=0.5?3:pct>=0.3?2:1;
+  const score=hzQuiz.correct*10+hzQuiz.fast*5;
+  const stepsGained=hzQuiz.correct+hzQuiz.fast; // энгийн зөв + хурдан бонус нэмэгдэл
+
+  document.getElementById('horseGame').style.display='none';
+  const rs=document.getElementById('hzResultScreen'); rs.style.display='block';
+  const finished=hzState.myPos>=HZ_FINISH;
+  document.getElementById('hzResultEmoji').textContent=finished?'🏆':'📚';
+  document.getElementById('hzResultTitle').textContent=finished?'Баяр хүргэе! Чи барианд орлоо!':'Өнөөдрийн ахиц';
+  document.getElementById('hzResultSub').textContent=(HZ_PROGRAM.find(p=>p.day===day)||{}).title||'';
+  document.getElementById('hzResultStars').textContent='⭐'.repeat(stars)+'☆'.repeat(5-stars);
+  document.getElementById('hzStatCorrect').textContent=`${hzQuiz.correct}/${HZ_Q_PER_DAY}`;
+  document.getElementById('hzStatScore').textContent=score;
+  document.getElementById('hzStatSteps').textContent=stepsGained;
+  document.getElementById('hzStatStreak').textContent=hzQuiz.maxStreak;
+  document.getElementById('hzSkillLine').textContent=`📚 Өнөөдөр давтсан: ${(HZ_PROGRAM.find(p=>p.day===day)||{}).title||''}`;
+  showToast(finished?'Уралдаан дууслаа! 🏆':'Өдрийн даалгавар дууслаа! 🎉','success');
+}
 
 /* ════════════════════════════════════
    ҮНДЭСНИЙ БИЧГИЙН СУРГАЛТ
