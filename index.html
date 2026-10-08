@@ -26,6 +26,7 @@
       <button class="nav-btn" onclick="showSec('home')">🏠 Нүүр</button>
       <button class="nav-btn" onclick="showSec('games')">🎮 Тоглоом</button>
       <button class="nav-btn" onclick="showSec('training')">🎓 Сургалт</button>
+      <button class="nav-btn" onclick="showSec('worksheet')">📝 Ажлын хуудас</button>
       <button class="nav-btn" onclick="showSec('shop')">🛒 Дэлгүүр</button>
       <button class="nav-btn" onclick="showSec('about')">👩‍🏫 Багшийн тухай</button>
     </div>
@@ -69,6 +70,7 @@
   <button class="nav-btn" onclick="showSec('home');closeMobileNav()">🏠 Нүүр</button>
   <button class="nav-btn" onclick="showSec('games');closeMobileNav()">🎮 Тоглоом</button>
   <button class="nav-btn" onclick="showSec('training');closeMobileNav()">🎓 Сургалт</button>
+  <button class="nav-btn" onclick="showSec('worksheet');closeMobileNav()">📝 Ажлын хуудас</button>
   <button class="nav-btn" onclick="showSec('shop');closeMobileNav()">🛒 Дэлгүүр</button>
   <button class="nav-btn" onclick="showSec('about');closeMobileNav()">👩‍🏫 Багшийн тухай</button>
 </div>
@@ -84,6 +86,7 @@
       <div class="hero-btns">
         <button class="btn-p" onclick="showSec('games')">🎮 Тоглоом эхлэх</button>
         <button class="btn-g" onclick="showSec('training')">🎓 Сургалтууд</button>
+        <button class="btn-g" onclick="showSec('worksheet')">📝 Ажлын хуудас</button>
       </div>
       <div class="hero-trust">
         <img src="https://raw.githubusercontent.com/tuult764-crypto/sonirholtoi-hel-bichig-/main/teacher.png" alt="Багш М.Туул" onerror="this.style.display='none'">
@@ -135,6 +138,23 @@
 
   <h2 class="sec-title">Шинэ материалууд</h2>
   <div id="dashGrid" class="prod-grid"></div>
+</section>
+
+<!-- АЖЛЫН ХУУДАС БЭЛТГЭХ -->
+<section id="worksheetSection" class="sec">
+  <h2 class="sec-title">📝 Унших эхээс ажлын хуудас бэлтгэх</h2>
+  <p style="max-width:680px;font-size:17px;line-height:1.6">Унших эхийнхээ зураг эсвэл PDF-ийг оруулаад Блумын танин мэдэхүйн шатнаас (сэргээн санахаас бүтээх хүртэл) сонгоход тэр эхэд тулгуурласан асуулт, даалгавар гарна. Асуултаа засаад Word файлаар татаж аваад хэвлэнэ.</p>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin:24px 0">
+    <div style="background:#f7f1e8;border:2px solid #e6d8c3;border-radius:22px;padding:22px;text-align:center"><div style="font-size:32px">📷</div><h3 style="margin:8px 0 6px">1. Эхээ оруул</h3><p style="margin:0;font-size:15px;color:var(--muted)">Номын хуудсыг зургаар авч эсвэл PDF-ээр оруулна.</p></div>
+    <div style="background:#f2ede4;border:2px solid #ddd3c2;border-radius:22px;padding:22px;text-align:center"><div style="font-size:32px">🪜</div><h3 style="margin:8px 0 6px">2. Шатаа сонго</h3><p style="margin:0;font-size:15px;color:var(--muted)">Доод эрэмбийн 3, дээд эрэмбийн 3 шатаас хүссэнээ.</p></div>
+    <div style="background:#f7f1e8;border:2px solid #e6d8c3;border-radius:22px;padding:22px;text-align:center"><div style="font-size:32px">✏️</div><h3 style="margin:8px 0 6px">3. Засаад татаж ав</h3><p style="margin:0;font-size:15px;color:var(--muted)">Асуултаа өөрөө засаад Word болгон татна.</p></div>
+  </div>
+  <div style="background:#fff;border:1px solid var(--border);border-radius:22px;padding:22px;max-width:680px">
+    <div style="font-size:22px;font-weight:800">Нэг ажлын хуудас — 500₮</div>
+    <p style="margin:8px 0 16px;font-size:16px">Эхний ажлын хуудас <b>үнэгүй</b>. Дараагийнхыг 1, 5, 10 ширхгээр худалдаж авна. Төлбөрийг QR-аар төлнө. Асуулт засаж, Word татахад нэмэлт төлбөргүй.</p>
+    <a class="btn-p" href="https://bagshiin-tuslah-fnv4.onrender.com" target="_blank" rel="noopener" style="display:inline-block;text-decoration:none">Ажлын хуудас бэлтгэх →</a>
+    <p style="margin:16px 0 0;font-size:14px;color:var(--muted)">AI бэлтгэсэн асуултыг хичээлдээ ашиглахаасаа өмнө өөрөө шалгаарай. Асуулт, санал: sonirholtoihelbichig@gmail.com</p>
+  </div>
 </section>
 
 <!-- GAMES LOBBY -->
