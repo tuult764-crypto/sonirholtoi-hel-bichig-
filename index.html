@@ -27,7 +27,8 @@
       <button class="nav-btn" onclick="showSec('games')">🎮 Тоглоом</button>
       <button class="nav-btn" onclick="showSec('training')">🎓 Сургалт</button>
       <button class="nav-btn" onclick="showSec('worksheet')">📝 Ажлын хуудас</button>
-      <button class="nav-btn" onclick="showSec('shop')">🛒 Дэлгүүр</button>
+      <button class="nav-btn" onclick="showSec('shop')">🛒 Сургалтын материал</button>
+      <button class="nav-btn" onclick="location.href='/materials.html#my'">📁 Миний сан</button>
       <button class="nav-btn" onclick="showSec('about')">👩‍🏫 Багшийн тухай</button>
     </div>
     <button class="hamburger" id="hamburger" onclick="toggleMobileNav()" aria-label="Цэс">
@@ -71,7 +72,8 @@
   <button class="nav-btn" onclick="showSec('games');closeMobileNav()">🎮 Тоглоом</button>
   <button class="nav-btn" onclick="showSec('training');closeMobileNav()">🎓 Сургалт</button>
   <button class="nav-btn" onclick="showSec('worksheet');closeMobileNav()">📝 Ажлын хуудас</button>
-  <button class="nav-btn" onclick="showSec('shop');closeMobileNav()">🛒 Дэлгүүр</button>
+  <button class="nav-btn" onclick="showSec('shop');closeMobileNav()">🛒 Сургалтын материал</button>
+  <button class="nav-btn" onclick="location.href='/materials.html#my'">📁 Миний сан</button>
   <button class="nav-btn" onclick="showSec('about');closeMobileNav()">👩‍🏫 Багшийн тухай</button>
 </div>
 <main>
@@ -124,7 +126,7 @@
   <div class="quick-nav-title">Хаанаас эхлэх вэ?</div>
   <div class="hero-cards">
     <div class="hero-card" style="background:#f7f1e8;border-color:#e6d8c3" onclick="showSec('games')"><div class="icon">🎮</div><h3>Тоглоом</h3></div>
-    <div class="hero-card" style="background:#f2ede4;border-color:#ddd3c2" onclick="showSec('shop')"><div class="icon">🛒</div><h3>Дэлгүүр</h3></div>
+    <div class="hero-card" style="background:#f2ede4;border-color:#ddd3c2" onclick="showSec('shop')"><div class="icon">🛒</div><h3>Сургалтын материал</h3></div>
     <div class="hero-card" style="background:#f7f1e8;border-color:#e6d8c3" onclick="showSec('training')"><div class="icon">🎓</div><h3>Сургалт</h3></div>
     <div class="hero-card" style="background:#f2ede4;border-color:#ddd3c2" onclick="showSec('library')"><div class="icon">📚</div><h3>Миний сан</h3></div>
   </div>
@@ -269,7 +271,7 @@
     <div style="font-size:52px;margin-bottom:16px">📄</div>
     <h3 style="font-size:17px;font-weight:800;margin-bottom:10px">PDF файл бэлэн болоогүй байна</h3>
     <p style="font-size:15px;color:var(--mid);line-height:1.7;margin-bottom:20px">GitHub дээрх <strong>wordsearch.pdf</strong> файлыг байршуулсны дараа тоглоом автоматаар идэвхжинэ.</p>
-    <button class="btn-p" style="margin-top:18px" onclick="showSec('shop')">🛒 Дэлгүүрт очих</button>
+    <button class="btn-p" style="margin-top:18px" onclick="showSec('shop')">🛒 Сургалтын материалт очих</button>
   </div>
   <div id="wsGameArea" style="display:none">
     <div style="display:grid;grid-template-columns:1fr 220px;gap:20px;align-items:start">
@@ -317,7 +319,7 @@
     <div class="options-grid" id="readOptions"></div>
     <div id="readLockMsg" class="lock-msg" style="display:none">
       <p>🔒 Үнэгүй 3 даалгавар дууслаа.<br>Үлдсэн даалгавруудыг тоглохын тулд дэлгүүрээс "Монгол бичиг унших" багцыг худалдаж аваарай.</p>
-      <button class="btn-p" onclick="showSec('shop')">🛒 Дэлгүүрт очих</button>
+      <button class="btn-p" onclick="showSec('shop')">🛒 Сургалтын материалт очих</button>
     </div>
   </div>
 </section>
@@ -683,7 +685,7 @@
     <div style="grid-column:1/-1;text-align:center;padding:56px;color:#bbb">
       <div style="font-size:44px;margin-bottom:12px">📭</div>
       <p style="font-size:16px;font-weight:600">Нэвтэрсний дараа таны худалдан авсан бүтээгдэхүүн энд харагдана.</p>
-      <button class="btn-p" style="margin-top:18px" onclick="showSec('shop')">Дэлгүүрт очих</button>
+      <button class="btn-p" style="margin-top:18px" onclick="showSec('shop')">Сургалтын материалт очих</button>
     </div>
   </div>
 </section>
@@ -933,13 +935,13 @@
         </div>
         Сонирхолтой хэл бичиг
       </div>
-      <p>Монгол хэл, Үндэсний бичиг, Уран зохиолын хичээлийг хүн бүрт хүртээмжтэй, сонирхолтой байдлаар хүргэх цахим платформ.</p>
+      <p>Монгол хэл, Үндэсний бичиг, Уран зохиолын хичээлийг хүн бүхэнд хүртээмжтэй, сонирхолтой байдлаар хүргэх цахим платформ.</p>
     </div>
     <div class="f-contact">
       <h4>Холбоо барих</h4>
       <div>📧 sonirholtoihelbichig@gmail.com</div>
       <div>🔵 Facebook: Сонирхолтой хэл бичиг</div>
-      <div>📸 Instagram: @sonirholtoi_hel</div>
+      <div>📸 Instagram: @sonirholtoi_hel_bichig</div>
     </div>
     <div style="text-align:right"><div class="copy">© 2026 Бүх эрх хуулиар хамгаалагдсан.</div></div>
   </div>
