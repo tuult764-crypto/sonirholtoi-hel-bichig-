@@ -1,8 +1,8 @@
 require('dotenv').config();
-const express = require('express'), cors = require('cors'), path = require('path'), crypto = require('crypto');
+const express = require('express'), path = require('path'), crypto = require('crypto');
 const { Pool, types } = require('pg'), bcrypt = require('bcryptjs'), jwt = require('jsonwebtoken'), qpay = require('./qpay');
 types.setTypeParser(20, Number);
-const { JWT_SECRET, DATABASE_URL, OPENAI_API_KEY } = process.env, ADMIN_KEY = process.env.ADMIN_KEY || '';
+const { JWT_SECRET, DATABASE_URL } = process.env, ADMIN_KEY = process.env.ADMIN_KEY || '';
 if (!JWT_SECRET || JWT_SECRET.length < 24) { console.error('JWT_SECRET (24+ тэмдэгт) тохируулна уу'); process.exit(1); }
 if (!DATABASE_URL) { console.error('DATABASE_URL тохируулна уу'); process.exit(1); }
 const pool = new Pool({ connectionString: DATABASE_URL, max: 5, ssl: process.env.PGSSL === 'disable' ? false : { rejectUnauthorized: false } });
@@ -157,12 +157,5 @@ app.post('/api/admin/materials/:id', ...A, ah(async (req, res) => {
   res.json({ ok: (await q('UPDATE materials SET title=$2,description=$3,category=$4,price=$5,active=$6 WHERE id=$1', [parseInt(req.params.id) || 0, f.title, f.description, f.category, f.price, active])).rowCount === 1 });
 }));
 
-// ---- хуучин AI chat (хамгаалалттай: түлхүүргүй бол унтраалтай, IP тутамд хязгаартай) ----
-app.use(cors({ origin: false }));
-app.post('/api/chat', limit(10, 3600e3), ah(async (req, res) => {
-  if (!OPENAI_API_KEY) return res.status(503).json({ error: 'AI тохируулаагүй байна' });
-  const { OpenAI } = require('openai');
-  res.json(await new OpenAI({ apiKey: OPENAI_API_KEY }).chat.completions.create({ model: 'gpt-3.5-turbo', messages: [{ role: 'user', content: String(req.body.prompt || '').slice(0, 2000) }] }));
-}));
 app.use(express.static(path.join(__dirname)));
 init().then(() => app.listen(process.env.PORT || 3000, () => console.log('Ажиллаж байна. QPay горим:', qpay.MODE))).catch(e => { console.error('Өгөгдлийн сантай холбогдож чадсангүй:', e.message); process.exit(1); });
