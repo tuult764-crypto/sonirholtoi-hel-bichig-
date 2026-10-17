@@ -1,0 +1,49 @@
+<!doctype html><html lang="mn"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Сургалтын материал · Сонирхолтой хэл бичиг</title>
+<style>
+:root{--amber:#b8763f;--amber-d:#96602f;--surface:#faf9f7;--s2:#f2ede4;--dark:#2b2724;--mid:#5c5650;--border:#e6e0d6}
+*{box-sizing:border-box}body{margin:0;font:16px/1.5 system-ui,sans-serif;background:var(--surface);color:var(--dark)}
+header{display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:space-between;padding:10px 16px;background:#fff;border-bottom:1px solid var(--border);position:sticky;top:0;z-index:5}
+a{color:var(--amber-d)}nav{display:flex;gap:6px;flex-wrap:wrap}
+button{font:600 15px system-ui;border:0;border-radius:10px;padding:10px 16px;cursor:pointer;background:var(--amber);color:#fff;min-height:44px}
+button.t{background:transparent;color:var(--mid)}button.t.on{background:var(--s2);color:var(--dark)}button.g{background:var(--s2);color:var(--dark)}
+main{max-width:1000px;margin:0 auto;padding:20px 16px}.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:16px;margin-top:14px}
+.card{background:#fff;border:1px solid var(--border);border-radius:16px;overflow:hidden;display:flex;flex-direction:column}.card img{width:100%;aspect-ratio:4/3;object-fit:cover;background:var(--s2)}
+.b{padding:14px;display:flex;flex-direction:column;gap:6px;flex:1}.b p{margin:0;color:var(--mid);font-size:14px}.a{margin-top:auto;display:flex;justify-content:space-between;align-items:center;gap:8px;padding-top:8px}
+.tag{font-size:13px;font-weight:700;padding:3px 10px;border-radius:99px;background:var(--s2);align-self:flex-start}.free{background:#d1fae5;color:#065f46}
+dialog{border:0;border-radius:18px;padding:22px;max-width:440px;width:92%}dialog::backdrop{background:#0006}
+input,select{font:inherit;width:100%;padding:11px;margin:5px 0;border:1.5px solid var(--border);border-radius:10px}.msg{color:#b3564f;font-weight:600;min-height:1.4em}
+</style></head><body>
+<header><a href="/" style="font-weight:800;text-decoration:none">← Сонирхолтой хэл бичиг</a>
+<nav><button class="t on" id="t1" onclick="tab('cat')">Сургалтын материал</button><button class="t" id="t2" onclick="tab('my')">Миний сан</button></nav><div id="acc"></div></header>
+<main><div id="msg" class="msg" role="alert"></div>
+<div id="cat"><select id="cf" onchange="draw()" aria-label="Ангилал"></select><div id="g1" class="grid"></div></div>
+<div id="my" hidden><div id="g2" class="grid"></div></div></main>
+<dialog id="dg"><h3 style="margin-top:0">Нэвтрэх / Бүртгүүлэх</h3><input id="em" type="email" placeholder="И-мэйл" autocomplete="email"><input id="pw" type="password" placeholder="Нууц үг (8+ тэмдэгт)" autocomplete="current-password"><div id="am" class="msg"></div>
+<div style="display:flex;gap:8px"><button onclick="auth('login')">Нэвтрэх</button><button class="g" onclick="auth('register')">Бүртгүүлэх</button><button class="t" onclick="dg.close()">Хаах</button></div></dialog>
+<dialog id="pd"><div id="pb"></div><div style="display:flex;gap:8px;margin-top:12px"><button onclick="chk()">Төлбөр шалгах</button><button class="t" onclick="pd.close()">Хаах</button></div></dialog>
+<script>
+const $=id=>document.getElementById(id);let U=null,M=[],order='',pending=null,PI;
+const el=(t,o={},...k)=>{const e=Object.assign(document.createElement(t),o);k.forEach(x=>e.append(x));return e};
+async function api(p,b){const r=await fetch('/api/'+p,{method:b?'POST':'GET',headers:{'Content-Type':'application/json'},body:b?JSON.stringify(b):undefined});let j={};try{j=await r.json()}catch{}if(!r.ok){const e=new Error(j.error||'Алдаа');e.status=r.status;throw e}return j}
+const say=t=>$('msg').textContent=t||'';
+function acc(){const a=$('acc');a.textContent='';if(U)a.append(U.email+' ',el('button',{className:'g',textContent:'Гарах',onclick:async()=>{await api('auth/logout',{});U=null;acc();await load();tab('cat')}}));else a.append(el('button',{textContent:'Нэвтрэх / Бүртгүүлэх',onclick:openAuth}))}
+function openAuth(){$('am').textContent='';$('dg').showModal()}
+async function auth(k){try{const j=await api('auth/'+k,{email:$('em').value,password:$('pw').value});U=j.user;$('dg').close();acc();await load();if(pending){const p=pending;pending=null;buy(p)}}catch(e){$('am').textContent=e.message}}
+function card(m){const img=el('img',{alt:m.title,loading:'lazy',src:'/api/materials/'+m.id+'/cover',onerror(){this.style.visibility='hidden'}});
+const st=m.price===0?el('span',{className:'tag free',textContent:'Үнэгүй'}):m.owned?el('span',{className:'tag free',textContent:'Миний санд байна'}):el('span',{className:'tag',textContent:m.price.toLocaleString()+'₮'});
+const act=m.owned?el('button',{textContent:'🖨️ Хэвлэх',onclick:()=>window.open('/api/materials/'+m.id+'/print','_blank')}):el('button',{textContent:'Авах',onclick:()=>buy(m.id)});
+return el('div',{className:'card'},img,el('div',{className:'b'},el('b',{textContent:m.title}),el('p',{textContent:m.description}),el('span',{className:'tag',textContent:m.category}),el('div',{className:'a'},st,act)))}
+function draw(){const c=$('cf').value,g=$('g1');g.textContent='';const l=M.filter(m=>!c||m.category===c);if(!l.length)g.append(el('p',{textContent:'Материал одоогоор алга.'}));l.forEach(m=>g.append(card(m)))}
+async function load(){M=await api('materials');const cs=[...new Set(M.map(m=>m.category))],cf=$('cf'),cur=cf.value;cf.textContent='';cf.append(new Option('Бүх ангилал',''));cs.forEach(c=>cf.append(new Option(c,c)));cf.value=cs.includes(cur)?cur:'';draw()}
+async function mine(){const g=$('g2');g.textContent='';if(!U){g.append(el('p',{textContent:'Худалдан авсан материалаа харахын тулд нэвтэрнэ үү.'}),el('button',{textContent:'Нэвтрэх',onclick:openAuth}));return}
+const l=await api('my');if(!l.length)g.append(el('p',{textContent:'Та одоогоор материал аваагүй байна.'}));l.forEach(m=>g.append(card({...m,owned:true})))}
+function tab(t){say();$('cat').hidden=t!=='cat';$('my').hidden=t!=='my';$('t1').classList.toggle('on',t==='cat');$('t2').classList.toggle('on',t==='my');if(t==='my')mine().catch(e=>say(e.message))}
+async function buy(id){if(!U){pending=id;openAuth();return}try{showPay(await api('buy',{materialId:id}))}catch(e){say(e.message);if(e.status===409)tab('my')}}
+function showPay(j){const b=$('pb');b.textContent='';order=j.orderNo;b.append(el('h3',{textContent:'Төлбөр: '+j.amount.toLocaleString()+'₮',style:'margin-top:0'}));
+if(j.qr)b.append(el('img',{alt:'QPay QR',style:'max-width:240px;display:block',src:'data:image/png;base64,'+j.qr}));
+(j.urls||[]).slice(0,6).forEach(u=>{if(!/^\s*javascript:/i.test(u.link))b.append(el('div',{},el('a',{href:u.link,textContent:String(u.name),target:'_blank',rel:'noopener'})))});
+if(j.manual){b.append(el('img',{alt:'Төлбөрийн QR',style:'max-width:240px;display:block;margin:8px 0',src:j.qrUrl}),el('div',{},'Гүйлгээний утга дээр заавал бичнэ: ',el('b',{textContent:j.orderNo,style:'font-size:1.4em'})),el('div',{textContent:'Төлсний дараа админ баталгаажуулна. Баталгаажмагц Миний санд нэмэгдэнэ.'}))}
+$('pd').showModal();clearInterval(PI);if(!j.manual){let n=0;PI=setInterval(()=>{if(++n>60)clearInterval(PI);else chk(true)},5000)}}
+async function chk(quiet){try{const j=await api('pay/check',{orderNo:order});if(j.status==='paid'){clearInterval(PI);$('pd').close();say('Төлбөр баталгаажлаа. Миний санд нэмэгдлээ.');await load();tab('my')}else if(!quiet)say('Төлбөр хараахан баталгаажаагүй байна. Гүйлгээний утгаа зөв бичсэн эсэхээ шалгана уу.')}catch(e){if(!quiet)say(e.message)}}
+api('auth/me').then(j=>{U=j.user;acc();return load()}).then(()=>{if(location.hash==='#my')tab('my')}).catch(e=>say(e.message));
+</script></body></html>
