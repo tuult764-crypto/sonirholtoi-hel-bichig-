@@ -1,4 +1,7 @@
 require('dotenv').config();
+// Render-ийн "Secret Files" (/etc/secrets/НЭР) болон "Environment Variables" хоёуланг дэмжинэ
+for (const k of ['JWT_SECRET', 'DATABASE_URL', 'ADMIN_KEY', 'QPAY_MODE', 'QPAY_USERNAME', 'QPAY_PASSWORD', 'QPAY_INVOICE_CODE', 'QPAY_BASE', 'PUBLIC_URL'])
+  if (!process.env[k]) { try { process.env[k] = require('fs').readFileSync('/etc/secrets/' + k, 'utf8').trim(); } catch {} }
 const express = require('express'), path = require('path'), crypto = require('crypto');
 const { Pool, types } = require('pg'), bcrypt = require('bcryptjs'), jwt = require('jsonwebtoken'), qpay = require('./qpay');
 types.setTypeParser(20, Number);
