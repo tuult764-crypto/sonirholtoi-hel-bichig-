@@ -2,8 +2,12 @@
   "name": "sonirholtoi-hel-bichig",
   "version": "2.0.0",
   "main": "server.js",
-  "scripts": { "start": "node server.js" },
-  "engines": { "node": ">=20" },
+  "scripts": {
+    "start": "node server.js"
+  },
+  "engines": {
+    "node": ">=20"
+  },
   "dependencies": {
     "bcryptjs": "^2.4.3",
     "dotenv": "^16.0.3",
