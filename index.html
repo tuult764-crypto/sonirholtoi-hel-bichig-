@@ -26,7 +26,7 @@
       <button class="nav-btn" onclick="showSec('home')">🏠 Нүүр</button>
       <button class="nav-btn" onclick="showSec('games')">🎮 Тоглоом</button>
       <button class="nav-btn" onclick="showSec('training')">🎓 Сургалт</button>
-      <button class="nav-btn" onclick="showSec('worksheet')">📝 Ажлын хуудас</button>
+      <button class="nav-btn" onclick="showSec('worksheet')">📝 Ээлжит хичээл</button>
       <button class="nav-btn" onclick="showSec('shop')">🛒 Сургалтын материал</button>
       <button class="nav-btn" onclick="location.href='/materials.html#my'">📁 Миний сан</button>
       <button class="nav-btn" onclick="showSec('about')">👩‍🏫 Багшийн тухай</button>
@@ -71,7 +71,7 @@
   <button class="nav-btn" onclick="showSec('home');closeMobileNav()">🏠 Нүүр</button>
   <button class="nav-btn" onclick="showSec('games');closeMobileNav()">🎮 Тоглоом</button>
   <button class="nav-btn" onclick="showSec('training');closeMobileNav()">🎓 Сургалт</button>
-  <button class="nav-btn" onclick="showSec('worksheet');closeMobileNav()">📝 Ажлын хуудас</button>
+  <button class="nav-btn" onclick="showSec('worksheet');closeMobileNav()">📝 Ээлжит хичээл</button>
   <button class="nav-btn" onclick="showSec('shop');closeMobileNav()">🛒 Сургалтын материал</button>
   <button class="nav-btn" onclick="location.href='/materials.html#my'">📁 Миний сан</button>
   <button class="nav-btn" onclick="showSec('about');closeMobileNav()">👩‍🏫 Багшийн тухай</button>
@@ -88,7 +88,7 @@
       <div class="hero-btns">
         <button class="btn-p" onclick="showSec('games')">🎮 Тоглоом эхлэх</button>
         <button class="btn-g" onclick="showSec('training')">🎓 Сургалтууд</button>
-        <button class="btn-g" onclick="showSec('worksheet')">📝 Ажлын хуудас</button>
+        <button class="btn-g" onclick="showSec('worksheet')">📝 Ээлжит хичээл</button>
       </div>
       <div class="hero-trust">
         <img src="https://raw.githubusercontent.com/tuult764-crypto/sonirholtoi-hel-bichig-/main/teacher.png" alt="Багш М.Туул" onerror="this.style.display='none'">
@@ -142,21 +142,46 @@
   <div id="dashGrid" class="prod-grid"></div>
 </section>
 
-<!-- АЖЛЫН ХУУДАС БЭЛТГЭХ -->
+<!-- ЭЭЛЖИТ ХИЧЭЭЛИЙН ТӨЛӨВЛӨЛТ -->
 <section id="worksheetSection" class="sec">
-  <h2 class="sec-title">📝 Унших эхээс ажлын хуудас бэлтгэх</h2>
-  <p style="max-width:680px;font-size:17px;line-height:1.6">Унших эхийнхээ зураг эсвэл PDF-ийг оруулаад Блумын танин мэдэхүйн шатнаас (сэргээн санахаас бүтээх хүртэл) сонгоход тэр эхэд тулгуурласан асуулт, даалгавар гарна. Асуултаа засаад Word файлаар татаж аваад хэвлэнэ.</p>
-  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin:24px 0">
-    <div style="background:#f7f1e8;border:2px solid #e6d8c3;border-radius:22px;padding:22px;text-align:center"><div style="font-size:32px">📷</div><h3 style="margin:8px 0 6px">1. Эхээ оруул</h3><p style="margin:0;font-size:15px;color:var(--muted)">Номын хуудсыг зургаар авч эсвэл PDF-ээр оруулна.</p></div>
-    <div style="background:#f2ede4;border:2px solid #ddd3c2;border-radius:22px;padding:22px;text-align:center"><div style="font-size:32px">🪜</div><h3 style="margin:8px 0 6px">2. Шатаа сонго</h3><p style="margin:0;font-size:15px;color:var(--muted)">Доод эрэмбийн 3, дээд эрэмбийн 3 шатаас хүссэнээ.</p></div>
-    <div style="background:#f7f1e8;border:2px solid #e6d8c3;border-radius:22px;padding:22px;text-align:center"><div style="font-size:32px">✏️</div><h3 style="margin:8px 0 6px">3. Засаад татаж ав</h3><p style="margin:0;font-size:15px;color:var(--muted)">Асуултаа өөрөө засаад Word болгон татна.</p></div>
+  <h2 class="sec-title">📝 Ээлжит хичээлийн төлөвлөлт</h2>
+  <p class="lp-lead">Сурах бичгийн хуудасны зураг болон эхийг оруулбал хичээлийн зорилго, зорилт, алхмуудыг ээлжит хичээлийн загвараар боловсруулна. Алхмын тоо хичээлийн агуулга, хугацаанаас хамаарч өөр өөр гарна. Засаад Word файлаар татаж ав.</p>
+  <div class="lp-steps3">
+    <div><div class="lp-ico">📷</div><h3>1. Эхээ оруул</h3><p>Сурах бичгийн хуудсыг зургаар авч оруулна, эсвэл эхийг буулгана.</p></div>
+    <div><div class="lp-ico">⚙️</div><h3>2. Хичээлээ тодорхойл</h3><p>Анги, хугацаа, сургалтын аргаа сонгоно.</p></div>
+    <div><div class="lp-ico">✏️</div><h3>3. Засаад татаж ав</h3><p>Алхмыг нэмж, хасаж, зөөгөөд Word болгон татна.</p></div>
   </div>
-  <div style="background:#fff;border:1px solid var(--border);border-radius:22px;padding:22px;max-width:680px">
-    <div style="font-size:22px;font-weight:800">Нэг ажлын хуудас — 500₮</div>
-    <p style="margin:8px 0 16px;font-size:16px">Эхний ажлын хуудас <b>үнэгүй</b>. Дараагийнхыг 1, 5, 10 ширхгээр худалдаж авна. Төлбөрийг QR-аар төлнө. Асуулт засаж, Word татахад нэмэлт төлбөргүй.</p>
-    <a class="btn-p" href="https://bagshiin-tuslah-fnv4.onrender.com" target="_blank" rel="noopener" style="display:inline-block;text-decoration:none">Ажлын хуудас бэлтгэх →</a>
-    <p style="margin:16px 0 0;font-size:14px;color:var(--muted)">AI бэлтгэсэн асуултыг хичээлдээ ашиглахаасаа өмнө өөрөө шалгаарай. Асуулт, санал: sonirholtoihelbichig@gmail.com</p>
+
+  <div class="lp-card" id="lpForm">
+    <label id="lpDrop" class="lp-drop" for="lpFile">
+      <span class="lp-drop-ico">📷</span>
+      <b>Сурах бичгийн хуудасны зураг</b>
+      <span>Энд чирж оруулах эсвэл дарж сонгоно (хамгийн ихдээ 6 зураг)</span>
+      <input id="lpFile" type="file" accept="image/jpeg,image/png,image/webp,image/*" multiple>
+    </label>
+    <div id="lpThumbs" class="lp-thumbs"></div>
+    <label class="lp-f"><span>Сурах бичгийн эх (заавал биш — зураг бүдэг бол эндээс буулгана)</span>
+      <textarea id="lpText" rows="5" placeholder="Эх, асуулт, дасгал, даалгаврыг энд буулгана уу"></textarea></label>
+    <div class="lp-grid3">
+      <label class="lp-f"><span>Анги</span><select id="lpGrade"><option value="1-р анги">1-р анги</option><option value="2-р анги">2-р анги</option><option value="3-р анги">3-р анги</option><option value="4-р анги">4-р анги</option><option value="5-р анги">5-р анги</option><option value="6-р анги">6-р анги</option><option value="7-р анги">7-р анги</option><option value="8-р анги" selected>8-р анги</option><option value="9-р анги">9-р анги</option><option value="10-р анги">10-р анги</option><option value="11-р анги">11-р анги</option><option value="12-р анги">12-р анги</option></select></label>
+      <label class="lp-f"><span>Судлагдахуун</span><input id="lpSubject" type="text" value="Монгол хэл"></label>
+      <label class="lp-f"><span>Нийт хугацаа (минут)</span><input id="lpMinutes" type="number" min="10" max="240" value="40" list="lpMinList"><datalist id="lpMinList"><option value="40"><option value="45"><option value="80"><option value="90"></datalist></label>
+    </div>
+    <div class="lp-grid3">
+      <label class="lp-f"><span>Хичээлийн сэдэв (заавал биш)</span><input id="lpTopic" type="text" placeholder="Хоосон бол эхээс тодорхойлно"></label>
+      <label class="lp-f"><span>Нэгжийн сэдэв (заавал биш)</span><input id="lpUnit" type="text"></label>
+      <label class="lp-f"><span>Сургалтын арга (заавал биш)</span><input id="lpMethod" type="text" placeholder="Жишээ: хосын ажил, асуулт хариулт"></label>
+    </div>
+    <div class="lp-go">
+      <button id="lpGo" type="button" class="btn-p">Ээлжит боловсруулах →</button>
+      <span id="lpStatus" class="lp-status" role="status"></span>
+    </div>
   </div>
+
+  <div id="lpResult" hidden></div>
+
+  <p class="lp-note">AI бэлтгэсэн төлөвлөгөөг хичээлдээ ашиглахаасаа өмнө өөрөө шалгаарай. Асуулт, санал: sonirholtoihelbichig@gmail.com</p>
+  <p class="lp-note">Блумын шатаар унших эхээс ажлын хуудас бэлтгэх бол: <a href="https://bagshiin-tuslah-fnv4.onrender.com" target="_blank" rel="noopener">Багшийн тусламж →</a></p>
 </section>
 
 <!-- GAMES LOBBY -->
@@ -952,5 +977,9 @@
 
 
 <script src="script.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<script src="lesson-core.js"></script>
+<script src="lesson-docx.js"></script>
+<script src="lesson-plan.js"></script>
 </body>
 </html>
