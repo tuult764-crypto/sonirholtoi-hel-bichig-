@@ -808,3 +808,6 @@ footer .copy{color:rgba(255,255,255,.2)}
 .lp-total .btn-g{padding:6px 16px;font-size:14px}
 .lp-actions{display:flex;gap:12px;flex-wrap:wrap;margin:18px 0 6px}
 .lp-note{max-width:720px;margin-top:14px;font-size:14px;color:var(--muted)}.lp-note a{color:var(--blue)}
+
+.print-status{background:#fef3c7;border:1.5px solid #fcd34d;border-radius:99px;padding:6px 14px;font-size:15px;font-weight:700;color:var(--amber-d)}
+.print-status.used{background:var(--surface2);border-color:var(--border);color:var(--mid)}
