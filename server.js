@@ -1,7 +1,4 @@
 require('dotenv').config();
-// Render-ийн "Secret Files" (/etc/secrets/НЭР) болон "Environment Variables" хоёуланг дэмжинэ
-for (const k of ['JWT_SECRET', 'DATABASE_URL', 'ADMIN_KEY', 'QPAY_MODE', 'QPAY_USERNAME', 'QPAY_PASSWORD', 'QPAY_INVOICE_CODE', 'QPAY_BASE', 'PUBLIC_URL'])
-  if (!process.env[k]) { try { process.env[k] = require('fs').readFileSync('/etc/secrets/' + k, 'utf8').trim(); } catch {} }
 const express = require('express'), path = require('path'), crypto = require('crypto');
 const { Pool, types } = require('pg'), bcrypt = require('bcryptjs'), jwt = require('jsonwebtoken'), qpay = require('./qpay');
 types.setTypeParser(20, Number);
@@ -28,9 +25,9 @@ app.set('trust proxy', 1);
 // Нууц файлуудыг (код, тохиргоо, өгөгдөл) нийтэд нээхгүй
 const DENY = /^\/(server\.js|qpay\.js|package(-lock)?\.json|\.env.*|\.git.*|netlify.*|readme\.md|literature_db\.txt|node_modules.*|.*\.xlsx)$/i;
 app.use((req, res, next) => { let p = ''; try { p = decodeURIComponent(req.path); } catch { return res.status(400).end(); } DENY.test(p) ? res.status(404).end() : next(); });
-app.use((req, res, next) => req.path === '/api/admin/materials' && req.method === 'POST' ? next() : express.json({ limit: '100kb' })(req, res, next));
+app.use((req, res, next) => (req.path === '/api/admin/materials' || req.path === '/api/lesson-plan') && req.method === 'POST' ? next() : express.json({ limit: '100kb' })(req, res, next));
 let ready = false;
-app.use('/api', (req, res, next) => ready ? next() : res.status(503).json({ error: 'Систем бэлдэж байна. Түр хүлээгээд дахин оролдоно уу.' }));
+app.use('/api', (req, res, next) => (ready || req.path === '/lesson-plan') ? next() : res.status(503).json({ error: 'Систем бэлдэж байна. Түр хүлээгээд дахин оролдоно уу.' }));
 const ah = fn => (req, res, next) => fn(req, res, next).catch(e => { console.error(req.path, e.message); if (!res.headersSent) res.status(500).json({ error: 'Серверийн алдаа' }); });
 const hits = new Map();
 const limit = (max, ms) => (req, res, next) => { const k = req.ip + req.path, now = Date.now(), a = (hits.get(k) || []).filter(t => now - t < ms); if (a.length >= max) return res.status(429).json({ error: 'Хэт олон оролдлого. Түр хүлээнэ үү.' }); a.push(now); hits.set(k, a); next(); };
@@ -162,6 +159,62 @@ app.post('/api/admin/materials/:id', ...A, ah(async (req, res) => {
   const f = fields(req.body), active = req.body.active !== false;
   if (!f.title) return res.status(400).json({ error: 'Нэр хоосон байна' });
   res.json({ ok: (await q('UPDATE shop_materials SET title=$2,description=$3,category=$4,price=$5,active=$6 WHERE id=$1', [parseInt(req.params.id) || 0, f.title, f.description, f.category, f.price, active])).rowCount === 1 });
+}));
+
+// ---- Ээлжит хичээлийн төлөвлөлт (сурах бичгийн зураг/эхээс AI боловсруулна) ----
+const lesson = require('./lesson-core');
+const LESSON_MODEL = process.env.LESSON_MODEL || 'gpt-4o';
+const LESSON_DAILY_CAP = parseInt(process.env.LESSON_DAILY_CAP) || 150; // өдөрт нийт хэдэн удаа AI дуудахыг хязгаарлана (зардлаас хамгаална)
+let lessonDay = '', lessonCount = 0;
+const IMG_URL = /^data:image\/(jpeg|png|webp);base64,[A-Za-z0-9+/=]+$/;
+const LESSON_SYS = `Та Монгол Улсын ерөнхий боловсролын сургуулийн туршлагатай багш, арга зүйч. Багшийн өгсөн сурах бичгийн хуудасны зураг, эх, ангийн түвшин, хичээлийн хугацаанд тулгуурлан "Ээлжит хичээлийн төлөвлөлт" боловсруулна. Хариуг ЗӨВХӨН нэг JSON объект байдлаар, монгол хэлээр (кирилл) бич. JSON-оос өөр текст бүү нэм.
+
+ДҮРЭМ:
+1. Сурах бичгийн эх, асуулт, дасгалыг зурагнаас болон өгсөн эхээс уншиж, төлөвлөгөөг тэдгээрт тулгуурла. Дасгал, даалгаврын дугаар, гарчгийг зөв иш татаж болно. Зурагнаас уншигдаагүй, мэдэгдэхгүй зүйлийг зохиож бүү нэм; уншигдахгүй хэсэг байвал "warnings" талбарт товч бич.
+2. Алхмын тоог хичээлийн зорилго, агуулга, ангийн нас, хугацаа, арга, ажлын зохион байгуулалтаас хамааруулан өөрөө тогтоо. Заавал 11 алхамтай байх албагүй; 6, 8, 10, 12 эсвэл түүнээс олон байж болно. Алхам олшруулахын тулд агуулгыг давтах, шаардлагагүй үйл ажиллагаа зохиохыг хориглоно.
+3. "stages" нь яг 3 үе шат: Эхлэл, Өрнөл, Төгсгөл. Бүх алхмын "minutes" (бүхэл тоо)-ын нийлбэр нийт хугацаатай яг тэнцүү байх ёстой. Үе шатны хугацаа хичээлийн онцлогт тохирно (ихэвчлэн эхлэл, төгсгөл тус бүр ойролцоогоор 10–15%).
+4. Алхам бүрд: title (нэр), minutes, goal (зорилго), teacher (багшийн хийх үйл ажиллагаа), student (сурагчийн хийх үйл ажиллагаа), materials (хэрэглэгдэхүүн, байхгүй бол ""), result (үнэлгээний арга эсвэл хүлээгдэх үр дүн). Багшийн болон сурагчийн үйл ажиллагаа бие биедээ яг харгалзсан байна. Тодорхой, хэрэгжихүйц бич (teacher, student тус бүр 2–4 өгүүлбэр).
+5. Хичээл нь өмнөх мэдлэгийг идэвхжүүлэх, шинэ агуулгыг бие даан болон хамтран ойлгох, хэрэглэх (дасгал, даалгавар), дүгнэж үнэлэх үе шатуудыг агуулсан байна. Ганцаарчилсан, хосын, багийн ажлыг агуулгад тохируулан хослуул.
+6. objectives нь 3–5 хэмжигдэхүйц зорилт ("...ж чадна" хэлбэртэй). goal нь нэг өгүүлбэр.
+7. Багш сургалтын арга заасан бол түүнийг ашигла; заагаагүй бол агуулгад тохирох 3–5 аргыг өөрөө сонго.
+8. assessment: 2–4 мөр — явцын үнэлгээ ба гүйцэтгэлийн үнэлгээний шалгуур (оноо эсвэл түвшинтэй).
+9. homework: сурах бичгийн агуулгатай холбоотой, 10 минутад хийхээр нэг даалгавар.
+10. Багш хичээлийн сэдэв өгөөгүй бол "lessonTopic"-ийг сурах бичгийн агуулгаас тодорхойл.
+
+JSON БҮТЭЦ:
+{"lessonTopic":"","unitTopic":"","organization":["Хичээлийн төрөл: ...","Ажлын хэлбэр: ..."],"methods":[""],"goal":"","objectives":[""],"materials":[""],"stages":[{"name":"Эхлэл","steps":[{"title":"","minutes":5,"goal":"","teacher":"","student":"","materials":"","result":""}]},{"name":"Өрнөл","steps":[]},{"name":"Төгсгөл","steps":[]}],"homework":"","assessment":[""],"warnings":[]}`;
+app.post('/api/lesson-plan', limit(8, 3600e3), express.json({ limit: '25mb' }), ah(async (req, res) => {
+  if (!process.env.OPENAI_API_KEY) return res.status(503).json({ error: 'AI хараахан тохируулагдаагүй байна (OPENAI_API_KEY).' });
+  const b = req.body || {}, t = (v, n) => String(v == null ? '' : v).trim().slice(0, n);
+  const images = (Array.isArray(b.images) ? b.images : []).slice(0, 6), text = t(b.text, 12000);
+  if (images.some(u => typeof u !== 'string' || u.length > 7e6 || !IMG_URL.test(u))) return res.status(400).json({ error: 'Зураг JPG/PNG/WEBP байх ёстой' });
+  if (!images.length && text.length < 30) return res.status(400).json({ error: 'Сурах бичгийн зураг эсвэл эхийг оруулна уу' });
+  const minutes = Math.max(10, Math.min(240, parseInt(b.minutes) || 40));
+  const inp = { grade: t(b.grade, 30), subject: t(b.subject, 60) || 'Монгол хэл', lessonTopic: t(b.lessonTopic, 250), unitTopic: t(b.unitTopic, 200), method: t(b.method, 300), minutes };
+  const today = new Date().toISOString().slice(0, 10);
+  if (today !== lessonDay) { lessonDay = today; lessonCount = 0; }
+  if (lessonCount >= LESSON_DAILY_CAP) return res.status(429).json({ error: 'Өнөөдрийн хязгаар хэтэрлээ. Маргааш дахин оролдоно уу.' });
+  lessonCount++;
+  const info = `Анги: ${inp.grade || '(заагаагүй)'}\nСудлагдахуун: ${inp.subject}\nНийт хугацаа: ${minutes} минут (алхмуудын минутын нийлбэр яг ${minutes} байна)\nХичээлийн сэдэв: ${inp.lessonTopic || '(өгөөгүй — сурах бичгээс тодорхойл)'}\nНэгжийн сэдэв: ${inp.unitTopic || '(өгөөгүй)'}\nСургалтын арга: ${inp.method || '(өгөөгүй — өөрөө сонго)'}\n` +
+    (text ? `\nСурах бичгийн эх (багшийн оруулсан):\n${text}\n` : '') + (images.length ? `\nДараах ${images.length} зураг нь сурах бичгийн хуудас.` : '');
+  const content = [{ type: 'text', text: info }, ...images.map(u => ({ type: 'image_url', image_url: { url: u, detail: 'high' } }))];
+  const ctl = new AbortController(), timer = setTimeout(() => ctl.abort(), 150e3);
+  let r, data;
+  try {
+    r = await fetch('https://api.openai.com/v1/chat/completions', {
+      method: 'POST', signal: ctl.signal,
+      headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + process.env.OPENAI_API_KEY },
+      body: JSON.stringify({ model: LESSON_MODEL, temperature: 0.4, max_tokens: 6000, response_format: { type: 'json_object' }, messages: [{ role: 'system', content: LESSON_SYS }, { role: 'user', content }] })
+    });
+    data = await r.json().catch(() => ({}));
+  } catch (e) {
+    return res.status(e.name === 'AbortError' ? 504 : 502).json({ error: 'AI хариулахад хэт удлаа. Дахин оролдоно уу.' });
+  } finally { clearTimeout(timer); }
+  if (!r.ok) { console.error('lesson-plan OpenAI:', r.status, data && data.error && data.error.message); return res.status(502).json({ error: 'AI үйлчилгээ хариулсангүй. Түр хүлээгээд дахин оролдоно уу.' }); }
+  let raw; try { raw = JSON.parse(data.choices[0].message.content); } catch { return res.status(502).json({ error: 'AI-ийн хариуг уншиж чадсангүй. Дахин оролдоно уу.' }); }
+  const plan = lesson.sanitizePlan(raw, { totalMinutes: minutes, grade: inp.grade, subject: inp.subject, lessonTopic: inp.lessonTopic, unitTopic: inp.unitTopic });
+  if (lesson.allSteps(plan).length < 3) return res.status(502).json({ error: 'AI бүрэн төлөвлөгөө гаргаж чадсангүй. Дахин оролдоно уу.' });
+  res.json({ plan, warnings: (Array.isArray(raw.warnings) ? raw.warnings : []).slice(0, 5).map(w => t(w, 200)).filter(Boolean) });
 }));
 
 app.use(express.static(path.join(__dirname)));
