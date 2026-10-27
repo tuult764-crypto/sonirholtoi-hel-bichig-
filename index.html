@@ -23,13 +23,13 @@
       Сонирхолтой хэл бичиг
     </div>
     <div class="nav-links">
-      <button class="nav-btn" onclick="showSec('home')">🏠 Нүүр</button>
-      <button class="nav-btn" onclick="showSec('games')">🎮 Тоглоом</button>
-      <button class="nav-btn" onclick="showSec('training')">🎓 Сургалт</button>
-      <button class="nav-btn" onclick="showSec('worksheet')">📝 Ээлжит хичээл</button>
-      <button class="nav-btn" onclick="showSec('shop')">🛒 Сургалтын материал</button>
-      <button class="nav-btn" onclick="location.href='/materials.html#my'">📁 Миний сан</button>
-      <button class="nav-btn" onclick="showSec('about')">👩‍🏫 Багшийн тухай</button>
+      <button class="nav-btn" onclick="showSec('home')">Нүүр</button>
+      <button class="nav-btn" onclick="showSec('games')">Тоглоом</button>
+      <button class="nav-btn" onclick="showSec('training')">Сургалт</button>
+      <button class="nav-btn" onclick="showSec('worksheet')">Ээлжит хичээл</button>
+      <button class="nav-btn" onclick="showSec('shop')">Сургалтын материал</button>
+      <button class="nav-btn" onclick="location.href='/materials.html#my'">Миний сан</button>
+      <button class="nav-btn" onclick="showSec('about')">Багшийн тухай</button>
     </div>
     <button class="hamburger" id="hamburger" onclick="toggleMobileNav()" aria-label="Цэс">
   <span></span><span></span><span></span>
@@ -55,10 +55,10 @@
             <div style="font-size:14px;font-weight:800;color:var(--dark)" id="menuUserName">—</div>
             <div style="font-size:13px;color:var(--muted);margin-top:2px" id="menuUserEmail">—</div>
           </div>
-          <button onclick="openAvatarPicker(event)">🖼 Профайл зураг солих</button>
-          <button onclick="showSec('library')">📚 Миний сан</button>
-          <button onclick="showSec('training')">🎓 Сургалт</button>
-          <button onclick="openCart()">🛒 Сагс</button>
+          <button onclick="openAvatarPicker(event)">Профайл зураг солих</button>
+          <button onclick="showSec('library')">Миний сан</button>
+          <button onclick="showSec('training')">Сургалт</button>
+          <button onclick="openCart()">Сагс</button>
           <hr>
           <button class="logout" onclick="logout()">↩ Гарах</button>
         </div>
@@ -68,13 +68,13 @@
 </nav>
 
   <div class="mobile-nav" id="mobileNav">
-  <button class="nav-btn" onclick="showSec('home');closeMobileNav()">🏠 Нүүр</button>
-  <button class="nav-btn" onclick="showSec('games');closeMobileNav()">🎮 Тоглоом</button>
-  <button class="nav-btn" onclick="showSec('training');closeMobileNav()">🎓 Сургалт</button>
-  <button class="nav-btn" onclick="showSec('worksheet');closeMobileNav()">📝 Ээлжит хичээл</button>
-  <button class="nav-btn" onclick="showSec('shop');closeMobileNav()">🛒 Сургалтын материал</button>
-  <button class="nav-btn" onclick="location.href='/materials.html#my'">📁 Миний сан</button>
-  <button class="nav-btn" onclick="showSec('about');closeMobileNav()">👩‍🏫 Багшийн тухай</button>
+  <button class="nav-btn" onclick="showSec('home');closeMobileNav()">Нүүр</button>
+  <button class="nav-btn" onclick="showSec('games');closeMobileNav()">Тоглоом</button>
+  <button class="nav-btn" onclick="showSec('training');closeMobileNav()">Сургалт</button>
+  <button class="nav-btn" onclick="showSec('worksheet');closeMobileNav()">Ээлжит хичээл</button>
+  <button class="nav-btn" onclick="showSec('shop');closeMobileNav()">Сургалтын материал</button>
+  <button class="nav-btn" onclick="location.href='/materials.html#my'">Миний сан</button>
+  <button class="nav-btn" onclick="showSec('about');closeMobileNav()">Багшийн тухай</button>
 </div>
 <main>
 
@@ -82,13 +82,12 @@
 <section id="homeSection" class="sec active">
   <div class="hero">
     <div>
-      <span class="hero-tag">Монгол хэл бичгийн цахим систем</span>
       <h1>Хэл бичгийг<br><span class="shimmer">сонирхолтойгоор</span> сур</h1>
-      <p>Орчин үеийн тоглоомын аргаар эх хэлээ төгс эзэмшицгээе. Судоку, үг хайх, монгол бичиг, морин уралдаан — бүгд нэг дор.</p>
+      <p>Судоку тоглоом, сургалт, дасгал ажил — бүгд нэг дор.</p>
       <div class="hero-btns">
-        <button class="btn-p" onclick="showSec('games')">🎮 Тоглоом эхлэх</button>
-        <button class="btn-g" onclick="showSec('training')">🎓 Сургалтууд</button>
-        <button class="btn-g" onclick="showSec('worksheet')">📝 Ээлжит хичээл</button>
+        <button class="btn-p" onclick="showSec('games')">Тоглоом эхлэх</button>
+        <button class="btn-g" onclick="showSec('training')">Сургалтууд</button>
+        <button class="btn-g" onclick="showSec('worksheet')">Ээлжит хичээл</button>
       </div>
       <div class="hero-trust">
         <img src="https://raw.githubusercontent.com/tuult764-crypto/sonirholtoi-hel-bichig-/main/teacher.png" alt="Багш М.Туул" onerror="this.style.display='none'">
@@ -96,8 +95,7 @@
       </div>
     </div>
     <div class="hero-visual">
-      <div class="hero-float-chip top">🏆 Олимпиадын амжилт</div>
-      <svg viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg">
+<svg viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg">
         <circle cx="150" cy="150" r="125" style="fill:var(--amber-l)"/>
         <path d="M60 190 Q150 165 240 190 L240 210 Q150 185 60 210 Z" style="fill:var(--amber)"/>
         <path d="M60 190 Q150 165 150 165 L150 145 Q60 170 60 190 Z" style="fill:#fff;opacity:.85"/>
@@ -119,8 +117,7 @@
         <circle cx="245" cy="95" r="4" style="fill:var(--purple);opacity:.5"/>
         <circle cx="230" cy="60" r="3" style="fill:var(--amber-d)"/>
       </svg>
-      <div class="hero-float-chip bottom">🎓 10+ жилийн туршлага</div>
-    </div>
+</div>
   </div>
 
   <div class="quick-nav-title">Хаанаас эхлэх вэ?</div>
@@ -131,28 +128,15 @@
     <div class="hero-card" style="background:#f2ede4;border-color:#ddd3c2" onclick="showSec('library')"><div class="icon">📚</div><h3>Миний сан</h3></div>
   </div>
 
-  <div class="stats">
-    <div><div class="stat-num" style="color:var(--amber)">4+</div><div class="stat-lbl">Тоглоом</div></div>
-    <div><div class="stat-num" style="color:var(--blue)">4</div><div class="stat-lbl">Сургалт</div></div>
-    <div><div class="stat-num" style="color:var(--green)">50</div><div class="stat-lbl">Морин уралдаан</div></div>
-    <div><div class="stat-num" style="color:var(--purple)">1</div><div class="stat-lbl">Туул Багш</div></div>
-  </div>
-
-  <h2 class="sec-title">Шинэ материалууд</h2>
+<h2 class="sec-title">Шинэ материалууд</h2>
   <div id="dashGrid" class="prod-grid"></div>
 </section>
 
 <!-- ЭЭЛЖИТ ХИЧЭЭЛИЙН ТӨЛӨВЛӨЛТ -->
 <section id="worksheetSection" class="sec">
-  <h2 class="sec-title">📝 Ээлжит хичээлийн төлөвлөлт</h2>
-  <p class="lp-lead">Сурах бичгийн хуудасны зураг болон эхийг оруулбал хичээлийн зорилго, зорилт, алхмуудыг ээлжит хичээлийн загвараар боловсруулна. Алхмын тоо хичээлийн агуулга, хугацаанаас хамаарч өөр өөр гарна. Засаад Word файлаар татаж ав.</p>
-  <div class="lp-steps3">
-    <div><div class="lp-ico">📷</div><h3>1. Эхээ оруул</h3><p>Сурах бичгийн хуудсыг зургаар авч оруулна, эсвэл эхийг буулгана.</p></div>
-    <div><div class="lp-ico">⚙️</div><h3>2. Хичээлээ тодорхойл</h3><p>Анги, хугацаа, сургалтын аргаа сонгоно.</p></div>
-    <div><div class="lp-ico">✏️</div><h3>3. Засаад татаж ав</h3><p>Алхмыг нэмж, хасаж, зөөгөөд Word болгон татна.</p></div>
-  </div>
-
-  <div class="lp-card" id="lpForm">
+  <h2 class="sec-title">Ээлжит хичээлийн төлөвлөлт</h2>
+  <p class="lp-lead">Сурах бичгийн зураг эсвэл эхийг оруулбал ээлжит хичээлийн төлөвлөлтийг боловсруулна. Засаад Word болгон татна.</p>
+<div class="lp-card" id="lpForm">
     <label id="lpDrop" class="lp-drop" for="lpFile">
       <span class="lp-drop-ico">📷</span>
       <b>Сурах бичгийн хуудасны зураг</b>
@@ -180,14 +164,14 @@
 
   <div id="lpResult" hidden></div>
 
-  <p class="lp-note">AI бэлтгэсэн төлөвлөгөөг хичээлдээ ашиглахаасаа өмнө өөрөө шалгаарай. Асуулт, санал: sonirholtoihelbichig@gmail.com</p>
+  <p class="lp-note">AI-ийн бэлтгэсэн төлөвлөгөөг ашиглахаасаа өмнө шалгаарай.</p>
   <p class="lp-note">Блумын шатаар унших эхээс ажлын хуудас бэлтгэх бол: <a href="https://bagshiin-tuslah-fnv4.onrender.com" target="_blank" rel="noopener">Багшийн тусламж →</a></p>
 </section>
 
 <!-- GAMES LOBBY -->
 <section id="gamesSection" class="sec">
   <button class="page-back" onclick="showSec('home')">← Буцах</button>
-  <h2 class="sec-title">🎮 Тоглоомын булан</h2>
+  <h2 class="sec-title">Тоглоомын булан</h2>
   <div class="game-grid">
     <div class="game-card" onclick="showSec('sudoku')">
       <span class="game-badge badge-free">Үнэгүй</span>
@@ -195,25 +179,7 @@
       <h3>Монгол Судоку</h3>
       <p>Монгол тоогоор тоглох өвөрмөц судоку тоглоом. Тоглох үнэгүй. Өдөрт 1 хуудас үнэгүй хэвлэнэ.</p>
     </div>
-    <div class="game-card" onclick="showSec('wordsearch')">
-      <span class="game-badge badge-free">Үнэгүй</span>
-      <div class="game-icon" style="background:#f0fdf4">🔍</div>
-      <h3>Үгийг олоорой</h3>
-      <p>Монгол хэлний үгсийг тор дотроос хайж, зураасаар тэмдэглэ.</p>
     </div>
-    <div class="game-card" onclick="showSec('reading')">
-      <span class="game-badge badge-paid">5 үнэгүй</span>
-      <div class="game-icon" style="background:#ede9fe">📜</div>
-      <h3>Монгол бичиг унших</h3>
-      <p>Тоо орхиод буусан монгол бичгийн эхийг нөхөж унш.</p>
-    </div>
-    <div class="game-card" onclick="showSec('horse')">
-      <span class="game-badge badge-new">Шинэ!</span>
-      <div class="game-icon" style="background:#fdf4ff">🐎</div>
-      <h3>Морь уралдъя</h3>
-      <p>Өдөр тутам тоглож, монгол бичгээ сур! 14 хоногийн хөтөлбөр, 50 алхамд хүр.</p>
-    </div>
-  </div>
 </section>
 
 <!-- SUDOKU -->
@@ -221,12 +187,12 @@
   <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:20px">
     <div>
       <button class="page-back" style="margin-bottom:6px" onclick="showSec('games')">← Буцах</button>
-      <h2 style="font-size:20px;font-weight:800;font-family:'Baloo 2',cursive">🔢 Монгол Судоку</h2>
+      <h2 style="font-size:20px;font-weight:800;font-family:'Baloo 2',cursive">Монгол Судоку</h2>
       <p style="font-size:14px;color:var(--mid)">Тоглох үнэгүй · Өдөрт 1 хуудас (4 судоку) үнэгүй хэвлэнэ</p>
     </div>
     <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
-      <div id="printStatus" class="print-status">🖨 Өнөөдөр 1 хуудас үнэгүй хэвлэнэ</div>
-      <button class="btn-p" onclick="initSudoku()">🔄 Шинэ</button>
+      <div id="printStatus" class="print-status">Өнөөдөр 1 хуудас үнэгүй хэвлэнэ</div>
+      <button class="btn-p" onclick="initSudoku()">Шинэ</button>
     </div>
   </div>
   <div class="sudoku-layout">
@@ -242,10 +208,10 @@
         <p class="guide-hint">1–9 тоо дарахад автоматаар монгол тоонд хөрвөнө.</p>
       </div>
       <div class="action-btns">
-        <button class="action-btn btn-new2" onclick="initSudoku()">🔄 Шинэ тоглоом</button>
-        <button class="action-btn btn-check2" onclick="checkSudoku()">✅ Шалгах</button>
-        <button class="action-btn btn-solve2" onclick="solveSudoku()">💡 Шийдэл</button>
-        <button class="action-btn btn-print2" onclick="handlePrint()">🖨 Үнэгүй хэвлэх (өдөрт 1)</button>
+        <button class="action-btn btn-new2" onclick="initSudoku()">Шинэ тоглоом</button>
+        <button class="action-btn btn-check2" onclick="checkSudoku()">Шалгах</button>
+        <button class="action-btn btn-solve2" onclick="solveSudoku()">Шийдэл</button>
+        <button class="action-btn btn-print2" onclick="handlePrint()">Үнэгүй хэвлэх (өдөрт 1)</button>
       </div>
       <div class="print-sec">
         <div class="psec-title">ӨДРИЙН ҮНЭГҮЙ ХЭВЛЭЛТ</div>
@@ -259,146 +225,6 @@
   </div>
 </section>
 
-<!-- WORD SEARCH -->
-<section id="wordsearchSection" class="sec">
-  <button class="page-back" onclick="showSec('games')">← Буцах</button>
-  <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:20px">
-    <div>
-      <h2 style="font-size:20px;font-weight:800;font-family:'Baloo 2',cursive">🔍 Үгийг олоорой</h2>
-    </div>
-    <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
-      <select id="wsCatSel" onchange="wsLoadPage()" style="padding:8px 12px;border:1.5px solid var(--border);border-radius:11px;font-family:'Plus Jakarta Sans',sans-serif;font-size:15px;font-weight:600;outline:none;background:#fff;cursor:pointer">
-        <option value="1">📖 Хуудас 1</option><option value="2">📖 Хуудас 2</option>
-        <option value="3">📖 Хуудас 3</option><option value="4">📖 Хуудас 4</option>
-        <option value="5">📖 Хуудас 5</option>
-      </select>
-      <button class="btn-p" onclick="wsLoadPage()">🔄 Шинэчлэх</button>
-    </div>
-  </div>
-  <div id="wsLoading" style="text-align:center;padding:48px">
-    <div style="width:36px;height:36px;border:3px solid var(--border);border-top-color:var(--amber);border-radius:50%;animation:spin .8s linear infinite;margin:0 auto 14px"></div>
-    <p style="font-size:15px;font-weight:600;color:var(--mid)">Номын хуудас татаж байна…</p>
-  </div>
-  <div id="wsNoPdf" style="display:none;max-width:480px;margin:0 auto;text-align:center;padding:40px 20px">
-    <div style="font-size:52px;margin-bottom:16px">📄</div>
-    <h3 style="font-size:17px;font-weight:800;margin-bottom:10px">PDF файл бэлэн болоогүй байна</h3>
-    <p style="font-size:15px;color:var(--mid);line-height:1.7;margin-bottom:20px">GitHub дээрх <strong>wordsearch.pdf</strong> файлыг байршуулсны дараа тоглоом автоматаар идэвхжинэ.</p>
-    <button class="btn-p" style="margin-top:18px" onclick="showSec('shop')">🛒 Сургалтын материалт очих</button>
-  </div>
-  <div id="wsGameArea" style="display:none">
-    <div style="display:grid;grid-template-columns:1fr 220px;gap:20px;align-items:start">
-      <div>
-        <div id="wsFoundCount" style="font-size:15px;font-weight:700;color:var(--mid);margin-bottom:10px"></div>
-        <div id="wsImgWrap" style="position:relative;display:inline-block;max-width:100%;border:2px solid var(--border);border-radius:16px;overflow:hidden;cursor:crosshair;box-shadow:0 4px 20px rgba(0,0,0,0.10)">
-          <img id="wsBgImg" src="" alt="Үгийг олоорой" style="display:block;max-width:100%;height:auto;user-select:none;-webkit-user-drag:none">
-          <svg id="wsOverlaySvg" style="position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none" xmlns="http://www.w3.org/2000/svg">
-            <g id="wsFoundLines"></g>
-            <line id="wsActiveLine" x1="0" y1="0" x2="0" y2="0" stroke="rgba(37,99,235,0.55)" stroke-width="18" stroke-linecap="round" stroke-dasharray="0" style="display:none"/>
-          </svg>
-          <div id="wsClickLayer" style="position:absolute;top:0;left:0;width:100%;height:100%;cursor:crosshair"></div>
-        </div>
-        <p style="font-size:13px;color:var(--muted);margin-top:8px">💡 Эхний үсгийг дараад сүүлчийн үсгийг дар</p>
-      </div>
-      <div style="display:flex;flex-direction:column;gap:10px">
-        <div class="word-list"><h4>🎯 Олох үгс</h4><div id="wordListEl"></div></div>
-        <div id="wsCatInfo" style="background:#f0fdf4;border:1px solid #a7f3d0;border-radius:12px;padding:12px;font-size:13px;color:#065f46;line-height:1.5"></div>
-        <button class="btn-p" style="font-size:14px;padding:9px" onclick="wsReset()">🔄 Дахин эхлэх</button>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- MONGOLIAN READING -->
-<section id="readingSection" class="sec">
-  <button class="page-back" onclick="showSec('games')">← Буцах</button>
-  <h2 style="font-size:20px;font-weight:800;font-family:'Baloo 2',cursive;margin-bottom:6px">📜 Монгол бичиг унших</h2>
-  <p style="font-size:14px;color:var(--mid);margin-bottom:20px">Тоо орхиод буусан нүдийг зөв үгээр нөхөөрэй</p>
-  <div class="read-game">
-    <div class="read-score">
-      <div class="score-box"><div class="score-num" id="readScore">0</div><div class="score-lbl">Оноо</div></div>
-      <div style="width:1px;height:36px;background:var(--border)"></div>
-      <div class="score-box"><div class="score-num" id="readQ">1</div><div class="score-lbl">Асуулт</div></div>
-      <div style="width:1px;height:36px;background:var(--border)"></div>
-      <div class="score-box"><div class="score-num" id="readTotal">5</div><div class="score-lbl">Нийт</div></div>
-      <div style="flex:1"></div>
-      <button class="btn-p" onclick="startReading()" style="font-size:15px;padding:8px 18px">🔄 Дахин</button>
-    </div>
-    <div class="progress-bar"><div class="progress-fill" id="readProgress" style="width:0%"></div></div>
-    <div class="text-display">
-      <div class="text-title" id="readTitle">— — —</div>
-      <div class="text-content" id="readContent"></div>
-    </div>
-    <div class="options-grid" id="readOptions"></div>
-    <div id="readLockMsg" class="lock-msg" style="display:none">
-      <p>🔒 Үнэгүй 3 даалгавар дууслаа.<br>Үлдсэн даалгавруудыг тоглохын тулд дэлгүүрээс "Монгол бичиг унших" багцыг худалдаж аваарай.</p>
-      <button class="btn-p" onclick="showSec('shop')">🛒 Сургалтын материалт очих</button>
-    </div>
-  </div>
-</section>
-
-<!-- HORSE RACE -->
-<section id="horseSection" class="sec">
-  <button class="page-back" onclick="showSec('games')">← Буцах</button>
-  <h2 style="font-size:20px;font-weight:800;font-family:'Baloo 2',cursive;margin-bottom:4px">🐎 Морь уралдъя</h2>
-  <p style="font-size:14px;color:var(--mid);margin-bottom:20px">Монгол бичгээ тоглонгоо сурцгаая! · Өдөр бүр 5–15 минут · 50 алхамд хүр</p>
-
-  <!-- ӨДРИЙН СОНГОЛТ -->
-  <div id="horseSetup" style="max-width:760px;margin:0 auto">
-    <div id="hzRaceMini" style="margin-bottom:18px"></div>
-    <h3 style="font-size:16px;font-weight:800;margin-bottom:4px;text-align:center">📅 Өдрөө сонгоод даалгавраа хий</h3>
-    <p style="font-size:13px;color:var(--muted);text-align:center;margin-bottom:6px">14 хоногийн хөтөлбөр — өдөр бүр нэг шинэ түвшин нээгдэнэ</p>
-    <div id="hzDayGrid" class="hz-day-grid"></div>
-    <div class="hz-testbar">
-      <button class="hz-testlink" id="hzTestBtn" onclick="hzToggleDevUnlock()">🔧 Туршилтын горим: бүх өдрийг нээх/хаах</button>
-    </div>
-  </div>
-
-  <!-- ТОГЛООМ (АСУУЛТ) -->
-  <div id="horseGame" class="horse-game" style="display:none;max-width:640px;margin:0 auto">
-    <div class="hz-race-wrap">
-      <div class="hz-day-badge" id="hzDayBadge">Өдөр 1</div>
-      <div class="hz-lane">
-        <div class="hz-lane-label">🐎 Миний морь</div>
-        <div class="hz-lane-track"><div class="lane-bg-stripes"></div><div class="hz-horse" id="hzMyHorse" style="left:1%">🐎</div><div class="hz-finish">🏁</div></div>
-      </div>
-      <div class="hz-lane">
-        <div class="hz-lane-label">🐴 Уралдааны морь</div>
-        <div class="hz-lane-track"><div class="lane-bg-stripes"></div><div class="hz-horse" id="hzRivalHorse" style="left:1%">🐴</div><div class="hz-finish">🏁</div></div>
-      </div>
-    </div>
-
-    <div class="hz-quiz-card" id="hzQuizCard">
-      <div class="hz-quiz-top">
-        <div class="hz-progress-mini"><div class="hz-progress-mini-fill" id="hzProgFill" style="width:0%"></div></div>
-        <div class="hz-streak" id="hzStreak">🔥 0</div>
-      </div>
-      <div id="hzQuestionArea"></div>
-      <div class="hz-feedback" id="hzFeedback"></div>
-    </div>
-
-    <button class="page-back" style="margin-top:16px" onclick="hzExitQuiz()">← Өдрийн жагсаалт руу буцах</button>
-  </div>
-
-  <!-- ӨДРИЙН ДҮН -->
-  <div id="hzResultScreen" style="display:none;max-width:480px;margin:0 auto">
-    <div class="hz-result-card">
-      <div style="font-size:40px;margin-bottom:6px" id="hzResultEmoji">🏆</div>
-      <h3 style="font-size:20px;font-weight:800;font-family:'Lora',serif;margin-bottom:4px" id="hzResultTitle">Баяр хүргэе!</h3>
-      <p style="font-size:14px;color:var(--mid)" id="hzResultSub">Өнөөдрийн ахиц</p>
-      <div class="hz-result-stars" id="hzResultStars">⭐⭐⭐⭐☆</div>
-      <div class="hz-stat-grid">
-        <div class="hz-stat-box"><div class="num" id="hzStatCorrect">0/10</div><div class="lbl">🎯 Зөв хариулт</div></div>
-        <div class="hz-stat-box"><div class="num" id="hzStatScore">0</div><div class="lbl">🏆 Оноо</div></div>
-        <div class="hz-stat-box"><div class="num" id="hzStatSteps">0</div><div class="lbl">🐎 Морь явсан алхам</div></div>
-        <div class="hz-stat-box"><div class="num" id="hzStatStreak">0</div><div class="lbl">🔥 Дараалсан зөв</div></div>
-      </div>
-      <div class="hz-skill-line" id="hzSkillLine">📚 Өнөөдөр давтсан: —</div>
-      <p style="font-size:14px;font-weight:700;color:var(--amber-d);margin:14px 0 4px">Маргааш дахин уулзъя! 👋</p>
-      <button class="btn-p" style="width:100%;margin-top:8px" onclick="hzBackToDays()">📅 Өдрийн жагсаалт руу</button>
-    </div>
-  </div>
-</section>
-
 <!-- ═══════════════════════════════════════
      ONLINE TRAINING SECTION — Онлайн сургалт
 ════════════════════════════════════════ -->
@@ -408,7 +234,7 @@
   <!-- Hero -->
   <div class="training-hero">
     <div class="training-hero-text">
-      <div class="training-hero-tag">🎓 Сургалт</div>
+      <div class="training-hero-tag">Сургалт</div>
       <h2>Багштай хамт суралц</h2>
       <p>Онлайн болон танхимаар.</p>
     </div>
@@ -418,10 +244,10 @@
   <!-- Filter -->
   <div class="training-filter">
     <button class="tr-flt-btn active" onclick="filterTraining('all',this)">Бүгд</button>
-    <button class="tr-flt-btn" onclick="filterTraining('mongol',this)">🗣 Монгол хэл</button>
-    <button class="tr-flt-btn" onclick="filterTraining('literature',this)">📚 Уран зохиол</button>
+    <button class="tr-flt-btn" onclick="filterTraining('mongol',this)">Монгол хэл</button>
+    <button class="tr-flt-btn" onclick="filterTraining('literature',this)">Уран зохиол</button>
     <button class="tr-flt-btn" onclick="filterTraining('script',this)">Үндэсний бичиг</button>
-    <button class="tr-flt-btn" onclick="filterTraining('other',this)">📝 Монгол хэл + бусад</button>
+    <button class="tr-flt-btn" onclick="filterTraining('other',this)">Монгол хэл + бусад</button>
   </div>
 
   <!-- Course Grid -->
@@ -432,7 +258,7 @@
       <div class="ribbon">АЛДАРТАЙ</div>
       <div class="course-card-top">
         <div class="course-tag-row">
-          <span class="course-tag tag-popular">🔥 Эрэлттэй</span>
+          <span class="course-tag tag-popular">Эрэлттэй</span>
           <div class="stars">
             <span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span>
             <span class="rating-count">(24)</span>
@@ -442,8 +268,8 @@
         <h3>Монгол хэл — Дүрэм, найруулга, бичих чадвар</h3>
 
         <div class="mode-toggle" onclick="event.stopPropagation()">
-          <button class="mode-btn active" onclick="setCourseMode('mongol','online',this)">💻 Онлайн</button>
-          <button class="mode-btn" onclick="setCourseMode('mongol','onsite',this)">🏫 Танхим</button>
+          <button class="mode-btn active" onclick="setCourseMode('mongol','online',this)">Онлайн</button>
+          <button class="mode-btn" onclick="setCourseMode('mongol','onsite',this)">Танхим</button>
         </div>
 
         <!-- ONLINE -->
@@ -480,7 +306,7 @@
     <div class="course-card" data-cat="literature" onclick="openCourseDetail('literature')">
       <div class="course-card-top">
         <div class="course-tag-row">
-          <span class="course-tag tag-limited">🔜 Тун удахгүй</span>
+          <span class="course-tag tag-limited">Тун удахгүй</span>
         </div>
         <div class="course-icon-wrap" style="background:#f0fdf4">📚</div>
         <h3>Уран зохиолын хичээл</h3>
@@ -505,7 +331,7 @@
       <div class="ribbon" id="scriptRibbon">20% CASHBACK</div>
       <div class="course-card-top">
         <div class="course-tag-row">
-          <span class="course-tag tag-new" id="scriptRegTag">🎓 Анхан шат</span>
+          <span class="course-tag tag-new" id="scriptRegTag">Анхан шат</span>
           <div class="stars">
             <span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span>
             <span class="rating-count">(19)</span>
@@ -515,8 +341,8 @@
         <h3>Үндэсний бичгийн анхан шатны сургалт</h3>
 
         <div class="mode-toggle" onclick="event.stopPropagation()">
-          <button class="mode-btn active" onclick="setCourseMode('script','online',this)">💻 Онлайн</button>
-          <button class="mode-btn" onclick="setCourseMode('script','onsite',this)">🏫 Танхим</button>
+          <button class="mode-btn active" onclick="setCourseMode('script','online',this)">Онлайн</button>
+          <button class="mode-btn" onclick="setCourseMode('script','onsite',this)">Танхим</button>
         </div>
 
         <!-- ONLINE -->
@@ -527,7 +353,7 @@
             <div class="meta-chip"><span>💻</span> Google Meet</div>
             <div class="meta-chip"><span>👤</span> Макс 10</div>
           </div>
-          <div class="course-note" id="scriptCashbackNote">🎁 20% cashback — 19,800₮ буцаагдана</div>
+          <div class="course-note" id="scriptCashbackNote">20% cashback — 19,800₮ буцаагдана</div>
         </div>
 
         <!-- ONSITE (ТАНХИМ) -->
@@ -554,7 +380,7 @@
     <div class="course-card" data-cat="other" onclick="openCourseDetail('other')">
       <div class="course-card-top">
         <div class="course-tag-row">
-          <span class="course-tag tag-popular" id="hwRegTag">🔥 Эрэлттэй</span>
+          <span class="course-tag tag-popular" id="hwRegTag">Эрэлттэй</span>
           <div class="stars">
             <span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span>
             <span class="rating-count">(28)</span>
@@ -571,7 +397,7 @@
           <div class="meta-chip"><span>👤</span> Цагт 2 сурагч</div>
         </div>
         <div class="course-time-row">
-          <span class="lbl">🕐 Цаг:</span>
+          <span class="lbl">Цаг:</span>
           <span class="time-pill">19:00</span>
           <span class="time-pill">20:00</span>
           <span class="time-pill">21:00</span>
@@ -590,7 +416,7 @@
 
   <!-- Testimonials -->
   <div class="testimonials">
-    <h3>💬 Суралцагчдын сэтгэгдэл</h3>
+    <h3>Суралцагчдын сэтгэгдэл</h3>
     <div class="testi-grid">
       <div class="testi-card">
         <div class="testi-stars">★★★★★</div>
@@ -600,23 +426,7 @@
           <div><div class="testi-name">Дэлгэрмаа</div><div class="testi-role">Эцэг эх · Улаанбаатар</div></div>
         </div>
       </div>
-      <div class="testi-card">
-        <div class="testi-stars">★★★★★</div>
-        <div class="testi-text">"Гэрийн даалгаврын тусламж маш хэрэгтэй болсон. Хүүхэдтэйгээ хамт суухгүйгээр даалгавраа дуусгадаг болсон."</div>
-        <div class="testi-author">
-          <div class="testi-avatar" style="background:var(--green)">Б</div>
-          <div><div class="testi-name">Батзориг</div><div class="testi-role">Эцэг эх · Дархан</div></div>
-        </div>
       </div>
-      <div class="testi-card">
-        <div class="testi-stars">★★★★☆</div>
-        <div class="testi-text">"Унших сургалт маш их тус болсон. Хүүхэд минь одоо уншихаасаа зугатдаггүй болсон, аяндаа сонирхдог болсон."</div>
-        <div class="testi-author">
-          <div class="testi-avatar" style="background:var(--purple)">О</div>
-          <div><div class="testi-name">Оюунцэцэг</div><div class="testi-role">Эцэг эх · Эрдэнэт</div></div>
-        </div>
-      </div>
-    </div>
   </div>
 </section>
 
@@ -639,15 +449,15 @@
         Монгол хэл, уран зохиол болон үндэсний бичгийн чиглэлээр мэргэжлээрээ <strong>10 гаруй жил</strong> ажилласан туршлагатай багш. Өөрийн сонирхлоор уран бийрээр хичээллэдэг. Өөрөө болон дадлагажуулсан шавь нар нь Монгол хэлний олимпиадад <strong>2, 3-р байр</strong> эзэлж байсан удаатай.
       </p>
       <div class="about-badges">
-        <span class="about-badge">🎓 10+ жилийн туршлага</span>
-        <span class="about-badge">🤖 Хиймэл оюун ухааны багш</span>
-        <span class="about-badge">🏆 Олимпиадын амжилттай шавь нар</span>
-        <span class="about-badge">🖌 Уран бийр</span>
+        <span class="about-badge">10+ жилийн туршлага</span>
+        <span class="about-badge">Хиймэл оюун ухааны багш</span>
+        <span class="about-badge">Олимпиадын амжилттай шавь нар</span>
+        <span class="about-badge">Уран бийр</span>
       </div>
     </div>
   </div>
 
-  <div class="about-section-title">✨ Бүтээл, санаачлага</div>
+  <div class="about-section-title">Бүтээл, санаачлага</div>
   <div class="about-grid">
     <div class="about-card">
       <div class="about-card-icon">💻</div>
@@ -667,7 +477,7 @@
   </div>
 
   <div style="text-align:center;margin-top:36px">
-    <button class="btn-p" onclick="showSec('training')">🎓 Сургалтууд руу очих →</button>
+    <button class="btn-p" onclick="showSec('training')">Сургалтууд руу очих →</button>
   </div>
 </section>
 
@@ -675,7 +485,7 @@
 <section id="shopSection" class="sec">
   <button class="page-back" onclick="showSec('home')">← Буцах</button>
   <div style="display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:12px;margin-bottom:20px">
-    <h2 class="sec-title" style="margin-bottom:0">🛒 Цахим дэлгүүр</h2>
+    <h2 class="sec-title" style="margin-bottom:0">Цахим дэлгүүр</h2>
     <div class="shop-filter">
       <button class="flt-btn active" onclick="filterShop('all',this)">Бүгд</button>
       <button class="flt-btn" onclick="filterShop('Төлбөртэй',this)">Төлбөртэй</button>
@@ -689,8 +499,8 @@
 <section id="librarySection" class="sec">
   <button class="page-back" onclick="showSec('home')">← Буцах</button>
   <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:24px">
-    <h2 class="sec-title" style="margin-bottom:0">📚 Миний сан</h2>
-    <button class="btn-p" onclick="loadLibrary()" style="font-size:14px;padding:7px 18px">🔄 Шинэчлэх</button>
+    <h2 class="sec-title" style="margin-bottom:0">Миний сан</h2>
+    <button class="btn-p" onclick="loadLibrary()" style="font-size:14px;padding:7px 18px">Шинэчлэх</button>
   </div>
   <div id="libStatus" style="display:none;background:#fef3c7;border:1px solid #fcd34d;border-radius:14px;padding:12px 18px;margin-bottom:18px;font-size:15px;color:var(--amber-d);font-weight:600"></div>
   <div id="libraryGrid" class="prod-grid">
@@ -733,7 +543,7 @@
       <div class="cp-body">
         <!-- Time slot picker - homework only -->
         <div id="cpTimeWrap" style="margin-bottom:14px;display:none">
-          <div class="cp-pick-title">🕐 Цагаа сонгоно уу <span class="cp-req">(заавал)</span></div>
+          <div class="cp-pick-title">Цагаа сонгоно уу <span class="cp-req">(заавал)</span></div>
           <div class="cp-time-grid">
             <button class="cp-time-btn" data-time="19:00" onclick="selectTimeSlot(this)">19:00</button>
             <button class="cp-time-btn" data-time="20:00" onclick="selectTimeSlot(this)">20:00</button>
@@ -741,7 +551,7 @@
           </div>
         </div>
         <div id="cpSchedWrap" style="margin-bottom:14px;display:none">
-          <div class="cp-pick-title">📆 Хүссэн өдрүүд</div>
+          <div class="cp-pick-title">Хүссэн өдрүүд</div>
           <div class="sched-select-wrap">
             <button class="sched-sel-btn" onclick="toggleSchedBtn(this)">Даваа</button>
             <button class="sched-sel-btn" onclick="toggleSchedBtn(this)">Мягмар</button>
@@ -767,11 +577,11 @@
           <img src="https://raw.githubusercontent.com/tuult764-crypto/sonirholtoi-hel-bichig-/main/teacher.png" alt="Багш" onerror="this.style.display='none'">
           <div class="cp-teacher-info">
             <div class="cp-teacher-name">Багш М.Туул</div>
-            <a class="cp-teacher-call" href="tel:89993835">📞 8999-3835</a>
+            <a class="cp-teacher-call" href="tel:89993835">8999-3835</a>
           </div>
         </div>
 
-        <button id="cpSubmitBtn" class="pay-next" onclick="cpConfirmPaid()">✅ Төлбөрөө хийлээ</button>
+        <button id="cpSubmitBtn" class="pay-next" onclick="cpConfirmPaid()">Төлбөрөө хийлээ</button>
         <button class="pay-close-lnk" onclick="closeCoursePayModal()">Хаах</button>
       </div>
     </div>
@@ -779,8 +589,8 @@
       <div style="font-size:44px;margin-bottom:10px">🎉</div>
       <div style="font-size:17px;font-weight:800;color:var(--green);margin-bottom:6px">Баталгаажлаа!</div>
       <div style="font-size:15px;color:var(--mid);line-height:1.6;margin-bottom:14px">Багш гүйлгээг шалгаад тантай холбогдоно.</div>
-      <div style="background:var(--amber-l);border-radius:11px;padding:11px;font-size:14px;color:var(--amber-d);margin-bottom:14px;line-height:1.6">📞 <strong>8999-3835</strong><br>✉️ sonirholtoihelbichig@gmail.com</div>
-      <button class="pay-next" onclick="closeCoursePayModal()">✓ Хаах</button>
+      <div style="background:var(--amber-l);border-radius:11px;padding:11px;font-size:14px;color:var(--amber-d);margin-bottom:14px;line-height:1.6">📞 <strong>8999-3835</strong><br>sonirholtoihelbichig@gmail.com</div>
+      <button class="pay-next" onclick="closeCoursePayModal()">Хаах</button>
     </div>
   </div>
 </div>
@@ -798,8 +608,8 @@
         <div class="qr-box"><img src="https://raw.githubusercontent.com/tuult764-crypto/sonirholtoi-hel-bichig-/main/qr.png" alt="QR" onerror="this.style.display='none';this.nextSibling.style.display='flex'"><span style="display:none;font-size:52px">🔲</span></div>
         <div class="qr-hint">QR-д дүн орохгүй — дээрх нийт дүнг өөрөө оруулна</div>
         <div class="bank-info"><div class="bank-num">ХАС БАНК: 5006069631</div><div class="bank-name">МӨНХДАЛАЙ ТУУЛ</div></div>
-        <div class="bank-note">⚠️ Гүйлгээний <strong>утга</strong> дээр и-мэйл хаягаа заавал бичнэ үү!</div>
-        <button class="pay-next" onclick="goToStep2()">✅ Төлбөрөө хийлээ → Дараах</button>
+        <div class="bank-note">Гүйлгээний <strong>утга</strong> дээр и-мэйл хаягаа заавал бичнэ үү!</div>
+        <button class="pay-next" onclick="goToStep2()">Төлбөрөө хийлээ → Дараах</button>
         <button class="pay-close-lnk" onclick="closePayment()">Хаах</button>
       </div>
     </div>
@@ -812,8 +622,8 @@
       <div class="pay-body">
         <input id="payEmail" type="email" class="modal-field" style="padding:13px 15px;font-size:16px;margin-bottom:9px" placeholder="tanii@gmail.com">
         <input id="payNote" type="text" class="modal-field" style="padding:11px 15px;font-size:15px;margin-bottom:14px" placeholder="Нэмэлт тайлбар (заавал биш)">
-        <div style="background:#f0fdf4;border-radius:11px;padding:11px 13px;margin-bottom:14px;font-size:14px;color:#166534;line-height:1.6">📦 Захиалга баталгаажсаны дараа та <strong>24 цагийн дотор</strong> файлаа и-мэйлээр хүлээн авна.</div>
-        <button id="submitOrderBtn" class="pay-next" onclick="submitOrder()">🚀 Захиалга илгээх</button>
+        <div style="background:#f0fdf4;border-radius:11px;padding:11px 13px;margin-bottom:14px;font-size:14px;color:#166534;line-height:1.6">Захиалга баталгаажсаны дараа та <strong>24 цагийн дотор</strong> файлаа и-мэйлээр хүлээн авна.</div>
+        <button id="submitOrderBtn" class="pay-next" onclick="submitOrder()">Захиалга илгээх</button>
         <button class="pay-close-lnk" onclick="goToStep1()">← Буцах</button>
       </div>
     </div>
@@ -822,7 +632,7 @@
       <div style="font-size:18px;font-weight:800;color:var(--green);margin-bottom:8px">Захиалга амжилттай!</div>
       <div style="font-size:15px;color:var(--mid);line-height:1.7;margin-bottom:20px">Таны захиалга бүртгэгдлээ.<br>Төлбөр шалгагдсаны дараа файлыг<br><strong id="confirmEmail" style="color:var(--amber)"></strong><br>хаяг руу илгээнэ.</div>
       <div style="background:#f0fdf4;border-radius:13px;padding:13px;font-size:14px;color:#166534;margin-bottom:18px">⏱ Ихэвчлэн <strong>1-24 цагийн дотор</strong> хүргэгдэнэ.<br>Асуух зүйл: <strong>sonirholtoihelbichig@gmail.com</strong></div>
-      <button class="pay-next" onclick="closePayment()">✓ Хаах</button>
+      <button class="pay-next" onclick="closePayment()">Хаах</button>
     </div>
   </div>
 </div>
@@ -839,8 +649,8 @@
         <div class="auth-logo-name">Сонирхолтой хэл бичиг</div>
       </div>
       <div class="auth-tabs-row">
-        <button class="auth-tab-btn active" id="tabLogin" onclick="switchTab('login')">🔑 Нэвтрэх</button>
-        <button class="auth-tab-btn" id="tabReg" onclick="switchTab('reg')">✨ Бүртгүүлэх</button>
+        <button class="auth-tab-btn active" id="tabLogin" onclick="switchTab('login')">Нэвтрэх</button>
+        <button class="auth-tab-btn" id="tabReg" onclick="switchTab('reg')">Бүртгүүлэх</button>
       </div>
     </div>
 
@@ -857,7 +667,7 @@
         <input id="authEmail" class="auth-input" type="email" placeholder="tanii@gmail.com" autocomplete="email">
         <div class="auth-section-title">Нууц үг</div>
         <input id="authPass" class="auth-input" type="password" placeholder="Нууц үгээ оруулна уу" autocomplete="current-password">
-        <button class="auth-submit-btn" onclick="handleAuth()">🔑 Нэвтрэх</button>
+        <button class="auth-submit-btn" onclick="handleAuth()">Нэвтрэх</button>
         <button class="auth-forgot-btn" onclick="handleForgot()">Нууц үг мартсан уу?</button>
       </div>
 
@@ -875,7 +685,7 @@
         <div class="auth-section-title">Профайл дүрс сонгох</div>
         <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-bottom:14px" id="regAvatarGrid"></div>
 
-        <button class="auth-submit-btn" style="background:var(--green);box-shadow:0 4px 16px rgba(5,150,105,.35)" onclick="handleRegister()">✨ Бүртгүүлэх</button>
+        <button class="auth-submit-btn" style="background:var(--green);box-shadow:0 4px 16px rgba(5,150,105,.35)" onclick="handleRegister()">Бүртгүүлэх</button>
       </div>
 
     </div>
@@ -886,13 +696,13 @@
 <div id="avatarModal" class="avatar-overlay hidden" onclick="if(event.target===this)closeAvatarPicker()">
   <div class="avatar-modal">
     <div class="avatar-modal-head">
-      <h3>🖼 Профайл дүрс сонгох</h3>
+      <h3>Профайл дүрс сонгох</h3>
       <button class="avatar-close" onclick="closeAvatarPicker()">✕</button>
     </div>
     <div class="avatar-grid" id="avatarGrid"></div>
     <div class="avatar-modal-foot">
       <button class="avatar-cancel" onclick="closeAvatarPicker()">Болих</button>
-      <button class="avatar-confirm" onclick="confirmAvatar()">✅ Сонгох</button>
+      <button class="avatar-confirm" onclick="confirmAvatar()">Сонгох</button>
     </div>
   </div>
 </div>
@@ -915,9 +725,9 @@
     </div>
     <div class="f-contact">
       <h4>Холбоо барих</h4>
-      <div>📧 sonirholtoihelbichig@gmail.com</div>
-      <div>🔵 Facebook: Сонирхолтой хэл бичиг</div>
-      <div>📸 Instagram: @sonirholtoi_hel_bichig</div>
+      <div>sonirholtoihelbichig@gmail.com</div>
+      <div>Facebook: Сонирхолтой хэл бичиг</div>
+      <div>Instagram: @sonirholtoi_hel</div>
     </div>
     <div style="text-align:right"><div class="copy">© 2026 Бүх эрх хуулиар хамгаалагдсан.</div></div>
   </div>
