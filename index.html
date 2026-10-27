@@ -193,7 +193,7 @@
       <span class="game-badge badge-free">Үнэгүй</span>
       <div class="game-icon" style="background:#fef3c7">🔢</div>
       <h3>Монгол Судоку</h3>
-      <p>Монгол тоогоор тоглох өвөрмөц судоку тоглоом. Тоглох үнэгүй, хэвлэхэд эрх шаардлагатай.</p>
+      <p>Монгол тоогоор тоглох өвөрмөц судоку тоглоом. Тоглох үнэгүй. Өдөрт 1 хуудас үнэгүй хэвлэнэ.</p>
     </div>
     <div class="game-card" onclick="showSec('wordsearch')">
       <span class="game-badge badge-free">Үнэгүй</span>
@@ -222,13 +222,10 @@
     <div>
       <button class="page-back" style="margin-bottom:6px" onclick="showSec('games')">← Буцах</button>
       <h2 style="font-size:20px;font-weight:800;font-family:'Baloo 2',cursive">🔢 Монгол Судоку</h2>
-      <p style="font-size:14px;color:var(--mid)">Тоглох үнэгүй · Хэвлэхэд эрх шаардлагатай</p>
+      <p style="font-size:14px;color:var(--mid)">Тоглох үнэгүй · Өдөрт 1 хуудас (4 судоку) үнэгүй хэвлэнэ</p>
     </div>
     <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
-      <div style="display:flex;align-items:center;gap:8px;background:#fef3c7;border:1.5px solid #fcd34d;border-radius:99px;padding:6px 14px;font-size:15px;font-weight:700;color:var(--amber-d)">
-        🖨 <span id="creditCount">0</span> хуудас эрхтэй
-        <button style="font-size:13px;color:var(--blue);text-decoration:underline;background:none;border:none;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif;font-weight:600" onclick="refreshCredits()" id="refreshCreditBtn">⟳ Шинэчлэх</button>
-      </div>
+      <div id="printStatus" class="print-status">🖨 Өнөөдөр 1 хуудас үнэгүй хэвлэнэ</div>
       <button class="btn-p" onclick="initSudoku()">🔄 Шинэ</button>
     </div>
   </div>
@@ -248,24 +245,14 @@
         <button class="action-btn btn-new2" onclick="initSudoku()">🔄 Шинэ тоглоом</button>
         <button class="action-btn btn-check2" onclick="checkSudoku()">✅ Шалгах</button>
         <button class="action-btn btn-solve2" onclick="solveSudoku()">💡 Шийдэл</button>
-        <button class="action-btn btn-print2" onclick="handlePrint()">🖨 А4 хэвлэх</button>
+        <button class="action-btn btn-print2" onclick="handlePrint()">🖨 Үнэгүй хэвлэх (өдөрт 1)</button>
       </div>
       <div class="print-sec">
-        <div class="psec-title">ХЭВЛЭХ ЭРХ <a href="#" onclick="refreshCredits();return false">Шинэчлэх</a></div>
+        <div class="psec-title">ӨДРИЙН ҮНЭГҮЙ ХЭВЛЭЛТ</div>
         <div class="free-banner">
-          <div class="free-title">1-Р ХУУДАС ҮНЭГҮЙ!</div>
-          <div class="free-desc">Нэг хуудас (4 судоку) үнэгүй хэвлэх боломжтой</div>
+          <div class="free-title">ӨДӨР БҮР 1 ХУУДАС ҮНЭГҮЙ!</div>
+          <div class="free-desc">Нэг хуудас (4 судоку)-г өдөрт нэг удаа хэвлэнэ. Маргааш шинэ эрх нээгдэнэ.</div>
           <button class="btn-free-p" onclick="printFree()">ҮНЭГҮЙ ХЭВЛЭХ</button>
-        </div>
-        <div class="pkgs">
-          <div class="pkg" onclick="buyPackage(5,3000)"><div class="pkg-n">5</div><div class="pkg-lbl">хуудас</div><div class="pkg-p">3,000₮</div></div>
-          <div class="pkg pop" onclick="buyPackage(10,5000)"><div class="pkg-badge">АЛДАРТАЙ</div><div class="pkg-n">10</div><div class="pkg-lbl">хуудас</div><div class="pkg-p">5,000₮</div></div>
-          <div class="pkg" onclick="buyPackage(15,7000)"><div class="pkg-n">15</div><div class="pkg-lbl">хуудас</div><div class="pkg-p">7,000₮</div></div>
-        </div>
-        <div class="pkgs">
-          <div class="pkg" onclick="buyPackage(20,9000)"><div class="pkg-n">20</div><div class="pkg-lbl">хуудас</div><div class="pkg-p">9,000₮</div></div>
-          <div class="pkg" onclick="buyPackage(25,11000)"><div class="pkg-n">25</div><div class="pkg-lbl">хуудас</div><div class="pkg-p">11,000₮</div></div>
-          <div class="pkg deal" onclick="buyPackage(30,12000)"><div class="pkg-badge">ХЯМДРАЛ!</div><div class="pkg-n">30</div><div class="pkg-lbl">хуудас</div><div class="pkg-p">12,000₮</div></div>
         </div>
       </div>
     </div>
@@ -798,42 +785,6 @@
   </div>
 </div>
 
-<!-- SUDOKU PAY MODAL -->
-<div id="sudokuPayModal" class="pay-overlay hidden">
-  <div class="sp-modal-card">
-    <div id="spStep1">
-      <div class="sp-top"><div class="si">💳</div><h3>Хэвлэх эрх худалдаж авах</h3><p id="spPkgLabel"></p></div>
-      <div class="sp-body">
-        <div class="sp-amt" id="spAmtEl"></div>
-        <div class="qr-box"><img src="https://raw.githubusercontent.com/tuult764-crypto/sonirholtoi-hel-bichig-/main/qr.png" alt="QR" onerror="this.style.display='none';this.nextSibling.style.display='flex'"><span style="display:none;font-size:44px">🔲</span></div>
-        <div class="qr-hint">QR-д дүн орохгүй — дээрх дүнг өөрөө оруулна</div>
-        <div class="bank-info"><div class="bank-num">ХАС БАНК: 5006069631</div><div class="bank-name">МӨНХДАЛАЙ ТУУЛ</div></div>
-        <div class="bank-note">⚠️ Гүйлгээний <strong>утга</strong> дээр и-мэйл хаягаа бичнэ үү!</div>
-        <button class="pay-next" onclick="spGoStep2()">✅ Төлбөрөө хийлээ → Дараах</button>
-        <button class="pay-close-lnk" onclick="closeSudokuPay()">Хаах</button>
-      </div>
-    </div>
-    <div id="spStep2" style="display:none">
-      <div class="sp-top"><div class="si">📧</div><h3>И-мэйл хаягаа оруулна уу</h3><p>Баталгаажсаны дараа илгээнэ</p></div>
-      <div class="sp-body">
-        <input id="spEmail" class="modal-field" type="email" placeholder="tanii@gmail.com">
-        <input id="spNote" class="modal-field" type="text" placeholder="Нэмэлт тайлбар (заавал биш)">
-        <div style="background:#f0fdf4;border-radius:11px;padding:11px;margin-bottom:12px;font-size:13px;color:#166534;line-height:1.6">📦 Захиалга баталгаажсаны дараа <strong>24 цагийн дотор</strong> эрхийн код хүлээн авна.</div>
-        <button id="spSubmitBtn" class="pay-next" onclick="spSubmit()">🚀 Захиалга илгээх</button>
-        <button class="pay-close-lnk" onclick="spGoStep1()">← Буцах</button>
-      </div>
-    </div>
-    <div id="spStep3" style="display:none;padding:28px 22px;text-align:center">
-      <div style="font-size:44px;margin-bottom:10px">🎉</div>
-      <div style="font-size:16px;font-weight:800;color:var(--green);margin-bottom:6px">Захиалга амжилттай!</div>
-      <div style="font-size:14px;color:var(--mid);line-height:1.7;margin-bottom:14px">Төлбөр шалгагдсаны дараа<br><strong id="spConfirmEmail" style="color:var(--amber)"></strong><br>хаяг руу мэдэгдэл илгээнэ.</div>
-      <div style="background:#f0fdf4;border-radius:11px;padding:11px;font-size:13px;color:#166534;margin-bottom:14px;line-height:1.5">⏱ <strong>1–24 цагийн дотор</strong> хүргэгдэнэ.<br>Асуух зүйл: <strong>sonirholtoihelbichig@gmail.com</strong></div>
-      <button class="pay-next" style="margin-bottom:8px" onclick="closeSudokuPay();refreshCredits()">⟳ Эрх шинэчлэх</button>
-      <button class="pay-close-lnk" onclick="closeSudokuPay()">Хаах</button>
-    </div>
-  </div>
-</div>
-
 <!-- SHOP PAY MODAL -->
 <div id="payModal" class="pay-overlay hidden">
   <div class="pay-card">
@@ -966,7 +917,7 @@
       <h4>Холбоо барих</h4>
       <div>📧 sonirholtoihelbichig@gmail.com</div>
       <div>🔵 Facebook: Сонирхолтой хэл бичиг</div>
-      <div>📸 Instagram: @sonirholtoi_hel</div>
+      <div>📸 Instagram: @sonirholtoi_hel_bichig</div>
     </div>
     <div style="text-align:right"><div class="copy">© 2026 Бүх эрх хуулиар хамгаалагдсан.</div></div>
   </div>
