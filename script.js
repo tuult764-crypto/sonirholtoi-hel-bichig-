@@ -7,8 +7,6 @@ const MONG_REV   = Object.fromEntries(Object.entries(MONG_NUMS).map(([k,v])=>[v,
 const GAS_URL    = 'https://script.google.com/macros/s/AKfycby1Hsa1TvOLBeuLuHtMTzYfuE8i6HT6fRxfhZqYcXB7tGSnt6-61sPQLwdulKhqf6FldQ/exec';
 const SHEET_ID   = '19XbGi1hWULDm2MRjFAG8G0dtlp7tbfN2pJSupKWA6G4';
 const SHEET_NAME = 'Products';
-const CREDIT_KEY    = 'shb_print_credits';
-const FREE_USED_KEY = 'shb_free_used';
 
 let currentUser    = '';
 let cartItems      = [];
@@ -77,7 +75,7 @@ document.addEventListener('DOMContentLoaded',()=>{
   startWordSearch();
   startReading();
   initHorseLearning();
-  updateCreditUI();
+  updatePrintUI();
 });
 
 /* ════════════════════════════════════
@@ -91,7 +89,7 @@ function showSec(name){
   const labels={'home':'Нүүр','games':'Тоглоом','training':'Сургалт','shop':'Сургалтын материал','about':'Багшийн тухай'};
   if(labels[name]){document.querySelectorAll('.nav-btn').forEach(b=>{if(b.textContent.includes(labels[name]))b.classList.add('active');});}
   if(name==='library')loadLibrary();
-  if(name==='sudoku'&&currentUser)refreshCredits(true);
+  if(name==='sudoku')updatePrintUI();
 }
 
 /* ════════════════════════════════════
@@ -836,46 +834,16 @@ function showToast(msg,type='success'){const t=document.getElementById('toast');
 /* ════════════════════════════════════
    SUDOKU
 ════════════════════════════════════ */
-function getCredits(){return parseInt(localStorage.getItem(CREDIT_KEY)||'0');}
-function setCredits(n){localStorage.setItem(CREDIT_KEY,String(Math.max(0,n)));updateCreditUI();}
-function updateCreditUI(){const el=document.getElementById('creditCount');if(el)el.textContent=getCredits();}
-// Хэрэглэгч бүрийн ашигласан хуудасны тоо (эрхийг шинэчлэхэд дахин олгохгүйн тулд)
-function usedKey(){return 'shb_print_used:'+String(currentUser||'').trim().toLowerCase();}
-function getUsed(){return parseInt(localStorage.getItem(usedKey())||'0')||0;}
-function addUsed(n){if(n>0)localStorage.setItem(usedKey(),String(getUsed()+n));}
-// Батлагдсан захиалгаас хэвлэх эрхийн хуудасны тоог олно (printPages байхгүй бол "Судоку хэвлэх эрх 5 хуудас" текстээс)
-function creditPagesOf(item){
-  if(!item||typeof item!=='object')return 0;
-  for(const k of ['printPages','pages','credits']){const v=parseInt(item[k]);if(v>0)return v;}
-  for(const v of Object.values(item)){if(typeof v!=='string')continue;const m=v.match(/хэвлэх\s+эрх\D{0,12}(\d+)\s*хуудас/i);if(m)return parseInt(m[1]);}
-  return 0;
+/* Судоку хэвлэх: өдөрт 1 хуудас (4 судоку) үнэгүй. Тэмдэглэгээг энэ төхөөрөмж дээр (Улаанбаатарын өдрөөр) хадгална. */
+const DAILY_PRINT_KEY='shb_sudoku_print_day';
+function todayUB(){try{return new Date().toLocaleDateString('en-CA',{timeZone:'Asia/Ulaanbaatar'});}catch(e){return new Date().toISOString().slice(0,10);}}
+function printedToday(){try{return localStorage.getItem(DAILY_PRINT_KEY)===todayUB();}catch(e){return false;}}
+function updatePrintUI(){
+  const el=document.getElementById('printStatus');if(!el)return;
+  const used=printedToday();
+  el.textContent=used?'✔ Өнөөдрийн үнэгүй хэвлэлт ашиглагдсан':'🖨 Өнөөдөр 1 хуудас үнэгүй хэвлэнэ';
+  el.classList.toggle('used',used);
 }
-// silent=true: toast харуулахгүй. Үлдэх хуудасны тоо эсвэл (алдаа/нэвтрээгүй бол) null буцаана.
-async function refreshCredits(silent){
-  if(!currentUser){if(!silent)showToast('Эхлээд нэвтэрнэ үү!','error');return null;}
-  const btn=document.getElementById('refreshCreditBtn');if(btn){btn.textContent='⏳';btn.disabled=true;}
-  let result=null;
-  try{
-    const resp=await fetch(GAS_URL+'?action=getApproved&email='+encodeURIComponent(currentUser));
-    const data=await resp.json();
-    if(Array.isArray(data)&&data.length){
-      let total=0;data.forEach(item=>{total+=creditPagesOf(item);});
-      if(total>0){
-        // Шинэчлэлтээс өмнө эрхтэй байсан хэрэглэгч: ашигласан хуудсыг одоогийн үлдэгдлээс тооцоолно
-        if(localStorage.getItem(usedKey())===null){const lc=getCredits();localStorage.setItem(usedKey(),String(lc>0?Math.max(0,total-lc):0));}
-        result=Math.max(0,total-getUsed());setCredits(result);
-        if(!silent)showToast(result>0?'✅ Эрх шинэчлэгдлээ: '+result+' хуудас':'Худалдаж авсан '+total+' хуудсыг бүгдийг ашигласан байна.',result>0?'success':'error');
-      }else{
-        console.warn('getApproved: хэвлэх эрхийн хуудасны тоо олдсонгүй',data);
-        if(!silent)showToast('Батлагдсан захиалга '+data.length+' байна, гэвч хэвлэх эрхийн хуудасны тоо танигдсангүй. Админд мэдэгдээрэй.','error');
-      }
-    }else{updateCreditUI();if(!silent)showToast('Батлагдсан захиалга байхгүй байна. (Захиалсан и-мэйлээрээ нэвтэрсэн эсэхээ шалгана уу)','error');}
-  }catch(e){updateCreditUI();if(!silent)showToast('Сүлжээний алдаа.','error');}
-  if(btn){btn.textContent='⟳ Шинэчлэх';btn.disabled=false;}
-  return result;
-}
-function isFreeUsed(){return localStorage.getItem(FREE_USED_KEY)==='1';}
-function markFreeUsed(){localStorage.setItem(FREE_USED_KEY,'1');}
 
 function initSudoku(){
   const{puzzle,solution}=generateSudoku();sudokuSolution=solution;sudokuPuzzle=puzzle;
@@ -897,36 +865,12 @@ function isValidPlacement(board,idx,num){const row=Math.floor(idx/9),col=idx%9;f
 function shuffle(arr){for(let i=arr.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[arr[i],arr[j]]=[arr[j],arr[i]];}return arr;}
 function checkSudoku(){const cells=document.querySelectorAll('.sudoku-cell');let hasError=false,hasEmpty=false;cells.forEach((cell,idx)=>{if(cell.readOnly)return;cell.classList.remove('error');const mv=cell.value;if(!mv){hasEmpty=true;return;}const n=parseInt(MONG_REV[mv]||mv);if(n!==sudokuSolution[idx]){cell.classList.add('error');hasError=true;}});if(hasEmpty)showToast('Бүх нүдийг бөглөнө үү','error');else if(hasError)showToast('Буруу нүд бий. Улаанаар тэмдэглэгдлээ','error');else showToast('Маш сайн! Судоку зөв боллоо! 🎉','success');}
 function solveSudoku(){const cells=document.querySelectorAll('.sudoku-cell');cells.forEach((cell,idx)=>{if(!cell.readOnly){cell.value=MONG_NUMS[String(sudokuSolution[idx])]||'';cell.classList.remove('error');}});showToast('Шийдэл харуулагдлаа','success');}
-async function handlePrint(){
-  let cr=getCredits();
-  // Эрх 0 харагдаж байвал батлагдсан захиалгыг автоматаар шалгана (шинэчлэх товч дарахыг хүлээхгүй)
-  if(cr<1&&isFreeUsed()&&currentUser){const r=await refreshCredits(true);if(r!=null)cr=r;}
-  if(cr<1&&isFreeUsed()){
-    showToast(currentUser?'Хэвлэх эрх байхгүй. Захиалга батлагдсан бол "⟳ Шинэчлэх" дарна уу, үгүй бол эрх худалдаж аваарай.':'Хэвлэх эрх байхгүй. Эрх авсан бол эхлээд нэвтэрнэ үү.','error');return;
-  }
-  askPrintCount();
+function handlePrint(){
+  if(printedToday()){showToast('Өнөөдрийн үнэгүй хэвлэх эрх ашиглагдсан. Маргааш дахин хэвлэнэ үү.','error');updatePrintUI();return;}
+  try{localStorage.setItem(DAILY_PRINT_KEY,todayUB());}catch(e){}
+  updatePrintUI();doPrint(1);
 }
 function printFree(){handlePrint();}
-function askPrintCount(){
-  const existing=document.getElementById('printCountModal');if(existing)existing.remove();
-  const cr=getCredits(),freeAvail=!isFreeUsed(),maxPages=freeAvail?Math.max(cr,1):cr;
-  const modal=document.createElement('div');modal.id='printCountModal';
-  modal.style.cssText='position:fixed;inset:0;z-index:99999;background:rgba(0,0,0,.65);display:flex;align-items:center;justify-content:center;padding:18px;font-family:"Manrope",sans-serif';
-  const maxBtn=Math.min(maxPages,5);
-  const btns=Array.from({length:maxBtn},(_,i)=>i+1).map(n=>`<button id="pcBtn${n}" onclick="selectPrintCount(${n})" style="width:50px;height:50px;border-radius:13px;border:2px solid #e7e5e4;background:#fff;font-size:15px;font-weight:800;cursor:pointer;font-family:'Manrope',sans-serif;color:#57534e">${n}</button>`).join('');
-  const creditInfo=cr>0?`Таны эрх: <strong>${cr} хуудас</strong>`:freeAvail?'Үнэгүй: <strong>1 хуудас</strong>':'⚠️ Эрх байхгүй';
-  modal.innerHTML=`<div style="background:#fff;border-radius:22px;padding:28px 24px;width:100%;max-width:320px;text-align:center;box-shadow:0 18px 56px rgba(0,0,0,.3)"><div style="font-size:38px;margin-bottom:10px">🖨️</div><h3 style="font-size:16px;font-weight:800;margin-bottom:7px;color:#1c1917">Хэдэн хуудас хэвлэх вэ?</h3><p style="font-size:11px;color:#57534e;margin-bottom:18px;line-height:1.6">1 хуудас = 4 судоку.<br>${creditInfo}</p><div style="display:flex;gap:7px;justify-content:center;margin-bottom:20px;flex-wrap:wrap">${btns}</div><div id="pcPreview" style="background:#fef3c7;border-radius:11px;padding:9px;font-size:11px;color:#92400e;font-weight:700;margin-bottom:16px;display:none"></div><div style="display:flex;gap:9px"><button onclick="closePrintCountModal()" style="flex:1;padding:12px;border-radius:12px;border:none;background:#f5f5f5;color:#555;font-family:'Manrope',sans-serif;font-size:12px;font-weight:700;cursor:pointer">Болих</button><button id="pcConfirmBtn" onclick="confirmPrintCount()" style="flex:2;padding:12px;border-radius:12px;border:none;background:var(--amber);color:#fff;font-family:'Manrope',sans-serif;font-size:12px;font-weight:800;cursor:pointer;opacity:.4;pointer-events:none">🖨️ Хэвлэх</button></div></div>`;
-  document.body.appendChild(modal);window._selectedPrintCount=0;
-}
-function selectPrintCount(n){if(!n||n<1)return;window._selectedPrintCount=n;[1,2,3,4,5].forEach(i=>{const b=document.getElementById('pcBtn'+i);if(!b)return;b.style.borderColor=i===n?'var(--amber)':'#e7e5e4';b.style.background=i===n?'rgba(217,119,6,.12)':'#fff';b.style.color=i===n?'var(--amber)':'#57534e';});const prev=document.getElementById('pcPreview'),btn=document.getElementById('pcConfirmBtn');if(prev){prev.style.display='block';prev.textContent=`${n} хуудас · ${n*4} судоку хэвлэгдэнэ`;}if(btn){btn.style.opacity='1';btn.style.pointerEvents='auto';}}
-function closePrintCountModal(){const m=document.getElementById('printCountModal');if(m)m.remove();}
-function confirmPrintCount(){
-  const n=window._selectedPrintCount||0;if(!n||n<1){showToast('Хуудасны тоо сонгоно уу!','error');return;}
-  const cr=getCredits(),freeAvail=!isFreeUsed();
-  if(!freeAvail&&n>cr){showToast(`Эрх хүрэлцэхгүй. Таны эрх: ${cr} хуудас`,'error');return;}
-  closePrintCountModal();if(!freeAvail){setCredits(cr-n);addUsed(n);}else{markFreeUsed();if(cr>0){const paid=Math.min(cr,Math.max(0,n-1));setCredits(cr-paid);addUsed(paid);}}
-  doPrint(n);
-}
 function doPrint(pageCount){
   const pages=[];for(let p=0;p<pageCount;p++){const puzzles=[];for(let q=0;q<4;q++)puzzles.push(generateNewPuzzle());pages.push(puzzles);}
   const html=buildPrintHTML(pages);showToast(`${pageCount} хуудас хэвлэж байна...`,'success');
@@ -941,22 +885,6 @@ function buildPrintHTML(pages){
     return`<div class="pg">${header}${puzzleHTMLs}</div>`;
   }).join('');
 }
-function buyPackage(pages,price){_spBuying={pages,price};document.getElementById('spPkgLabel').textContent=`${pages} хуудас · ${price.toLocaleString()}₮`;document.getElementById('spAmtEl').textContent=price.toLocaleString()+'₮';if(currentUser)document.getElementById('spEmail').value=currentUser;spGoStep1();document.getElementById('sudokuPayModal').classList.remove('hidden');}
-function spGoStep1(){['spStep1','spStep2','spStep3'].forEach((id,i)=>document.getElementById(id).style.display=i===0?'':'none');}
-function spGoStep2(){['spStep1','spStep2','spStep3'].forEach((id,i)=>document.getElementById(id).style.display=i===1?'':'none');}
-function closeSudokuPay(){document.getElementById('sudokuPayModal').classList.add('hidden');spGoStep1();}
-async function spSubmit(){
-  const email=document.getElementById('spEmail').value.trim(),note=document.getElementById('spNote').value.trim();
-  if(!email||!email.includes('@')){showToast('Зөв и-мэйл хаяг оруулна уу','error');return;}
-  const btn=document.getElementById('spSubmitBtn');btn.disabled=true;btn.textContent='⏳ Илгээж байна...';
-  try{await fetch(GAS_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'submitOrder',email,note,total:_spBuying.price,items:`Судоку хэвлэх эрх ${_spBuying.pages} хуудас`,printPages:_spBuying.pages,date:new Date().toLocaleString('mn-MN')})});
-    document.getElementById('spConfirmEmail').textContent=email;
-    ['spStep1','spStep2','spStep3'].forEach((id,i)=>document.getElementById(id).style.display=i===2?'':'none');
-    showToast('Захиалга амжилттай!','success');
-  }catch(e){showToast('Сүлжээний алдаа.','error');}
-  btn.disabled=false;btn.textContent='🚀 Захиалга илгээх';
-}
-
 /* ════════════════════════════════════
    WORD SEARCH
 ════════════════════════════════════ */
