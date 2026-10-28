@@ -80,56 +80,22 @@
 
 <!-- HOME -->
 <section id="homeSection" class="sec active">
-  <div class="hero">
-    <div>
-      <h1>Хэл бичгийг<br><span class="shimmer">сонирхолтойгоор</span> сур</h1>
-      <p>Судоку тоглоом, сургалт, дасгал ажил — бүгд нэг дор.</p>
-      <div class="hero-btns">
-        <button class="btn-p" onclick="showSec('games')">Тоглоом эхлэх</button>
-        <button class="btn-g" onclick="showSec('training')">Сургалтууд</button>
-        <button class="btn-g" onclick="showSec('worksheet')">Ээлжит хичээл</button>
-      </div>
-      <div class="hero-trust">
-        <img src="https://raw.githubusercontent.com/tuult764-crypto/sonirholtoi-hel-bichig-/main/teacher.png" alt="Багш М.Туул" onerror="this.style.display='none'">
-        <div class="hero-trust-text"><strong>Багш М.Туул</strong> — 10+ жилийн туршлагатай багш</div>
-      </div>
+  <div class="hero hero-simple">
+    <h1>Хэл бичгийг <span class="shimmer">сонирхолтойгоор</span> сур</h1>
+    <p>Судоку тоглоом, сургалт, дасгал ажил — бүгд нэг дор.</p>
+    <div class="hero-trust">
+      <img src="https://raw.githubusercontent.com/tuult764-crypto/sonirholtoi-hel-bichig-/main/teacher.png" alt="Багш М.Туул" onerror="this.style.display='none'">
+      <div class="hero-trust-text"><strong>Багш М.Туул</strong> — 10+ жилийн туршлагатай багш</div>
     </div>
-    <div class="hero-visual">
-<svg viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg">
-        <circle cx="150" cy="150" r="125" style="fill:var(--amber-l)"/>
-        <path d="M60 190 Q150 165 240 190 L240 210 Q150 185 60 210 Z" style="fill:var(--amber)"/>
-        <path d="M60 190 Q150 165 150 165 L150 145 Q60 170 60 190 Z" style="fill:#fff;opacity:.85"/>
-        <path d="M240 190 Q150 165 150 165 L150 145 Q240 170 240 190 Z" style="fill:#fff;opacity:.7"/>
-        <line x1="150" y1="165" x2="150" y2="145" style="stroke:var(--amber-d);stroke-width:2"/>
-        <g transform="translate(150,95)">
-          <polygon points="-45,10 0,-15 45,10 0,32" style="fill:var(--dark)"/>
-          <rect x="-14" y="30" width="28" height="18" rx="4" style="fill:var(--dark)"/>
-          <circle cx="42" cy="18" r="4" style="fill:var(--amber-d)"/>
-          <line x1="42" y1="18" x2="42" y2="40" style="stroke:var(--amber-d);stroke-width:2"/>
-        </g>
-        <text x="222" y="245" font-size="46" style="fill:var(--purple);opacity:.55" font-family="Montserrat, sans-serif">ᠮ</text>
-        <g transform="translate(75,235) rotate(-25)">
-          <rect x="0" y="0" width="70" height="12" rx="3" style="fill:var(--amber-d)"/>
-          <polygon points="70,0 86,6 70,12" style="fill:var(--amber)"/>
-          <rect x="-8" y="0" width="8" height="12" style="fill:#8a8378"/>
-        </g>
-        <circle cx="55" cy="70" r="5" style="fill:var(--amber)"/>
-        <circle cx="245" cy="95" r="4" style="fill:var(--purple);opacity:.5"/>
-        <circle cx="230" cy="60" r="3" style="fill:var(--amber-d)"/>
-      </svg>
-</div>
   </div>
 
-  <div class="quick-nav-title">Хаанаас эхлэх вэ?</div>
   <div class="hero-cards">
-    <div class="hero-card" style="background:#f7f1e8;border-color:#e6d8c3" onclick="showSec('games')"><div class="icon">🎮</div><h3>Тоглоом</h3></div>
-    <div class="hero-card" style="background:#f2ede4;border-color:#ddd3c2" onclick="showSec('shop')"><div class="icon">🛒</div><h3>Сургалтын материал</h3></div>
     <div class="hero-card" style="background:#f7f1e8;border-color:#e6d8c3" onclick="showSec('training')"><div class="icon">🎓</div><h3>Сургалт</h3></div>
-    <div class="hero-card" style="background:#f2ede4;border-color:#ddd3c2" onclick="showSec('library')"><div class="icon">📚</div><h3>Миний сан</h3></div>
+    <div class="hero-card" style="background:#f2ede4;border-color:#ddd3c2" onclick="showSec('games')"><div class="icon">🎮</div><h3>Тоглоом</h3></div>
+    <div class="hero-card" style="background:#f7f1e8;border-color:#e6d8c3" onclick="showSec('worksheet')"><div class="icon">📝</div><h3>Ээлжит хичээл</h3></div>
+    <div class="hero-card" style="background:#f2ede4;border-color:#ddd3c2" onclick="showSec('shop')"><div class="icon">🛒</div><h3>Сургалтын материал</h3></div>
+    <div class="hero-card" style="background:#f7f1e8;border-color:#e6d8c3" onclick="showSec('library')"><div class="icon">📚</div><h3>Миний сан</h3></div>
   </div>
-
-<h2 class="sec-title">Шинэ материалууд</h2>
-  <div id="dashGrid" class="prod-grid"></div>
 </section>
 
 <!-- ЭЭЛЖИТ ХИЧЭЭЛИЙН ТӨЛӨВЛӨЛТ -->
@@ -728,7 +694,7 @@
       <h4>Холбоо барих</h4>
       <div>sonirholtoihelbichig@gmail.com</div>
       <div>Facebook: Сонирхолтой хэл бичиг</div>
-      <div>Instagram: @sonirholtoi_hel</div>
+      <div>Instagram: @sonirholtoi_hel_bichig</div>
     </div>
     <div style="text-align:right"><div class="copy">© 2026 Бүх эрх хуулиар хамгаалагдсан.</div></div>
   </div>
