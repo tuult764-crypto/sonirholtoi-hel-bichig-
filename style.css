@@ -819,3 +819,13 @@ footer .copy{color:rgba(255,255,255,.2)}
 .course-icon-wrap,.game-icon{background:var(--amber-l)!important}
 .btn-enroll[style*="--purple"]{background:var(--amber)!important}
 .testi-avatar{background:var(--amber)!important}
+
+/* ── Хялбар нүүр хуудас: гарчиг + том товчнууд ── */
+.hero-simple{display:block;max-width:680px;margin:0 auto 28px;padding-top:28px;text-align:center}
+.hero-simple p{font-size:18px;margin-top:14px}
+.hero-simple .hero-trust{justify-content:center}
+.hero-cards{margin-bottom:40px}
+.hero-card{text-align:center;padding:28px 14px}
+.hero-card .icon{font-size:42px}
+.hero-card h3{font-size:17px}
+@media(min-width:769px){.hero-cards{grid-template-columns:repeat(auto-fit,minmax(170px,1fr))}}
