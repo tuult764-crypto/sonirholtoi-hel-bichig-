@@ -87,6 +87,7 @@ function showSec(name){
   if(labels[name]){document.querySelectorAll('.nav-btn').forEach(b=>{if(b.textContent.includes(labels[name]))b.classList.add('active');});}
   if(name==='library')loadLibrary();
   if(name==='sudoku')updatePrintUI();
+  if(name==='home'&&window.HomeProgress)HomeProgress.render();
 }
 
 /* ════════════════════════════════════
@@ -733,7 +734,7 @@ async function loadProducts(){
       const c=r.c,type=safeVal(c[CI.type]),price=safeNum(c[CI.price]),free=price===0||['free','free-sample'].includes(type.toLowerCase());
       return{id:i+1,title:safeVal(c[CI.title]),desc:safeVal(c[CI.desc]),price,type,cat:free?'Үнэгүй':'Төлбөртэй',icon:free?'🎁':'📝',link:safeVal(c[CI.link]),img:safeVal(c[CI.img])};
     });
-    renderProducts(allProducts,'shopGrid');renderProducts(allProducts,'dashGrid');
+    renderProducts(allProducts,'shopGrid');renderProducts(allProducts.slice(-5).reverse(),'dashGrid');
   }catch(e){
     const err=`<div style="grid-column:1/-1;text-align:center;padding:44px;color:#bbb"><p style="font-size:12px;font-weight:600;margin-bottom:8px">⚠️ Бүтээгдэхүүн ачаалах боломжгүй.</p><button class="btn-p" style="margin-top:14px;font-size:11px" onclick="loadProducts()">🔄 Дахин</button></div>`;
     ['shopGrid','dashGrid'].forEach(id=>{const g=document.getElementById(id);if(g)g.innerHTML=err;});
@@ -860,7 +861,7 @@ function generateNewPuzzle(){const base=Array(81).fill(0);fillSudoku(base);const
 function fillSudoku(board){const empty=board.indexOf(0);if(empty===-1)return true;const nums=shuffle([1,2,3,4,5,6,7,8,9]);for(const n of nums){if(isValidPlacement(board,empty,n)){board[empty]=n;if(fillSudoku(board))return true;board[empty]=0;}}return false;}
 function isValidPlacement(board,idx,num){const row=Math.floor(idx/9),col=idx%9;for(let i=0;i<9;i++){if(board[row*9+i]===num||board[i*9+col]===num)return false;}const br=Math.floor(row/3)*3,bc=Math.floor(col/3)*3;for(let r=0;r<3;r++)for(let c=0;c<3;c++)if(board[(br+r)*9+(bc+c)]===num)return false;return true;}
 function shuffle(arr){for(let i=arr.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[arr[i],arr[j]]=[arr[j],arr[i]];}return arr;}
-function checkSudoku(){const cells=document.querySelectorAll('.sudoku-cell');let hasError=false,hasEmpty=false;cells.forEach((cell,idx)=>{if(cell.readOnly)return;cell.classList.remove('error');const mv=cell.value;if(!mv){hasEmpty=true;return;}const n=parseInt(MONG_REV[mv]||mv);if(n!==sudokuSolution[idx]){cell.classList.add('error');hasError=true;}});if(hasEmpty)showToast('Бүх нүдийг бөглөнө үү','error');else if(hasError)showToast('Буруу нүд бий. Улаанаар тэмдэглэгдлээ','error');else showToast('Маш сайн! Судоку зөв боллоо! 🎉','success');}
+function checkSudoku(){const cells=document.querySelectorAll('.sudoku-cell');let hasError=false,hasEmpty=false;cells.forEach((cell,idx)=>{if(cell.readOnly)return;cell.classList.remove('error');const mv=cell.value;if(!mv){hasEmpty=true;return;}const n=parseInt(MONG_REV[mv]||mv);if(n!==sudokuSolution[idx]){cell.classList.add('error');hasError=true;}});if(hasEmpty)showToast('Бүх нүдийг бөглөнө үү','error');else if(hasError)showToast('Буруу нүд бий. Улаанаар тэмдэглэгдлээ','error');else{showToast('Маш сайн! Судоку зөв боллоо! 🎉','success');if(window.HomeProgress)HomeProgress.sudokuSolved(sudokuSolution.join(''));}}
 function solveSudoku(){const cells=document.querySelectorAll('.sudoku-cell');cells.forEach((cell,idx)=>{if(!cell.readOnly){cell.value=MONG_NUMS[String(sudokuSolution[idx])]||'';cell.classList.remove('error');}});showToast('Шийдэл харуулагдлаа','success');}
 function handlePrint(){
   if(printedToday()){showToast('Өнөөдрийн үнэгүй хэвлэх эрх ашиглагдсан. Маргааш дахин хэвлэнэ үү.','error');updatePrintUI();return;}
