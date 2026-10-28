@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Сонирхолтой хэл бичиг</title>
-<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800&family=Manrope:wght@400;500;600;700;800&family=Noto+Sans+Mongolian&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;700;800;900&family=Montserrat:wght@600;700;800&family=Manrope:wght@400;500;600;700;800&family=Noto+Sans+Mongolian&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -35,6 +35,7 @@
   <span></span><span></span><span></span>
 </button>
     <div class="nav-right">
+      <div class="nav-search"><input id="navSearch" type="search" placeholder="Хайх…" aria-label="Материал хайх" autocomplete="off"><button id="navSearchBtn" type="button" aria-label="Хайх">🔍</button></div>
       <button class="cart-btn" onclick="openCart()">🛒<span id="cartBadge" class="cart-badge">0</span></button>
 
       <!-- Guest: нэвтрэх / бүртгүүлэх товч -->
@@ -79,23 +80,65 @@
 <main>
 
 <!-- HOME -->
-<section id="homeSection" class="sec active">
-  <div class="hero hero-simple">
-    <h1>Хэл бичгийг <span class="shimmer">сонирхолтойгоор</span> сур</h1>
-    <p>Судоку тоглоом, сургалт, дасгал ажил — бүгд нэг дор.</p>
-    <div class="hero-trust">
-      <img src="https://raw.githubusercontent.com/tuult764-crypto/sonirholtoi-hel-bichig-/main/teacher.png" alt="Багш М.Туул" onerror="this.style.display='none'">
-      <div class="hero-trust-text"><strong>Багш М.Туул</strong> — 10+ жилийн туршлагатай багш</div>
+<section id="homeSection" class="sec active home-v2">
+
+  <!-- Гол уриа + дүрүүд. Дүрүүдийн зургийг images/characters/ хавтсанд хийнэ (home.js дээр тайлбар бий) -->
+  <div class="hero-banner">
+    <span class="spark s1">✦</span><span class="spark s2">✦</span><span class="spark s3">✦</span>
+    <div class="hb-left" id="hbLeft"></div>
+    <div class="hb-center">
+      <h1><span class="t1">Хэл бичгийг</span> <span class="t2">сонирхолтойгоор</span> <span class="t1">сур</span></h1>
+      <p>Судоку тоглоом, сургалт, дасгал ажил — бүгд нэг дор.</p>
+      <button class="cta" type="button" onclick="showSec('training')">Хичээлээ эхлүүлэх <span aria-hidden="true">→</span></button>
     </div>
+    <div class="hb-right" id="hbRight"></div>
   </div>
 
-  <div class="hero-cards">
-    <div class="hero-card" style="background:#f7f1e8;border-color:#e6d8c3" onclick="showSec('training')"><div class="icon">🎓</div><h3>Сургалт</h3></div>
-    <div class="hero-card" style="background:#f2ede4;border-color:#ddd3c2" onclick="showSec('games')"><div class="icon">🎮</div><h3>Тоглоом</h3></div>
-    <div class="hero-card" style="background:#f7f1e8;border-color:#e6d8c3" onclick="showSec('worksheet')"><div class="icon">📝</div><h3>Ээлжит хичээл</h3></div>
-    <div class="hero-card" style="background:#f2ede4;border-color:#ddd3c2" onclick="showSec('shop')"><div class="icon">🛒</div><h3>Сургалтын материал</h3></div>
-    <div class="hero-card" style="background:#f7f1e8;border-color:#e6d8c3" onclick="showSec('library')"><div class="icon">📚</div><h3>Миний сан</h3></div>
+  <!-- Үндсэн таван хэсэг -->
+  <div class="svc-grid">
+    <button class="svc svc-peach" type="button" onclick="showSec('training')"><span class="svc-ico">🎓</span><span class="svc-txt"><b>Сургалт</b><small>Хичээлээ үзэж, мэдлэгээ нэмье</small></span><span class="svc-go" aria-hidden="true">→</span></button>
+    <button class="svc svc-rose" type="button" onclick="showSec('games')"><span class="svc-ico">🎮</span><span class="svc-txt"><b>Тоглоом</b><small>Сонирхолтой тоглоомоор дасгал хийе</small></span><span class="svc-go" aria-hidden="true">→</span></button>
+    <button class="svc svc-mint" type="button" onclick="showSec('worksheet')"><span class="svc-ico">📝</span><span class="svc-txt"><b>Ээлжит хичээл</b><small>Хичээлийн төлөвлөгөөгөө бэлтгэе</small></span><span class="svc-go" aria-hidden="true">→</span></button>
+    <button class="svc svc-sky" type="button" onclick="showSec('shop')"><span class="svc-ico">📚</span><span class="svc-txt"><b>Сургалтын материал</b><small>Хичээлийн бүх материал нэг дор</small></span><span class="svc-go" aria-hidden="true">→</span></button>
+    <button class="svc svc-lilac" type="button" onclick="showSec('library')"><span class="svc-ico">📁</span><span class="svc-txt"><b>Миний сан</b><small>Өөрийн хадгалсан материалаа үзье</small></span><span class="svc-go" aria-hidden="true">→</span></button>
   </div>
+
+  <!-- Өнөөдрийн даалгавар · Мэдээ · Миний ахиц -->
+  <div class="home-row">
+    <article class="hcard">
+      <h2 class="hcard-title"><span class="hcard-ico">📅</span>Өнөөдрийн даалгавар</h2>
+      <div class="task-body">
+        <div class="task-thumb" aria-hidden="true"><span>🧩</span></div>
+        <div class="task-info">
+          <span class="task-tag" id="htTag"></span>
+          <h3 id="htTitle"></h3>
+          <p id="htText"></p>
+          <div class="task-prog"><div class="bar"><i id="htFill"></i></div><span id="htPct">0%</span></div>
+          <button class="btn-p" id="htBtn" type="button"></button>
+        </div>
+      </div>
+    </article>
+
+    <article class="hcard">
+      <h2 class="hcard-title"><span class="hcard-ico">📢</span>Мэдээ, мэдээлэл<span class="pill-new" id="homeNewsBadge" hidden>Шинэ</span></h2>
+      <ul class="news" id="homeNews"></ul>
+    </article>
+
+    <article class="hcard" id="homeProgress">
+      <h2 class="hcard-title"><span class="hcard-ico">📊</span>Миний ахиц</h2>
+      <div class="stat-grid">
+        <div class="stat"><i>⭐</i><b id="hpPoints">0</b><small>Оноо</small></div>
+        <div class="stat"><i>👑</i><b id="hpLevel">1</b><small>Түвшин</small></div>
+        <div class="stat"><i>✅</i><b id="hpDone">0</b><small>Гүйцэтгэсэн</small></div>
+        <div class="stat"><i>🎯</i><b id="hpStreak">1</b><small>Өдөр дараалан</small></div>
+      </div>
+      <div class="prog-talk"><div class="prog-char" id="hpChar"></div><div class="bubble big" id="hpSay"></div></div>
+    </article>
+  </div>
+
+  <!-- Шинэ хичээлүүд (Сургалтын материалын сүүлийн 5) -->
+  <div class="new-head"><h2>✨ Шинэ хичээлүүд</h2><button class="more" type="button" onclick="showSec('shop')">Бүгдийг харах →</button></div>
+  <div class="prod-grid new-grid" id="dashGrid"><p class="new-loading">Ачаалж байна…</p></div>
 </section>
 
 <!-- ЭЭЛЖИТ ХИЧЭЭЛИЙН ТӨЛӨВЛӨЛТ -->
@@ -694,7 +737,7 @@
       <h4>Холбоо барих</h4>
       <div>sonirholtoihelbichig@gmail.com</div>
       <div>Facebook: Сонирхолтой хэл бичиг</div>
-      <div>Instagram: @sonirholtoi_hel_bichig</div>
+      <div>Instagram: @sonirholtoi_hel</div>
     </div>
     <div style="text-align:right"><div class="copy">© 2026 Бүх эрх хуулиар хамгаалагдсан.</div></div>
   </div>
@@ -705,6 +748,7 @@
 
 
 <script src="script.js"></script>
+<script src="home.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script src="lesson-core.js"></script>
 <script src="lesson-docx.js"></script>
