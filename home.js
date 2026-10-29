@@ -28,7 +28,15 @@
       </button>`).join('');
     grid.querySelectorAll('.character-card').forEach(card => {
       const img = card.querySelector('img');
-      if (img) img.addEventListener('error', () => { img.style.display = 'none'; }, { once: true });
+      if (img) {
+        // Зургийг дараах байршлуудаас дарааллаар хайна: заасан зам, characters/, төслийн үндсэн хавтас
+        const file = img.getAttribute('src').split('/').pop();
+        const tries = ['characters/' + file, file];
+        img.addEventListener('error', () => {
+          const next = tries.shift();
+          if (next) img.src = next; else img.style.display = 'none';
+        });
+      }
       card.addEventListener('click', () => {
         const id = card.dataset.character;
         try { localStorage.setItem(CHARACTER_KEY, id); } catch (e) { toast('Энэ төхөөрөмж дээр сонголтыг хадгалах боломжгүй байна.', 'error'); }
