@@ -23,7 +23,7 @@ let _currentCourseType = '';
 /* ════════════════════════════════════
    LOGO — GitHub-аас найдвартай ачаалах
 ════════════════════════════════════ */
-const LOGO_URL = 'https://raw.githubusercontent.com/tuult764-crypto/sonirholtoi-hel-bichig-/main/logo.png';
+const LOGO_URL = 'logo.png';
 
 // Лого ачааллагдахгүй бол дахин оролдоно (3 удаа)
 function loadLogoWithRetry(imgEl, attempt) {
@@ -82,13 +82,30 @@ function showSec(name){
   document.querySelectorAll('.sec').forEach(s=>s.classList.remove('active'));
   const el=document.getElementById(name+'Section');
   if(el){el.classList.add('active');window.scrollTo(0,0);}
-  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
-  const labels={'home':'Нүүр','games':'Тоглоом','training':'Сургалт','worksheet':'Ээлжит хичээл','shop':'Сургалтын материал','about':'Багшийн тухай'};
-  if(labels[name]){document.querySelectorAll('.nav-btn').forEach(b=>{if(b.textContent.includes(labels[name]))b.classList.add('active');});}
+  // Цэсний идэвхтэй товч: хуудас бүр цэсний аль хэсэгт хамаарахыг заана
+  const navOf={home:'home',knowledge:'knowledge',training:'students',worksheet:'teachers',games:'games',sudoku:'games',shop:'library',library:'more',about:'more'};
+  const key=navOf[name];
+  document.querySelectorAll('.nav-btn[data-nav]').forEach(b=>{
+    const on=b.dataset.nav===key;
+    b.classList.toggle('active',on);
+    if(on)b.setAttribute('aria-current','page');else b.removeAttribute('aria-current');
+  });
+  closeNavMore();
   if(name==='library')loadLibrary();
   if(name==='sudoku')updatePrintUI();
-  if(name==='home'&&window.HomeProgress)HomeProgress.render();
+  if(name==='home'&&window.HomeProgress){HomeProgress.render();if(window.KnowledgePage)KnowledgePage.refresh();}
 }
+// "Бусад" цэс
+function closeNavMore(){const m=document.getElementById('navMore');if(m){m.classList.remove('open');const b=m.querySelector('.nav-btn');if(b)b.setAttribute('aria-expanded','false');}}
+function toggleNavMore(e){
+  if(e)e.stopPropagation();
+  const m=document.getElementById('navMore');if(!m)return;
+  const open=m.classList.toggle('open');
+  m.querySelector('.nav-btn').setAttribute('aria-expanded',open?'true':'false');
+}
+document.addEventListener('click',e=>{const m=document.getElementById('navMore');if(m&&!m.contains(e.target))closeNavMore();});
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeNavMore();});
+document.addEventListener('DOMContentLoaded',()=>{const b=document.querySelector('.nav-btn[data-nav="home"]');if(b){b.classList.add('active');b.setAttribute('aria-current','page');}});
 
 /* ════════════════════════════════════
    AUTH — Нэвтрэх / Бүртгүүлэх / Avatar
@@ -742,7 +759,7 @@ async function loadProducts(){
 }
 function isFreeP(p){return p.price===0||['free','free-sample'].includes((p.type||'').toLowerCase().trim());}
 function driveDownloadUrl(link){if(!link)return'';const m1=link.match(/\/file\/d\/([a-zA-Z0-9_-]+)/);if(m1)return`https://drive.google.com/uc?export=download&id=${m1[1]}`;const m2=link.match(/[?&]id=([a-zA-Z0-9_-]+)/);if(m2)return`https://drive.google.com/uc?export=download&id=${m2[1]}`;return link;}
-function productImgHTML(p){if(p.img){const fn=p.img.split(',')[0].trim();if(fn){const url=`https://raw.githubusercontent.com/tuult764-crypto/sonirholtoi-hel-bichig-/main/${encodeURIComponent(fn)}`;return`<img src="${url}" alt="${p.title}" style="width:100%;height:100%;object-fit:cover;display:block" onerror="this.style.display='none';this.nextSibling.style.display='flex'"><span style="display:none;font-size:44px;width:100%;height:100%;align-items:center;justify-content:center">${p.icon}</span>`;}}return`<span style="font-size:44px">${p.icon}</span>`;}
+function productImgHTML(p){if(p.img){const fn=p.img.split(',')[0].trim();if(fn){const url=encodeURIComponent(fn).replace(/%2F/gi,'/');return`<img src="${url}" alt="${p.title}" style="width:100%;height:100%;object-fit:cover;display:block" onerror="this.style.display='none';this.nextSibling.style.display='flex'"><span style="display:none;font-size:44px;width:100%;height:100%;align-items:center;justify-content:center">${p.icon}</span>`;}}return`<span style="font-size:44px">${p.icon}</span>`;}
 function renderProducts(prods,gridId){
   const grid=document.getElementById(gridId);if(!grid)return;
   if(!prods.length){grid.innerHTML=`<div style="grid-column:1/-1;text-align:center;padding:44px;color:#bbb"><p style="font-size:12px;font-weight:600">Бүтээгдэхүүн олдсонгүй</p></div>`;return;}
@@ -768,7 +785,7 @@ function filterShop(cat,btn){document.querySelectorAll('.flt-btn').forEach(b=>b.
 function openPreview(p){
   if(!p)return;const imgs=(p.img||'').split(',').map(s=>s.trim()).filter(Boolean);
   if(!imgs.length){showToast('Жишээ зураг байхгүй','error');return;}
-  const slides=imgs.map((name,i)=>{const url=`https://raw.githubusercontent.com/tuult764-crypto/sonirholtoi-hel-bichig-/main/${encodeURIComponent(name)}`;return`<div class="preview-slide" style="display:${i===0?'flex':'none'};align-items:center;justify-content:center;width:100%;height:100%"><img src="${url}" alt="${name}" style="max-width:100%;max-height:100%;object-fit:contain;border-radius:10px"></div>`;}).join('');
+  const slides=imgs.map((name,i)=>{const url=encodeURIComponent(name).replace(/%2F/gi,'/');return`<div class="preview-slide" style="display:${i===0?'flex':'none'};align-items:center;justify-content:center;width:100%;height:100%"><img src="${url}" alt="${name}" style="max-width:100%;max-height:100%;object-fit:contain;border-radius:10px"></div>`;}).join('');
   const dots=imgs.length>1?`<div style="display:flex;gap:5px;justify-content:center;margin-top:10px">${imgs.map((_,i)=>`<button onclick="previewGoTo(${i})" id="pdot${i}" style="width:7px;height:7px;border-radius:50%;border:none;cursor:pointer;background:${i===0?'var(--amber)':'#ddd'};padding:0;transition:all .2s"></button>`).join('')}</div>`:'';
   const nav=imgs.length>1?`<button onclick="previewNav(-1)" style="position:absolute;left:7px;top:50%;transform:translateY(-50%);background:rgba(0,0,0,.4);color:#fff;border:none;border-radius:50%;width:34px;height:34px;font-size:17px;cursor:pointer;z-index:2">‹</button><button onclick="previewNav(1)" style="position:absolute;right:7px;top:50%;transform:translateY(-50%);background:rgba(0,0,0,.4);color:#fff;border:none;border-radius:50%;width:34px;height:34px;font-size:17px;cursor:pointer;z-index:2">›</button>`:'';
   document.getElementById('previewModalBody').innerHTML=`
@@ -878,7 +895,7 @@ function doPrint(pageCount){
 function buildPrintHTML(pages){
   const MN={'1':'᠑','2':'᠒','3':'᠓','4':'᠔','5':'᠕','6':'᠖','7':'᠗','8':'᠘','9':'᠙'};
   return pages.map((puzzles,pi)=>{
-    const header=`<div class="pg-hdr"><img src="https://raw.githubusercontent.com/tuult764-crypto/sonirholtoi-hel-bichig-/main/logo.png" alt="" onerror="this.style.display='none'" style="width:24px;height:24px;object-fit:contain;border-radius:5px;background:#1c1917;"><div><div class="pg-hdr-t">Сонирхолтой хэл бичиг</div><div class="pg-hdr-s">Судоку · Хуудас ${pi+1}</div></div></div>`;
+    const header=`<div class="pg-hdr"><img src="logo.png" alt="" onerror="this.style.display='none'" style="width:24px;height:24px;object-fit:contain;border-radius:5px;background:#1c1917;"><div><div class="pg-hdr-t">Сонирхолтой хэл бичиг</div><div class="pg-hdr-s">Судоку · Хуудас ${pi+1}</div></div></div>`;
     const puzzleHTMLs=puzzles.map((p,qi)=>{let rows='';for(let r=0;r<9;r++){rows+='<tr>';for(let c=0;c<9;c++){const idx=r*9+c,val=p.puzzle[idx];let cls='';if(c===2||c===5)cls+=' br';if(r===2||r===5)cls+=' bb';if(val!==0)cls+=' gv';rows+=`<td class="${cls.trim()}">${val?(MN[String(val)]||val):''}</td>`;}rows+='</tr>';}return`<div class="pp"><div class="pp-t">Судоку ${pi*4+qi+1} &nbsp;·&nbsp; Нэр:_______________ &nbsp;·&nbsp; Анги:_____</div><table class="pt"><tbody>${rows}</tbody></table><div class="pp-g">᠑=1 ᠒=2 ᠓=3 ᠔=4 ᠕=5 ᠖=6 ᠗=7 ᠘=8 ᠙=9</div></div>`;}).join('');
     return`<div class="pg">${header}${puzzleHTMLs}</div>`;
   }).join('');

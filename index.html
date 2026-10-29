@@ -102,6 +102,11 @@
     </div>
   </div>
 
+  <section class="character-pick" aria-labelledby="characterPickTitle">
+    <div class="character-pick-head"><div><h2 id="characterPickTitle">Өөрийн найзаа сонгоорой</h2><p>Сонгосон дүр чинь энэ төхөөрөмж дээр хадгалагдана.</p></div><span class="character-selected-note" id="characterSelectedNote" aria-live="polite">Дүр сонгоогүй байна</span></div>
+    <div class="character-pick-grid" id="characterPickGrid"></div>
+  </section>
+
   <div class="h3-wrap">
     <!-- Шинэ мэдлэг: нүүр хуудасны гол хэсэг -->
     <div class="kn-row">
@@ -453,7 +458,7 @@
   <div class="about-hero">
     <div class="about-photo-wrap">
       <img class="about-photo"
-        src="https://raw.githubusercontent.com/tuult764-crypto/sonirholtoi-hel-bichig-/main/teacher.png"
+        src="teacher.png"
         alt="Багш М.Туул"
         onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
       <div class="about-photo-fallback" style="display:none">👩‍🏫</div>
@@ -585,13 +590,13 @@
           <div class="cp-amt-sub" id="cpAmtSub"></div>
         </div>
 
-        <div class="qr-box"><img src="https://raw.githubusercontent.com/tuult764-crypto/sonirholtoi-hel-bichig-/main/qr.png" alt="QR" onerror="this.style.display='none';this.nextSibling.style.display='flex'"><span style="display:none;font-size:52px">🔲</span></div>
+        <div class="qr-box"><img src="qr.png" alt="QR" onerror="this.style.display='none';this.nextSibling.style.display='flex'"><span style="display:none;font-size:52px">🔲</span></div>
         <div class="qr-hint">QR-д дүн орохгүй — дээрх дүнг өөрөө оруулна</div>
         <div class="bank-info"><div class="bank-num">ХАС БАНК: 5006069631</div><div class="bank-name">МӨНХДАЛАЙ ТУУЛ</div></div>
         <div class="bank-note" id="cpNote">Гүйлгээний утга: и-мэйл · Сургалтын нэр</div>
 
         <div class="cp-teacher">
-          <img src="https://raw.githubusercontent.com/tuult764-crypto/sonirholtoi-hel-bichig-/main/teacher.png" alt="Багш" onerror="this.style.display='none'">
+          <img src="teacher.png" alt="Багш" onerror="this.style.display='none'">
           <div class="cp-teacher-info">
             <div class="cp-teacher-name">Багш М.Туул</div>
             <a class="cp-teacher-call" href="tel:89993835">8999-3835</a>
@@ -622,7 +627,7 @@
         <div id="payItemList" style="margin-top:8px;font-size:13px;opacity:.65;line-height:1.8"></div>
       </div>
       <div class="pay-body">
-        <div class="qr-box"><img src="https://raw.githubusercontent.com/tuult764-crypto/sonirholtoi-hel-bichig-/main/qr.png" alt="QR" onerror="this.style.display='none';this.nextSibling.style.display='flex'"><span style="display:none;font-size:52px">🔲</span></div>
+        <div class="qr-box"><img src="qr.png" alt="QR" onerror="this.style.display='none';this.nextSibling.style.display='flex'"><span style="display:none;font-size:52px">🔲</span></div>
         <div class="qr-hint">QR-д дүн орохгүй — дээрх нийт дүнг өөрөө оруулна</div>
         <div class="bank-info"><div class="bank-num">ХАС БАНК: 5006069631</div><div class="bank-name">МӨНХДАЛАЙ ТУУЛ</div></div>
         <div class="bank-note">Гүйлгээний <strong>утга</strong> дээр и-мэйл хаягаа заавал бичнэ үү!</div>
@@ -729,9 +734,9 @@
   <div class="footer-in">
     <div>
       <div class="footer-brand">
-        <div style="width:40px;height:40px;border-radius:10px;background:#ffffff;border:1px solid rgba(255,255,255,.25);...">
+        <div style="width:40px;height:40px;border-radius:10px;background:#ffffff;border:1px solid rgba(255,255,255,.25);display:flex;align-items:center;justify-content:center;overflow:hidden">
           <img id="footerLogo"
-            src="https://raw.githubusercontent.com/tuult764-crypto/sonirholtoi-hel-bichig-/main/logo.png"
+            src="logo.png"
             alt="Лого"
             style="width:36px;height:36px;object-fit:contain;display:block"
             onerror="handleLogoError(this)">
@@ -754,6 +759,7 @@
 <div id="printArea"></div>
 
 
+<script src="characters.js"></script>
 <script src="script.js"></script>
 <script src="knowledge-data.js"></script>
 <script src="home.js"></script>
