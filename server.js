@@ -18,14 +18,16 @@ CREATE TABLE IF NOT EXISTS shop_materials(id BIGSERIAL PRIMARY KEY, title TEXT N
 CREATE TABLE IF NOT EXISTS shop_files(id BIGSERIAL PRIMARY KEY, material_id BIGINT NOT NULL REFERENCES shop_materials(id) ON DELETE CASCADE, role TEXT NOT NULL, ord INTEGER NOT NULL DEFAULT 0, mime TEXT NOT NULL, data BYTEA NOT NULL);
 CREATE INDEX IF NOT EXISTS files_m ON shop_files(material_id, role, ord);
 CREATE TABLE IF NOT EXISTS shop_purchases(user_id BIGINT NOT NULL REFERENCES shop_users(id), material_id BIGINT NOT NULL REFERENCES shop_materials(id) ON DELETE CASCADE, created_at BIGINT NOT NULL, PRIMARY KEY(user_id, material_id));
-CREATE TABLE IF NOT EXISTS shop_payments(id BIGSERIAL PRIMARY KEY, order_no TEXT UNIQUE NOT NULL, user_id BIGINT NOT NULL REFERENCES shop_users(id), material_id BIGINT NOT NULL REFERENCES shop_materials(id) ON DELETE CASCADE, invoice_id TEXT NOT NULL, amount INTEGER NOT NULL, status TEXT NOT NULL DEFAULT 'pending', created_at BIGINT NOT NULL, paid_at BIGINT);`);
+CREATE TABLE IF NOT EXISTS shop_payments(id BIGSERIAL PRIMARY KEY, order_no TEXT UNIQUE NOT NULL, user_id BIGINT NOT NULL REFERENCES shop_users(id), material_id BIGINT NOT NULL REFERENCES shop_materials(id) ON DELETE CASCADE, invoice_id TEXT NOT NULL, amount INTEGER NOT NULL, status TEXT NOT NULL DEFAULT 'pending', created_at BIGINT NOT NULL, paid_at BIGINT);
+CREATE TABLE IF NOT EXISTS site_entries(id BIGSERIAL PRIMARY KEY, kind TEXT NOT NULL DEFAULT 'diary', title TEXT NOT NULL, body TEXT NOT NULL DEFAULT '', excerpt TEXT NOT NULL DEFAULT '', image_url TEXT NOT NULL DEFAULT '', chapter INTEGER NOT NULL DEFAULT 1, entry_date DATE, status TEXT NOT NULL DEFAULT 'draft' CHECK(status IN ('draft','published','archived')), created_at BIGINT NOT NULL, updated_at BIGINT NOT NULL);
+CREATE INDEX IF NOT EXISTS site_entries_public ON site_entries(kind,status,entry_date DESC);`);
 }
 const app = express();
 app.set('trust proxy', 1);
 // Нууц файлуудыг (код, тохиргоо, өгөгдөл) нийтэд нээхгүй
 const DENY = /^\/(server\.js|qpay\.js|package(-lock)?\.json|\.env.*|\.git.*|netlify.*|readme\.md|literature_db\.txt|node_modules.*|.*\.xlsx)$/i;
 app.use((req, res, next) => { let p = ''; try { p = decodeURIComponent(req.path); } catch { return res.status(400).end(); } DENY.test(p) ? res.status(404).end() : next(); });
-app.use((req, res, next) => (req.path === '/api/admin/materials' || req.path === '/api/lesson-plan') && req.method === 'POST' ? next() : express.json({ limit: '100kb' })(req, res, next));
+app.use((req, res, next) => ((req.path === '/api/admin/materials' || req.path === '/api/lesson-plan') && req.method === 'POST') || (req.path.startsWith('/api/admin/entries') && ['POST','PUT'].includes(req.method)) ? next() : express.json({ limit: '100kb' })(req, res, next));
 let ready = false;
 app.use('/api', (req, res, next) => (ready || req.path === '/lesson-plan') ? next() : res.status(503).json({ error: 'Систем бэлдэж байна. Түр хүлээгээд дахин оролдоно уу.' }));
 const ah = fn => (req, res, next) => fn(req, res, next).catch(e => { console.error(req.path, e.message); if (!res.headersSent) res.status(500).json({ error: 'Серверийн алдаа' }); });
@@ -133,6 +135,28 @@ const adminAuth = (req, res, next) => {
 };
 const A = [limit(120, 900e3), adminAuth];
 app.get('/admin', (req, res) => res.sendFile(path.join(__dirname, 'admin.html')));
+// ---- Нийтлэл, Анирын тэмдэглэлийн агуулгын удирдлага ----
+app.get('/api/diary', ah(async (req, res) => {
+  const rows = await q("SELECT id,title,excerpt,image_url AS \"imageUrl\",chapter,entry_date AS date,body FROM site_entries WHERE kind='diary' AND status='published' ORDER BY chapter ASC, entry_date ASC");
+  res.json(rows.rows);
+}));
+app.get('/api/admin/entries', ...A, ah(async (req, res) => {
+  const kind = ['diary','knowledge','material','game','library'].includes(String(req.query.kind)) ? String(req.query.kind) : 'diary';
+  res.json((await q('SELECT id,kind,title,body,excerpt,image_url AS \"imageUrl\",chapter,entry_date AS date,status,created_at AS \"createdAt\",updated_at AS \"updatedAt\" FROM site_entries WHERE kind=$1 ORDER BY updated_at DESC LIMIT 500',[kind])).rows);
+}));
+app.post('/api/admin/entries', express.json({ limit: '2mb' }), ...A, ah(async (req, res) => {
+  const b=req.body||{}, kind=['diary','knowledge','material','game','library'].includes(String(b.kind))?String(b.kind):'diary';
+  const title=String(b.title||'').trim().slice(0,180), body=String(b.body||'').slice(0,100000), excerpt=String(b.excerpt||'').slice(0,600), image=String(b.imageUrl||'').slice(0,2500000), chapter=Math.max(1,Math.min(9999,parseInt(b.chapter)||1)), status=['draft','published','archived'].includes(b.status)?b.status:'draft', date=/^\d{4}-\d{2}-\d{2}$/.test(String(b.date||''))?b.date:null;
+  if(!title || !body.trim()) return res.status(400).json({error:'Гарчиг болон зохиолын текстээ оруулна уу'});
+  const now=Date.now(), r=await q('INSERT INTO site_entries(kind,title,body,excerpt,image_url,chapter,entry_date,status,created_at,updated_at) VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9,$9) RETURNING id',[kind,title,body,excerpt,image,chapter,date,status,now]); res.json({ok:true,id:r.rows[0].id});
+}));
+app.put('/api/admin/entries/:id', express.json({ limit: '2mb' }), ...A, ah(async (req,res)=>{
+  const b=req.body||{}, title=String(b.title||'').trim().slice(0,180), body=String(b.body||'').slice(0,100000), excerpt=String(b.excerpt||'').slice(0,600), image=String(b.imageUrl||'').slice(0,2500000), chapter=Math.max(1,Math.min(9999,parseInt(b.chapter)||1)), status=['draft','published','archived'].includes(b.status)?b.status:'draft', date=/^\d{4}-\d{2}-\d{2}$/.test(String(b.date||''))?b.date:null;
+  if(!title||!body.trim()) return res.status(400).json({error:'Гарчиг болон зохиолын текстээ оруулна уу'});
+  const r=await q('UPDATE site_entries SET title=$2,body=$3,excerpt=$4,image_url=$5,chapter=$6,entry_date=$7,status=$8,updated_at=$9 WHERE id=$1',[parseInt(req.params.id)||0,title,body,excerpt,image,chapter,date,status,Date.now()]); res.json({ok:r.rowCount===1});
+}));
+app.delete('/api/admin/entries/:id', ...A, ah(async (req,res)=>{const r=await q('DELETE FROM site_entries WHERE id=$1',[parseInt(req.params.id)||0]);res.json({ok:r.rowCount===1});}));
+
 app.get('/api/admin/pending', ...A, ah(async (req, res) => res.json((await q(`SELECT p.order_no "orderNo", p.amount, p.created_at "createdAt", u.email, m.title FROM shop_payments p JOIN shop_users u ON u.id=p.user_id JOIN shop_materials m ON m.id=p.material_id WHERE p.status='pending' AND p.invoice_id LIKE 'MANUAL-%' ORDER BY p.created_at DESC LIMIT 100`)).rows)));
 app.post('/api/admin/confirm', ...A, ah(async (req, res) => {
   const o = String(req.body.orderNo || '');

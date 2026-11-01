@@ -38,6 +38,7 @@
     <button class="hamburger" id="hamburger" onclick="toggleMobileNav()" aria-label="Цэс">
   <span></span><span></span><span></span>
 </button>
+      <a class="nav-btn" href="/diary.html" style="text-decoration:none;display:flex;align-items:center;gap:8px"><span>Анирын тэмдэглэл</span></a>
     <div class="nav-right">
       <div class="nav-search"><input id="navSearch" type="search" placeholder="Хайх…" aria-label="Материал хайх" autocomplete="off"><button id="navSearchBtn" type="button" aria-label="Хайх"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.500-3.500"/></svg></button></div>
       <button class="cart-btn" onclick="openCart()">🛒<span id="cartBadge" class="cart-badge">0</span></button>
@@ -74,6 +75,7 @@
 
   <div class="mobile-nav" id="mobileNav">
   <div class="nav-search m-search"><input id="mobileSearch" type="search" placeholder="Хайх…" aria-label="Материал хайх" autocomplete="off"><button id="mobileSearchBtn" type="button" aria-label="Хайх"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.500-3.500"/></svg></button></div>
+  <a class="nav-btn" href="/diary.html" style="text-decoration:none"><span>Анирын тэмдэглэл</span></a>
   <button class="nav-btn" type="button" data-nav="home" onclick="showSec('home');closeMobileNav()"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11l9-8 9 8v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg><span>Нүүр</span></button>
   <button class="nav-btn" type="button" data-nav="knowledge" onclick="openKnowledge();closeMobileNav()"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18h6M10 21h4"/><path d="M12 3a6 6 0 0 0-3.5 10.9c.6.5 1 1.2 1 2.1h5c0-.9.4-1.6 1-2.1A6 6 0 0 0 12 3z"/></svg><span>Шинэ мэдлэг</span></button>
   <button class="nav-btn" type="button" data-nav="students" onclick="showSec('training');closeMobileNav()"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 9l10-5 10 5-10 5z"/><path d="M6 11.5V16c0 1.5 3 3 6 3s6-1.5 6-3v-4.5"/></svg><span>Суралцагчдад</span></button>
