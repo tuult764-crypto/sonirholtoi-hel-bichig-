@@ -22,6 +22,7 @@
     <div class="nav-links" id="navLinks">
       <button class="nav-btn" type="button" data-nav="home" onclick="showSec('home')"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11l9-8 9 8v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg><span>Нүүр</span></button>
       <button class="nav-btn" type="button" data-nav="knowledge" onclick="openKnowledge()"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18h6M10 21h4"/><path d="M12 3a6 6 0 0 0-3.5 10.9c.6.5 1 1.2 1 2.1h5c0-.9.4-1.6 1-2.1A6 6 0 0 0 12 3z"/></svg><span>Шинэ мэдлэг</span></button>
+      <button class="nav-btn" type="button" data-nav="diary" onclick="showSec('diary')"><span aria-hidden="true" style="font-size:24px;line-height:1">✎</span><span>Анирын тэмдэглэл</span></button>
       <button class="nav-btn" type="button" data-nav="students" onclick="showSec('training')"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 9l10-5 10 5-10 5z"/><path d="M6 11.5V16c0 1.5 3 3 6 3s6-1.5 6-3v-4.5"/></svg><span>Суралцагчдад</span></button>
       <button class="nav-btn" type="button" data-nav="teachers" onclick="showSec('worksheet')"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="12" rx="1.5"/><path d="M12 16v4M8 20h8"/></svg><span>Багш нарт</span></button>
       <button class="nav-btn" type="button" data-nav="games" onclick="showSec('games')"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 6h10a4 4 0 0 1 4 4v4a3 3 0 0 1-5 2l-1-1H9l-1 1a3 3 0 0 1-5-2v-4a4 4 0 0 1 4-4z"/><path d="M8 9.5v3M6.5 11h3M15.5 11h.01M18 12.5h.01"/></svg><span>Тоглоом</span></button>
@@ -38,7 +39,6 @@
     <button class="hamburger" id="hamburger" onclick="toggleMobileNav()" aria-label="Цэс">
   <span></span><span></span><span></span>
 </button>
-      <a class="nav-btn" href="/diary.html" style="text-decoration:none;display:flex;align-items:center;gap:8px"><span>Анирын тэмдэглэл</span></a>
     <div class="nav-right">
       <div class="nav-search"><input id="navSearch" type="search" placeholder="Хайх…" aria-label="Материал хайх" autocomplete="off"><button id="navSearchBtn" type="button" aria-label="Хайх"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.500-3.500"/></svg></button></div>
       <button class="cart-btn" onclick="openCart()">🛒<span id="cartBadge" class="cart-badge">0</span></button>
@@ -75,9 +75,9 @@
 
   <div class="mobile-nav" id="mobileNav">
   <div class="nav-search m-search"><input id="mobileSearch" type="search" placeholder="Хайх…" aria-label="Материал хайх" autocomplete="off"><button id="mobileSearchBtn" type="button" aria-label="Хайх"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.500-3.500"/></svg></button></div>
-  <a class="nav-btn" href="/diary.html" style="text-decoration:none"><span>Анирын тэмдэглэл</span></a>
   <button class="nav-btn" type="button" data-nav="home" onclick="showSec('home');closeMobileNav()"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11l9-8 9 8v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg><span>Нүүр</span></button>
   <button class="nav-btn" type="button" data-nav="knowledge" onclick="openKnowledge();closeMobileNav()"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18h6M10 21h4"/><path d="M12 3a6 6 0 0 0-3.5 10.9c.6.5 1 1.2 1 2.1h5c0-.9.4-1.6 1-2.1A6 6 0 0 0 12 3z"/></svg><span>Шинэ мэдлэг</span></button>
+  <button class="nav-btn" type="button" data-nav="diary" onclick="showSec('diary');closeMobileNav()"><span aria-hidden="true">✎</span><span>Анирын тэмдэглэл</span></button>
   <button class="nav-btn" type="button" data-nav="students" onclick="showSec('training');closeMobileNav()"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 9l10-5 10 5-10 5z"/><path d="M6 11.5V16c0 1.5 3 3 6 3s6-1.5 6-3v-4.5"/></svg><span>Суралцагчдад</span></button>
   <button class="nav-btn" type="button" data-nav="teachers" onclick="showSec('worksheet');closeMobileNav()"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="12" rx="1.5"/><path d="M12 16v4M8 20h8"/></svg><span>Багш нарт</span></button>
   <button class="nav-btn" type="button" data-nav="games" onclick="showSec('games');closeMobileNav()"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 6h10a4 4 0 0 1 4 4v4a3 3 0 0 1-5 2l-1-1H9l-1 1a3 3 0 0 1-5-2v-4a4 4 0 0 1 4-4z"/><path d="M8 9.5v3M6.5 11h3M15.5 11h.01M18 12.5h.01"/></svg><span>Тоглоом</span></button>
@@ -144,6 +144,52 @@
   </div>
 </section>
 
+<!-- АНИРЫН ӨДРИЙН ТЭМДЭГЛЭЛ -->
+<section id="diarySection" class="sec anir-diary">
+  <div class="diary-topline"><button class="diary-back" type="button" onclick="showSec('home')">← Нүүр хуудас</button><span>АНИРЫН ЕРТӨНЦ</span></div>
+  <header class="diary-intro">
+    <p class="diary-kicker">НЭГЭН ОХИНЫ ТЭМДЭГЛЭЛ</p>
+    <h2>Анирын өдрийн тэмдэглэл</h2>
+    <p>Зарим өдөр инээдтэй. Зарим өдөр бодолд автуулна. Харин өдөр бүрт бичиж үлдээх нэг зүйл байдаг.</p>
+  </header>
+  <div class="diary-stage" id="diaryStage">
+    <div class="diary-book" id="diaryBook" aria-label="Анирын тэмдэглэлийн дэвтэр">
+      <div class="diary-cover">
+        <div class="diary-cover-inner">
+          <span class="diary-cover-small">МИНИЙ НУУЦХАН ЕРТӨНЦ</span>
+          <img src="images/characters/anir.png" alt="Анир" class="diary-anir-cover">
+          <h3>Анирын<br>өдрийн тэмдэглэл</h3>
+          <span class="diary-cover-rule"></span>
+          <p>Бодол · Дурсамж · Найзууд</p>
+          <span class="diary-cover-year">2026</span>
+        </div>
+      </div>
+      <div class="diary-pages" id="diaryPages">
+        <div class="diary-page diary-page-left"><span class="diary-page-mark">А</span><p>Энэ дэвтэрт миний өдөр хоног, бодол, асуулт, жижигхэн нээлтүүд үлдэнэ.</p><span class="diary-page-foot">Анирын тэмдэглэл</span></div>
+        <div class="diary-page diary-page-right"><span class="diary-page-date">ЭХЛЭЛ</span><h3>Сайн уу, уншигч минь.</h3><p>Намайг Анир гэдэг. Би заримдаа олон зүйл боддог ч тэр бүр чангаар хэлж чаддаггүй.</p><p>Тиймээс бодлоо энэ дэвтэрт бичиж үлдээхээр шийдлээ. Магадгүй миний туулсан зүйлс чамд ч танил санагдах байх.</p><p>Хамтдаа миний ертөнцөөр аялцгаая.</p><span class="diary-sign">— Анир</span><span class="diary-page-number">1</span></div>
+      </div>
+    </div>
+    <button class="diary-open-btn" id="diaryOpenBtn" type="button" onclick="openAnirDiary()">ДЭВТРИЙГ НЭЭХ <span>↗</span></button>
+    <div class="diary-reading-controls" id="diaryReadingControls" hidden>
+      <button type="button" id="diaryPrevBtn" onclick="turnDiaryPage(-1)" disabled>← Өмнөх</button>
+      <span id="diaryPageStatus">Эхлэл</span>
+      <button type="button" id="diaryNextBtn" onclick="turnDiaryPage(1)">Дараагийн →</button>
+      <button type="button" class="diary-close-btn" onclick="closeAnirDiary()">Дэвтрээ хаах</button>
+    </div>
+  </div>
+  <section class="diary-archive" aria-labelledby="diaryArchiveTitle">
+    <div><p class="diary-kicker">ХУУДАС БҮР НЬ ДУРСАМЖ</p><h3 id="diaryArchiveTitle">Өмнөх тэмдэглэлүүд</h3><p>Анир долоо хоног бүр шинэ тэмдэглэлээ энд нэмнэ.</p></div>
+    <div class="diary-empty"><span>✧</span><p>Одоогоор нийтлэгдсэн тэмдэглэл алга.</p><small>Удахгүй энэ хэсэгт шинэ дурсамж нэмэгдэнэ.</small></div>
+  </section>
+  <section class="diary-friends"><h3>Анирын найзууд</h3><div class="diary-friend-list">
+    <div><img src="images/characters/tsovoo.png" alt="Цовоо"><span>Цовоо</span></div>
+    <div><img src="images/characters/todoo.png" alt="Тодоо"><span>Тодоо</span></div>
+    <div><img src="images/characters/enkhrii.png" alt="Энхрий"><span>Энхрий</span></div>
+    <div><img src="images/characters/azaa.png" alt="Азаа"><span>Азаа</span></div>
+    <div><img src="images/characters/anir.png" alt="Анир"><span>Анир</span></div>
+  </div></section>
+</section>
+
 <!-- ШИНЭ МЭДЛЭГ — дэлгэрэнгүй ба архив -->
 <section id="knowledgeSection" class="sec kn-page">
   <button class="page-back" onclick="showSec('home')">← Буцах</button>
@@ -155,9 +201,23 @@
   <div class="kn-grid" id="knGrid"></div>
 </section>
 
-<!-- ЭЭЛЖИТ ХИЧЭЭЛИЙН ТӨЛӨВЛӨЛТ -->
+<!-- БАГШ НАРТ: хоёр хэрэгсэл нэг үндсэн сайтад -->
 <section id="worksheetSection" class="sec">
-  <h2 class="sec-title">Ээлжит хичээлийн төлөвлөлт</h2>
+  <div class="lp-card" style="margin-bottom:22px;padding:22px;border:1px solid #e5e1ff;border-radius:20px;background:#fbfaff">
+    <h2 class="sec-title" style="margin-top:0">Багш нарт зориулсан хэрэгслүүд</h2>
+    <p class="lp-lead">Нэг сайтаас хичээлийн төлөвлөгөө болон Блумын шатлалтай ажлын хуудас бэлтгээрэй.</p>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px">
+      <div style="background:#fff;border:1px solid #e8e3ff;border-radius:16px;padding:18px">
+        <h3>Ээлжит хичээл боловсруулах</h3><p>Сурах бичгийн зураг эсвэл эхэд тулгуурлан ээлжит хичээлийн төлөвлөгөө гаргана.</p>
+        <button type="button" class="btn-p" onclick="document.getElementById('lpForm').scrollIntoView({behavior:'smooth'})">Ээлжит хичээл боловсруулах</button>
+      </div>
+      <div style="background:#fff;border:1px solid #e8e3ff;border-radius:16px;padding:18px">
+        <h3>Ажлын хуудас бэлтгэх</h3><p>Унших эхийн зураг эсвэл PDF-ээс Блумын 6 шатлалтай асуулт бэлтгэж, Word татна.</p>
+        <a class="btn-p" href="/bagsh/" style="display:inline-block;text-decoration:none">Ажлын хуудас бэлтгэх</a>
+      </div>
+    </div>
+  </div>
+<h2 class="sec-title">Ээлжит хичээлийн төлөвлөлт</h2>
   <p class="lp-lead">Сурах бичгийн зураг эсвэл эхийг оруулбал ээлжит хичээлийн төлөвлөлтийг боловсруулна. Засаад Word болгон татна.</p>
 <div class="lp-card" id="lpForm">
     <label id="lpDrop" class="lp-drop" for="lpFile">
@@ -762,6 +822,7 @@
 
 
 <script src="characters.js"></script>
+<script src="diary.js"></script>
 <script src="script.js"></script>
 <script src="knowledge-data.js"></script>
 <script src="home.js"></script>

@@ -1,0 +1,14 @@
+<!doctype html><html lang="mn"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex"><title>Админ</title>
+<style>body{font-family:system-ui,sans-serif;max-width:720px;margin:0 auto;padding:16px}input,button{font:inherit;padding:8px;margin:4px 0}table{width:100%;border-collapse:collapse}td,th{border-bottom:1px solid #ddd;padding:6px;text-align:left}.msg{color:#b91c1c}</style></head><body>
+<h1>Хүлээгдэж буй төлбөр</h1><div class="msg" id="msg"></div>
+<input id="k" type="password" placeholder="Админ түлхүүр"> <button onclick="load()">Харах</button>
+<p>Банкны апп-аас орлогыг шалгаад, <b>гүйлгээний утга + дүн</b> таарсан мөрийг "Баталгаажуулах" дарна.</p>
+<table><thead><tr><th>Код</th><th>И-мэйл</th><th>Дүн</th><th>Огноо</th><th></th></tr></thead><tbody id="t"></tbody></table>
+<script>
+const $=id=>document.getElementById(id);
+async function call(p,b){const r=await fetch('/api/worksheet/admin/'+p,{method:b?'POST':'GET',headers:{'Content-Type':'application/json','x-admin-key':$('k').value},body:b?JSON.stringify(b):undefined});const j=await r.json();if(!r.ok){$('msg').textContent=j.error||'Алдаа';throw j}$('msg').textContent='';return j}
+async function load(){try{const rows=await call('pending');const t=$('t');t.textContent='';
+rows.forEach(r=>{const tr=t.insertRow();[r.orderNo,r.email,r.amount+'₮',new Date(r.createdAt).toLocaleString()].forEach(v=>tr.insertCell().textContent=v);
+const b=document.createElement('button');b.textContent='Баталгаажуулах';b.onclick=async()=>{if(confirm(r.orderNo+' ('+r.amount+'₮) орлого банкинд ирсэн үү?')){await call('confirm',{orderNo:r.orderNo});load()}};tr.insertCell().appendChild(b)});
+if(!rows.length){t.insertRow().insertCell().textContent='Хүлээгдэж буй төлбөр алга'}}catch{}}
+</script></body></html>

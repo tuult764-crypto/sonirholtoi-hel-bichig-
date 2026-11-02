@@ -1,0 +1,71 @@
+<!doctype html><html lang="mn"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Сонирхолтой хэл бичиг · Ажлын хуудас</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@600;800&family=Nunito:wght@500;700&display=swap&subset=cyrillic" rel="stylesheet">
+<style>
+:root{--blue:#3B2FBF;--sun:#FFC21A;--coral:#FF5A5F;--mint:#19B394;--ink:#1E1646;--tint:#F3F1FF}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;font:500 17px/1.6 Nunito,system-ui,sans-serif;color:var(--ink);background:var(--tint)}
+h1,h2,h3{font-family:Unbounded,system-ui,sans-serif;line-height:1.2;margin:0 0 .5em}
+section{padding:72px 20px}.in{max-width:900px;margin:0 auto}
+a.btn,button{font:700 17px Nunito,system-ui;border:0;border-radius:999px;padding:14px 26px;cursor:pointer;background:var(--sun);color:var(--ink);text-decoration:none;display:inline-block}
+a.btn:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:3px solid var(--coral);outline-offset:2px}
+.hero{background:var(--blue);color:#fff;overflow:hidden;padding-top:56px}
+.hero .in{display:grid;grid-template-columns:1.1fr .9fr;gap:32px;align-items:center}.hero h1{font-size:clamp(28px,5vw,46px)}.hero p{font-size:19px;max-width:30em}
+.stack{position:relative;height:280px}.stack i{position:absolute;inset:0;border-radius:20px;display:flex;align-items:flex-end;padding:18px;font:700 20px Unbounded,sans-serif;font-style:normal;color:var(--ink)}
+.stack i:nth-child(1){background:var(--coral);transform:rotate(-8deg) translate(-14px,10px)}.stack i:nth-child(2){background:var(--mint);transform:rotate(5deg) translate(12px,-6px)}
+.stack i:nth-child(3){background:var(--sun);transform:rotate(-1deg)}
+.steps{background:var(--sun)}.steps ol{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;padding:0;margin:0;list-style:none;counter-reset:s}
+.steps li{counter-increment:s;background:#fff;border-radius:24px 24px 24px 4px;padding:22px}.steps li::before{content:counter(s);display:grid;place-items:center;width:40px;height:40px;border-radius:50%;background:var(--blue);color:#fff;font:700 18px Unbounded;margin-bottom:10px}
+.tool{background:#fff}.card{background:var(--tint);border-radius:28px;padding:24px;margin-top:16px}
+input,select,textarea{font:inherit;width:100%;padding:12px 14px;margin:6px 0;border:2px solid #cfc9ff;border-radius:14px;background:#fff;color:var(--ink)}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:10px}.msg{color:#b3262b;font-weight:700;min-height:1.5em}.ok{color:#0b6b57;font-weight:700}
+.price{background:var(--mint);color:var(--ink);text-align:center}.price b{font:800 44px Unbounded}
+footer{background:var(--ink);color:#cfc9ff;padding:28px 20px;text-align:center;font-size:15px}
+@media(max-width:700px){.hero .in,.steps ol,.row{grid-template-columns:1fr}.stack{height:200px}section{padding:52px 18px}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+.qrow{display:grid;grid-template-columns:2fr 1.3fr auto;gap:8px;align-items:start;margin:6px 0}button.x{background:#e7e3ff;padding:8px 14px;font-size:14px;margin:4px 0}fieldset{border:0;padding:0;margin:12px 0}label.lv{display:block;padding:4px 0}@media(max-width:700px){.qrow{grid-template-columns:1fr}}</style></head><body>
+<section class="hero"><div class="in"><div><h1>Унших эхээс Блумын шатлалаар асуулт бэлтгэ</h1><p>Эхийн зураг эсвэл PDF-ээ оруулаад шатаа сонгоход тэр эхэд тулгуурласан асуулт гарна. Засаад Word болгон татна.</p><a class="btn" href="#try">Ажлын хуудас бэлтгэх</a></div>
+<div class="stack" aria-hidden="true"><i>Үгийн сан</i><i>Асуулт</i><i>Ажлын хуудас</i></div></div></section>
+<section class="steps"><div class="in"><h2>Гурван алхам</h2><ol><li><b>Эхээ оруул</b><br>Номын хуудсыг зургаар авч эсвэл PDF-ээр.</li><li><b>Шатаа сонго</b><br>Сэргээн санахаас бүтээх хүртэл 6 шат.</li><li><b>Засаад татаж ав</b><br>Асуултаа өөрөө засаад Word болгоно.</li></ol></div></section>
+<section class="tool" id="try"><div class="in"><h2>Асуулт бэлтгэх</h2><div id="msg" class="msg" role="alert"></div>
+<div id="auth" class="card"><p>Эхний ажлын хуудас үнэгүй. Бүртгүүлээд эхэлнэ үү.</p><input id="em" type="email" placeholder="И-мэйл" aria-label="И-мэйл"><input id="pw" type="password" placeholder="Нууц үг (8+ тэмдэгт)" aria-label="Нууц үг">
+<div class="row"><button onclick="login('login')">Нэвтрэх</button><button style="background:var(--blue);color:#fff" onclick="login('register')">Бүртгүүлэх</button></div></div>
+<div id="app" hidden><div class="card" id="st"></div>
+<div class="card"><label for="file"><b>Унших эх (зураг эсвэл PDF)</b></label><input id="file" type="file" accept="application/pdf,image/*"><div class="row"><select id="grade" aria-label="Анги"><option value="5">5-р анги</option><option value="6" selected>6-р анги</option><option value="7">7-р анги</option><option value="8">8-р анги</option><option value="9">9-р анги</option><option value="10">10-р анги</option><option value="11">11-р анги</option><option value="12">12-р анги</option></select><select id="per" aria-label="Асуултын тоо"><option value="1">Шат бүрт 1 асуулт</option><option value="2" selected>Шат бүрт 2 асуулт</option><option value="3">Шат бүрт 3 асуулт</option></select></div><fieldset ><legend><b>Доод эрэмбийн чадвар</b></legend><label class="lv"><input type="checkbox" value="Сэргээн санах" checked style="width:auto;margin-right:8px">1. Сэргээн санах</label><label class="lv"><input type="checkbox" value="Ойлгох" checked style="width:auto;margin-right:8px">2. Ойлгох</label><label class="lv"><input type="checkbox" value="Хэрэглэх" checked style="width:auto;margin-right:8px">3. Хэрэглэх</label></fieldset><fieldset ><legend><b>Дээд эрэмбийн чадвар</b></legend><label class="lv"><input type="checkbox" value="Задлан шинжлэх" style="width:auto;margin-right:8px">4. Задлан шинжлэх</label><label class="lv"><input type="checkbox" value="Үнэлэх" style="width:auto;margin-right:8px">5. Үнэлэх</label><label class="lv"><input type="checkbox" value="Бүтээх" style="width:auto;margin-right:8px">6. Бүтээх</label></fieldset><textarea id="note" rows="2" placeholder="Нэмэлт хүсэлт (заавал биш)" aria-label="Нэмэлт хүсэлт"></textarea><button id="gen" onclick="gen()">Асуулт боловсруулах</button><div id="dl" class="ok"></div></div><div id="edit" class="card" hidden></div>
+<div id="paybox" class="card" hidden><b>Ажлын хуудас авах</b> <select id="qty" onchange="pp()"><option>1</option><option>5</option><option>10</option></select> ширхэг: <b id="tot"></b>₮ <button onclick="pay()">Төлөх</button><div id="payinfo"></div></div></div></div></section>
+<section class="price"><div class="in"><h2>Үнэ</h2><p>Эхний ажлын хуудас үнэгүй</p><b>500₮</b><p>нэг ажлын хуудас. Асуулт засаж, Word татахад нэмэлт төлбөргүй.</p></div></section>
+<footer>Багшийн туслах · AI бэлтгэсэн агуулгыг хичээлдээ ашиглахаасаа өмнө өөрөө шалгаарай.</footer>
+<script>
+let T=localStorage.t||'',order='';const $=id=>document.getElementById(id);
+async function api(p,b){const r=await fetch('/api/worksheet/'+p,{method:b?'POST':'GET',headers:{'Content-Type':'application/json',Authorization:'Bearer '+T},body:b?JSON.stringify(b):undefined});const j=await r.json();if(!r.ok){$('msg').textContent=j.error||'Алдаа';if(j.payRequired)$('paybox').hidden=false;throw j}$('msg').textContent='';return j}
+function show(s){$('auth').hidden=true;$('app').hidden=false;window.P=s.price;pp();$('st').textContent='Үнэгүй хуудас: '+s.freeLeft+' · Худалдаж авсан: '+s.credits;$('paybox').hidden=s.freeLeft>0||s.credits>0}
+function pp(){$('tot').textContent=($('qty').value*(window.P||0)).toLocaleString()}
+async function refresh(){try{const r=await fetch('/api/worksheet/me',{headers:{Authorization:'Bearer '+T}});if(r.ok)show(await r.json())}catch{}}
+async function login(k){try{const j=await api(k,{email:$('em').value,password:$('pw').value});T=j.token;localStorage.t=T;show(j)}catch{}}
+function toB64(f){return new Promise((ok,no)=>{const r=new FileReader();r.onload=()=>ok(r.result.split(',')[1]);r.onerror=no;r.readAsDataURL(f)})}
+async function shrink(f){if(!f.type.startsWith('image/'))return f;try{const m=await createImageBitmap(f),k=Math.min(1,1800/Math.max(m.width,m.height)),c=document.createElement('canvas');c.width=m.width*k;c.height=m.height*k;c.getContext('2d').drawImage(m,0,0,c.width,c.height);return await new Promise(r=>c.toBlob(r,'image/jpeg',.85))}catch{return f}}
+function dlfile(b64,name){const bin=atob(b64),a=new Uint8Array(bin.length);for(let i=0;i<bin.length;i++)a[i]=bin.charCodeAt(i);const l=document.createElement('a');l.href=URL.createObjectURL(new Blob([a],{type:'application/vnd.openxmlformats-officedocument.wordprocessingml.document'}));l.download=name;l.click()}
+let D=null;
+async function gen(){const f=$('file').files[0],levels=[...document.querySelectorAll('input[type=checkbox]:checked')].map(x=>x.value);
+if(!f){$('msg').textContent='Эхийн зураг эсвэл PDF сонгоно уу';return}if(!levels.length){$('msg').textContent='Дор хаяж нэг шат сонгоно уу';return}
+$('gen').disabled=true;$('gen').textContent='Боловсруулж байна... (1 минут орчим)';
+try{const b=await shrink(f);if(b.size>6e6){$('msg').textContent='Файл 6 MB-аас бага байх ёстой';throw 0}
+const j=await api('generate',{grade:$('grade').value,per:$('per').value,levels,note:$('note').value,file:{mime:b.type||f.type,data:await toB64(b)}});
+D={title:j.title,levels:j.levels};render();show(j);$('edit').scrollIntoView({behavior:'smooth'})}catch(e){await refresh()}
+$('gen').disabled=false;$('gen').textContent='Асуулт боловсруулах'}
+function el(t,o){return Object.assign(document.createElement(t),o)}
+function render(){const e=$('edit');e.hidden=false;e.textContent='';e.appendChild(el('p',{textContent:'Асуултаа хянаж, шаардлагатай бол засна уу. AI алдаа гаргаж болзошгүй.',className:'ok'}));
+const t=el('input',{value:D.title,oninput:()=>D.title=t.value});e.appendChild(t);
+D.levels.forEach(L=>{e.appendChild(el('h3',{textContent:L.level}));
+L.questions.forEach((x,i)=>{const w=el('div',{className:'qrow'});
+w.append(el('textarea',{rows:3,value:x.q,oninput(){x.q=this.value}}),el('textarea',{rows:3,value:x.a,placeholder:'Хариу',oninput(){x.a=this.value}}),el('button',{className:'x',textContent:'Устгах',onclick(){L.questions.splice(i,1);render()}}));e.appendChild(w)});
+e.appendChild(el('button',{className:'x',textContent:'+ Асуулт нэмэх',onclick(){L.questions.push({q:'',a:''});render()}}))});
+e.appendChild(el('div',{style:'margin-top:14px'}));e.appendChild(el('button',{textContent:'Word татах',onclick:dl}))}
+async function dl(){try{const j=await api('docx',D);dlfile(j.docx,(j.title||'ajliin-huudas').replace(/[^\p{L}\p{N} _-]/gu,'')+'.docx')}catch{}}
+async function pay(){try{const j=await api('pay/create',{qty:$('qty').value});order=j.orderNo;let h='';
+if(j.manual)h+=`<img alt="Төлбөрийн QR" style="max-width:260px;display:block;margin:8px 0" src="${j.qrUrl}"><div>Дүн: <b>${j.amount}₮</b></div><div>Гүйлгээний утга дээр заавал бичнэ: <b style="font-size:1.4em">${j.orderNo}</b></div><div>Төлсний дараа эрх нээгдэхийг админ баталгаажуулна (ажлын цагаар хэдэн минут–цаг).</div>`;
+if(j.mock)h+='<div>(Туршилтын горим)</div><button onclick="mock()">Төлсөнд тооц</button>';
+h+='<button style="margin-top:8px" onclick="chk()">Төлбөр шалгах</button>';$('payinfo').innerHTML=h}catch{}}
+async function mock(){await api('pay/mock-confirm',{orderNo:order});chk()}
+async function chk(){try{const j=await api('pay/check',{orderNo:order});if(j.status==='paid'){show(j);$('payinfo').textContent='Төлбөр баталгаажлаа!'}else $('msg').textContent='Төлбөр хараахан баталгаажаагүй байна. Гүйлгээний утгаа зөв бичсэн эсэхээ шалгаад түр хүлээнэ үү.'}catch{}}
+if(T)api('me').then(show).catch(()=>{T='';localStorage.removeItem('t')});
+</script></body></html>

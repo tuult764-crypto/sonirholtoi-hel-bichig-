@@ -83,7 +83,7 @@ function showSec(name){
   const el=document.getElementById(name+'Section');
   if(el){el.classList.add('active');window.scrollTo(0,0);}
   // Цэсний идэвхтэй товч: хуудас бүр цэсний аль хэсэгт хамаарахыг заана
-  const navOf={home:'home',knowledge:'knowledge',training:'students',worksheet:'teachers',games:'games',sudoku:'games',shop:'library',library:'more',about:'more'};
+  const navOf={home:'home',knowledge:'knowledge',diary:'diary',training:'students',worksheet:'teachers',games:'games',sudoku:'games',shop:'library',library:'more',about:'more'};
   const key=navOf[name];
   document.querySelectorAll('.nav-btn[data-nav]').forEach(b=>{
     const on=b.dataset.nav===key;

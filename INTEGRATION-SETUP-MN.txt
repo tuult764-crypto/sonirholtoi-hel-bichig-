@@ -1,0 +1,19 @@
+СОНИРХОЛТОЙ ХЭЛ БИЧИГ + БАГШИЙН ТУСЛАХ НЭГДСЭН ХУВИЛБАР
+
+ЧУХАЛ: ОДООГИЙН ХОЁР RENDER ҮЙЛЧИЛГЭЭГ УСТГАХГҮЙ. ЭХЛЭЭД ШИНЭ ХУВИЛБАРЫГ ТУСДАА BRANCH/ТЕСТ ҮЙЛЧИЛГЭЭНД ТУРШ.
+
+1. Энэ ZIP-ийг задлаад доторх sonirholtoi-hel-bichig--main хавтасны файлуудыг үндсэн GitHub repository-д оруул. Одоо ажиллаж байгаа файлуудаа эхлээд GitHub branch эсвэл ZIP backup болгон хадгал.
+2. Үндсэн Render Web Service-ийн одоогийн DATABASE_URL, JWT_SECRET, ADMIN_KEY, OPENAI_API_KEY-г өөрчлөхгүй.
+3. Render > үндсэн сайтын Web Service > Environment > Secret Files дээр дараах 4 файлыг нэм: 
+   BAGSH_DATABASE_URL — Багшийн туслахын Supabase Session Pooler URL (бүтэн URL, password-тай).
+   BAGSH_JWT_SECRET — хуучин Багшийн туслах Render-ийн JWT_SECRET-ийн яг утга.
+   BAGSH_ADMIN_KEY — хуучин Багшийн туслах Render-ийн ADMIN_KEY-ийн яг утга.
+   BAGSH_GEMINI_API_KEY — Багшийн туслахад хэрэглэж байсан Gemini API түлхүүр.
+   Нууцуудыг чат руу бүү явуул.
+4. Environment Variables дээр BAGSH_AI_PROVIDER=gemini, BAGSH_QPAY_MODE=manual, BAGSH_SHEET_PRICE=500 (одоогийн үнэ 500₮ хэвээр бол) тохируул. Багшийн туслахын одоогийн үнэтэй тохируулан үнэ өөрчилж болно.
+5. Хэрэв QPay manual QR ашигладаг бол pay-qr.jpg файлаа хуучин Багшийн туслахын яг өөрийн QR-тай байгааг шалга. Энэ архивт өмнөх ZIP доторх pay-qr.jpg хуулсан.
+6. package.json-д docx dependency нэмэгдсэн. Render build command npm install, start command npm start хэвээр.
+7. Deploy хийсний дараа үндсэн сайт нээгдэж, /bagsh/ ажлын хуудасны хэсэг, /bagsh-admin админ төлбөрийн хэсэг болно. Үндсэн админ /admin хэвээр.
+8. Ажлын хуудасны API нь /api/worksheet/ гэсэн тусдаа замтай. Үндсэн сайтын /api/pay болон /api/auth замтай давхцахгүй. Хоёр Supabase тусдаа хэвээр: үндсэн DATABASE_URL болон BAGSH_DATABASE_URL.
+
+АНХААРУУЛГА: Gemini API бодит хүсэлт, QPay live merchant, Render дээрх хоёр бодит Supabase-ийн нууцтай production туршилтыг энэ орчноос хийх боломжгүй. ZIP-ийн JavaScript syntax болон дотоод route тохиргоог л шалгана. Live deploy-ийг backup/тестийн дараа хийнэ.
