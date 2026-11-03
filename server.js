@@ -18,7 +18,11 @@ CREATE TABLE IF NOT EXISTS shop_materials(id BIGSERIAL PRIMARY KEY, title TEXT N
 CREATE TABLE IF NOT EXISTS shop_files(id BIGSERIAL PRIMARY KEY, material_id BIGINT NOT NULL REFERENCES shop_materials(id) ON DELETE CASCADE, role TEXT NOT NULL, ord INTEGER NOT NULL DEFAULT 0, mime TEXT NOT NULL, data BYTEA NOT NULL);
 CREATE INDEX IF NOT EXISTS files_m ON shop_files(material_id, role, ord);
 CREATE TABLE IF NOT EXISTS shop_purchases(user_id BIGINT NOT NULL REFERENCES shop_users(id), material_id BIGINT NOT NULL REFERENCES shop_materials(id) ON DELETE CASCADE, created_at BIGINT NOT NULL, PRIMARY KEY(user_id, material_id));
-CREATE TABLE IF NOT EXISTS shop_payments(id BIGSERIAL PRIMARY KEY, order_no TEXT UNIQUE NOT NULL, user_id BIGINT NOT NULL REFERENCES shop_users(id), material_id BIGINT NOT NULL REFERENCES shop_materials(id) ON DELETE CASCADE, invoice_id TEXT NOT NULL, amount INTEGER NOT NULL, status TEXT NOT NULL DEFAULT 'pending', created_at BIGINT NOT NULL, paid_at BIGINT);`);
+CREATE TABLE IF NOT EXISTS shop_payments(id BIGSERIAL PRIMARY KEY, order_no TEXT UNIQUE NOT NULL, user_id BIGINT NOT NULL REFERENCES shop_users(id), material_id BIGINT NOT NULL REFERENCES shop_materials(id) ON DELETE CASCADE, invoice_id TEXT NOT NULL, amount INTEGER NOT NULL, status TEXT NOT NULL DEFAULT 'pending', created_at BIGINT NOT NULL, paid_at BIGINT);
+CREATE TABLE IF NOT EXISTS lesson_package_payments(id BIGSERIAL PRIMARY KEY, order_no TEXT UNIQUE NOT NULL, user_id BIGINT NOT NULL REFERENCES shop_users(id), package_type TEXT NOT NULL CHECK(package_type IN ('pages5','week7')), invoice_id TEXT NOT NULL, amount INTEGER NOT NULL, status TEXT NOT NULL DEFAULT 'pending', created_at BIGINT NOT NULL, paid_at BIGINT);
+CREATE TABLE IF NOT EXISTS lesson_packages(id BIGSERIAL PRIMARY KEY, user_id BIGINT NOT NULL REFERENCES shop_users(id), package_type TEXT NOT NULL, paid_amount INTEGER NOT NULL, total_pages INTEGER NOT NULL, used_pages INTEGER NOT NULL DEFAULT 0, daily_limit INTEGER NOT NULL, starts_at BIGINT NOT NULL, expires_at BIGINT, status TEXT NOT NULL DEFAULT 'active', created_at BIGINT NOT NULL);
+CREATE INDEX IF NOT EXISTS lesson_packages_user ON lesson_packages(user_id, status, expires_at);
+CREATE TABLE IF NOT EXISTS lesson_usage(id BIGSERIAL PRIMARY KEY, user_id BIGINT NOT NULL REFERENCES shop_users(id), package_id BIGINT NOT NULL REFERENCES lesson_packages(id), source_pages INTEGER NOT NULL, input_tokens INTEGER NOT NULL DEFAULT 0, output_tokens INTEGER NOT NULL DEFAULT 0, model TEXT NOT NULL, created_at BIGINT NOT NULL);`);
 }
 const app = express();
 app.set('trust proxy', 1);
@@ -168,6 +172,55 @@ app.post('/api/admin/materials/:id', ...A, ah(async (req, res) => {
   res.json({ ok: (await q('UPDATE shop_materials SET title=$2,description=$3,category=$4,price=$5,active=$6 WHERE id=$1', [parseInt(req.params.id) || 0, f.title, f.description, f.category, f.price, active])).rowCount === 1 });
 }));
 
+// ---- Ээлжит хичээлийн төлбөрт багц ----
+const PACKAGE_OPTIONS = { pages5: { amount: 5000, pages: 5, daily: 5, days: null, title: '5 хуудасны багц' }, week7: { amount: 10000, pages: 70, daily: 10, days: 7, title: '7 хоногийн багц' } };
+async function currentLessonPackage(userId) {
+  const now = Date.now();
+  await q("UPDATE lesson_packages SET status='expired' WHERE user_id=$1 AND status='active' AND expires_at IS NOT NULL AND expires_at <= $2", [userId, now]);
+  const r = await q("SELECT *, GREATEST(0,total_pages-used_pages) remaining_pages FROM lesson_packages WHERE user_id=$1 AND status='active' AND (expires_at IS NULL OR expires_at>$2) AND used_pages<total_pages ORDER BY created_at DESC LIMIT 1", [userId, now]);
+  const pkg = r.rows[0] || null;
+  if (!pkg) return { package: null, status: 'expired', message: 'Эрх дууссан' };
+  const day = new Date(now).toLocaleDateString('en-CA', { timeZone: 'Asia/Ulaanbaatar' });
+  const daily = await q("SELECT COALESCE(SUM(source_pages),0)::int n FROM lesson_usage WHERE package_id=$1 AND (to_timestamp(created_at/1000.0) AT TIME ZONE 'Asia/Ulaanbaatar')::date=$2::date", [pkg.id, day]);
+  return { package: { id: pkg.id, type: pkg.package_type, totalPages: pkg.total_pages, usedPages: pkg.used_pages, remainingPages: pkg.remaining_pages, dailyLimit: pkg.daily_limit, usedToday: daily.rows[0].n, expiresAt: pkg.expires_at, status: 'active' }, status: 'active', message: 'Танд эрх байна' };
+}
+async function activateLessonPackage(orderNo) {
+  const c = await pool.connect();
+  try {
+    await c.query('BEGIN');
+    const pr = await c.query("UPDATE lesson_package_payments SET status='paid',paid_at=$2 WHERE order_no=$1 AND status='pending' RETURNING user_id,package_type,amount", [orderNo, Date.now()]);
+    if (!pr.rowCount) { await c.query('ROLLBACK'); return false; }
+    const o = PACKAGE_OPTIONS[pr.rows[0].package_type], now = Date.now();
+    await c.query("UPDATE lesson_packages SET status='replaced' WHERE user_id=$1 AND status='active'", [pr.rows[0].user_id]);
+    await c.query("INSERT INTO lesson_packages(user_id,package_type,paid_amount,total_pages,daily_limit,starts_at,expires_at,status,created_at) VALUES($1,$2,$3,$4,$5,$6,$7,'active',$6)", [pr.rows[0].user_id, pr.rows[0].package_type, pr.rows[0].amount, o.pages, o.daily, now, o.days ? now + o.days*86400000 : null]);
+    await c.query('COMMIT'); return true;
+  } catch(e) { await c.query('ROLLBACK').catch(()=>{}); throw e; } finally { c.release(); }
+}
+async function verifyLessonPackage(orderNo) {
+  const p=(await q('SELECT * FROM lesson_package_payments WHERE order_no=$1',[orderNo])).rows[0];
+  if(!p) return 'unknown'; if(p.status==='paid') return 'paid';
+  if(await qpay.isPaid(p.invoice_id,p.amount)){ await activateLessonPackage(orderNo); return 'paid'; }
+  return 'pending';
+}
+app.get('/api/lesson-package/status', need, ah(async(req,res)=>res.json(await currentLessonPackage(req.user.id))));
+app.post('/api/lesson-package/buy', need, limit(10,3600e3), ah(async(req,res)=>{
+  if(qpay.MODE==='mock' && (process.env.RENDER || process.env.NODE_ENV==='production')) return res.status(503).json({error:'Төлбөрийн горим тохируулаагүй байна. QPAY_MODE=manual эсвэл live тохируулна уу.'});
+  const type=String(req.body.packageType||''), o=PACKAGE_OPTIONS[type]; if(!o) return res.status(400).json({error:'Багцаа сонгоно уу'});
+  const orderNo='LP'+Date.now()+crypto.randomBytes(3).toString('hex');
+  const inv=await qpay.createInvoice({orderNo,amount:o.amount,description:o.title,callbackUrl:`${process.env.PUBLIC_URL||''}/api/lesson-package/callback?order=${orderNo}`});
+  await q('INSERT INTO lesson_package_payments(order_no,user_id,package_type,invoice_id,amount,created_at) VALUES($1,$2,$3,$4,$5,$6)',[orderNo,req.user.id,type,inv.invoiceId,o.amount,Date.now()]);
+  res.json({orderNo,amount:o.amount,title:o.title,...inv,manual:qpay.MODE==='manual',mock:qpay.MODE==='mock',qrUrl:qpay.MODE==='manual'?'/qr.png':null});
+}));
+app.post('/api/lesson-package/check', need, ah(async(req,res)=>{
+  const orderNo=String(req.body.orderNo||''), p=(await q('SELECT 1 FROM lesson_package_payments WHERE order_no=$1 AND user_id=$2',[orderNo,req.user.id])).rowCount;
+  if(!p) return res.status(404).json({error:'Төлбөрийн хүсэлт олдсонгүй'});
+  try { const status=await verifyLessonPackage(orderNo); res.json({status, ...(status==='paid'?await currentLessonPackage(req.user.id):{})}); }
+  catch(e){ console.error('lesson package check:',e.message); res.status(502).json({error:'Төлбөр шалгаж чадсангүй'}); }
+}));
+app.all('/api/lesson-package/callback',async(req,res)=>{try{await verifyLessonPackage(String(req.query.order||''));}catch(e){console.error('package callback:',e.message);}res.sendStatus(200);});
+app.get('/api/admin/lesson-packages/pending', ...A, ah(async(req,res)=>res.json((await q("SELECT p.order_no \"orderNo\",p.amount,p.package_type \"packageType\",p.created_at \"createdAt\",u.email FROM lesson_package_payments p JOIN shop_users u ON u.id=p.user_id WHERE p.status='pending' AND p.invoice_id LIKE 'MANUAL-%' ORDER BY p.created_at DESC LIMIT 100")).rows)));
+app.post('/api/admin/lesson-packages/confirm', ...A, ah(async(req,res)=>{const o=String(req.body.orderNo||'');if(!(await q("SELECT 1 FROM lesson_package_payments WHERE order_no=$1 AND invoice_id LIKE 'MANUAL-%'",[o])).rowCount)return res.status(404).json({error:'Олдсонгүй'});res.json({ok:true,activated:await activateLessonPackage(o)});}));
+
 // ---- Ээлжит хичээлийн төлөвлөлт (сурах бичгийн зураг/эхээс AI боловсруулна) ----
 const lesson = require('./lesson-core');
 const LESSON_MODEL = process.env.LESSON_MODEL || 'gpt-4o';
@@ -193,15 +246,16 @@ JSON БҮТЭЦ:
 app.post('/api/lesson-plan', limit(8, 3600e3), express.json({ limit: '25mb' }), ah(async (req, res) => {
   if (!process.env.OPENAI_API_KEY) return res.status(503).json({ error: 'AI хараахан тохируулагдаагүй байна (OPENAI_API_KEY).' });
   const b = req.body || {}, t = (v, n) => String(v == null ? '' : v).trim().slice(0, n);
-  const images = (Array.isArray(b.images) ? b.images : []).slice(0, 6), text = t(b.text, 12000);
+  const images = (Array.isArray(b.images) ? b.images : []).slice(0, 10), text = t(b.text, 12000);
   if (images.some(u => typeof u !== 'string' || u.length > 7e6 || !IMG_URL.test(u))) return res.status(400).json({ error: 'Зураг JPG/PNG/WEBP байх ёстой' });
   if (!images.length && text.length < 30) return res.status(400).json({ error: 'Сурах бичгийн зураг эсвэл эхийг оруулна уу' });
   const minutes = Math.max(10, Math.min(240, parseInt(b.minutes) || 40));
   const inp = { grade: t(b.grade, 30), subject: t(b.subject, 60) || 'Монгол хэл', lessonTopic: t(b.lessonTopic, 250), unitTopic: t(b.unitTopic, 200), method: t(b.method, 300), minutes };
-  const today = new Date().toISOString().slice(0, 10);
-  if (today !== lessonDay) { lessonDay = today; lessonCount = 0; }
-  if (lessonCount >= LESSON_DAILY_CAP) return res.status(429).json({ error: 'Өнөөдрийн хязгаар хэтэрлээ. Маргааш дахин оролдоно уу.' });
-  lessonCount++;
+  const user = await userOf(req); if (!user) return res.status(401).json({ error: 'Ээлжит хичээл боловсруулахын тулд и-мэйлээр нэвтэрнэ үү.' });
+  const sourcePages = images.length ? images.length : Math.max(1, Math.min(10, parseInt(b.sourcePages) || 1));
+  const access = await currentLessonPackage(user.id); if (!access.package) return res.status(402).json({ error: 'Эрх дууссан. Багц сонгон төлбөр төлнө үү.', access });
+  if (sourcePages > access.package.dailyLimit - access.package.usedToday) return res.status(429).json({ error: `Өнөөдөр ${access.package.dailyLimit-access.package.usedToday} хуудас ашиглах эрх үлдсэн.`, access });
+  if (sourcePages > access.package.remainingPages) return res.status(429).json({ error: `Нийт ${access.package.remainingPages} хуудасны эрх үлдсэн.`, access });
   const info = `Анги: ${inp.grade || '(заагаагүй)'}\nСудлагдахуун: ${inp.subject}\nНийт хугацаа: ${minutes} минут (алхмуудын минутын нийлбэр яг ${minutes} байна)\nХичээлийн сэдэв: ${inp.lessonTopic || '(өгөөгүй — сурах бичгээс тодорхойл)'}\nНэгжийн сэдэв: ${inp.unitTopic || '(өгөөгүй)'}\nСургалтын арга: ${inp.method || '(өгөөгүй — өөрөө сонго)'}\n` +
     (text ? `\nСурах бичгийн эх (багшийн оруулсан):\n${text}\n` : '') + (images.length ? `\nДараах ${images.length} зураг нь сурах бичгийн хуудас.` : '');
   const content = [{ type: 'text', text: info }, ...images.map(u => ({ type: 'image_url', image_url: { url: u, detail: 'high' } }))];
@@ -221,7 +275,9 @@ app.post('/api/lesson-plan', limit(8, 3600e3), express.json({ limit: '25mb' }), 
   let raw; try { raw = JSON.parse(data.choices[0].message.content); } catch { return res.status(502).json({ error: 'AI-ийн хариуг уншиж чадсангүй. Дахин оролдоно уу.' }); }
   const plan = lesson.sanitizePlan(raw, { totalMinutes: minutes, grade: inp.grade, subject: inp.subject, lessonTopic: inp.lessonTopic, unitTopic: inp.unitTopic });
   if (lesson.allSteps(plan).length < 3) return res.status(502).json({ error: 'AI бүрэн төлөвлөгөө гаргаж чадсангүй. Дахин оролдоно уу.' });
-  res.json({ plan, warnings: (Array.isArray(raw.warnings) ? raw.warnings : []).slice(0, 5).map(w => t(w, 200)).filter(Boolean) });
+  await q('UPDATE lesson_packages SET used_pages=used_pages+$2 WHERE id=$1', [access.package.id, sourcePages]);
+  await q('INSERT INTO lesson_usage(user_id,package_id,source_pages,input_tokens,output_tokens,model,created_at) VALUES($1,$2,$3,$4,$5,$6,$7)', [user.id, access.package.id, sourcePages, Number(data.usage?.prompt_tokens||0), Number(data.usage?.completion_tokens||0), LESSON_MODEL, Date.now()]);
+  res.json({ plan, warnings: (Array.isArray(raw.warnings) ? raw.warnings : []).slice(0, 5).map(w => t(w, 200)).filter(Boolean), usage: { sourcePages, inputTokens: Number(data.usage?.prompt_tokens||0), outputTokens: Number(data.usage?.completion_tokens||0) }, access: await currentLessonPackage(user.id) });
 }));
 
 app.use(express.static(path.join(__dirname)));

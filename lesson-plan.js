@@ -3,7 +3,7 @@
   'use strict';
   const C = window.LessonCore;
   const DRAFT_KEY = 'shb_lesson_draft_v1';
-  const MAX_IMAGES = 6;
+  const MAX_IMAGES = 10;
   const S = { images: [], plan: null, warnings: [], busy: false };
   const $ = id => document.getElementById(id);
   const toast = (m, t) => (typeof showToast === 'function' ? showToast(m, t) : alert(m));
@@ -84,7 +84,7 @@
       const r = await fetch('/api/lesson-plan', {
         method: 'POST', headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          images: S.images.map(i => i.url), text, minutes,
+          images: S.images.map(i => i.url), text, minutes, sourcePages: S.images.length || Math.max(1, Math.min(10, parseInt($('lpPageCount').value)||1)),
           grade: $('lpGrade').value, subject: $('lpSubject').value.trim(),
           lessonTopic: $('lpTopic').value.trim(), unitTopic: $('lpUnit').value.trim(), method: $('lpMethod').value.trim()
         })
@@ -92,6 +92,7 @@
       let data = {}; try { data = await r.json(); } catch (e) { /* JSON биш хариу */ }
       if (!r.ok) throw new Error(data.error || (r.status === 413 ? 'Зураг хэт том байна. Цөөн эсвэл жижиг зураг оруулна уу.' : 'Алдаа гарлаа (' + r.status + ')'));
       S.plan = C.sanitizePlan(data.plan, { totalMinutes: minutes });
+      if (data.access) showAccess(data.access);
       S.warnings = data.warnings || [];
       save(); render();
       $('lpStatus').textContent = '';
@@ -195,10 +196,46 @@
       field('Үнэлгээ (мөр бүр нэг зүйл)', bindText(h('textarea', { rows: 3 }), P, 'assessment'))));
 
     root.append(h('div', { class: 'lp-actions' },
+      h('button', { type: 'button', class: 'btn-g', onclick: previewPlan }, '👁 Харах'),
+      h('button', { type: 'button', class: 'btn-p', onclick: printPlan }, '🖨 Харснаа хэвлэх'),
       h('button', { type: 'button', class: 'btn-p', onclick: download }, '⬇ Word татах'),
       h('button', { type: 'button', class: 'btn-g', onclick: () => { if (confirm('Одоогийн төлөвлөгөө арилна. Шинээр эхлэх үү?')) reset(); } }, 'Шинээр эхлэх')));
     refreshTotals();
   }
+
+  function showAccess(data) {
+    const title=$('lpAccessTitle'), info=$('lpAccessInfo'); if(!title||!info)return;
+    if(data && data.package){const a=data.package;title.textContent='Танд эрх байна';info.textContent=`${a.type==='week7'?'7 хоногийн багц':'5 хуудасны багц'} · Үлдсэн ${a.remainingPages}/${a.totalPages} хуудас · Өнөөдөр ${Math.max(0,a.dailyLimit-a.usedToday)} хуудас ашиглах боломжтой`+(a.expiresAt?' · Дуусах: '+new Date(Number(a.expiresAt)).toLocaleString('mn-MN'): ' · Хугацаагүй');}
+    else {title.textContent='Эрх дууссан';info.textContent='Ээлжит хичээл боловсруулахын тулд багц сонгоно уу.';}
+  }
+  async function refreshLessonAccess(){
+    try{const r=await fetch('/api/lesson-package/status'); if(r.status===401){$('lpAccessTitle').textContent='И-мэйлээр нэвтэрнэ үү';$('lpAccessInfo').textContent='Нэвтэрсний дараа багцын эрхээ харах боломжтой.';return;} const d=await r.json();showAccess(d);}catch(e){if($('lpAccessTitle'))$('lpAccessTitle').textContent='Эрхийн төлөв шалгаж чадсангүй';}
+  }
+  window.refreshLessonAccess=refreshLessonAccess;
+  async function buyPackage(type){
+    if(!currentUser){if(typeof openAuth==='function')openAuth('login');else toast('Эхлээд и-мэйлээр нэвтэрнэ үү','error');return;}
+    const box=$('lpPayBox'), wrap=$('lpPackages'); box.hidden=false;box.textContent='Нэхэмжлэх үүсгэж байна…';
+    try{const r=await fetch('/api/lesson-package/buy',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({packageType:type})});const d=await r.json();if(!r.ok)throw new Error(d.error||'Нэхэмжлэх үүссэнгүй');
+      box.textContent='';box.append(h('b',{text:d.title+' · '+Number(d.amount).toLocaleString('mn-MN')+'₮'}));
+      if(d.qr){const im=h('img',{alt:'QPay QR код',src:d.qr.startsWith('data:')?d.qr:'data:image/png;base64,'+d.qr});box.append(im);}
+      else if(d.qrUrl){box.append(h('img',{alt:'Төлбөрийн QR код',src:d.qrUrl}));}
+      if(d.shortUrl)box.append(h('p',{},h('a',{href:d.shortUrl,target:'_blank',rel:'noopener',text:'QPay-ээр төлөх'})));
+      box.append(h('p',{text:d.manual?'Төлбөр хийсний дараа админ баталгаажуулна.':'Төлбөр хийсний дараа төлөвөө шалгана уу.'}));
+      box.append(h('button',{type:'button',class:'btn-p',onclick:()=>checkPackage(d.orderNo)},'Төлбөр шалгах'));
+      box.append(h('button',{type:'button',class:'btn-g',onclick:()=>{box.hidden=true;wrap.hidden=true;}},'Хаах'));
+    }catch(e){box.textContent=e.message;if(/нэвтэр|401/i.test(e.message)&&typeof openAuth==='function')openAuth('login');}
+  }
+  async function checkPackage(orderNo){
+    try{const r=await fetch('/api/lesson-package/check',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({orderNo})});const d=await r.json();if(!r.ok)throw new Error(d.error||'Шалгаж чадсангүй');if(d.status==='paid'){toast('Төлбөр баталгаажлаа. Эрх идэвхжлээ.','success');$('lpPackages').hidden=true;await refreshLessonAccess();}else toast('Төлбөр хараахан баталгаажаагүй байна.','error');}catch(e){toast(e.message,'error');}
+  }
+  function escHtml(v){return String(v==null?'':v).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+  function printable(){
+    const P=C.prepareForExport(S.plan);let n=1;
+    const stages=P.stages.map(st=>`<section><h2>${escHtml(st.name)}</h2>${st.steps.map(x=>`<article><h3>${n++}. ${escHtml(x.title)} <small>(${x.minutes} минут)</small></h3><p><b>Зорилго:</b> ${escHtml(x.goal)}</p><p><b>Багш:</b> ${escHtml(x.teacher)}</p><p><b>Сурагч:</b> ${escHtml(x.student)}</p><p><b>Хэрэглэгдэхүүн:</b> ${escHtml(x.materials)}</p><p><b>Үнэлгээ, үр дүн:</b> ${escHtml(x.result)}</p></article>`).join('')}</section>`).join('');
+    return `<!doctype html><html lang="mn"><meta charset="utf-8"><title>Ээлжит хичээлийн төлөвлөлт</title><style>body{font:14px Arial,sans-serif;color:#111;line-height:1.5;max-width:900px;margin:24px auto;padding:0 20px}h1{text-align:center;font-size:22px}h2{border-bottom:1px solid #333;padding-bottom:5px;margin-top:24px}article{page-break-inside:avoid;margin:12px 0 18px}h3{font-size:16px;margin-bottom:6px}p{margin:4px 0}small{font-weight:normal}@media print{body{margin:0 auto}.noprint{display:none}}</style><body><h1>ЭЭЛЖИТ ХИЧЭЭЛИЙН ТӨЛӨВЛӨЛТ</h1><p><b>Анги:</b> ${escHtml(P.grade)}　<b>Судлагдахуун:</b> ${escHtml(P.subject)}　<b>Хугацаа:</b> ${P.totalMinutes} минут</p><p><b>Нэгжийн сэдэв:</b> ${escHtml(P.unitTopic)}</p><p><b>Хичээлийн сэдэв:</b> ${escHtml(P.lessonTopic)}</p><p><b>Зорилго:</b> ${escHtml(P.goal)}</p><p><b>Зорилт:</b><br>${(P.objectives||[]).map(x=>'• '+escHtml(x)).join('<br>')}</p>${stages}<h2>Гэрийн даалгавар</h2><p>${escHtml(P.homework)}</p><h2>Үнэлгээ</h2><p>${(P.assessment||[]).map(escHtml).join('<br>')}</p><div class="noprint"><button onclick="window.print()">Хэвлэх</button></div></body></html>`;
+  }
+  function previewPlan(){if(!S.plan)return;const w=window.open('','_blank');if(!w){toast('Цонх нээхийг зөвшөөрнө үү','error');return;}w.document.open();w.document.write(printable());w.document.close();}
+  function printPlan(){if(!S.plan)return;const w=window.open('','_blank');if(!w){toast('Цонх нээхийг зөвшөөрнө үү','error');return;}w.document.open();w.document.write(printable());w.document.close();w.onload=()=>{w.focus();w.print();};}
 
   function reset() {
     S.plan = null; S.warnings = []; try { localStorage.removeItem(DRAFT_KEY); } catch (e) { /* */ }
@@ -230,6 +267,10 @@
     ['dragleave', 'drop'].forEach(ev => drop.addEventListener(ev, e => { e.preventDefault(); drop.classList.remove('over'); }));
     drop.addEventListener('drop', e => addFiles(e.dataTransfer.files));
     $('lpGo').addEventListener('click', generate);
+    if($('lpBuyOpen'))$('lpBuyOpen').addEventListener('click',()=>{$('lpPackages').hidden=!$('lpPackages').hidden;});
+    document.querySelectorAll('.lp-package').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('.lp-package').forEach(x=>x.classList.remove('selected'));b.classList.add('selected');buyPackage(b.dataset.package);}));
+    refreshLessonAccess();
+    setInterval(refreshLessonAccess, 60000);
     try {
       const d = localStorage.getItem(DRAFT_KEY);
       if (d) { S.plan = C.prepareForExport(JSON.parse(d)); render(); }

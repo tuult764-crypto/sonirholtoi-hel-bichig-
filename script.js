@@ -179,17 +179,18 @@ function clearAuthMessages() {
 }
 
 // ── Login ───────────────────────────
-function handleAuth() {
+async function handleAuth() {
   const email = document.getElementById('authEmail').value.trim().toLowerCase();
-  const pass  = document.getElementById('authPass').value;
+  const pass = document.getElementById('authPass').value;
   if (!email || !email.includes('@')) { showAuthError('Зөв и-мэйл хаяг оруулна уу.'); return; }
-  if (pass.length < 6) { showAuthError('Нууц үг хамгийн багадаа 6 тэмдэгт байна.'); return; }
-
-  const user = getUser(email);
-  if (!user) { showAuthError('И-мэйл бүртгэлгүй байна. Бүртгүүлнэ үү.'); return; }
-  if (user.pass !== btoa(pass)) { showAuthError('Нууц үг буруу байна.'); return; }
-
-  loginSuccess(email, user);
+  if (pass.length < 8) { showAuthError('Нууц үг хамгийн багадаа 8 тэмдэгт байна.'); return; }
+  try {
+    let r = await fetch('/api/auth/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email,password:pass})});
+    let d=await r.json();
+    if(r.status===401){const old=getUser(email);if(old && old.pass===btoa(pass)){r=await fetch('/api/auth/register',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email,password:pass,name:old.name||''})});d=await r.json();}}
+    if(!r.ok) throw new Error(d.error||'Нэвтэрч чадсангүй');
+    const old=getUser(email)||{}; loginSuccess(email,{...old,name:d.user.name||old.name||email.split('@')[0]});
+  } catch(e){showAuthError(e.message||'Сервертэй холбогдож чадсангүй');}
 }
 
 // ── Register ────────────────────────
@@ -220,26 +221,17 @@ function buildRegAvatarGrid() {
   });
 }
 
-function handleRegister() {
-  const name  = document.getElementById('regName').value.trim();
-  const email = document.getElementById('regEmail').value.trim().toLowerCase();
-  const pass  = document.getElementById('regPass').value;
-  const pass2 = document.getElementById('regPass2').value;
-
-  if (!name)                       { showAuthError('Нэрээ оруулна уу.'); return; }
-  if (!email.includes('@'))        { showAuthError('Зөв и-мэйл хаяг оруулна уу.'); return; }
-  if (pass.length < 6)             { showAuthError('Нууц үг хамгийн багадаа 6 тэмдэгт байна.'); return; }
-  if (pass !== pass2)              { showAuthError('Нууц үг тохирохгүй байна.'); return; }
-  if (getUser(email))              { showAuthError('Энэ и-мэйл аль хэдийн бүртгэлтэй байна.'); return; }
-
-  saveUser(email, {
-    name, pass: btoa(pass),
-    avatarSeed: _selectedRegAvatar,
-    avatarStyle: _selectedRegStyle,
-    createdAt: Date.now()
-  });
-  showAuthSuccess('✅ Бүртгэл амжилттай! Нэвтэрч байна...');
-  setTimeout(() => loginSuccess(email, getUser(email)), 1000);
+async function handleRegister() {
+  const name=document.getElementById('regName').value.trim(), email=document.getElementById('regEmail').value.trim().toLowerCase();
+  const pass=document.getElementById('regPass').value, pass2=document.getElementById('regPass2').value;
+  if(!name){showAuthError('Нэрээ оруулна уу.');return;} if(!email.includes('@')){showAuthError('Зөв и-мэйл хаяг оруулна уу.');return;}
+  if(pass.length<8){showAuthError('Нууц үг хамгийн багадаа 8 тэмдэгт байна.');return;} if(pass!==pass2){showAuthError('Нууц үг тохирохгүй байна.');return;}
+  try {
+    const r=await fetch('/api/auth/register',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name,email,password:pass})});
+    const d=await r.json(); if(!r.ok) throw new Error(d.error||'Бүртгүүлж чадсангүй');
+    const profile={name,avatarSeed:_selectedRegAvatar,avatarStyle:_selectedRegStyle,createdAt:Date.now()}; saveUser(email,profile);
+    showAuthSuccess('Бүртгэл амжилттай. Нэвтэрч байна…'); loginSuccess(email,profile);
+  }catch(e){showAuthError(e.message||'Сервертэй холбогдож чадсангүй');}
 }
 
 function loginSuccess(email, user) {
@@ -252,9 +244,11 @@ function loginSuccess(email, user) {
   updateNavUser();
   closeAuth();
   showToast(`👋 Сайн байна уу, ${user.name || email.split('@')[0]}!`, 'success');
+  if (window.refreshLessonAccess) window.refreshLessonAccess();
 }
 
 function logout() {
+  fetch('/api/auth/logout',{method:'POST'}).catch(()=>{});
   localStorage.removeItem(AUTH_KEY);
   currentUser = '';
   updateNavUser();
@@ -262,7 +256,7 @@ function logout() {
 }
 
 function handleForgot() {
-  showAuthSuccess('📧 Нууц үг сэргээх холбоос тан руу илгээгдэх болно.');
+  showAuthError('Нууц үг мартсан бол админтай холбогдон сэргээнэ үү.');
 }
 
 // ── Nav user display ─────────────────

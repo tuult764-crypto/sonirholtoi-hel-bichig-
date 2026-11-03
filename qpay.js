@@ -13,7 +13,7 @@ async function token() {
   const j = await r.json(); tok = j.access_token; exp = Date.now() + (j.expires_in ? j.expires_in * 1000 - 60000 : 3000000);
   return tok;
 }
-async function createInvoice({ orderNo, amount, description }) {
+async function createInvoice({ orderNo, amount, description, callbackUrl }) {
   if (MODE === 'mock') return { invoiceId: 'MOCK-' + orderNo, qr: null, urls: [], shortUrl: null };
   if (MODE === 'manual') return { invoiceId: 'MANUAL-' + orderNo, qr: null, urls: [], shortUrl: null };
   const r = await fetch(`${BASE}/invoice`, {
@@ -22,7 +22,7 @@ async function createInvoice({ orderNo, amount, description }) {
     body: JSON.stringify({
       invoice_code: process.env.QPAY_INVOICE_CODE, sender_invoice_no: orderNo,
       invoice_receiver_code: 'terminal', invoice_description: description, amount,
-      callback_url: `${process.env.PUBLIC_URL}/api/pay/callback?order=${orderNo}`
+      callback_url: callbackUrl || `${process.env.PUBLIC_URL}/api/pay/callback?order=${orderNo}`
     })
   });
   if (!r.ok) throw new Error('QPay invoice алдаа ' + r.status);
