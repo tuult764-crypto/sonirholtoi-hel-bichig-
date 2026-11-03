@@ -68,4 +68,18 @@ h+='<button style="margin-top:8px" onclick="chk()">Төлбөр шалгах</bu
 async function mock(){await api('pay/mock-confirm',{orderNo:order});chk()}
 async function chk(){try{const j=await api('pay/check',{orderNo:order});if(j.status==='paid'){show(j);$('payinfo').textContent='Төлбөр баталгаажлаа!'}else $('msg').textContent='Төлбөр хараахан баталгаажаагүй байна. Гүйлгээний утгаа зөв бичсэн эсэхээ шалгаад түр хүлээнэ үү.'}catch{}}
 if(T)api('me').then(show).catch(()=>{T='';localStorage.removeItem('t')});
+</script><script>
+(function(){
+  function sendHeight(){
+    var h=Math.max(document.documentElement.scrollHeight,document.body?document.body.scrollHeight:0);
+    if(window.parent && window.parent!==window) window.parent.postMessage({type:'worksheet-frame-height',height:h},window.location.origin);
+  }
+  window.addEventListener('load',sendHeight);
+  window.addEventListener('resize',sendHeight);
+  if('ResizeObserver' in window){
+    new ResizeObserver(sendHeight).observe(document.documentElement);
+  }
+  setTimeout(sendHeight,300);
+  setTimeout(sendHeight,1000);
+})();
 </script></body></html>

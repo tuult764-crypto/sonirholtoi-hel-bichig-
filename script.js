@@ -763,6 +763,7 @@ function openCoursePayModal(type) {
 
   document.getElementById('cpTitle').textContent = d.title + (modeLabel ? ` (${modeLabel})` : '');
   document.getElementById('cpSubtitle').textContent = 'QR уншуулж эсвэл данс руу шилжүүлнэ үү';
+  const cpEmail = document.getElementById('cpEmail'); if (cpEmail) cpEmail.value = currentUser && currentUser !== 'guest@shb.mn' ? currentUser : '';
 
   // QR/дансаар ОДОО шилжүүлэх дүн: урьдчилгаатай бол урьдчилгаа, бусад үед бүтэн үнэ
   document.getElementById('cpAmtLbl').textContent = isDeposit ? 'Одоо төлөх урьдчилгаа' : 'Төлөх дүн';
@@ -828,24 +829,21 @@ async function cpConfirmPaid() {
     return;
   }
 
-  const email = currentUser !== 'guest@shb.mn' ? currentUser : '';
+  const email = (currentUser && currentUser !== 'guest@shb.mn' ? currentUser : (document.getElementById('cpEmail')?.value || '')).trim().toLowerCase();
+  if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)){showToast('И-мэйл хаягаа зөв оруулна уу.','error');return;}
   const btn = document.getElementById('cpSubmitBtn');
   btn.disabled=true;btn.textContent='⏳ Илгээж байна...';
 
   try {
-    await fetch(GAS_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({
-        action:'submitOrder',
-        email,
-        note:`Сургалт: ${label} | Хуваарь: ${schedDays} | Цаг: ${timeSlot}`,
-        // total = QR/дансаар яг шилжүүлсэн дүн (урьдчилгаатай бол урьдчилгаа)
-        total: payNow,
-        items:`Сургалтын бүртгэл: ${label} — төлсөн ${fmtMNT(payNow)}` + (isDeposit ? ` (урьдчилгаа, нийт ${fmtMNT(total)})` : ''),
-        date:new Date().toLocaleString('mn-MN')
-      })
+    const response = await fetch('/api/training/orders',{method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({email,item:label,note:`Хуваарь: ${schedDays} | Цаг: ${timeSlot}` + (isDeposit ? ` | Нийт үнэ: ${fmtMNT(total)}, үлдэгдэл: ${fmtMNT(total-payNow)}` : ''),amount:payNow})
     });
+    const result = await response.json();
+    if(!response.ok) throw new Error(result.error || 'Захиалга бүртгэж чадсангүй');
+    const done = document.getElementById('cpStep3');
+    if(done) { const info=document.createElement('p'); info.style.cssText='font-weight:700;color:#8a552f;margin-top:12px'; info.textContent=`Захиалгын код: ${result.orderNo}. Төлбөрийг банкны хуулгатай тулгасны дараа админ баталгаажуулна.`; done.appendChild(info); }
     cpGoDone();
-    showToast('Баталгаажлаа!','success');
+    showToast('Төлбөрийн хүсэлт бүртгэгдлээ. Банкны орлогыг шалгасны дараа баталгаажуулна.','success');
   } catch(e) {
     showToast('Сүлжээний алдаа. Дахин оролдоно уу.','error');
   } finally {

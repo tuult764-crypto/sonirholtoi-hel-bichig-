@@ -1,7 +1,7 @@
 // QPay v2 адаптер. QPAY_MODE=mock үед жинхэнэ дуудлага хийхгүй.
 // ЖИНХЭНЭ горимд ашиглахын өмнө QPay merchant баримт бичгийн endpoint/талбарыг заавал баталгаажуул.
-const env = (k, fallback) => process.env['BAGSH_' + k] || process.env[k] || fallback;
-const MODE = env('QPAY_MODE', 'mock');
+const env = (k, fallback) => process.env[k] || process.env['BAGSH_' + k] || fallback;
+const MODE = process.env.QPAY_MODE || 'mock';
 const BASE = env('QPAY_BASE', 'https://merchant.qpay.mn/v2');
 let tok = null, exp = 0;
 const mockPaid = new Set();

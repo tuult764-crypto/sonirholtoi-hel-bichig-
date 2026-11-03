@@ -259,7 +259,17 @@
 
   <p class="lp-note">AI-ийн бэлтгэсэн төлөвлөгөөг ашиглахаасаа өмнө шалгаарай.</p>
   <p class="lp-note">Блумын шатаар унших эхээс ажлын хуудас бэлтгэх бол: <a href="https://bagshiin-tuslah-fnv4.onrender.com" target="_blank" rel="noopener">Багшийн тусламж →</a></p>
-</div><div id="worksheetPanel" class="teacher-tool-panel" hidden><div class="worksheet-visual-card"><span>📝</span><h2>Ажлын хуудас бэлтгэх</h2><p>Унших эхэд тулгуурлан Блумын шатлалтай даалгавар үүсгэнэ.</p><a href="/bagsh/" class="teacher-launch-btn">Ажлын хуудас руу очих →</a></div></div></section>
+</div><div id="worksheetPanel" class="teacher-tool-panel" hidden>
+  <div class="worksheet-visual-card" style="margin-bottom:14px">
+    <span>📝</span><h2>Ажлын хуудас бэлтгэх</h2>
+    <p>Унших эхэд тулгуурлан Блумын шатлалтай даалгавар бэлтгэж, Word файлаар татна.</p>
+  </div>
+  <div class="worksheet-embedded" style="width:100%;overflow:hidden;border:1px solid #e8dfd2;border-radius:18px;background:#fff">
+    <iframe id="worksheetAppFrame" title="Ажлын хуудас бэлтгэх" src="/bagsh/?embed=1" loading="lazy"
+      style="display:block;width:100%;height:1100px;border:0;background:#fff"
+      allow="clipboard-read; clipboard-write"></iframe>
+  </div>
+</div></section>
 
 <!-- GAMES LOBBY -->
 <section id="gamesSection" class="sec">
@@ -672,6 +682,7 @@
         </div>
 
         <!-- Amount to transfer (QR has no fixed amount — payer types this in the bank app) -->
+        <label style="display:block;margin:10px 0;font-size:13px;font-weight:700">И-мэйл хаяг <input id="cpEmail" type="email" placeholder="tanii@gmail.com" style="display:block;width:100%;box-sizing:border-box;padding:11px;border:1px solid #ddd;border-radius:9px;margin-top:6px"></label>
         <div class="cp-amt-box">
           <div class="cp-amt-lbl" id="cpAmtLbl">Төлөх дүн</div>
           <div class="cp-amt" id="cpAmt">0₮</div>
@@ -697,8 +708,8 @@
     </div>
     <div id="cpStep3" style="display:none;padding:28px 22px;text-align:center">
       <div style="font-size:44px;margin-bottom:10px">🎉</div>
-      <div style="font-size:17px;font-weight:800;color:var(--green);margin-bottom:6px">Баталгаажлаа!</div>
-      <div style="font-size:15px;color:var(--mid);line-height:1.6;margin-bottom:14px">Багш гүйлгээг шалгаад тантай холбогдоно.</div>
+      <div style="font-size:17px;font-weight:800;color:var(--green);margin-bottom:6px">Төлбөрийн хүсэлт бүртгэгдлээ!</div>
+      <div style="font-size:15px;color:var(--mid);line-height:1.6;margin-bottom:14px">Банкны орлогыг шалгасны дараа админ баталгаажуулж, тантай холбогдоно.</div>
       <div style="background:var(--amber-l);border-radius:11px;padding:11px;font-size:14px;color:var(--amber-d);margin-bottom:14px;line-height:1.6">📞 <strong>8999-3835</strong><br>sonirholtoihelbichig@gmail.com</div>
       <button class="pay-next" onclick="closeCoursePayModal()">Хаах</button>
     </div>
@@ -875,6 +886,18 @@
     });
   }
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',initTeacherChoices);else initTeacherChoices();
+})();
+</script>
+<script>
+(function(){
+  window.addEventListener('message',function(event){
+    if(event.origin!==window.location.origin) return;
+    if(!event.data || event.data.type!=='worksheet-frame-height') return;
+    var frame=document.getElementById('worksheetAppFrame');
+    if(frame && Number.isFinite(Number(event.data.height))){
+      frame.style.height=Math.max(900,Math.min(6000,Number(event.data.height)))+'px';
+    }
+  });
 })();
 </script>
 </body>

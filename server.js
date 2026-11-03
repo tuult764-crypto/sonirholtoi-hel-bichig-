@@ -22,10 +22,13 @@ CREATE TABLE IF NOT EXISTS shop_files(id BIGSERIAL PRIMARY KEY, material_id BIGI
 CREATE INDEX IF NOT EXISTS files_m ON shop_files(material_id, role, ord);
 CREATE TABLE IF NOT EXISTS shop_purchases(user_id BIGINT NOT NULL REFERENCES shop_users(id), material_id BIGINT NOT NULL REFERENCES shop_materials(id) ON DELETE CASCADE, created_at BIGINT NOT NULL, PRIMARY KEY(user_id, material_id));
 CREATE TABLE IF NOT EXISTS shop_payments(id BIGSERIAL PRIMARY KEY, order_no TEXT UNIQUE NOT NULL, user_id BIGINT NOT NULL REFERENCES shop_users(id), material_id BIGINT NOT NULL REFERENCES shop_materials(id) ON DELETE CASCADE, invoice_id TEXT NOT NULL, amount INTEGER NOT NULL, status TEXT NOT NULL DEFAULT 'pending', created_at BIGINT NOT NULL, paid_at BIGINT);
+ALTER TABLE shop_payments ADD COLUMN IF NOT EXISTS bank_reference TEXT; ALTER TABLE shop_payments ADD COLUMN IF NOT EXISTS confirmed_at BIGINT;
 CREATE TABLE IF NOT EXISTS lesson_package_payments(id BIGSERIAL PRIMARY KEY, order_no TEXT UNIQUE NOT NULL, user_id BIGINT NOT NULL REFERENCES shop_users(id), package_type TEXT NOT NULL CHECK(package_type IN ('pages5','week7')), invoice_id TEXT NOT NULL, amount INTEGER NOT NULL, status TEXT NOT NULL DEFAULT 'pending', created_at BIGINT NOT NULL, paid_at BIGINT);
+ALTER TABLE lesson_package_payments ADD COLUMN IF NOT EXISTS bank_reference TEXT; ALTER TABLE lesson_package_payments ADD COLUMN IF NOT EXISTS confirmed_at BIGINT;
 CREATE TABLE IF NOT EXISTS lesson_packages(id BIGSERIAL PRIMARY KEY, user_id BIGINT NOT NULL REFERENCES shop_users(id), package_type TEXT NOT NULL, paid_amount INTEGER NOT NULL, total_pages INTEGER NOT NULL, used_pages INTEGER NOT NULL DEFAULT 0, daily_limit INTEGER NOT NULL, starts_at BIGINT NOT NULL, expires_at BIGINT, status TEXT NOT NULL DEFAULT 'active', created_at BIGINT NOT NULL);
 CREATE INDEX IF NOT EXISTS lesson_packages_user ON lesson_packages(user_id, status, expires_at);
-CREATE TABLE IF NOT EXISTS lesson_usage(id BIGSERIAL PRIMARY KEY, user_id BIGINT NOT NULL REFERENCES shop_users(id), package_id BIGINT NOT NULL REFERENCES lesson_packages(id), source_pages INTEGER NOT NULL, input_tokens INTEGER NOT NULL DEFAULT 0, output_tokens INTEGER NOT NULL DEFAULT 0, model TEXT NOT NULL, created_at BIGINT NOT NULL);`);
+CREATE TABLE IF NOT EXISTS lesson_usage(id BIGSERIAL PRIMARY KEY, user_id BIGINT NOT NULL REFERENCES shop_users(id), package_id BIGINT NOT NULL REFERENCES lesson_packages(id), source_pages INTEGER NOT NULL, input_tokens INTEGER NOT NULL DEFAULT 0, output_tokens INTEGER NOT NULL DEFAULT 0, model TEXT NOT NULL, created_at BIGINT NOT NULL);
+CREATE TABLE IF NOT EXISTS training_orders(id BIGSERIAL PRIMARY KEY, order_no TEXT UNIQUE NOT NULL, email TEXT NOT NULL, item TEXT NOT NULL, note TEXT NOT NULL DEFAULT '', amount INTEGER NOT NULL CHECK(amount > 0), status TEXT NOT NULL DEFAULT 'pending', created_at BIGINT NOT NULL, paid_at BIGINT, bank_reference TEXT, confirmed_at BIGINT);`);
 }
 const app = express();
 app.set('trust proxy', 1);
@@ -90,13 +93,13 @@ app.get('/api/auth/me', ah(async (req, res) => { const u = await userOf(req); re
 
 // ---- материал, эрх ----
 const owned = async (m, u) => m.price === 0 || (!!u && (await q('SELECT 1 FROM shop_purchases WHERE user_id=$1 AND material_id=$2', [u.id, m.id])).rowCount > 0);
-const material = async (id, includeInactive = false) => (await q(`SELECT * FROM shop_materials WHERE id=$1 ${includeInactive ? '' : 'AND active=true'}`, [parseInt(id) || 0])).rows[0];
+const material = async id => (await q('SELECT * FROM shop_materials WHERE id=$1 AND active=true', [parseInt(id) || 0])).rows[0];
 app.get('/api/materials', ah(async (req, res) => {
   const u = await userOf(req), mine = u ? new Set((await q('SELECT material_id FROM shop_purchases WHERE user_id=$1', [u.id])).rows.map(r => r.material_id)) : new Set();
   const rows = (await q('SELECT id,title,description,category,price,created_at FROM shop_materials WHERE active=true ORDER BY created_at DESC')).rows;
   res.json(rows.map(m => ({ ...m, owned: m.price === 0 || mine.has(m.id) })));
 }));
-app.get('/api/my', need, ah(async (req, res) => res.json((await q('SELECT m.id,m.title,m.description,m.category,m.price,p.created_at "boughtAt" FROM shop_purchases p JOIN shop_materials m ON m.id=p.material_id WHERE p.user_id=$1 ORDER BY p.created_at DESC', [req.user.id])).rows)));
+app.get('/api/my', need, ah(async (req, res) => res.json((await q('SELECT m.id,m.title,m.description,m.category,m.price,p.created_at "boughtAt" FROM shop_purchases p JOIN shop_materials m ON m.id=p.material_id WHERE p.user_id=$1 AND m.active=true ORDER BY p.created_at DESC', [req.user.id])).rows)));
 const sendFile = (res, f) => { res.set({ 'Content-Type': f.mime, 'Cache-Control': 'private, no-store', 'X-Content-Type-Options': 'nosniff', 'Content-Disposition': 'inline' }); res.send(f.data); };
 app.get('/api/materials/:id/cover', ah(async (req, res) => {
   const f = (await q("SELECT f.mime,f.data FROM shop_files f JOIN shop_materials m ON m.id=f.material_id WHERE m.id=$1 AND m.active=true AND f.role='cover' LIMIT 1", [parseInt(req.params.id) || 0])).rows[0];
@@ -104,13 +107,13 @@ app.get('/api/materials/:id/cover', ah(async (req, res) => {
 }));
 // хуудас бүрийг эрх шалгаж өгнө (нийтэд нээлттэй URL биш)
 app.get('/api/materials/:id/page/:n', ah(async (req, res) => {
-  const m = await material(req.params.id, true); if (!m) return res.status(404).end();
+  const m = await material(req.params.id); if (!m) return res.status(404).end();
   if (!(await owned(m, await userOf(req)))) return res.status(403).end();
   const f = (await q("SELECT mime,data FROM shop_files WHERE material_id=$1 AND role='page' ORDER BY ord OFFSET $2 LIMIT 1", [m.id, Math.max(0, (parseInt(req.params.n) || 1) - 1)])).rows[0];
   f ? sendFile(res, f) : res.status(404).end();
 }));
 app.get('/api/materials/:id/print', ah(async (req, res) => {
-  const m = await material(req.params.id, true), u = await userOf(req); res.set('Cache-Control', 'no-store');
+  const m = await material(req.params.id), u = await userOf(req); res.set('Cache-Control', 'no-store');
   const msg = t => res.status(403).type('html').send(`<meta charset="utf-8"><body style="font:18px system-ui;padding:40px;text-align:center">${t}<p><a href="/materials.html">← Сургалтын материал</a></p>`);
   if (!m) return res.status(404).type('html').send('<meta charset="utf-8">Материал олдсонгүй');
   if (!(await owned(m, u))) return msg(u ? 'Энэ материалыг хэвлэхийн тулд эхлээд худалдаж авна уу.' : 'Төлбөртэй материал. Эхлээд нэвтэрч, худалдаж авна уу.');
@@ -121,11 +124,11 @@ app.get('/api/materials/:id/print', ah(async (req, res) => {
 }));
 
 // ---- худалдан авалт, төлбөр (QPay / гар баталгаажуулалт) ----
-async function activate(orderNo) {
+async function activate(orderNo, bankReference = null) {
   const c = await pool.connect();
   try {
     await c.query('BEGIN');
-    const p = await c.query("UPDATE shop_payments SET status='paid', paid_at=$2 WHERE order_no=$1 AND status='pending' RETURNING user_id, material_id", [orderNo, Date.now()]);
+    const p = await c.query("UPDATE shop_payments SET status='paid', paid_at=$2, bank_reference=$3, confirmed_at=$2 WHERE order_no=$1 AND status='pending' RETURNING user_id, material_id", [orderNo, Date.now(), bankReference]);
     if (!p.rowCount) { await c.query('ROLLBACK'); return false; }
     await c.query('INSERT INTO shop_purchases(user_id,material_id,created_at) VALUES($1,$2,$3) ON CONFLICT DO NOTHING', [p.rows[0].user_id, p.rows[0].material_id, Date.now()]);
     await c.query('COMMIT'); return true;
@@ -138,6 +141,7 @@ async function verify(orderNo) {
   return 'pending';
 }
 app.post('/api/buy', need, limit(30, 3600e3), ah(async (req, res) => {
+  if (qpay.MODE === 'mock' && (process.env.RENDER || process.env.NODE_ENV === 'production')) return res.status(503).json({ error: 'Төлбөрийн горим тохируулаагүй байна. QPAY_MODE=manual эсвэл live тохируулна уу.' });
   const m = await material(req.body.materialId);
   if (!m) return res.status(404).json({ error: 'Материал олдсонгүй' });
   if (m.price === 0) return res.status(400).json({ error: 'Үнэгүй материал. Шууд хэвлэж болно.' });
@@ -208,11 +212,11 @@ async function currentLessonPackage(userId) {
   const daily = await q("SELECT COALESCE(SUM(source_pages),0)::int n FROM lesson_usage WHERE package_id=$1 AND (to_timestamp(created_at/1000.0) AT TIME ZONE 'Asia/Ulaanbaatar')::date=$2::date", [pkg.id, day]);
   return { package: { id: pkg.id, type: pkg.package_type, totalPages: pkg.total_pages, usedPages: pkg.used_pages, remainingPages: pkg.remaining_pages, dailyLimit: pkg.daily_limit, usedToday: daily.rows[0].n, expiresAt: pkg.expires_at, status: 'active' }, status: 'active', message: 'Танд эрх байна' };
 }
-async function activateLessonPackage(orderNo) {
+async function activateLessonPackage(orderNo, bankReference = null) {
   const c = await pool.connect();
   try {
     await c.query('BEGIN');
-    const pr = await c.query("UPDATE lesson_package_payments SET status='paid',paid_at=$2 WHERE order_no=$1 AND status='pending' RETURNING user_id,package_type,amount", [orderNo, Date.now()]);
+    const pr = await c.query("UPDATE lesson_package_payments SET status='paid',paid_at=$2,bank_reference=$3,confirmed_at=$2 WHERE order_no=$1 AND status='pending' RETURNING user_id,package_type,amount", [orderNo, Date.now(), bankReference]);
     if (!pr.rowCount) { await c.query('ROLLBACK'); return false; }
     const o = PACKAGE_OPTIONS[pr.rows[0].package_type], now = Date.now();
     await c.query("UPDATE lesson_packages SET status='replaced' WHERE user_id=$1 AND status='active'", [pr.rows[0].user_id]);
@@ -244,6 +248,66 @@ app.post('/api/lesson-package/check', need, ah(async(req,res)=>{
 app.all('/api/lesson-package/callback',async(req,res)=>{try{await verifyLessonPackage(String(req.query.order||''));}catch(e){console.error('package callback:',e.message);}res.sendStatus(200);});
 app.get('/api/admin/lesson-packages/pending', ...A, ah(async(req,res)=>res.json((await q("SELECT p.order_no \"orderNo\",p.amount,p.package_type \"packageType\",p.created_at \"createdAt\",u.email FROM lesson_package_payments p JOIN shop_users u ON u.id=p.user_id WHERE p.status='pending' AND p.invoice_id LIKE 'MANUAL-%' ORDER BY p.created_at DESC LIMIT 100")).rows)));
 app.post('/api/admin/lesson-packages/confirm', ...A, ah(async(req,res)=>{const o=String(req.body.orderNo||'');if(!(await q("SELECT 1 FROM lesson_package_payments WHERE order_no=$1 AND invoice_id LIKE 'MANUAL-%'",[o])).rowCount)return res.status(404).json({error:'Олдсонгүй'});res.json({ok:true,activated:await activateLessonPackage(o)});}));
+
+
+// ---- Сургалтын бүртгэлийн төлбөр (банкнаас гар аргаар тулган баталгаажуулна) ----
+app.post('/api/training/orders', limit(10, 3600e3), ah(async (req, res) => {
+  const email = String(req.body.email || '').trim().toLowerCase();
+  const item = String(req.body.item || '').trim().slice(0, 180);
+  const note = String(req.body.note || '').trim().slice(0, 500);
+  const amount = Math.floor(Number(req.body.amount));
+  if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) return res.status(400).json({ error: 'Зөв и-мэйл хаяг оруулна уу.' });
+  if (!item || !Number.isSafeInteger(amount) || amount < 1 || amount > 5000000) return res.status(400).json({ error: 'Сургалтын нэр эсвэл төлөх дүн буруу байна.' });
+  const orderNo = 'TR' + Date.now() + crypto.randomBytes(3).toString('hex').toUpperCase();
+  await q('INSERT INTO training_orders(order_no,email,item,note,amount,created_at) VALUES($1,$2,$3,$4,$5,$6)', [orderNo,email,item,note,amount,Date.now()]);
+  res.status(201).json({ ok: true, orderNo, amount, status: 'pending' });
+}));
+
+// ---- Бүх үйлчилгээний төлбөрийн нэгтгэсэн админ API ----
+app.get('/api/admin/all-pending', ...A, ah(async (req, res) => {
+  const [materials, lessons, worksheets, trainings] = await Promise.all([
+    q(`SELECT p.order_no AS "orderNo", p.amount, p.created_at AS "createdAt", u.email, m.title AS detail
+       FROM shop_payments p JOIN shop_users u ON u.id=p.user_id JOIN shop_materials m ON m.id=p.material_id
+       WHERE p.status='pending' AND p.invoice_id LIKE 'MANUAL-%' ORDER BY p.created_at DESC LIMIT 100`),
+    q(`SELECT p.order_no AS "orderNo", p.amount, p.created_at AS "createdAt", u.email, p.package_type AS detail
+       FROM lesson_package_payments p JOIN shop_users u ON u.id=p.user_id
+       WHERE p.status='pending' AND p.invoice_id LIKE 'MANUAL-%' ORDER BY p.created_at DESC LIMIT 100`),
+    bagsh.adminPendingPayments(),
+    q(`SELECT order_no AS "orderNo", amount, created_at AS "createdAt", email, item AS detail FROM training_orders WHERE status='pending' ORDER BY created_at DESC LIMIT 100`)
+  ]);
+  const rows = [
+    ...materials.rows.map(r => ({ ...r, service: 'Цахим дэлгүүр', detail: r.detail, kind: 'material' })),
+    ...lessons.rows.map(r => ({ ...r, service: 'Ээлжит хичээл', detail: r.detail === 'week7' ? '7 хоногийн багц' : '5 хуудасны багц', kind: 'lesson' })),
+    ...worksheets.map(r => ({ ...r, service: 'Багшийн туслах · Ажлын хуудас', detail: `${r.qty || 1} эрх`, kind: 'worksheet' })),
+    ...trainings.rows.map(r => ({ ...r, service: 'Сургалтын бүртгэл', kind: 'training' }))
+  ].sort((a,b) => Number(b.createdAt) - Number(a.createdAt));
+  res.json(rows);
+}));
+app.post('/api/admin/all-confirm', ...A, ah(async (req, res) => {
+  const orderNo = String(req.body.orderNo || '').trim();
+  const kind = String(req.body.kind || '');
+  const bankReference = String(req.body.bankReference || '').trim().slice(0, 120);
+  if (!bankReference) return res.status(400).json({ error: 'Банкны гүйлгээний дугаар эсвэл лавлагааг оруулна уу.' });
+  if (!orderNo || !['material','lesson','worksheet','training'].includes(kind)) return res.status(400).json({ error: 'Захиалгын мэдээлэл буруу байна.' });
+  let activated = false;
+  if (kind === 'material') {
+    const found = await q("SELECT 1 FROM shop_payments WHERE order_no=$1 AND invoice_id LIKE 'MANUAL-%' AND status='pending'", [orderNo]);
+    if (!found.rowCount) return res.status(404).json({ error: 'Хүлээгдэж буй захиалга олдсонгүй эсвэл аль хэдийн баталгаажсан байна.' });
+    activated = await activate(orderNo, bankReference);
+  } else if (kind === 'lesson') {
+    const found = await q("SELECT 1 FROM lesson_package_payments WHERE order_no=$1 AND invoice_id LIKE 'MANUAL-%' AND status='pending'", [orderNo]);
+    if (!found.rowCount) return res.status(404).json({ error: 'Хүлээгдэж буй захиалга олдсонгүй эсвэл аль хэдийн баталгаажсан байна.' });
+    activated = await activateLessonPackage(orderNo, bankReference);
+  } else if (kind === 'worksheet') {
+    activated = await bagsh.adminConfirmPayment(orderNo, bankReference);
+    if (!activated) return res.status(404).json({ error: 'Хүлээгдэж буй ажлын хуудасны захиалга олдсонгүй эсвэл аль хэдийн баталгаажсан байна.' });
+  } else {
+    const r = await q("UPDATE training_orders SET status='paid', paid_at=$2, bank_reference=$3, confirmed_at=$2 WHERE order_no=$1 AND status='pending' RETURNING order_no", [orderNo, Date.now(), bankReference]);
+    activated = r.rowCount === 1;
+  }
+  if (!activated) return res.status(409).json({ error: 'Энэ захиалга өмнө нь баталгаажсан эсвэл идэвхжүүлэх боломжгүй байна.' });
+  res.json({ ok: true, activated: true, orderNo, kind });
+}));
 
 // ---- Ээлжит хичээлийн төлөвлөлт (сурах бичгийн зураг/эхээс AI боловсруулна) ----
 const lesson = require('./lesson-core');

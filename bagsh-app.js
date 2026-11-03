@@ -6,13 +6,13 @@ types.setTypeParser(20, Number);
 const fs = require('fs'), path = require('path');
 const secret = name => { if (process.env[name]) return process.env[name]; try { return fs.readFileSync('/etc/secrets/' + name, 'utf8').trim(); } catch { return ''; } };
 const JWT_SECRET = secret('BAGSH_JWT_SECRET') || secret('JWT_SECRET');
-const DATABASE_URL = secret('BAGSH_DATABASE_URL');
+const DATABASE_URL = secret('BAGSH_DATABASE_URL') || secret('DATABASE_URL');
 const GEMINI_API_KEY = secret('BAGSH_GEMINI_API_KEY') || secret('GEMINI_API_KEY');
 const ANTHROPIC_API_KEY = secret('BAGSH_ANTHROPIC_API_KEY') || secret('ANTHROPIC_API_KEY');
 const PROVIDER = (process.env.BAGSH_AI_PROVIDER || process.env.AI_PROVIDER || 'gemini').toLowerCase();
 const GEMINI_MODEL = process.env.GEMINI_MODEL || 'gemini-flash-lite-latest';
 const GEMINI_URL = process.env.GEMINI_URL || `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent`;
-const ADMIN_KEY = secret('BAGSH_ADMIN_KEY') || secret('ADMIN_KEY');
+const ADMIN_KEY = secret('ADMIN_KEY') || secret('BAGSH_ADMIN_KEY');
 if (!JWT_SECRET || JWT_SECRET.length < 24) console.error('Багшийн туслах: BAGSH_JWT_SECRET (эсвэл JWT_SECRET) 24+ тэмдэгт байх ёстой.');
 if (!DATABASE_URL) console.error('Багшийн туслах: BAGSH_DATABASE_URL тохируулаагүй байна.');
 const HOLD = 120e3;
@@ -37,6 +37,7 @@ ALTER TABLE users ADD COLUMN IF NOT EXISTS free_hold BIGINT NOT NULL DEFAULT 0;
 ALTER TABLE users ADD COLUMN IF NOT EXISTS free_done BOOLEAN NOT NULL DEFAULT false;
 ALTER TABLE users ADD COLUMN IF NOT EXISTS credits INTEGER NOT NULL DEFAULT 0;
 ALTER TABLE payments ADD COLUMN IF NOT EXISTS qty INTEGER NOT NULL DEFAULT 1;
+ALTER TABLE payments ADD COLUMN IF NOT EXISTS bank_reference TEXT; ALTER TABLE payments ADD COLUMN IF NOT EXISTS confirmed_at BIGINT;
 CREATE INDEX IF NOT EXISTS usage_user_ts ON usage(user_id, ts);
 CREATE INDEX IF NOT EXISTS payments_user ON payments(user_id);`);
 }
@@ -136,11 +137,11 @@ router.post('/docx', auth, limit(40, 3600e3), express.json({ limit: '200kb' }), 
 }));
 
 // ---- төлбөр ----
-async function activate(orderNo) {
+async function activate(orderNo, bankReference = null) {
   const c = await pool.connect();
   try {
     await c.query('BEGIN');
-    const p = await c.query("UPDATE payments SET status='paid', paid_at=$2 WHERE order_no=$1 AND status='pending' RETURNING user_id, qty", [orderNo, Date.now()]);
+    const p = await c.query("UPDATE payments SET status='paid', paid_at=$2, bank_reference=$3, confirmed_at=$2 WHERE order_no=$1 AND status='pending' RETURNING user_id, qty", [orderNo, Date.now(), bankReference]);
     if (!p.rowCount) { await c.query('ROLLBACK'); return false; }
     await c.query('UPDATE users SET credits=credits+$1 WHERE id=$2', [p.rows[0].qty, p.rows[0].user_id]);
     await c.query('COMMIT'); return true;
@@ -157,11 +158,12 @@ async function verifyAndActivate(orderNo) {
 router.post('/pay/create', auth, limit(20, 3600e3), ah(async (req, res) => {
   const qty = Math.min(50, Math.max(1, parseInt(req.body.qty) || 1)), amount = qty * SHEET_PRICE;
   try {
+    if (qpay.MODE === 'mock' && (process.env.RENDER || process.env.NODE_ENV === 'production')) return res.status(503).json({ error: 'Төлбөрийн горим тохируулаагүй байна. QPAY_MODE=manual эсвэл live тохируулна уу.' });
     const manual = qpay.MODE === 'manual';
-    const orderNo = manual ? 'BT' + crypto.randomInt(10000, 100000) : 'BT' + Date.now() + crypto.randomBytes(3).toString('hex');
+    const orderNo = 'WS' + Date.now() + crypto.randomBytes(4).toString('hex');
     const inv = await qpay.createInvoice({ orderNo, amount, description: `Ажлын хуудас ${qty} ширхэг` });
     await q('INSERT INTO payments(order_no,user_id,invoice_id,amount,qty,created_at) VALUES($1,$2,$3,$4,$5,$6)', [orderNo, req.user.id, inv.invoiceId, amount, qty, Date.now()]);
-    res.json({ orderNo, amount, qty, ...inv, mock: qpay.MODE === 'mock', manual, qrUrl: manual ? '/pay-qr.jpg' : null });
+    res.json({ orderNo, amount, qty, ...inv, mock: qpay.MODE === 'mock', manual, qrUrl: manual ? '/qr.png' : null });
   } catch (e) { console.error('pay:', e.message); res.status(502).json({ error: 'Нэхэмжлэх үүсгэж чадсангүй. Дахин оролдоно уу.' }); }
 }));
 router.post('/pay/check', auth, ah(async (req, res) => {
@@ -194,5 +196,21 @@ router.post('/admin/confirm', limit(60, 900e3), adminAuth, ah(async (req, res) =
   res.json({ ok: true, activated: await activate(o) });
 }));
 
+
+// Үндсэн сайтын нэгдсэн админ самбар эдгээр функцийг дуудаж worksheet төлбөрийг удирдана.
+async function adminPendingPayments() {
+  if (!ready) throw new Error('Ажлын хуудасны өгөгдлийн сан бэлэн биш байна.');
+  return (await q(`SELECT p.order_no AS "orderNo", p.amount, p.created_at AS "createdAt", u.email, p.qty
+    FROM payments p JOIN users u ON u.id=p.user_id
+    WHERE p.status='pending' AND p.invoice_id LIKE 'MANUAL-%'
+    ORDER BY p.created_at DESC LIMIT 100`)).rows;
+}
+async function adminConfirmPayment(orderNo, bankReference) {
+  if (!ready) throw new Error('Ажлын хуудасны өгөгдлийн сан бэлэн биш байна.');
+  const found = await q("SELECT 1 FROM payments WHERE order_no=$1 AND invoice_id LIKE 'MANUAL-%' AND status='pending'", [orderNo]);
+  if (!found.rowCount) return false;
+  return activate(orderNo, bankReference);
+}
+
 async function initBagsh() { if (!DATABASE_URL || !JWT_SECRET || JWT_SECRET.length < 24) throw new Error('BAGSH_DATABASE_URL эсвэл BAGSH_JWT_SECRET тохируулаагүй'); await init(); ready = true; console.log('Багшийн туслах өгөгдлийн сан бэлэн. QPay:', qpay.MODE); }
-module.exports = { router, initBagsh, pool };
+module.exports = { router, initBagsh, pool, adminPendingPayments, adminConfirmPayment };
