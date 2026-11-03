@@ -65,7 +65,7 @@ app.post('/api/auth/register', limit(10, 3600e3), ah(async (req, res) => {
   const characterId = String(req.body.characterId || '').trim();
   const avatarSeed = String(req.body.avatarSeed || '').trim().slice(0, 40);
   const avatarStyle = String(req.body.avatarStyle || '').trim().slice(0, 40);
-  if (!/^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$/.test(email)) return res.status(400).json({ error: 'И-мэйл хаягаа зөв бичнэ үү.' });
+  if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) return res.status(400).json({ error: 'И-мэйл хаягаа зөв бичнэ үү.' });
   if (!name) return res.status(400).json({ error: 'Нэрээ оруулна уу.' });
   if (pw.length < 8 || pw.length > 200) return res.status(400).json({ error: 'Нууц үг 8–200 тэмдэгт байх ёстой.' });
   const allowedCharacters = ['anir','tsovoo','todoo','enkhrii','azaa'];
