@@ -4,7 +4,7 @@
   const C = window.LessonCore;
   const DRAFT_KEY = 'shb_lesson_draft_v1';
   const MAX_IMAGES = 10;
-  const S = { images: [], plan: null, warnings: [], busy: false };
+  const S = { images: [], plan: null, warnings: [], busy: false, pdf: null, pdfName: '' };
   const $ = id => document.getElementById(id);
   const toast = (m, t) => (typeof showToast === 'function' ? showToast(m, t) : alert(m));
 
@@ -70,6 +70,57 @@
     S.images.forEach((im, i) => box.append(h('div', { class: 'lp-thumb' },
       h('img', { src: im.url, alt: 'Хуудас ' + (i + 1) }),
       h('button', { type: 'button', title: 'Хасах', 'aria-label': 'Зургийг хасах', onclick: () => { S.images.splice(i, 1); drawThumbs(); } }, '✕'))));
+  }
+
+
+  /* ── сурах бичгийн PDF-ээс хуудас сонгох ── */
+  async function openBookPdf(file) {
+    if (!file) return;
+    if (file.type !== 'application/pdf' && !/\.pdf$/i.test(file.name)) { toast('PDF файл сонгоно уу.', 'error'); return; }
+    if (!window.pdfjsLib) { toast('PDF уншигч ачаалагдсангүй. Интернэтээ шалгаад дахин оролдоно уу.', 'error'); return; }
+    try {
+      const bytes = await file.arrayBuffer();
+      S.pdf = await pdfjsLib.getDocument({ data: bytes }).promise;
+      S.pdfName = file.name;
+      $('lpPdfStart').max = S.pdf.numPages;
+      $('lpPdfEnd').max = S.pdf.numPages;
+      $('lpPdfEnd').value = Math.min(S.pdf.numPages, 1);
+      $('lpPdfInfo').textContent = `${file.name} · Нийт ${S.pdf.numPages} хуудастай. Ашиглах хуудасны дугаараа сонгоно уу.`;
+      $('lpPdfPreview').textContent = '';
+    } catch (e) {
+      S.pdf = null;
+      $('lpPdfInfo').textContent = 'PDF файлыг нээж чадсангүй.';
+      toast('PDF уншиж чадсангүй: ' + e.message, 'error');
+    }
+  }
+  async function selectBookPages() {
+    if (!S.pdf) { toast('Эхлээд сурах бичгийн PDF файлаа сонгоно уу.', 'error'); return; }
+    const start = Math.max(1, parseInt($('lpPdfStart').value, 10) || 1);
+    const end = Math.max(start, parseInt($('lpPdfEnd').value, 10) || start);
+    if (end > S.pdf.numPages) { toast('Хуудасны дугаар PDF-ийн нийт хуудасны тооноос их байна.', 'error'); return; }
+    const count = end - start + 1;
+    if (count > 10) { toast('Нэг удаад хамгийн ихдээ 10 хуудас сонгоно.', 'error'); return; }
+    const rendered = [];
+    $('lpPdfPreview').textContent = 'Хуудсуудыг бэлтгэж байна…';
+    try {
+      for (let n = start; n <= end; n++) {
+        const page = await S.pdf.getPage(n);
+        const viewport = page.getViewport({ scale: Math.min(1.5, 1500 / page.getViewport({scale:1}).width) });
+        const canvas = document.createElement('canvas');
+        canvas.width = Math.ceil(viewport.width); canvas.height = Math.ceil(viewport.height);
+        await page.render({ canvasContext: canvas.getContext('2d'), viewport }).promise;
+        rendered.push({ name: `${S.pdfName} — ${n}-р хуудас`, url: canvas.toDataURL('image/jpeg', .86), pageNo: n });
+      }
+      S.images = rendered;
+      drawThumbs();
+      $('lpPdfInfo').textContent = `${start}–${end}-р хуудас сонгогдлоо (${count} хуудас). Боловсруулахдаа эдгээр хуудсыг ашиглана.`;
+      const preview = $('lpPdfPreview'); preview.textContent = '';
+      rendered.forEach((im, i) => preview.append(h('div', {class:'lp-pdf-page'}, h('img',{src:im.url,alt:`${im.pageNo}-р хуудас`}), h('span',{text:`${im.pageNo}-р хуудас`}))));
+      $('lpPageCount').value = count;
+    } catch (e) {
+      $('lpPdfPreview').textContent = '';
+      toast('Хуудас хөрвүүлэхэд алдаа гарлаа: ' + e.message, 'error');
+    }
   }
 
   /* ── боловсруулах ── */
@@ -263,6 +314,8 @@
     if (!$('lpResult') || !C) return;
     const drop = $('lpDrop');
     $('lpFile').addEventListener('change', e => { addFiles(e.target.files); e.target.value = ''; });
+    if ($('lpPdfFile')) $('lpPdfFile').addEventListener('change', e => openBookPdf(e.target.files[0]));
+    if ($('lpPdfSelect')) $('lpPdfSelect').addEventListener('click', selectBookPages);
     ['dragenter', 'dragover'].forEach(ev => drop.addEventListener(ev, e => { e.preventDefault(); drop.classList.add('over'); }));
     ['dragleave', 'drop'].forEach(ev => drop.addEventListener(ev, e => { e.preventDefault(); drop.classList.remove('over'); }));
     drop.addEventListener('drop', e => addFiles(e.dataTransfer.files));

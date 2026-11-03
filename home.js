@@ -39,8 +39,12 @@
       }
       card.addEventListener('click', () => {
         const id = card.dataset.character;
-        try { localStorage.setItem(CHARACTER_KEY, id); } catch (e) { toast('Энэ төхөөрөмж дээр сонголтыг хадгалах боломжгүй байна.', 'error'); }
+        try {
+          localStorage.setItem(CHARACTER_KEY, id);
+          localStorage.setItem('shb_profile_character_v1', id);
+        } catch (e) { toast('Энэ төхөөрөмж дээр сонголтыг хадгалах боломжгүй байна.', 'error'); }
         renderCharacters();
+        if (window.refreshRegCharacterChoices) window.refreshRegCharacterChoices();
       });
     });
     if (note) {

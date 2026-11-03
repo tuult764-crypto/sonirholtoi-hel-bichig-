@@ -942,3 +942,498 @@ nav{background:rgba(255,250,243,.93);border-bottom:1px solid #f0e2cf}
 
 /* Ээлжит хичээлийн эрх ба багц */
 .lp-access{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;margin:16px 0;padding:16px 18px;border:1px solid rgba(155,100,220,.45);border-radius:16px;background:linear-gradient(120deg,#171d38,#282044);color:#fff;box-shadow:0 0 24px rgba(155,75,220,.16)}.lp-access b,.lp-access small{display:block}.lp-access small{margin-top:5px;color:#c4bdd5}.lp-packages{margin:14px 0 20px;padding:18px;border-radius:18px;background:#151a32;border:1px solid #674b86;color:#fff}.lp-packages h3{margin:0 0 14px}.lp-package-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.lp-package{display:grid;grid-template-columns:1fr auto;gap:8px;text-align:left;padding:16px;border-radius:14px;border:1px solid #76559a;background:#352b50;color:#fff;cursor:pointer}.lp-package b{color:#c58aff}.lp-package strong{font-size:17px}.lp-package small{grid-column:1/-1;color:#c6bdd4;line-height:1.5}.lp-package:hover,.lp-package.selected{border-color:#d29aff;box-shadow:0 0 16px #a84cff55}.lp-paybox{margin-top:14px;padding:14px;border-radius:12px;background:#211c39;color:#fff}.lp-paybox img{max-width:220px;display:block;margin:12px auto}.lp-paybox button{margin:6px 8px 0 0}.lp-actions{display:flex;gap:10px;flex-wrap:wrap}@media(max-width:600px){.lp-package-grid{grid-template-columns:1fr}}
+
+
+/* 2026-11-03: Ээлжит хичээлийн уншигдахуйц, цэгцтэй загвар */
+#lessonPlanSection, #lessonPlanSection .lp-card, #lpForm, #lpResult { line-height:1.75; letter-spacing:0; }
+.lp-lead { line-height:1.9 !important; font-size:16px !important; max-width:900px; }
+#lpForm { padding:26px !important; }
+#lpForm .lp-f { display:flex; flex-direction:column; gap:9px; margin:0 0 18px; min-width:0; }
+#lpForm .lp-f > span { font-size:15px; line-height:1.65; font-weight:800; letter-spacing:0; }
+#lpForm input, #lpForm textarea, #lpForm select, #lpResult input, #lpResult textarea {
+  font:500 16px/1.75 inherit; letter-spacing:0; padding:12px 14px !important;
+  min-height:46px; border-radius:11px; box-sizing:border-box; width:100%;
+}
+#lpForm textarea, #lpResult textarea { min-height:94px; line-height:1.85 !important; resize:vertical; }
+#lpForm .lp-grid3, #lpForm .lp-grid2, #lpResult .lp-grid2 { gap:20px 22px !important; }
+#lpResult { font-size:15px; line-height:1.85; }
+#lpResult .lp-card, #lpResult .lp-stage { padding:22px !important; margin:18px 0 !important; }
+#lpResult .lp-step { padding:18px !important; margin:14px 0 !important; }
+#lpResult .lp-step-grid { gap:18px 22px !important; }
+#lpResult .lp-bar-top p, #lpResult .lp-empty, .lp-status, .lp-note { line-height:1.8 !important; }
+.lp-book-select { padding:20px; margin:0 0 24px; border:1px solid #d8c8ed; border-radius:16px; background:linear-gradient(145deg,#fbf8ff,#f4f7ff); }
+.lp-book-select h3 { margin:0 0 7px; font-size:19px; line-height:1.5; color:#49356d; }
+.lp-book-select p { margin:0 0 16px; color:#665d70; line-height:1.85; }
+.lp-book-row { display:grid; grid-template-columns:minmax(220px,2fr) minmax(110px,.7fr) minmax(110px,.7fr) auto; gap:14px; align-items:end; }
+.lp-book-row .lp-f { margin:0 !important; }
+.lp-pdf-info { margin-top:12px; font-size:14px; line-height:1.8; color:#57486d; }
+.lp-pdf-preview { display:grid; grid-template-columns:repeat(auto-fill,minmax(130px,1fr)); gap:14px; margin-top:14px; }
+.lp-pdf-page { background:#fff; border:1px solid #e5dced; border-radius:10px; padding:8px; text-align:center; }
+.lp-pdf-page img { display:block; width:100%; height:170px; object-fit:contain; }
+.lp-pdf-page span { display:block; padding-top:6px; font-size:13px; font-weight:800; }
+.lp-thumbs { gap:14px !important; }
+.lp-thumb { margin:0 0 8px; }
+@media(max-width:760px) {
+  #lpForm { padding:16px !important; }
+  .lp-book-row { grid-template-columns:1fr 1fr; }
+  .lp-book-row .lp-f:first-child { grid-column:1/-1; }
+  .lp-book-row #lpPdfSelect { grid-column:1/-1; width:100%; }
+  #lpResult .lp-card, #lpResult .lp-stage { padding:16px !important; }
+}
+
+
+/* ===== 2026-11-03: хөнгөн, цэгцтэй үндсэн интерфэйс ===== */
+:root { --ui-ink:#263b59; --ui-blue:#4b82c3; --ui-mint:#eaf5ef; --ui-paper:#fffdf7; }
+body { letter-spacing:0 !important; }
+.sec { scroll-margin-top:92px; }
+.hero3 { margin-bottom:24px; }
+.door { transition:transform .22s ease, box-shadow .22s ease; }
+.door:hover,.door:focus-visible { transform:translateY(-5px); box-shadow:0 16px 30px #24415a1c; outline:none; }
+.door-go { transition:transform .2s ease; }
+.door:hover .door-go { transform:translateX(5px); }
+.kn-row { display:block !important; margin:24px auto !important; max-width:980px; }
+.today { position:relative; max-width:760px; margin:0 auto; padding:20px 24px 20px 30px !important; border-radius:8px 18px 8px 18px !important; background:#fffef7 !important; border:1px solid #e9dfc5 !important; box-shadow:0 8px 22px #584d3510, 3px 3px 0 #f1e8d4; transform:rotate(-.25deg); }
+.today:before { content:"ӨНӨӨДРИЙН ШИНЭ МЭДЛЭГ"; display:inline-block; font-size:11px; font-weight:900; letter-spacing:.04em; color:#66845d; background:#eaf2d8; padding:5px 9px; border-radius:3px; margin-bottom:9px; }
+.today h2,.today h3 { color:#334d68; line-height:1.5 !important; }
+.today p { font-size:15px !important; line-height:1.85 !important; color:#5a5d57; }
+.today mark,.today strong { background:linear-gradient(transparent 52%,#ffed8a 52%); color:#314e69; padding:0 2px; }
+#prevList,.topics,.h3-head:has(+ .topics),#homeProgress { display:none !important; }
+#knowledgeSection .kn-sub,#knowledgeSection .kn-filter,#knowledgeSection .kn-grid { display:none !important; }
+#knowledgeSection .kn-detail { max-width:760px; margin:20px auto; }
+#worksheetSection { max-width:1120px; margin:0 auto; padding:24px 20px 70px; }
+.teacher-tools-hero { background:linear-gradient(135deg,#f4f8ff,#f5fbf5); border:1px solid #e1eaf4; border-radius:24px; padding:clamp(20px,4vw,38px); margin:0 0 22px; }
+.teacher-tools-heading { margin-bottom:22px; }
+.teacher-tools-kicker { color:#6a8c75; font-size:11px; font-weight:900; letter-spacing:.12em; }
+.teacher-tools-heading h2 { margin:7px 0; color:#294465; font-size:clamp(25px,3vw,34px); line-height:1.35; }
+.teacher-tools-heading p { margin:0; color:#69788a; line-height:1.8; }
+.teacher-tool-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:18px; }
+.teacher-tool-card { display:grid; grid-template-columns:82px 1fr 28px; gap:16px; align-items:center; text-align:left; padding:20px; min-height:132px; border:1px solid #dfe8ef; border-radius:20px; background:#fff; color:#294465; cursor:pointer; transition:transform .2s,box-shadow .2s,border-color .2s; }
+.teacher-tool-card:hover,.teacher-tool-card:focus-visible,.teacher-tool-card.is-selected { transform:translateY(-3px); border-color:#91b9a2; box-shadow:0 12px 28px #304d6816; outline:none; }
+.teacher-tool-visual { width:78px;height:78px;display:grid;place-items:center;border-radius:20px;background:#eaf3ff;font-size:40px; }
+.worksheet-choice .teacher-tool-visual { background:#fff3d9; }
+.teacher-tool-copy { display:flex;flex-direction:column;gap:7px; }
+.teacher-tool-copy b { font-size:19px;line-height:1.5; }
+.teacher-tool-copy small { color:#718096;font-size:13px;line-height:1.7; }
+.teacher-tool-arrow { font-size:25px;color:#7390a8;transition:transform .2s; }
+.teacher-tool-card.is-selected .teacher-tool-arrow { transform:rotate(180deg); }
+.teacher-tool-panel { margin:20px 0 0; padding:clamp(16px,3vw,28px); background:#fff; border:1px solid #e4eaf0; border-radius:22px; box-shadow:0 10px 28px #304d680c; }
+.teacher-tool-panel[hidden] { display:none !important; }
+.teacher-tool-panel .sec-title { color:#294465; line-height:1.45; }
+.teacher-tool-panel .lp-lead { color:#66768a; line-height:1.8; }
+.worksheet-visual-card { max-width:620px; margin:auto; padding:28px; text-align:center; border-radius:20px; background:#fff9ec; border:1px solid #f0dfb7; }
+.worksheet-visual-card>span { font-size:52px; }
+.worksheet-visual-card h2 { color:#294465; }
+.worksheet-visual-card p { color:#6e7781;line-height:1.8; }
+.teacher-launch-btn { display:inline-block;padding:12px 22px;border-radius:24px;background:#4f8c78;color:#fff;text-decoration:none;font-weight:800; }
+#lpForm,#lpAccess,#lpPackages { margin-top:18px; }
+#lpForm { line-height:1.8; }
+#lpForm .lp-f span { line-height:1.7; }
+#lpForm input,#lpForm textarea,#lpForm select { letter-spacing:0 !important; line-height:1.75 !important; }
+#diarySection { padding:24px clamp(12px,3vw,34px) 64px; }
+.diary-intro { max-width:720px; margin:0 auto 22px; text-align:center; }
+.diary-intro h2 { font-size:clamp(30px,5vw,48px); line-height:1.35; }
+.diary-intro p { line-height:1.8; }
+.diary-book { max-width:940px !important; width:100% !important; margin:0 auto !important; }
+.diary-pages { min-height:560px; }
+.diary-page { position:relative; min-width:0; padding:clamp(24px,4vw,46px) clamp(20px,4vw,48px) 64px !important; overflow:hidden; overflow-wrap:anywhere; word-break:normal; }
+.diary-page p { font-size:15px; line-height:1.9 !important; margin:0 0 14px; max-width:100%; }
+.diary-page h3 { font-size:clamp(21px,3vw,29px); line-height:1.45; overflow-wrap:anywhere; }
+.diary-page:after { content:"✿  ✧  ♡  ✧  ✿"; position:absolute; right:18px; bottom:14px; color:#e6a8b3; font-size:17px; letter-spacing:7px; opacity:.8; }
+.diary-page-left:before { content:"✎  ✿"; position:absolute; right:24px; top:20px; color:#d69cab; font-size:20px; transform:rotate(9deg); }
+.diary-friend-list img { border:3px solid #fff; box-shadow:0 4px 12px #4a61451c; }
+.diary-friend-list span { font-family:'Caveat',cursive; font-size:20px; }
+.diary-reading-controls { gap:12px; flex-wrap:wrap; }
+.diary-reading-controls button { min-width:110px; }
+@media(max-width:720px){
+ .teacher-tool-grid{grid-template-columns:1fr}
+ .teacher-tool-card{grid-template-columns:66px 1fr 24px;padding:15px;min-height:112px}
+ .teacher-tool-visual{width:62px;height:62px;font-size:32px}
+ .diary-pages{min-height:0}
+ .diary-page{min-height:420px}
+}
+
+
+/* Сургалт хэсгийг нүүрийн "Суралцагч" хаалгатай ижил цэнхэр, өнгөлөг болгов */
+#trainingSection {
+  background:linear-gradient(180deg,#eef7ff 0%,#f7fbff 48%,#ffffff 100%) !important;
+  color:#193b68 !important;
+  padding:clamp(18px,3vw,34px) !important;
+  border-radius:26px;
+}
+#trainingSection .page-back {
+  color:#2868ad !important;
+  background:#e1efff !important;
+  border:1px solid #c8e0ff !important;
+}
+#trainingSection .training-hero {
+  background:linear-gradient(125deg,#267fd1 0%,#398fe0 48%,#70b9f2 100%) !important;
+  color:#fff !important;
+  border:1px solid #77b9ef !important;
+  border-radius:26px !important;
+  box-shadow:0 16px 34px #287ac329 !important;
+}
+#trainingSection .training-hero h1,
+#trainingSection .training-hero h2,
+#trainingSection .training-hero h3,
+#trainingSection .training-hero p,
+#trainingSection .training-hero .training-hero-tag { color:#fff !important; }
+#trainingSection .training-hero-tag {
+  background:#ffffff27 !important;
+  border:1px solid #ffffff55 !important;
+}
+#trainingSection .training-filter { gap:10px !important; }
+#trainingSection .tr-flt-btn {
+  color:#326a9f !important;
+  background:#e6f2ff !important;
+  border:1px solid #c9e2fa !important;
+  border-radius:999px !important;
+  font-weight:750 !important;
+}
+#trainingSection .tr-flt-btn.active {
+  color:#fff !important;
+  background:#287fd0 !important;
+  border-color:#287fd0 !important;
+  box-shadow:0 5px 14px #287fd02a !important;
+}
+#trainingSection .tr-flt-btn:hover:not(.active) { background:#d6eaff !important; }
+#trainingSection .course-card {
+  background:linear-gradient(180deg,#fff 0%,#f7fbff 100%) !important;
+  color:#24466d !important;
+  border:1.5px solid #d4e7f8 !important;
+  box-shadow:0 8px 22px #2c6b9d10 !important;
+}
+#trainingSection .course-card:hover {
+  border-color:#8fc4ef !important;
+  box-shadow:0 15px 30px #2c79b51c !important;
+}
+#trainingSection .course-card h3,
+#trainingSection .course-card .course-price { color:#214c78 !important; }
+#trainingSection .course-card .course-desc,
+#trainingSection .course-card .course-price-sub,
+#trainingSection .course-card .rating-count { color:#647d96 !important; }
+#trainingSection .course-icon-wrap { background:#e1f0ff !important; color:#287fd0 !important; }
+#trainingSection .meta-chip { background:#eaf4ff !important; color:#356d9f !important; }
+#trainingSection .course-tag { background:#dceeff !important; color:#2468a5 !important; }
+#trainingSection .course-tag.tag-popular { background:#fff0c7 !important; color:#936316 !important; }
+#trainingSection .course-tag.tag-free { background:#dff5e9 !important; color:#26734a !important; }
+#trainingSection .btn-enroll {
+  background:linear-gradient(100deg,#287fd0,#4ba5e9) !important;
+  color:#fff !important;
+  border:0 !important;
+  box-shadow:0 5px 13px #287fd02c !important;
+}
+#trainingSection .btn-enroll:hover { filter:brightness(1.05); }
+#trainingSection .ribbon { background:#287fd0 !important; color:#fff !important; }
+#trainingSection .training-stats .tr-stat {
+  background:#fff !important;
+  border:1px solid #d7eafa !important;
+  color:#2b5e8c !important;
+}
+@media(max-width:680px) {
+  #trainingSection { padding:14px !important; border-radius:18px; }
+  #trainingSection .training-hero { border-radius:20px !important; }
+}
+
+
+/* Найзаа сонгох: шинэ мэдлэг + бүртгэлийн профайл зураг */
+#knowledgeSection .character-pick { max-width:1040px; margin:22px auto 28px; padding:18px 20px; border-radius:22px; background:linear-gradient(135deg,#eef7ff,#f2fbf7); border:1px solid #dceaf4; }
+#knowledgeSection .character-pick-head h2 { color:#2e5f8d; font-size:21px; line-height:1.45; }
+#knowledgeSection .character-pick-head p { color:#71849a; line-height:1.7; }
+#knowledgeSection .character-pick-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:12px; }
+#knowledgeSection .character-card { background:#fff !important; border:1.5px solid #d8e8f5 !important; border-radius:16px !important; }
+#knowledgeSection .character-card.selected { border-color:#398bd0 !important; background:#f0f8ff !important; box-shadow:0 5px 16px #398bd01c !important; }
+#knowledgeSection .character-check { color:#347eb8 !important; }
+#regAvatarGrid { grid-template-columns:repeat(5,minmax(0,1fr)); gap:10px !important; }
+#regAvatarGrid button { min-width:0; box-shadow:0 3px 10px #29446512; }
+#regAvatarGrid button:focus-visible { outline:3px solid #6bb3ed; outline-offset:3px; }
+@media(max-width:520px) {
+ #knowledgeSection .character-pick { padding:14px; }
+ #knowledgeSection .character-pick-grid { grid-template-columns:repeat(2,minmax(0,1fr)); }
+ #regAvatarGrid { grid-template-columns:repeat(4,minmax(0,1fr)) !important; }
+}
+
+
+/* Нүүрийн "Шинэ хичээлүүд" болон доод холбоо барих хэсгийн өнгө */
+#homeSection .h3-wrap > .h3-head,
+#homeSection .h3-wrap > .new-grid {
+  background:#eef7ff !important;
+}
+#homeSection .h3-wrap > .h3-head {
+  padding:24px 24px 10px !important;
+  margin:28px 0 0 !important;
+  border-radius:22px 22px 0 0 !important;
+  border-top:1px solid #d7eaff;
+  border-left:1px solid #d7eaff;
+  border-right:1px solid #d7eaff;
+}
+#homeSection .h3-wrap > .h3-head h2 {
+  color:#245b91 !important;
+}
+#homeSection .h3-wrap > .h3-head .link-more {
+  color:#2479c4 !important;
+}
+#homeSection .h3-wrap > .new-grid {
+  padding:14px 24px 26px !important;
+  margin:0 0 34px !important;
+  border-radius:0 0 22px 22px !important;
+  border:1px solid #d7eaff;
+  border-top:0;
+}
+#homeSection .new-grid .prod-card,
+#homeSection .new-grid .product-card {
+  background:#fff !important;
+  border:1px solid #d8e9f8 !important;
+  box-shadow:0 8px 20px #367bb414 !important;
+}
+#homeSection .new-grid .new-loading {
+  color:#6b88a5 !important;
+}
+footer {
+  background:linear-gradient(120deg,#246fb5 0%,#328bd0 52%,#5aa9e8 100%) !important;
+  color:#fff !important;
+  border-top:1px solid #83c0ef !important;
+}
+footer .footer-brand,
+footer .footer-in,
+footer .footer-in p,
+footer .footer-in h4,
+footer .footer-in .copy,
+footer .f-contact,
+footer .f-contact div {
+  color:#fff !important;
+}
+footer .footer-in p,
+footer .f-contact div,
+footer .copy {
+  opacity:.9;
+}
+footer .footer-in h4 { color:#e8f5ff !important; }
+footer a { color:#fff !important; text-decoration-color:#d5edff !important; }
+
+
+/* Зөөлөн, дулаан өнгөний нэгдсэн палитр — хэт хурц цэнхэрийг намсгав */
+:root { --soft-sky:#8dbbd0; --soft-sky-deep:#547f9d; --soft-sky-pale:#f0f6f8; --soft-ink:#40576a; }
+#homeSection .h3-wrap > .h3-head,
+#homeSection .h3-wrap > .new-grid { background:#f1f6f6 !important; border-color:#dce8e7 !important; }
+#homeSection .h3-wrap > .h3-head h2,
+#homeSection .h3-wrap > .h3-head .link-more { color:#547b82 !important; }
+footer { background:linear-gradient(120deg,#527f8d 0%,#6e9ca5 55%,#91b7b7 100%) !important; border-color:#aac9c7 !important; }
+#trainingSection {
+  background:linear-gradient(180deg,#fffaf1 0%,#fff7f5 52%,#f6fbf8 100%) !important;
+  color:#526273 !important;
+}
+#trainingSection .page-back { color:#6c8e91 !important; background:#edf5f1 !important; border-color:#d9e9df !important; }
+#trainingSection .training-hero {
+  position:relative; overflow:hidden;
+  background:linear-gradient(120deg,#8bb8c8 0%,#9fc9c6 55%,#b9d9c7 100%) !important;
+  border:0 !important; box-shadow:0 12px 26px #769e9c22 !important;
+}
+#trainingSection .training-hero:after {
+  content:"✦  ✿  ·  ♡  ·  ✿"; position:absolute; right:24px; bottom:12px;
+  color:#ffffffa8; font-size:25px; letter-spacing:8px; pointer-events:none;
+}
+#trainingSection .training-hero h2 { font-size:clamp(26px,4vw,36px) !important; text-shadow:0 2px 0 #ffffff22; }
+#trainingSection .training-hero-tag { background:#ffffff3d !important; border-color:#ffffff66 !important; border-radius:99px !important; }
+#trainingSection .training-hero-emoji { filter:drop-shadow(0 5px 7px #426c6c33); transform:rotate(-5deg); }
+#trainingSection .tr-flt-btn { color:#64858b !important; background:#f0f6f4 !important; border-color:#dcebe5 !important; }
+#trainingSection .tr-flt-btn.active { background:#789fa5 !important; border-color:#789fa5 !important; box-shadow:0 5px 12px #789fa533 !important; }
+#trainingSection .tr-flt-btn:hover:not(.active) { background:#e5f0eb !important; }
+#trainingSection .course-card {
+  border-radius:26px !important; border-color:#e7e7dc !important;
+  background:linear-gradient(155deg,#fff 0%,#fffdf8 100%) !important;
+  box-shadow:0 8px 24px #8c8b7114 !important;
+}
+#trainingSection .course-card:nth-child(4n+1) { border-top:5px solid #a9cbd1 !important; }
+#trainingSection .course-card:nth-child(4n+2) { border-top:5px solid #e9c9a4 !important; }
+#trainingSection .course-card:nth-child(4n+3) { border-top:5px solid #c8b9d9 !important; }
+#trainingSection .course-card:nth-child(4n) { border-top:5px solid #b8d4b7 !important; }
+#trainingSection .course-card:hover { transform:translateY(-4px) !important; box-shadow:0 14px 28px #718b841f !important; }
+#trainingSection .course-card h3 { color:#4d6575 !important; line-height:1.5 !important; }
+#trainingSection .course-card .course-desc { color:#75838a !important; line-height:1.8 !important; }
+#trainingSection .course-icon-wrap { background:#edf5f3 !important; color:#698f91 !important; border-radius:20px !important; }
+#trainingSection .meta-chip { background:#f0f5f1 !important; color:#66817d !important; border-radius:99px !important; }
+#trainingSection .course-tag { background:#edf4ef !important; color:#668477 !important; letter-spacing:0 !important; }
+#trainingSection .course-tag.tag-popular { background:#fff2d9 !important; color:#9a7950 !important; }
+#trainingSection .course-tag.tag-free { background:#e8f4e9 !important; color:#5d8967 !important; }
+#trainingSection .btn-enroll {
+  background:linear-gradient(100deg,#789fa5,#91b8b1) !important;
+  color:#fff !important; border-radius:999px !important; box-shadow:0 5px 13px #789fa52e !important;
+}
+#trainingSection .btn-enroll:hover { filter:brightness(1.04); }
+#trainingSection .ribbon { background:#8eaaa2 !important; color:#fff !important; }
+#trainingSection .training-stats .tr-stat { background:#fff !important; border-color:#e1ebe5 !important; color:#66847f !important; }
+
+/* Суралцагчийг угтах, урмын үгтэй найзын карт */
+.learner-welcome {
+  position:relative; display:grid; grid-template-columns:112px 1fr auto; gap:20px; align-items:center;
+  margin:20px 0 24px; padding:20px 26px; overflow:hidden;
+  border-radius:24px; border:1px solid #f0dfd2;
+  background:linear-gradient(115deg,#fff4e9 0%,#fff9ef 48%,#f0f7f0 100%);
+  box-shadow:0 8px 22px #9c80651a;
+}
+.learner-welcome-art { width:104px;height:104px;display:grid;place-items:center;background:#fff;border:5px solid #fff;border-radius:32px 32px 26px 32px;box-shadow:0 5px 15px #88745c20;transform:rotate(-3deg);overflow:hidden; }
+.learner-welcome-art img { width:100%;height:100%;object-fit:cover; }
+.learner-welcome-kicker { color:#a07e65;font-size:11px;font-weight:900;letter-spacing:.08em; }
+.learner-welcome-copy h3 { color:#5a6f67;font-size:clamp(19px,2.8vw,25px);line-height:1.45;margin:5px 0 6px; }
+.learner-welcome-copy p { color:#6f7771;font-size:15px;line-height:1.8;margin:0;max-width:720px; }
+.learner-welcome-chips { display:flex;flex-wrap:wrap;gap:8px;margin-top:12px; }
+.learner-welcome-chips span { background:#ffffffb8;color:#7c8c7b;padding:6px 11px;border-radius:99px;font-size:12px;font-weight:700; }
+.learner-welcome-doodle { color:#e6b6a8;font-size:64px;line-height:1;transform:rotate(12deg);padding:0 8px; }
+@media(max-width:620px) {
+ .learner-welcome { grid-template-columns:72px 1fr;gap:13px;padding:15px;border-radius:20px; }
+ .learner-welcome-art { width:70px;height:70px;border-radius:22px; }
+ .learner-welcome-doodle { display:none; }
+ .learner-welcome-copy p { font-size:14px; }
+}
+
+
+/* ===== Storybook / Cozy vintage palette =====
+   Далайн зөөлөн цэнхэр + шүрэн дээвэр + дулаан цаас + нарны шаргал */
+:root {
+  --storybook-sea:#4f9caf;
+  --storybook-sea-deep:#326f83;
+  --storybook-coral:#e87968;
+  --storybook-coral-soft:#f7d7cd;
+  --storybook-cream:#fff8e8;
+  --storybook-paper:#fffdf5;
+  --storybook-sun:#f3c86b;
+  --storybook-leaf:#9ebc9b;
+  --storybook-ink:#435766;
+  --storybook-line:#eadfca;
+}
+/* Нийт сайтын өнгө: хурц цэнхэрийг зурагт номын зөөлөн өнгөөр солих */
+body { background:#fffaf0 !important; color:var(--storybook-ink) !important; }
+header, .site-header, .top-nav, nav {
+  background:rgba(255,253,245,.97) !important;
+  border-bottom-color:#eadfce !important;
+}
+.nav-btn { color:#526d79 !important; }
+.nav-btn .nav-icon, .nav-btn svg { color:#5e9bad !important; stroke:#5e9bad !important; }
+.nav-btn.active { color:#4f927f !important; }
+.nav-btn.active:after { background:#8ebd9e !important; }
+.search-box, .search-input { background:#f3f0e6 !important; border-color:#e7dfcf !important; }
+button.primary, .btn-primary { background:#e77e6c !important; border-color:#e77e6c !important; color:white !important; }
+/* Нүүрний суралцагчийн сонголтууд: усан будгийн жижиг картууд */
+#homeSection .door {
+  background:linear-gradient(145deg,#fffdf6,#f8f2e5) !important;
+  border:1px solid #eadfca !important;
+  box-shadow:0 12px 28px #557f7b18 !important;
+}
+#homeSection .door:nth-child(1) { background:linear-gradient(145deg,#e4f2f2,#fffdf5) !important; }
+#homeSection .door:nth-child(2) { background:linear-gradient(145deg,#fff0e8,#fffaf0) !important; }
+#homeSection .door:nth-child(3) { background:linear-gradient(145deg,#fff5d9,#fffdf4) !important; }
+#homeSection .door-go { background:#e77e6c !important; box-shadow:0 5px 12px #d77b672b !important; }
+#homeSection .door:nth-child(1) .door-go { background:#5c9eaf !important; }
+#homeSection .door:nth-child(2) .door-go { background:#83a98c !important; }
+#homeSection .door:nth-child(3) .door-go { background:#e8b84e !important; }
+/* Өнөөдрийн мэдлэгийн цаасан тэмдэглэл */
+.today {
+  background:#fff8e8 !important; border-color:#ead9b8 !important;
+  box-shadow:0 10px 24px #806b4c12,3px 3px 0 #f0e5cf !important;
+}
+.today:before { background:#f8e6a9 !important; color:#8e7442 !important; }
+.today mark,.today strong { background:linear-gradient(transparent 52%,#f5d77c 52%) !important; color:#526c70 !important; }
+/* Шинэ хичээлүүд болон footer */
+#homeSection .h3-wrap > .h3-head,
+#homeSection .h3-wrap > .new-grid {
+  background:#edf5f2 !important; border-color:#dbe8df !important;
+}
+#homeSection .h3-wrap > .h3-head h2 { color:#4c7780 !important; }
+#homeSection .h3-wrap > .h3-head .link-more { color:#d47768 !important; }
+#homeSection .new-grid .prod-card,
+#homeSection .new-grid .product-card { border-color:#e8dfcf !important; }
+footer {
+  background:linear-gradient(125deg,#376f7c 0%,#558e94 54%,#83aaa0 100%) !important;
+  border-top:4px solid #e7b76a !important;
+}
+/* Сургалтын булан: далайн эргийн үлгэрийн өнгө */
+#trainingSection {
+  background:
+    radial-gradient(circle at 8% 8%,#f9dfd2 0 4%,transparent 4.2%),
+    radial-gradient(circle at 95% 20%,#f8e9bd 0 5%,transparent 5.2%),
+    linear-gradient(180deg,#e8f3f1 0%,#fff8e9 48%,#fff1e9 100%) !important;
+  color:var(--storybook-ink) !important;
+  position:relative; overflow:hidden;
+}
+#trainingSection .training-hero {
+  background:linear-gradient(118deg,#4d94a5 0%,#69aeb5 48%,#e6a18c 100%) !important;
+  border:2px solid #ffffffa8 !important;
+  border-radius:30px !important;
+  box-shadow:0 16px 32px #477f8126 !important;
+  min-height:210px;
+}
+#trainingSection .training-hero:before {
+  content:"☁"; position:absolute; top:8px; right:22%; color:#fff9e8;
+  font-size:54px; opacity:.7; animation:storybook-cloud 8s ease-in-out infinite;
+}
+#trainingSection .training-hero:after {
+  content:"✦  ✿  ♡  ✿  ✦"; right:24px; bottom:12px;
+  color:#fff5df; opacity:.9; animation:storybook-twinkle 4s ease-in-out infinite;
+}
+#trainingSection .training-hero h2 { color:#fffdf5 !important; text-shadow:0 2px 8px #285e6b4a !important; }
+#trainingSection .training-hero p { color:#fff9ed !important; }
+#trainingSection .training-hero-tag { background:#fff4df44 !important; border:1px solid #fff8e6a8 !important; color:#fffdf5 !important; }
+#trainingSection .training-hero-emoji { animation:storybook-float 4s ease-in-out infinite; }
+#trainingSection .training-filter { gap:10px !important; }
+#trainingSection .tr-flt-btn {
+  background:#fffaf0 !important; color:#5a7e82 !important;
+  border:1px solid #e8ddc9 !important; border-radius:999px !important;
+}
+#trainingSection .tr-flt-btn.active {
+  background:#e77e6c !important; border-color:#e77e6c !important;
+  color:#fff !important; box-shadow:0 6px 15px #dc8a772e !important;
+}
+#trainingSection .course-card {
+  position:relative; overflow:hidden; border-radius:27px !important;
+  background:#fffdf6 !important; border:1px solid #eadfca !important;
+  box-shadow:0 9px 24px #637c7218 !important;
+  transition:transform .28s ease,box-shadow .28s ease !important;
+}
+#trainingSection .course-card:after {
+  content:""; position:absolute; top:-42px; right:-38px; width:110px;height:110px;
+  border-radius:50%; background:#f5dfbd55; pointer-events:none;
+}
+#trainingSection .course-card:nth-child(4n+1) { border-top:6px solid #75aeba !important; }
+#trainingSection .course-card:nth-child(4n+2) { border-top:6px solid #e98e7b !important; }
+#trainingSection .course-card:nth-child(4n+3) { border-top:6px solid #e9c46d !important; }
+#trainingSection .course-card:nth-child(4n) { border-top:6px solid #9bbd9b !important; }
+#trainingSection .course-card:hover { transform:translateY(-7px) rotate(-.35deg) !important; box-shadow:0 18px 34px #637c7228 !important; }
+#trainingSection .course-card:nth-child(even):hover { transform:translateY(-7px) rotate(.35deg) !important; }
+#trainingSection .course-card h3 { color:#435f6b !important; }
+#trainingSection .course-desc { color:#718087 !important; }
+#trainingSection .course-icon-wrap { background:#e7f1ed !important; color:#538b91 !important; border-radius:22px !important; }
+#trainingSection .meta-chip { background:#f3f0e5 !important; color:#6c7f79 !important; }
+#trainingSection .course-tag { background:#e8f1e9 !important; color:#64856d !important; }
+#trainingSection .course-tag.tag-popular { background:#fae5d8 !important; color:#b66e59 !important; }
+#trainingSection .btn-enroll {
+  background:linear-gradient(110deg,#e47c69,#ed9b7f) !important;
+  border-radius:999px !important; color:#fff !important;
+  box-shadow:0 6px 14px #d47d692b !important;
+}
+#trainingSection .btn-enroll:hover { transform:translateY(-2px); filter:saturate(1.05); }
+#trainingSection .ribbon { background:#5f9aa1 !important; color:#fff !important; }
+/* Сонгосон найзын мэндчилгээ: ил захидал шиг, дүр нь зөөлөн хөвнө */
+.learner-welcome {
+  background:linear-gradient(120deg,#fff3df 0%,#fffaf0 48%,#e7f2ed 100%) !important;
+  border:1px solid #ecdcc4 !important; border-radius:28px !important;
+  box-shadow:0 12px 28px #8b73531b !important;
+}
+.learner-welcome-art {
+  background:#fffdf5 !important; border:5px solid #fffdf5 !important;
+  box-shadow:0 7px 17px #927d632b !important;
+  animation:storybook-float 4.5s ease-in-out infinite;
+}
+.learner-welcome-kicker { color:#bb8267 !important; }
+.learner-welcome-copy h3 { color:#547d7d !important; }
+.learner-welcome-copy p { color:#68777a !important; }
+.learner-welcome-chips span { background:#fffdf0cc !important; color:#718b7b !important; }
+.learner-welcome-doodle { color:#e98f7b !important; animation:storybook-heart 5s ease-in-out infinite; }
+/* хөдөлгөөнүүд — тайван, нүд ядраахгүй */
+@keyframes storybook-float { 0%,100%{transform:translateY(0) rotate(-2deg)} 50%{transform:translateY(-8px) rotate(2deg)} }
+@keyframes storybook-cloud { 0%,100%{transform:translateX(0)} 50%{transform:translateX(-15px)} }
+@keyframes storybook-twinkle { 0%,100%{opacity:.55;transform:translateY(0)} 50%{opacity:1;transform:translateY(-5px)} }
+@keyframes storybook-heart { 0%,100%{transform:rotate(10deg) scale(1)} 50%{transform:rotate(-8deg) scale(1.12)} }
+#trainingSection .course-card, #trainingSection .tr-flt-btn, .learner-welcome-art { will-change:transform; }
+@media (prefers-reduced-motion:reduce) {
+  #trainingSection *, .learner-welcome * { animation:none !important; transition:none !important; }
+}

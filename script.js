@@ -78,10 +78,44 @@ document.addEventListener('DOMContentLoaded',()=>{
 /* ════════════════════════════════════
    NAVIGATION
 ════════════════════════════════════ */
+function refreshLearnerWelcome(){
+  const box=document.getElementById('learnerWelcome'); if(!box)return;
+  let id='anir';
+  try{id=localStorage.getItem('shb_profile_character_v1')||localStorage.getItem('shb_selected_character_v1')||'anir';}catch(e){}
+  const friend=(window.SHCharacters||[]).find(c=>c.id===id)||{name:'Найз',image:'images/characters/anir.png'};
+  const greetings={
+    tsovoo:{emoji:'🧩',title:'Сайн уу, нямбай найз минь!',text:'Өнөөдөр нэг жижиг алхам хийе. Чи хичээвэл чадна, би чамтай хамт байна!'},
+    todoo:{emoji:'🚀',title:'Өө, миний эрч хүчтэй найз ирлээ!',text:'Шинэ зүйл туршиж үзэхэд бэлэн үү? Алдахаас бүү ай, оролдох бүрдээ чи өсөж байна!'},
+    enkhrii:{emoji:'🌸',title:'Сайн уу, хөөрхөн найз аа!',text:'Өнөөдөр өөртөө зөөлөн хандаарай. Бага багаар сурсан ч ахиц шүү. Би чамд итгэж байна!'},
+    azaa:{emoji:'🌼',title:'Тавтай морил, хайрт найз минь!',text:'Чи өнөөдөр энд ирсэн нь өөрөө сайхан эхлэл. Хамтдаа сонирхолтой зүйл нээцгээе!'},
+    anir:{emoji:'📖',title:'Сайн уу, миний ажигч найз аа!',text:'Өнөөдөр нэг шинэ мэдлэг олж аваад, өөрийнхөөрөө бодож үзье. Чиний бодол чухал шүү!'}
+  };
+  const g=greetings[id]||greetings.anir;
+  const img=document.getElementById('learnerWelcomeAvatar');
+  if(img){img.src=friend.image||'images/characters/anir.png';img.alt=friend.name+' — хамт суралцах найз';}
+  const title=document.getElementById('learnerWelcomeTitle'), text=document.getElementById('learnerWelcomeText');
+  if(title)title.textContent=g.emoji+' '+g.title;
+  if(text)text.textContent=g.text;
+  box.dataset.friend=id;
+}
+function showLearnerGoodbye(){
+  const id=(function(){try{return localStorage.getItem('shb_profile_character_v1')||localStorage.getItem('shb_selected_character_v1')||'anir';}catch(e){return 'anir';}})();
+  const words={
+    tsovoo:'Өнөөдөр маш нямбай хичээллэлээ! 🧩 Маргааш дахин уулзацгаая. Сайхан амраарай!',
+    todoo:'Ёстой мундаг байлаа! 🚀 Өнөөдрийн оролдлого бүр чинь чамайг урагшлууллаа. Маргааш уулзъя!',
+    enkhrii:'Өнөөдөр өөртөө цаг гаргасанд баярлалаа, найз аа. 🌸 Маргааш дахин уулзацгаая!',
+    azaa:'Чи өнөөдөр чадах бүхнээ хийлээ! 🌼 Өөрөөрөө бахархаарай. Маргааш уулзъя!',
+    anir:'Өнөөдөр хамтдаа сайхан суралцлаа. 📖 Шинэ мэдлэгээ бодож амраарай. Маргааш дахин уулзацгаая!'
+  };
+  const title=document.getElementById('learnerWelcomeTitle'), text=document.getElementById('learnerWelcomeText');
+  if(title)title.textContent='Баярлалаа, найз аа! 💛';
+  if(text)text.textContent=words[id]||words.anir;
+}
 function showSec(name){
+  const wasTraining=!!document.getElementById('trainingSection')?.classList.contains('active');
   document.querySelectorAll('.sec').forEach(s=>s.classList.remove('active'));
   const el=document.getElementById(name+'Section');
-  if(el){el.classList.add('active');window.scrollTo(0,0);}
+  if(el){el.classList.add('active');window.scrollTo(0,0);if(name==='training')refreshLearnerWelcome();else if(wasTraining){showLearnerGoodbye();const farewell=document.getElementById('learnerWelcomeText');if(farewell&&typeof showToast==='function')showToast(farewell.textContent,'success');}}
   // Цэсний идэвхтэй товч: хуудас бүр цэсний аль хэсэгт хамаарахыг заана
   const navOf={home:'home',knowledge:'knowledge',diary:'diary',training:'students',worksheet:'teachers',games:'games',sudoku:'games',shop:'library',library:'more',about:'more'};
   const key=navOf[name];
@@ -196,30 +230,60 @@ async function handleAuth() {
 // ── Register ────────────────────────
 let _selectedRegAvatar = AVATAR_SEEDS[0];
 let _selectedRegStyle  = AVATAR_STYLES[0];
+let _selectedRegCharacter = '';
 
 function buildRegAvatarGrid() {
   const grid = document.getElementById('regAvatarGrid');
-  if (!grid || grid.children.length) return; // already built
-  AVATAR_SEEDS.slice(0,10).forEach((seed,i) => {
-    const style = AVATAR_STYLES[i % AVATAR_STYLES.length];
-    const div = document.createElement('div');
-    div.style.cssText = 'border-radius:12px;border:2.5px solid var(--border);cursor:pointer;overflow:hidden;aspect-ratio:1;background:var(--surface2);transition:all .18s';
-    div.onclick = () => {
-      document.querySelectorAll('#regAvatarGrid > div').forEach(d => {
-        d.style.borderColor = 'var(--border)'; d.style.transform = '';
-      });
-      div.style.borderColor = 'var(--amber)';
-      div.style.transform = 'scale(1.08)';
-      _selectedRegAvatar = seed; _selectedRegStyle = style;
-    };
+  if (!grid || grid.dataset.built === '1') return;
+  grid.dataset.built = '1';
+  const friends = Array.isArray(window.SHCharacters) ? window.SHCharacters : [];
+  const savedFriend = localStorage.getItem('shb_profile_character_v1') || localStorage.getItem('shb_selected_character_v1') || '';
+  friends.forEach((friend) => {
+    const div = document.createElement('button');
+    div.type = 'button';
+    div.title = friend.name;
+    div.setAttribute('aria-label', friend.name + ' профайл зураг болгох');
+    div.style.cssText = 'border-radius:14px;border:2.5px solid var(--border);cursor:pointer;overflow:hidden;aspect-ratio:1;background:var(--surface2);transition:all .18s;padding:0;position:relative';
     const img = document.createElement('img');
-    img.src = getAvatarUrl(seed, style);
+    img.src = friend.image; img.alt = friend.name;
     img.style.cssText = 'width:100%;height:100%;object-fit:cover;display:block';
-    div.appendChild(img);
+    img.onerror = () => { img.style.display='none'; div.textContent=friend.name; };
+    const name = document.createElement('small');
+    name.textContent = friend.name;
+    name.style.cssText = 'position:absolute;left:0;right:0;bottom:0;padding:3px;background:#ffffffdf;color:#294465;font-size:10px;font-weight:800';
+    div.append(img,name);
+    div.addEventListener('click',()=>{
+      grid.querySelectorAll('button').forEach(b=>{b.style.borderColor='var(--border)';b.style.transform='';});
+      div.style.borderColor='#368bd4';div.style.transform='scale(1.06)';
+      _selectedRegCharacter=friend.id;
+      try { localStorage.setItem('shb_profile_character_v1',friend.id); } catch(e) {}
+    });
     grid.appendChild(div);
-    if (i === 0) { div.style.borderColor = 'var(--amber)'; div.style.transform = 'scale(1.08)'; }
+    if (friend.id===savedFriend || (!savedFriend && friend.id==='anir')) {
+      div.style.borderColor='#368bd4';div.style.transform='scale(1.06)';_selectedRegCharacter=friend.id;
+    }
+  });
+  // Нэмэлт зурагт аватар сонголтуудыг хэвээр үлдээнэ.
+  AVATAR_SEEDS.slice(0,5).forEach((seed,i)=>{
+    const style=AVATAR_STYLES[i%AVATAR_STYLES.length];
+    const div=document.createElement('button');div.type='button';div.title='Өөр аватар';
+    div.style.cssText='border-radius:14px;border:2.5px solid var(--border);cursor:pointer;overflow:hidden;aspect-ratio:1;background:var(--surface2);padding:0';
+    const img=document.createElement('img');img.src=getAvatarUrl(seed,style);img.alt='Профайл зураг';
+    img.style.cssText='width:100%;height:100%;object-fit:cover;display:block';div.appendChild(img);
+    div.addEventListener('click',()=>{
+      grid.querySelectorAll('button').forEach(b=>{b.style.borderColor='var(--border)';b.style.transform='';});
+      div.style.borderColor='var(--amber)';div.style.transform='scale(1.06)';
+      _selectedRegAvatar=seed;_selectedRegStyle=style;_selectedRegCharacter='';
+      try{localStorage.removeItem('shb_profile_character_v1');}catch(e){}
+    });
+    grid.appendChild(div);
   });
 }
+window.refreshRegCharacterChoices = function(){
+  const grid=document.getElementById('regAvatarGrid');
+  if(!grid)return;
+  grid.innerHTML='';grid.dataset.built='0';buildRegAvatarGrid();
+};
 
 async function handleRegister() {
   const name=document.getElementById('regName').value.trim(), email=document.getElementById('regEmail').value.trim().toLowerCase();
@@ -229,7 +293,7 @@ async function handleRegister() {
   try {
     const r=await fetch('/api/auth/register',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name,email,password:pass})});
     const d=await r.json(); if(!r.ok) throw new Error(d.error||'Бүртгүүлж чадсангүй');
-    const profile={name,avatarSeed:_selectedRegAvatar,avatarStyle:_selectedRegStyle,createdAt:Date.now()}; saveUser(email,profile);
+    const profile={name,avatarSeed:_selectedRegAvatar,avatarStyle:_selectedRegStyle,characterId:_selectedRegCharacter||null,createdAt:Date.now()}; saveUser(email,profile);
     showAuthSuccess('Бүртгэл амжилттай. Нэвтэрч байна…'); loginSuccess(email,profile);
   }catch(e){showAuthError(e.message||'Сервертэй холбогдож чадсангүй');}
 }
@@ -238,6 +302,7 @@ function loginSuccess(email, user) {
   currentUser = email;
   localStorage.setItem(AUTH_KEY, email);
   // Save avatar preference
+  if (user.characterId) { try { localStorage.setItem('shb_profile_character_v1',user.characterId); localStorage.setItem('shb_selected_character_v1',user.characterId); } catch(e) {} }
   if (user.avatarSeed) {
     localStorage.setItem(AVATAR_KEY, JSON.stringify({seed: user.avatarSeed, style: user.avatarStyle||'avataaars'}));
   }
