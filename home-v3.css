@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css2?family=Caveat:wght@500;600;700&family=Kalam:wght@300;400;700&family=Nunito:wght@400;600;700;800&display=swap');
 /* ══════════════════════════════════════════════════════════════
    НҮҮР ХУУДАС + ТОЛГОЙ ХЭСЭГ — v3
    Цагаан дэвсгэр, цайвар цэнхэр дэмжлэг, ногоон тодотгол.
@@ -328,20 +329,20 @@ main:has(> .home-v3.active) { max-width: none; padding: 0; }
 .diary-cover-inner{height:100%;display:flex;align-items:center;flex-direction:column;text-align:center;padding:28px 18px 18px;position:relative}
 .diary-cover-small{font:700 9px 'Nunito',sans-serif;letter-spacing:.2em;color:#e7d9b8}
 .diary-anir-cover{width:145px;height:155px;object-fit:contain;margin:6px 0 -2px;filter:drop-shadow(0 4px 2px rgba(0,0,0,.12))}
-.diary-cover h3{font:500 27px/1.2 Georgia,serif;color:#fff1d7;margin:0}
+.diary-cover h3{font:600 34px/1.12 'Caveat',cursive;color:#fff1d7;margin:0}
 .diary-cover-rule{width:52px;height:1px;background:#d7c69f;margin:12px 0 8px}
-.diary-cover-inner p{font:italic 12px Georgia,serif;color:#e8ddc4}
+.diary-cover-inner p{font:400 17px 'Kalam',cursive;color:#e8ddc4}
 .diary-cover-year{position:absolute;bottom:22px;font:11px 'Nunito',sans-serif;letter-spacing:.25em;color:#d7c69f}
 .diary-pages{position:absolute;inset:0 0 0 50%;width:50%;display:flex;background:var(--paper);border-radius:0 5px 5px 0;box-shadow:inset 8px 0 12px rgba(92,66,36,.1)}
-.diary-page{width:50%;height:100%;position:relative;padding:48px 28px 35px;background:repeating-linear-gradient(to bottom,transparent 0,transparent 31px,rgba(164,147,116,.18) 32px),linear-gradient(90deg,#f0e5ce,#fbf5e9);color:#65523c;font:italic 16px/2 Georgia,serif}
+.diary-page{width:50%;height:100%;position:relative;padding:48px 28px 35px;background:repeating-linear-gradient(to bottom,transparent 0,transparent 31px,rgba(164,147,116,.18) 32px),linear-gradient(90deg,#f0e5ce,#fbf5e9);color:#65523c;font:400 17px/1.9 'Kalam',cursive}
 .diary-page-left{border-right:1px solid #d8c8aa;display:flex;flex-direction:column;justify-content:center;text-align:center;padding:32px}
 .diary-page-left p{font-size:15px}
 .diary-page-mark{font:italic 58px Georgia,serif;color:#a18d69;margin-bottom:18px}
 .diary-page-right{width:100%;padding:42px 42px 35px;background:repeating-linear-gradient(to bottom,transparent 0,transparent 31px,rgba(164,147,116,.18) 32px),linear-gradient(90deg,#fbf5e9,#f4ead7);transition:opacity .35s,transform .7s}
 .diary-page-date{font:700 10px 'Nunito',sans-serif;letter-spacing:.18em;color:#a18b68}
-.diary-page-right h3{font:italic 25px Georgia,serif;margin:18px 0;color:#5c4935}
+.diary-page-right h3{font:600 30px 'Caveat',cursive;margin:18px 0;color:#5c4935}
 .diary-page-right p{margin:0 0 8px}
-.diary-sign{display:block;text-align:right;margin-top:14px;font-size:18px}
+.diary-sign{display:block;text-align:right;margin-top:14px;font:600 25px 'Caveat',cursive}
 .diary-page-number,.diary-page-foot{position:absolute;bottom:16px;font:10px 'Nunito',sans-serif;color:#a18b68}
 .diary-page-number{right:24px}.diary-page-foot{left:22px}
 .diary-book.is-open .diary-cover{transform:rotateY(-178deg);opacity:0;pointer-events:none}
