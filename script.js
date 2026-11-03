@@ -216,15 +216,39 @@ function clearAuthMessages() {
 async function handleAuth() {
   const email = document.getElementById('authEmail').value.trim().toLowerCase();
   const pass = document.getElementById('authPass').value;
-  if (!email || !email.includes('@')) { showAuthError('Зөв и-мэйл хаяг оруулна уу.'); return; }
+  if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) { showAuthError('И-мэйл хаягаа зөв бичнэ үү.'); return; }
   if (pass.length < 8) { showAuthError('Нууц үг хамгийн багадаа 8 тэмдэгт байна.'); return; }
+  const btn = document.querySelector('#loginFields .auth-submit-btn');
+  if (btn) { btn.disabled = true; btn.textContent = 'Түр хүлээнэ үү…'; }
   try {
-    let r = await fetch('/api/auth/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email,password:pass})});
-    let d=await r.json();
-    if(r.status===401){const old=getUser(email);if(old && old.pass===btoa(pass)){r=await fetch('/api/auth/register',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email,password:pass,name:old.name||''})});d=await r.json();}}
-    if(!r.ok) throw new Error(d.error||'Нэвтэрч чадсангүй');
-    const old=getUser(email)||{}; loginSuccess(email,{...old,name:d.user.name||old.name||email.split('@')[0]});
-  } catch(e){showAuthError(e.message||'Сервертэй холбогдож чадсангүй');}
+    let r = await fetch('/api/auth/login', {
+      method:'POST', credentials:'same-origin',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({email,password:pass})
+    });
+    let d = await r.json().catch(() => ({}));
+    if (r.status === 401) {
+      const old = getUser(email);
+      if (old && old.pass === btoa(unescape(encodeURIComponent(pass)))) {
+        r = await fetch('/api/auth/register', {
+          method:'POST', credentials:'same-origin',
+          headers:{'Content-Type':'application/json'},
+          body:JSON.stringify({email,password:pass,name:old.name||email.split('@')[0],
+            characterId:old.characterId||null,avatarSeed:old.avatarSeed||null,avatarStyle:old.avatarStyle||null})
+        });
+        d = await r.json().catch(() => ({}));
+      }
+    }
+    if (!r.ok) throw new Error(d.error || 'Нэвтэрч чадсангүй. Дахин оролдоно уу.');
+    const old = getUser(email) || {};
+    const profile = {...old,...(d.user||{}),name:(d.user&&d.user.name)||old.name||email.split('@')[0]};
+    saveUser(email,profile);
+    loginSuccess(email,profile);
+  } catch(e) {
+    showAuthError(e.message || 'Сервертэй холбогдож чадсангүй. Интернэт болон бүртгэлийн тохиргоог шалгана уу.');
+  } finally {
+    if (btn) { btn.disabled = false; btn.textContent = 'Нэвтрэх'; }
+  }
 }
 
 // ── Register ────────────────────────
@@ -286,23 +310,61 @@ window.refreshRegCharacterChoices = function(){
 };
 
 async function handleRegister() {
-  const name=document.getElementById('regName').value.trim(), email=document.getElementById('regEmail').value.trim().toLowerCase();
-  const pass=document.getElementById('regPass').value, pass2=document.getElementById('regPass2').value;
-  if(!name){showAuthError('Нэрээ оруулна уу.');return;} if(!email.includes('@')){showAuthError('Зөв и-мэйл хаяг оруулна уу.');return;}
-  if(pass.length<8){showAuthError('Нууц үг хамгийн багадаа 8 тэмдэгт байна.');return;} if(pass!==pass2){showAuthError('Нууц үг тохирохгүй байна.');return;}
+  const name = document.getElementById('regName').value.trim();
+  const email = document.getElementById('regEmail').value.trim().toLowerCase();
+  const pass = document.getElementById('regPass').value;
+  const pass2 = document.getElementById('regPass2').value;
+  if (!name) { showAuthError('Нэрээ оруулна уу.'); return; }
+  if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) { showAuthError('И-мэйл хаягаа зөв бичнэ үү.'); return; }
+  if (pass.length < 8 || pass.length > 200) { showAuthError('Нууц үг 8–200 тэмдэгт байх ёстой.'); return; }
+  if (pass !== pass2) { showAuthError('Нууц үг тохирохгүй байна. Хоёр удаа ижил оруулна уу.'); return; }
+
+  const friends = Array.isArray(window.SHCharacters) ? window.SHCharacters : [];
+  if (!_selectedRegCharacter && friends.length) {
+    // Дүр сонгоогүй бол одоогийн сонголт эсвэл Анирыг автоматаар авна.
+    const fallback = friends.find(c => c.id === 'anir') || friends[0];
+    _selectedRegCharacter = fallback.id;
+  }
+  const btn = document.querySelector('#regFields .auth-submit-btn');
+  if (btn) { btn.disabled = true; btn.textContent = 'Бүртгэж байна…'; }
   try {
-    const r=await fetch('/api/auth/register',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name,email,password:pass})});
-    const d=await r.json(); if(!r.ok) throw new Error(d.error||'Бүртгүүлж чадсангүй');
-    const profile={name,avatarSeed:_selectedRegAvatar,avatarStyle:_selectedRegStyle,characterId:_selectedRegCharacter||null,createdAt:Date.now()}; saveUser(email,profile);
-    showAuthSuccess('Бүртгэл амжилттай. Нэвтэрч байна…'); loginSuccess(email,profile);
-  }catch(e){showAuthError(e.message||'Сервертэй холбогдож чадсангүй');}
+    const payload = {
+      name,email,password:pass,
+      characterId:_selectedRegCharacter || null,
+      avatarSeed:_selectedRegAvatar || null,
+      avatarStyle:_selectedRegStyle || null
+    };
+    const r = await fetch('/api/auth/register', {
+      method:'POST', credentials:'same-origin',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify(payload)
+    });
+    const d = await r.json().catch(() => ({}));
+    if (!r.ok) throw new Error(d.error || 'Бүртгэл үүсгэж чадсангүй. Дахин оролдоно уу.');
+    const profile = {
+      name,
+      characterId:(d.user && d.user.characterId) || payload.characterId,
+      avatarSeed:(d.user && d.user.avatarSeed) || payload.avatarSeed,
+      avatarStyle:(d.user && d.user.avatarStyle) || payload.avatarStyle,
+      createdAt:Date.now()
+    };
+    saveUser(email,profile);
+    showAuthSuccess('Бүртгэл амжилттай. Тавтай морил!');
+    loginSuccess(email,profile);
+  } catch(e) {
+    showAuthError(e.message || 'Сервертэй холбогдож чадсангүй. Дахин оролдоно уу.');
+  } finally {
+    if (btn) { btn.disabled = false; btn.textContent = 'Бүртгүүлэх'; }
+  }
 }
 
 function loginSuccess(email, user) {
   currentUser = email;
   localStorage.setItem(AUTH_KEY, email);
   // Save avatar preference
-  if (user.characterId) { try { localStorage.setItem('shb_profile_character_v1',user.characterId); localStorage.setItem('shb_selected_character_v1',user.characterId); } catch(e) {} }
+  if (user.characterId) {
+    try { localStorage.setItem('shb_profile_character_v1',user.characterId); localStorage.setItem('shb_selected_character_v1',user.characterId); } catch(e) {}
+  }
   if (user.avatarSeed) {
     localStorage.setItem(AVATAR_KEY, JSON.stringify({seed: user.avatarSeed, style: user.avatarStyle||'avataaars'}));
   }

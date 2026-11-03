@@ -857,7 +857,7 @@ nav{background:rgba(255,250,243,.93);border-bottom:1px solid #f0e2cf}
 
 .home-v2,.home-v2 h1,.home-v2 h2,.home-v2 h3,.home-v2 button{font-family:'Nunito',sans-serif}
 .hero-banner{position:relative;display:grid;grid-template-columns:1fr 1.5fr 1.4fr;align-items:end;gap:10px;min-height:390px;padding:28px 28px 0;border-radius:36px;overflow:hidden;
-  background:url('images/hero-bg.jpg') center/cover no-repeat,radial-gradient(circle at 12% 18%,#fff7e8 0,transparent 42%),radial-gradient(circle at 88% 85%,#fbd9a8 0,transparent 50%),linear-gradient(135deg,#fff1dc,#fde3c3 55%,#f8cf9c);
+  background:radial-gradient(circle at 12% 18%,#fff7e8 0,transparent 42%),radial-gradient(circle at 88% 85%,#fbd9a8 0,transparent 50%),linear-gradient(135deg,#fff1dc,#fde3c3 55%,#f8cf9c);
   box-shadow:0 10px 40px rgba(184,118,63,.15)}
 .spark{position:absolute;color:#f5b942;font-size:26px;opacity:.9;pointer-events:none}
 .spark.s1{top:34px;right:41%}.spark.s2{top:48%;left:30%;font-size:20px}.spark.s3{top:22px;left:43%;font-size:18px}

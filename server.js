@@ -14,6 +14,9 @@ const IMG = ['image/jpeg', 'image/png', 'image/webp'], esc = s => String(s).repl
 async function init() {
   await q(`
 CREATE TABLE IF NOT EXISTS shop_users(id BIGSERIAL PRIMARY KEY, email TEXT UNIQUE NOT NULL, name TEXT NOT NULL DEFAULT '', pass_hash TEXT NOT NULL, created_at BIGINT NOT NULL);
+ALTER TABLE shop_users ADD COLUMN IF NOT EXISTS character_id TEXT;
+ALTER TABLE shop_users ADD COLUMN IF NOT EXISTS avatar_seed TEXT;
+ALTER TABLE shop_users ADD COLUMN IF NOT EXISTS avatar_style TEXT;
 CREATE TABLE IF NOT EXISTS shop_materials(id BIGSERIAL PRIMARY KEY, title TEXT NOT NULL, description TEXT NOT NULL DEFAULT '', category TEXT NOT NULL DEFAULT 'Бусад', price INTEGER NOT NULL DEFAULT 0, active BOOLEAN NOT NULL DEFAULT true, created_at BIGINT NOT NULL);
 CREATE TABLE IF NOT EXISTS shop_files(id BIGSERIAL PRIMARY KEY, material_id BIGINT NOT NULL REFERENCES shop_materials(id) ON DELETE CASCADE, role TEXT NOT NULL, ord INTEGER NOT NULL DEFAULT 0, mime TEXT NOT NULL, data BYTEA NOT NULL);
 CREATE INDEX IF NOT EXISTS files_m ON shop_files(material_id, role, ord);
@@ -46,15 +49,36 @@ setInterval(() => { const n = Date.now(); for (const [k, a] of hits) if (!a.some
 
 // ---- хэрэглэгч, session (httpOnly cookie) ----
 const cookies = req => Object.fromEntries((req.headers.cookie || '').split(';').map(c => c.trim()).filter(Boolean).map(c => { const i = c.indexOf('='); return [c.slice(0, i), decodeURIComponent(c.slice(i + 1))]; }));
-const pub = u => ({ id: u.id, email: u.email, name: u.name });
+const pub = u => ({
+  id: u.id, email: u.email, name: u.name,
+  characterId: u.character_id || null,
+  avatarSeed: u.avatar_seed || null,
+  avatarStyle: u.avatar_style || null
+});
 const login = (res, u) => res.cookie('sid', jwt.sign({ uid: u.id }, JWT_SECRET, { expiresIn: '60d' }), { httpOnly: true, sameSite: 'lax', secure: SECURE, maxAge: 60 * 864e5 });
 async function userOf(req) { try { return (await q('SELECT * FROM shop_users WHERE id=$1', [jwt.verify(cookies(req).sid, JWT_SECRET).uid])).rows[0] || null; } catch { return null; } }
 const need = ah(async (req, res, next) => { req.user = await userOf(req); req.user ? next() : res.status(401).json({ error: 'Нэвтэрнэ үү' }); });
 app.post('/api/auth/register', limit(10, 3600e3), ah(async (req, res) => {
-  const email = String(req.body.email || '').toLowerCase().trim(), pw = String(req.body.password || ''), name = String(req.body.name || '').trim().slice(0, 60);
-  if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email) || pw.length < 8 || pw.length > 200) return res.status(400).json({ error: 'Зөв и-мэйл, 8+ тэмдэгт нууц үг оруулна уу' });
-  try { const u = (await q('INSERT INTO shop_users(email,name,pass_hash,created_at) VALUES($1,$2,$3,$4) RETURNING *', [email, name, bcrypt.hashSync(pw, 10), Date.now()])).rows[0]; login(res, u); res.json({ user: pub(u) }); }
-  catch (e) { if (e.code === '23505') return res.status(409).json({ error: 'Энэ и-мэйл бүртгэлтэй байна' }); throw e; }
+  const email = String(req.body.email || '').toLowerCase().trim();
+  const pw = String(req.body.password || '');
+  const name = String(req.body.name || '').trim().slice(0, 60);
+  const characterId = String(req.body.characterId || '').trim();
+  const avatarSeed = String(req.body.avatarSeed || '').trim().slice(0, 40);
+  const avatarStyle = String(req.body.avatarStyle || '').trim().slice(0, 40);
+  if (!/^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$/.test(email)) return res.status(400).json({ error: 'И-мэйл хаягаа зөв бичнэ үү.' });
+  if (!name) return res.status(400).json({ error: 'Нэрээ оруулна уу.' });
+  if (pw.length < 8 || pw.length > 200) return res.status(400).json({ error: 'Нууц үг 8–200 тэмдэгт байх ёстой.' });
+  const allowedCharacters = ['anir','tsovoo','todoo','enkhrii','azaa'];
+  if (characterId && !allowedCharacters.includes(characterId)) return res.status(400).json({ error: 'Сонгосон найзын мэдээлэл буруу байна. Дахин сонгоно уу.' });
+  try {
+    const u = (await q('INSERT INTO shop_users(email,name,pass_hash,created_at,character_id,avatar_seed,avatar_style) VALUES($1,$2,$3,$4,$5,$6,$7) RETURNING *',
+      [email, name, bcrypt.hashSync(pw, 10), Date.now(), characterId || null, avatarSeed || null, avatarStyle || null])).rows[0];
+    login(res, u);
+    res.status(201).json({ user: pub(u) });
+  } catch (e) {
+    if (e.code === '23505') return res.status(409).json({ error: 'Энэ и-мэйл өмнө нь бүртгэгдсэн байна. Нэвтрэх хэсгээр орно уу.' });
+    throw e;
+  }
 }));
 app.post('/api/auth/login', limit(20, 900e3), ah(async (req, res) => {
   const u = (await q('SELECT * FROM shop_users WHERE email=$1', [String(req.body.email || '').toLowerCase().trim()])).rows[0];
