@@ -82,7 +82,7 @@ function refreshLearnerWelcome(){
   const box=document.getElementById('learnerWelcome'); if(!box)return;
   let id='anir';
   try{id=localStorage.getItem('shb_profile_character_v1')||localStorage.getItem('shb_selected_character_v1')||'anir';}catch(e){}
-  const friend=(window.SHCharacters||[]).find(c=>c.id===id)||{name:'Найз',image:'images/characters/anir.png'};
+  const friend=(window.SHCharacters||[]).find(c=>c.id===id)||{name:'Найз',image:'anir.png'};
   const greetings={
     tsovoo:{emoji:'🧩',title:'Сайн уу, нямбай найз минь!',text:'Өнөөдөр нэг жижиг алхам хийе. Чи хичээвэл чадна, би чамтай хамт байна!'},
     todoo:{emoji:'🚀',title:'Өө, миний эрч хүчтэй найз ирлээ!',text:'Шинэ зүйл туршиж үзэхэд бэлэн үү? Алдахаас бүү ай, оролдох бүрдээ чи өсөж байна!'},
@@ -92,7 +92,7 @@ function refreshLearnerWelcome(){
   };
   const g=greetings[id]||greetings.anir;
   const img=document.getElementById('learnerWelcomeAvatar');
-  if(img){img.src=friend.image||'images/characters/anir.png';img.alt=friend.name+' — хамт суралцах найз';}
+  if(img){img.src=friend.image||'anir.png';img.alt=friend.name+' — хамт суралцах найз';}
   const title=document.getElementById('learnerWelcomeTitle'), text=document.getElementById('learnerWelcomeText');
   if(title)title.textContent=g.emoji+' '+g.title;
   if(text)text.textContent=g.text;
