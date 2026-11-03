@@ -90,13 +90,13 @@ app.get('/api/auth/me', ah(async (req, res) => { const u = await userOf(req); re
 
 // ---- материал, эрх ----
 const owned = async (m, u) => m.price === 0 || (!!u && (await q('SELECT 1 FROM shop_purchases WHERE user_id=$1 AND material_id=$2', [u.id, m.id])).rowCount > 0);
-const material = async id => (await q('SELECT * FROM shop_materials WHERE id=$1 AND active=true', [parseInt(id) || 0])).rows[0];
+const material = async (id, includeInactive = false) => (await q(`SELECT * FROM shop_materials WHERE id=$1 ${includeInactive ? '' : 'AND active=true'}`, [parseInt(id) || 0])).rows[0];
 app.get('/api/materials', ah(async (req, res) => {
   const u = await userOf(req), mine = u ? new Set((await q('SELECT material_id FROM shop_purchases WHERE user_id=$1', [u.id])).rows.map(r => r.material_id)) : new Set();
   const rows = (await q('SELECT id,title,description,category,price,created_at FROM shop_materials WHERE active=true ORDER BY created_at DESC')).rows;
   res.json(rows.map(m => ({ ...m, owned: m.price === 0 || mine.has(m.id) })));
 }));
-app.get('/api/my', need, ah(async (req, res) => res.json((await q('SELECT m.id,m.title,m.description,m.category,m.price,p.created_at "boughtAt" FROM shop_purchases p JOIN shop_materials m ON m.id=p.material_id WHERE p.user_id=$1 AND m.active=true ORDER BY p.created_at DESC', [req.user.id])).rows)));
+app.get('/api/my', need, ah(async (req, res) => res.json((await q('SELECT m.id,m.title,m.description,m.category,m.price,p.created_at "boughtAt" FROM shop_purchases p JOIN shop_materials m ON m.id=p.material_id WHERE p.user_id=$1 ORDER BY p.created_at DESC', [req.user.id])).rows)));
 const sendFile = (res, f) => { res.set({ 'Content-Type': f.mime, 'Cache-Control': 'private, no-store', 'X-Content-Type-Options': 'nosniff', 'Content-Disposition': 'inline' }); res.send(f.data); };
 app.get('/api/materials/:id/cover', ah(async (req, res) => {
   const f = (await q("SELECT f.mime,f.data FROM shop_files f JOIN shop_materials m ON m.id=f.material_id WHERE m.id=$1 AND m.active=true AND f.role='cover' LIMIT 1", [parseInt(req.params.id) || 0])).rows[0];
@@ -104,13 +104,13 @@ app.get('/api/materials/:id/cover', ah(async (req, res) => {
 }));
 // хуудас бүрийг эрх шалгаж өгнө (нийтэд нээлттэй URL биш)
 app.get('/api/materials/:id/page/:n', ah(async (req, res) => {
-  const m = await material(req.params.id); if (!m) return res.status(404).end();
+  const m = await material(req.params.id, true); if (!m) return res.status(404).end();
   if (!(await owned(m, await userOf(req)))) return res.status(403).end();
   const f = (await q("SELECT mime,data FROM shop_files WHERE material_id=$1 AND role='page' ORDER BY ord OFFSET $2 LIMIT 1", [m.id, Math.max(0, (parseInt(req.params.n) || 1) - 1)])).rows[0];
   f ? sendFile(res, f) : res.status(404).end();
 }));
 app.get('/api/materials/:id/print', ah(async (req, res) => {
-  const m = await material(req.params.id), u = await userOf(req); res.set('Cache-Control', 'no-store');
+  const m = await material(req.params.id, true), u = await userOf(req); res.set('Cache-Control', 'no-store');
   const msg = t => res.status(403).type('html').send(`<meta charset="utf-8"><body style="font:18px system-ui;padding:40px;text-align:center">${t}<p><a href="/materials.html">← Сургалтын материал</a></p>`);
   if (!m) return res.status(404).type('html').send('<meta charset="utf-8">Материал олдсонгүй');
   if (!(await owned(m, u))) return msg(u ? 'Энэ материалыг хэвлэхийн тулд эхлээд худалдаж авна уу.' : 'Төлбөртэй материал. Эхлээд нэвтэрч, худалдаж авна уу.');
