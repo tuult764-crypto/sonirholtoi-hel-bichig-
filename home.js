@@ -83,14 +83,18 @@
 
   /* ── 3. ШИНЭ МЭДЛЭГ (нүүр хуудасны гол карт) ───────────── */
   function renderToday() {
-    const box = $('todayCard'); if (!box) return;
+    const boxes = [$('todayCard'), $('studentTodayCard')].filter(Boolean);
+    if (!boxes.length) return;
     const e = K.today();
-    if (!e) { box.innerHTML = '<p class="empty">Өнөөдрийн мэдлэг бэлтгэгдэж байна.</p>'; return; }
+    if (!e) {
+      boxes.forEach(box => { box.innerHTML = '<p class="empty">Өнөөдрийн мэдлэг бэлтгэгдэж байна.</p>'; });
+      return;
+    }
     const t = K.topic(e.topics[0]);
-    box.innerHTML = `
+    const content = `
       <div class="today-head">
         <span class="today-ico" aria-hidden="true">${CAL}</span>
-        <h2>Шинэ мэдлэг</h2>
+        <h2>Өнөөдрийн шинэ мэдлэг</h2>
         <time class="date-chip" datetime="${today()}">${K.fmtDate(today())}</time>
       </div>
       <div class="today-body">
@@ -102,6 +106,7 @@
           <button class="btn-blue" type="button" data-open="${esc(e.id)}">Дэлгэрэнгүй үзэх ${ARROW}</button>
         </div>
       </div>`;
+    boxes.forEach(box => { box.innerHTML = content; });
   }
   function renderPrev() {
     const box = $('prevList'); if (!box) return;

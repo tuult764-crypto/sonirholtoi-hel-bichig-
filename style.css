@@ -1437,3 +1437,34 @@ footer {
 @media (prefers-reduced-motion:reduce) {
   #trainingSection *, .learner-welcome * { animation:none !important; transition:none !important; }
 }
+
+
+/* Сурагчийн хэсэгт өнөөдрийн шинэ мэдлэгийг ил тод харуулах */
+.student-daily-knowledge {
+  max-width:1090px; margin:4px auto 24px; padding:0;
+}
+.student-daily-label {
+  display:inline-flex; align-items:center; gap:7px;
+  margin:0 0 9px 8px; padding:6px 12px;
+  border-radius:999px; background:#f6e8bf; color:#8a7142;
+  font-size:11px; font-weight:900; letter-spacing:.04em;
+}
+.student-today {
+  display:block !important; max-width:none !important; width:100%;
+  margin:0 auto !important; padding:20px 24px !important;
+  background:linear-gradient(120deg,#fff8e8 0%,#fffdf5 52%,#edf5ee 100%) !important;
+  border:1px solid #eadcc1 !important; border-radius:22px !important;
+  box-shadow:0 10px 24px #78694a14 !important; transform:none !important;
+}
+.student-today:before { display:none !important; }
+.student-today .today-head { display:flex; align-items:center; gap:10px; flex-wrap:wrap; }
+.student-today .today-head h2 { color:#567c7d !important; font-size:19px !important; margin:0; }
+.student-today .today-body { display:grid; grid-template-columns:112px 1fr; gap:18px; align-items:center; }
+.student-today .today-text h3 { color:#4b6670 !important; line-height:1.5 !important; }
+.student-today .today-text p { color:#6f7b78 !important; line-height:1.8 !important; }
+.student-today .btn-blue { background:#e77e6c !important; border-color:#e77e6c !important; border-radius:999px !important; color:#fff !important; }
+@media(max-width:620px) {
+ .student-today { padding:15px !important; }
+ .student-today .today-body { grid-template-columns:1fr; }
+ .student-today .today-body .kd-art,.student-today .today-body .art-tile { max-width:130px; }
+}
