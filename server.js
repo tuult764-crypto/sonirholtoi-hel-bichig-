@@ -30,12 +30,14 @@ ALTER TABLE lesson_packages ADD COLUMN IF NOT EXISTS payment_order_no TEXT;
 CREATE UNIQUE INDEX IF NOT EXISTS lesson_packages_payment_order ON lesson_packages(payment_order_no) WHERE payment_order_no IS NOT NULL;
 CREATE INDEX IF NOT EXISTS lesson_packages_user ON lesson_packages(user_id, status, expires_at);
 CREATE TABLE IF NOT EXISTS lesson_usage(id BIGSERIAL PRIMARY KEY, user_id BIGINT NOT NULL REFERENCES shop_users(id), package_id BIGINT NOT NULL REFERENCES lesson_packages(id), source_pages INTEGER NOT NULL, input_tokens INTEGER NOT NULL DEFAULT 0, output_tokens INTEGER NOT NULL DEFAULT 0, model TEXT NOT NULL, created_at BIGINT NOT NULL);
-CREATE TABLE IF NOT EXISTS training_orders(id BIGSERIAL PRIMARY KEY, order_no TEXT UNIQUE NOT NULL, email TEXT NOT NULL, item TEXT NOT NULL, note TEXT NOT NULL DEFAULT '', amount INTEGER NOT NULL CHECK(amount > 0), status TEXT NOT NULL DEFAULT 'pending', created_at BIGINT NOT NULL, paid_at BIGINT, bank_reference TEXT, confirmed_at BIGINT);`);
+CREATE TABLE IF NOT EXISTS training_orders(id BIGSERIAL PRIMARY KEY, order_no TEXT UNIQUE NOT NULL, email TEXT NOT NULL, item TEXT NOT NULL, note TEXT NOT NULL DEFAULT '', amount INTEGER NOT NULL CHECK(amount > 0), status TEXT NOT NULL DEFAULT 'pending', created_at BIGINT NOT NULL, paid_at BIGINT, bank_reference TEXT, confirmed_at BIGINT);
+CREATE TABLE IF NOT EXISTS diary_entries(id BIGSERIAL PRIMARY KEY, title TEXT NOT NULL, body TEXT NOT NULL, excerpt TEXT NOT NULL DEFAULT '', entry_date DATE NOT NULL DEFAULT CURRENT_DATE, status TEXT NOT NULL DEFAULT 'draft', image_url TEXT, created_at BIGINT NOT NULL, updated_at BIGINT NOT NULL);
+CREATE INDEX IF NOT EXISTS diary_entries_public ON diary_entries(status, entry_date DESC, id DESC);`);
 }
 const app = express();
 app.set('trust proxy', 1);
 // Нууц файлуудыг (код, тохиргоо, өгөгдөл) нийтэд нээхгүй
-const DENY = /^\/(server\.js|qpay\.js|package(-lock)?\.json|\.env.*|\.git.*|netlify.*|readme\.md|literature_db\.txt|bagsh-app\.js|bagsh-qpay\.js|worksheet\.js|node_modules.*|.*\.xlsx)$/i;
+const DENY = /^\/(server\.js|server-code\.txt|qpay\.js|bagsh-app\.js|bagsh-qpay\.js|worksheet\.js|package(-lock)?\.json|\.env.*|env\.(example|integrated\.example)|\.git.*|netlify.*|readme\.md|.*-MN\.(txt|md)|literature_db\.txt|node_modules.*|.*\.xlsx)$/i;
 app.use((req, res, next) => { let p = ''; try { p = decodeURIComponent(req.path); } catch { return res.status(400).end(); } DENY.test(p) ? res.status(404).end() : next(); });
 app.use((req, res, next) => (req.path.startsWith('/api/worksheet/') || req.path === '/api/admin/materials' || req.path === '/api/lesson-plan') && req.method === 'POST' ? next() : express.json({ limit: '100kb' })(req, res, next));
 let ready = false;
@@ -46,7 +48,7 @@ const bagsh = require('./bagsh-app');
 app.use('/api/worksheet', bagsh.router);
 app.get(['/bagsh', '/bagsh/'], (req, res) => res.sendFile(path.join(__dirname, 'bagsh-index.html')));
 app.get(['/bagsh/admin', '/bagsh/admin.html', '/bagsh-admin'], (req, res) => res.sendFile(path.join(__dirname, 'bagsh-admin.html')));
-app.get('/bagsh/pay-qr.jpg', (req, res) => res.sendFile(path.join(__dirname, 'pay-qr.jpg')));
+app.get('/bagsh/pay-qr.jpg', (req, res) => res.redirect(302, '/qr.png'));
 const ah = fn => (req, res, next) => fn(req, res, next).catch(e => { console.error(req.path, e.message); if (!res.headersSent) res.status(500).json({ error: 'Серверийн алдаа' }); });
 const hits = new Map();
 const limit = (max, ms) => (req, res, next) => { const k = req.ip + req.path, now = Date.now(), a = (hits.get(k) || []).filter(t => now - t < ms); if (a.length >= max) return res.status(429).json({ error: 'Хэт олон оролдлого. Түр хүлээнэ үү.' }); a.push(now); hits.set(k, a); next(); };
@@ -149,6 +151,10 @@ app.post('/api/buy', need, limit(30, 3600e3), ah(async (req, res) => {
   if (m.price === 0) return res.status(400).json({ error: 'Үнэгүй материал. Шууд хэвлэж болно.' });
   if (await owned(m, req.user)) return res.status(409).json({ error: 'Та энэ материалыг аль хэдийн авсан байна (Миний сан)' });
   const manual = qpay.MODE === 'manual';
+  if (manual) {
+    const pending = (await q("SELECT order_no AS \"orderNo\",amount FROM shop_payments WHERE user_id=$1 AND material_id=$2 AND status='pending' AND invoice_id LIKE 'MANUAL-%' ORDER BY created_at DESC LIMIT 1", [req.user.id,m.id])).rows[0];
+    if (pending) return res.json({ ...pending, invoiceId:'MANUAL-'+pending.orderNo, manual:true, mock:false, qrUrl:'/qr.png', reused:true });
+  }
   for (let i = 0; i < 3; i++) {
     const orderNo = manual ? 'BT' + crypto.randomInt(10000, 100000) : 'BT' + Date.now() + crypto.randomBytes(3).toString('hex');
     try {
@@ -275,6 +281,10 @@ app.get('/api/lesson-package/status', need, ah(async(req,res)=>res.json(await cu
 app.post('/api/lesson-package/buy', need, limit(10,3600e3), ah(async(req,res)=>{
   if(qpay.MODE==='mock' && (process.env.RENDER || process.env.NODE_ENV==='production')) return res.status(503).json({error:'Төлбөрийн горим тохируулаагүй байна. QPAY_MODE=manual эсвэл live тохируулна уу.'});
   const type=String(req.body.packageType||''), o=PACKAGE_OPTIONS[type]; if(!o) return res.status(400).json({error:'Багцаа сонгоно уу'});
+  if (qpay.MODE === 'manual') {
+    const pending=(await q("SELECT order_no AS \"orderNo\",amount FROM lesson_package_payments WHERE user_id=$1 AND package_type=$2 AND status='pending' AND invoice_id LIKE 'MANUAL-%' ORDER BY created_at DESC LIMIT 1",[req.user.id,type])).rows[0];
+    if(pending) return res.json({...pending,title:o.title,invoiceId:'MANUAL-'+pending.orderNo,manual:true,mock:false,qrUrl:'/qr.png',reused:true});
+  }
   const orderNo='LP'+Date.now()+crypto.randomBytes(3).toString('hex');
   const inv=await qpay.createInvoice({orderNo,amount:o.amount,description:o.title,callbackUrl:`${process.env.PUBLIC_URL||''}/api/lesson-package/callback?order=${orderNo}`});
   await q('INSERT INTO lesson_package_payments(order_no,user_id,package_type,invoice_id,amount,created_at) VALUES($1,$2,$3,$4,$5,$6)',[orderNo,req.user.id,type,inv.invoiceId,o.amount,Date.now()]);
@@ -332,7 +342,8 @@ app.get('/api/admin/lesson-package-status/:orderNo', ...A, ah(async (req, res) =
 }));
 
 app.get('/api/admin/all-pending', ...A, ah(async (req, res) => {
-  const [materials, lessons, worksheets, trainings] = await Promise.all([
+  // Нэг үйлчилгээний сан түр тасарсан ч бусад үйлчилгээний захиалгыг харуулна.
+  const sources = await Promise.allSettled([
     q(`SELECT p.order_no AS "orderNo", p.amount, p.created_at AS "createdAt", u.email, m.title AS detail
        FROM shop_payments p JOIN shop_users u ON u.id=p.user_id JOIN shop_materials m ON m.id=p.material_id
        WHERE p.status='pending' AND p.invoice_id LIKE 'MANUAL-%' ORDER BY p.created_at DESC LIMIT 100`),
@@ -342,12 +353,14 @@ app.get('/api/admin/all-pending', ...A, ah(async (req, res) => {
     bagsh.adminPendingPayments(),
     q(`SELECT order_no AS "orderNo", amount, created_at AS "createdAt", email, item AS detail FROM training_orders WHERE status='pending' ORDER BY created_at DESC LIMIT 100`)
   ]);
+  const get = i => sources[i].status === 'fulfilled' ? sources[i].value : null;
   const rows = [
-    ...materials.rows.map(r => ({ ...r, service: 'Цахим дэлгүүр', detail: r.detail, kind: 'material' })),
-    ...lessons.rows.map(r => ({ ...r, service: 'Ээлжит хичээл', detail: r.detail === 'week7' ? '7 хоногийн багц' : '5 хуудасны багц', kind: 'lesson' })),
-    ...worksheets.map(r => ({ ...r, service: 'Багшийн туслах · Ажлын хуудас', detail: `${r.qty || 1} эрх`, kind: 'worksheet' })),
-    ...trainings.rows.map(r => ({ ...r, service: 'Сургалтын бүртгэл', kind: 'training' }))
+    ...(get(0)?.rows || []).map(r => ({ ...r, service: 'Цахим дэлгүүр', kind: 'material' })),
+    ...(get(1)?.rows || []).map(r => ({ ...r, service: 'Ээлжит хичээл', detail: r.detail === 'week7' ? '7 хоногийн багц' : '5 хуудасны багц', kind: 'lesson' })),
+    ...(get(2) || []).map(r => ({ ...r, service: 'Ажлын хуудас', detail: `${r.qty || 1} эрх`, kind: 'worksheet' })),
+    ...(get(3)?.rows || []).map(r => ({ ...r, service: 'Сургалтын бүртгэл', kind: 'training' }))
   ].sort((a,b) => Number(b.createdAt) - Number(a.createdAt));
+  res.set('X-Admin-Source-Status', sources.map((x,i) => `${['shop','lesson','worksheet','training'][i]}:${x.status}`).join(','));
   res.json(rows);
 }));
 app.post('/api/admin/all-confirm', ...A, ah(async (req, res) => {
@@ -435,12 +448,55 @@ app.post('/api/lesson-plan', limit(8, 3600e3), express.json({ limit: '25mb' }), 
   res.json({ plan, warnings: (Array.isArray(raw.warnings) ? raw.warnings : []).slice(0, 5).map(w => t(w, 200)).filter(Boolean), usage: { sourcePages, inputTokens: Number(data.usage?.prompt_tokens||0), outputTokens: Number(data.usage?.completion_tokens||0) }, access: await currentLessonPackage(user.id) });
 }));
 
+// ---- Анирын тэмдэглэл: админ бичиж/засаж, нийтэлсэн бичвэрийг сайт харуулна ----
+app.get('/api/diary', ah(async (req,res) => {
+  const rows = await q("SELECT id,title,body,excerpt,entry_date AS date,image_url AS \"imageUrl\" FROM diary_entries WHERE status='published' ORDER BY entry_date DESC,id DESC");
+  res.json(rows.rows);
+}));
+app.get('/api/admin/diary', ...A, ah(async (req,res) => {
+  res.json((await q("SELECT id,title,body,excerpt,entry_date AS date,status,image_url AS \"imageUrl\" FROM diary_entries ORDER BY entry_date DESC,id DESC")).rows);
+}));
+app.post('/api/admin/diary', ...A, ah(async (req,res) => {
+  const id = Number(req.body.id) || 0;
+  const title = String(req.body.title || '').trim().slice(0,160);
+  const body = String(req.body.body || '').trim().slice(0,20000);
+  const excerpt = String(req.body.excerpt || '').trim().slice(0,500);
+  const date = String(req.body.date || '').trim();
+  const status = req.body.status === 'published' ? 'published' : 'draft';
+  const imageUrl = String(req.body.imageUrl || '').trim().slice(0,1000);
+  if (!title || !body || !/^\\d{4}-\\d{2}-\\d{2}$/.test(date)) return res.status(400).json({error:'Гарчиг, бичвэр, огноог зөв оруулна уу.'});
+  if (imageUrl && !/^https:\/\//i.test(imageUrl) && !/^\/(?!\/)/.test(imageUrl)) return res.status(400).json({error:'Зургийн холбоос буруу байна.'});
+  const now=Date.now();
+  if (id) {
+    const r=await q("UPDATE diary_entries SET title=$2,body=$3,excerpt=$4,entry_date=$5,status=$6,image_url=$7,updated_at=$8 WHERE id=$1 RETURNING id",
+      [id,title,body,excerpt,date,status,imageUrl||null,now]);
+    if (!r.rowCount) return res.status(404).json({error:'Тэмдэглэл олдсонгүй'});
+    return res.json({ok:true,id});
+  }
+  const r=await q("INSERT INTO diary_entries(title,body,excerpt,entry_date,status,image_url,created_at,updated_at) VALUES($1,$2,$3,$4,$5,$6,$7,$7) RETURNING id",
+    [title,body,excerpt,date,status,imageUrl||null,now]);
+  res.status(201).json({ok:true,id:r.rows[0].id});
+}));
+app.delete('/api/admin/diary/:id', ...A, ah(async (req,res) => {
+  const r=await q("DELETE FROM diary_entries WHERE id=$1",[Number(req.params.id)||0]);
+  res.json({ok:r.rowCount===1});
+}));
+
 app.use(express.static(path.join(__dirname)));
 app.listen(process.env.PORT || 3000, () => console.log('Ажиллаж байна. Port:', process.env.PORT || 3000, '| QPay горим:', qpay.MODE));
 (async function boot() {
   if (!CONFIG_OK) return;
   for (;;) {
-    try { await init(); ready = true; console.log('Өгөгдлийн сан бэлэн'); try { await bagsh.initBagsh(); } catch (be) { console.error('Багшийн туслахын DB холболт бэлэн биш:', be.message); } return; }
+    try {
+      await init(); ready = true; console.log('Өгөгдлийн сан бэлэн');
+      (async function retryBagsh() {
+        for (;;) {
+          try { await bagsh.initBagsh(); return; }
+          catch (be) { console.error('Багшийн туслахын DB холболт бэлэн биш:', be.message, '(30 секундын дараа дахин оролдоно)'); await new Promise(r => setTimeout(r, 30000)); }
+        }
+      })();
+      return;
+    }
     catch (e) { console.error('Өгөгдлийн сантай холбогдож чадсангүй:', e.message, '(15 секундын дараа дахин оролдоно)'); await new Promise(r => setTimeout(r, 15000)); }
   }
 })();

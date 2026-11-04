@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Caveat:wght@500;600;700&family=Kalam:wght@300;400;700&family=Nunito:wght@400;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Caveat:wght@500;600;700&family=Nunito:wght@400;600;700;800&family=Noto+Sans:wght@400;500;600;700;800&display=swap');
 /* ══════════════════════════════════════════════════════════════
    НҮҮР ХУУДАС + ТОЛГОЙ ХЭСЭГ — v3
    Цагаан дэвсгэр, цайвар цэнхэр дэмжлэг, ногоон тодотгол.
@@ -366,3 +366,7 @@ main:has(> .home-v3.active) { max-width: none; padding: 0; }
 .diary-friend-list img{width:92px;height:100px;object-fit:contain}
 @media(max-width:650px){.anir-diary{padding:18px 14px 55px}.diary-stage{min-height:360px;padding:18px 4px}.diary-book{height:320px;width:96vw}.diary-cover-inner{padding:24px 10px 12px}.diary-anir-cover{width:105px;height:112px}.diary-cover h3{font-size:20px}.diary-cover-small{font-size:7px}.diary-page{padding:30px 12px 25px;font-size:12px;line-height:1.8}.diary-page-left{padding:15px}.diary-page-left p{font-size:11px}.diary-page-mark{font-size:38px}.diary-page-right{padding:25px 18px 20px}.diary-page-right h3{font-size:17px;margin:10px 0}.diary-page-date{font-size:8px}.diary-page-number{right:12px}.diary-archive{grid-template-columns:1fr;gap:15px;padding:42px 4px 30px}.diary-empty{border-left:0;border-top:1px solid #e5d9c4}.diary-friend-list{gap:12px}.diary-friend-list img{width:65px;height:75px}}
 @media(prefers-reduced-motion:reduce){.diary-cover,.diary-page-right,.diary-book{transition:none!important}}
+
+/* Анирын тэмдэглэлийн кирилл бичвэрт кирилл дэмждэг фонт ашиглана. */
+.diary-page-right p,.diary-entry-body{font-family:'Noto Sans',Nunito,system-ui,sans-serif!important;font-size:clamp(15px,1.35vw,18px)!important;line-height:1.85!important;letter-spacing:0!important;white-space:normal;overflow-wrap:anywhere}
+.diary-entry-body{white-space:pre-wrap;}

@@ -12,7 +12,7 @@ const ANTHROPIC_API_KEY = secret('BAGSH_ANTHROPIC_API_KEY') || secret('ANTHROPIC
 const PROVIDER = (process.env.BAGSH_AI_PROVIDER || process.env.AI_PROVIDER || 'gemini').toLowerCase();
 const GEMINI_MODEL = process.env.GEMINI_MODEL || 'gemini-flash-lite-latest';
 const GEMINI_URL = process.env.GEMINI_URL || `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent`;
-const ADMIN_KEY = secret('ADMIN_KEY') || secret('BAGSH_ADMIN_KEY');
+const ADMIN_KEYS = [...new Set([secret('BAGSH_ADMIN_KEY'), secret('ADMIN_KEY')].filter(x => x && x.length >= 12))];
 if (!JWT_SECRET || JWT_SECRET.length < 24) console.error('Багшийн туслах: BAGSH_JWT_SECRET (эсвэл JWT_SECRET) 24+ тэмдэгт байх ёстой.');
 if (!DATABASE_URL) console.error('Багшийн туслах: BAGSH_DATABASE_URL тохируулаагүй байна.');
 const HOLD = 120e3;
@@ -160,6 +160,10 @@ router.post('/pay/create', auth, limit(20, 3600e3), ah(async (req, res) => {
   try {
     if (qpay.MODE === 'mock' && (process.env.RENDER || process.env.NODE_ENV === 'production')) return res.status(503).json({ error: 'Төлбөрийн горим тохируулаагүй байна. QPAY_MODE=manual эсвэл live тохируулна уу.' });
     const manual = qpay.MODE === 'manual';
+    if (manual) {
+      const pending = (await q("SELECT order_no AS \"orderNo\",amount,qty FROM payments WHERE user_id=$1 AND qty=$2 AND status='pending' AND invoice_id LIKE 'MANUAL-%' ORDER BY created_at DESC LIMIT 1", [req.user.id,qty])).rows[0];
+      if (pending) return res.json({ ...pending, invoiceId:'MANUAL-'+pending.orderNo, manual:true, mock:false, qrUrl:'/qr.png', reused:true });
+    }
     const orderNo = 'WS' + Date.now() + crypto.randomBytes(4).toString('hex');
     const inv = await qpay.createInvoice({ orderNo, amount, description: `Ажлын хуудас ${qty} ширхэг` });
     await q('INSERT INTO payments(order_no,user_id,invoice_id,amount,qty,created_at) VALUES($1,$2,$3,$4,$5,$6)', [orderNo, req.user.id, inv.invoiceId, amount, qty, Date.now()]);
@@ -182,8 +186,9 @@ if (qpay.MODE === 'mock') router.post('/pay/mock-confirm', auth, ah(async (req, 
 
 // ---- гар төлбөрийн админ (QPAY_MODE=manual) ----
 const adminAuth = (req, res, next) => {
-  const a = Buffer.from(String(req.headers['x-admin-key'] || '')), b = Buffer.from(ADMIN_KEY);
-  if (ADMIN_KEY.length < 12 || a.length !== b.length || !crypto.timingSafeEqual(a, b)) return res.status(401).json({ error: 'Админ түлхүүр буруу' });
+  const supplied = Buffer.from(String(req.headers['x-admin-key'] || ''));
+  const valid = ADMIN_KEYS.some(key => { const expected = Buffer.from(key); return supplied.length === expected.length && crypto.timingSafeEqual(supplied, expected); });
+  if (!valid) return res.status(401).json({ error: 'Админ түлхүүр буруу' });
   next();
 };
 router.get('/admin/pending', limit(60, 900e3), adminAuth, ah(async (req, res) => {

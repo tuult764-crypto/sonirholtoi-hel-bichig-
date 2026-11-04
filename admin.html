@@ -18,6 +18,21 @@ table{width:100%;border-collapse:collapse;display:block;overflow-x:auto}td,th{bo
 <div class="panel"><label for="lookup">Захиалгын кодоор төлөв шалгах (Ээлжит хичээлийн багц)</label><br>
 <input id="lookup" placeholder="LP..."><button id="check" type="button">Төлөв шалгах</button><pre id="status" class="muted" style="white-space:pre-wrap"></pre></div>
 <table><thead><tr><th>Захиалгын код</th><th>И-мэйл</th><th>Үйлчилгээ</th><th>Дүн</th><th>Огноо</th><th>Үйлдэл</th></tr></thead><tbody id="allPayments"></tbody></table>
+
+<h2>Анирын тэмдэглэл · Зохиол бичих</h2>
+<div class="panel f" style="max-width:900px">
+  <input id="diaryId" type="hidden">
+  <label>Гарчиг<input id="diaryTitle" maxlength="160" placeholder="Тэмдэглэлийн гарчиг"></label>
+  <label>Огноо<input id="diaryDate" type="date"></label>
+  <label>Товч танилцуулга<input id="diaryExcerpt" maxlength="500" placeholder="Нүүр хуудсанд харагдах товч агуулга"></label>
+  <label>Зохиол / тэмдэглэл<textarea id="diaryBody" rows="12" maxlength="20000" placeholder="Анир энд өөрийн тэмдэглэл, зохиолоо бичнэ..."></textarea></label>
+  <label>Зургийн холбоос (заавал биш)<input id="diaryImage" placeholder="/anir.png эсвэл https://..."></label>
+  <label>Төлөв<select id="diaryStatus"><option value="draft">Ноорог — сайтад харагдахгүй</option><option value="published">Нийтлэх — сайтад харагдана</option></select></label>
+  <div><button id="diarySave" type="button">Хадгалах</button> <button id="diaryClear" type="button">Шинэ тэмдэглэл</button></div>
+  <p class="muted">Ноорог хадгалж болно. “Нийтлэх” төлөв сонгосон үед л үндсэн сайтад нийтлэгдэнэ.</p>
+</div>
+<table><thead><tr><th>Огноо</th><th>Гарчиг</th><th>Төлөв</th><th>Үйлдэл</th></tr></thead><tbody id="diaryRows"></tbody></table>
+
 <h2>Материал нэмэх</h2><div class="f panel">
 <input id="ti" placeholder="Нэр"><input id="de" placeholder="Товч тайлбар"><input id="ca" placeholder="Ангилал">
 <input id="pr" type="number" min="0" placeholder="Үнэ (0 = үнэгүй)">
@@ -34,7 +49,7 @@ async function api(p,b){
  if(!r.ok)throw new Error(j.error||('Алдаа ('+r.status+')'));return j
 }
 function cell(tr,v){const c=tr.insertCell();if(v instanceof Node)c.append(v);else c.textContent=String(v??'');return c}
-function date(v){const n=Number(v);return Number.isFinite(n)?new Date(n).toLocaleString('mn-MN'):'—'}
+function date(v){if(v==null)return '—';const n=typeof v==='number'||/^\\d+$/.test(String(v))?new Date(Number(v)):new Date(v);return Number.isNaN(n.getTime())?'—':n.toLocaleString('mn-MN')}
 async function refresh(){
  try{
   const rows=await api('all-pending');const t=$('allPayments');t.replaceChildren();
@@ -82,5 +97,21 @@ async function add(){
  $('add').disabled=true;say('Байршуулж байна...');
  try{const body={title:$('ti').value,description:$('de').value,category:$('ca').value,price:$('pr').value,pages:await Promise.all(pg.map(img))};if($('cv').files[0])body.cover=await img($('cv').files[0]);await api('materials',body);say('Материал нэмэгдлээ',true);['ti','de','ca','pr','cv','pg'].forEach(i=>$(i).value='');await refresh()}catch(e){say(e.message)}finally{$('add').disabled=false}
 }
-$('login').onclick=refresh;$('check').onclick=checkOrder;$('add').onclick=add;
+
+function clearDiary(){['diaryId','diaryTitle','diaryExcerpt','diaryBody','diaryImage'].forEach(id=>$(id).value='');$('diaryDate').value=new Date().toISOString().slice(0,10);$('diaryStatus').value='draft'}
+async function loadDiary(){
+ const rows=await api('diary');const t=$('diaryRows');t.replaceChildren();
+ rows.forEach(x=>{const tr=t.insertRow();cell(tr,date(x.date));cell(tr,x.title);cell(tr,x.status==='published'?'Нийтэлсэн':'Ноорог');
+ const edit=document.createElement('button');edit.textContent='Засах';edit.onclick=()=>{ $('diaryId').value=x.id;$('diaryTitle').value=x.title;$('diaryDate').value=String(x.date).slice(0,10);$('diaryExcerpt').value=x.excerpt||'';$('diaryBody').value=x.body;$('diaryImage').value=x.imageUrl||'';$('diaryStatus').value=x.status;window.scrollTo({top:$('diaryTitle').getBoundingClientRect().top+scrollY-30,behavior:'smooth'});};
+ const del=document.createElement('button');del.textContent='Устгах';del.onclick=async()=>{if(confirm('Энэ тэмдэглэлийг бүрмөсөн устгах уу?')){await fetch('/api/admin/diary/'+x.id,{method:'DELETE',headers:{'x-admin-key':$('k').value}}).then(async r=>{if(!r.ok)throw new Error('Устгаж чадсангүй')});await loadDiary();}};
+ cell(tr,edit);cell(tr,del);
+ });
+}
+async function saveDiary(){
+ const b=$('diarySave');b.disabled=true;
+ try{await api('diary',{id:$('diaryId').value||undefined,title:$('diaryTitle').value,date:$('diaryDate').value,excerpt:$('diaryExcerpt').value,body:$('diaryBody').value,imageUrl:$('diaryImage').value,status:$('diaryStatus').value});say('Тэмдэглэл хадгалагдлаа',true);clearDiary();await loadDiary();}
+ catch(e){say(e.message)}finally{b.disabled=false}
+}
+
+$('login').onclick=async()=>{await refresh();try{await loadDiary()}catch(e){say(e.message)}};$('check').onclick=checkOrder;$('add').onclick=add;$('diarySave').onclick=saveDiary;$('diaryClear').onclick=clearDiary;clearDiary();
 </script></body></html>
