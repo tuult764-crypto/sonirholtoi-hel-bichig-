@@ -26,6 +26,8 @@ ALTER TABLE shop_payments ADD COLUMN IF NOT EXISTS bank_reference TEXT; ALTER TA
 CREATE TABLE IF NOT EXISTS lesson_package_payments(id BIGSERIAL PRIMARY KEY, order_no TEXT UNIQUE NOT NULL, user_id BIGINT NOT NULL REFERENCES shop_users(id), package_type TEXT NOT NULL CHECK(package_type IN ('pages5','week7')), invoice_id TEXT NOT NULL, amount INTEGER NOT NULL, status TEXT NOT NULL DEFAULT 'pending', created_at BIGINT NOT NULL, paid_at BIGINT);
 ALTER TABLE lesson_package_payments ADD COLUMN IF NOT EXISTS bank_reference TEXT; ALTER TABLE lesson_package_payments ADD COLUMN IF NOT EXISTS confirmed_at BIGINT;
 CREATE TABLE IF NOT EXISTS lesson_packages(id BIGSERIAL PRIMARY KEY, user_id BIGINT NOT NULL REFERENCES shop_users(id), package_type TEXT NOT NULL, paid_amount INTEGER NOT NULL, total_pages INTEGER NOT NULL, used_pages INTEGER NOT NULL DEFAULT 0, daily_limit INTEGER NOT NULL, starts_at BIGINT NOT NULL, expires_at BIGINT, status TEXT NOT NULL DEFAULT 'active', created_at BIGINT NOT NULL);
+ALTER TABLE lesson_packages ADD COLUMN IF NOT EXISTS payment_order_no TEXT;
+CREATE UNIQUE INDEX IF NOT EXISTS lesson_packages_payment_order ON lesson_packages(payment_order_no) WHERE payment_order_no IS NOT NULL;
 CREATE INDEX IF NOT EXISTS lesson_packages_user ON lesson_packages(user_id, status, expires_at);
 CREATE TABLE IF NOT EXISTS lesson_usage(id BIGSERIAL PRIMARY KEY, user_id BIGINT NOT NULL REFERENCES shop_users(id), package_id BIGINT NOT NULL REFERENCES lesson_packages(id), source_pages INTEGER NOT NULL, input_tokens INTEGER NOT NULL DEFAULT 0, output_tokens INTEGER NOT NULL DEFAULT 0, model TEXT NOT NULL, created_at BIGINT NOT NULL);
 CREATE TABLE IF NOT EXISTS training_orders(id BIGSERIAL PRIMARY KEY, order_no TEXT UNIQUE NOT NULL, email TEXT NOT NULL, item TEXT NOT NULL, note TEXT NOT NULL DEFAULT '', amount INTEGER NOT NULL CHECK(amount > 0), status TEXT NOT NULL DEFAULT 'pending', created_at BIGINT NOT NULL, paid_at BIGINT, bank_reference TEXT, confirmed_at BIGINT);`);
@@ -216,11 +218,50 @@ async function activateLessonPackage(orderNo, bankReference = null) {
   const c = await pool.connect();
   try {
     await c.query('BEGIN');
-    const pr = await c.query("UPDATE lesson_package_payments SET status='paid',paid_at=$2,bank_reference=$3,confirmed_at=$2 WHERE order_no=$1 AND status='pending' RETURNING user_id,package_type,amount", [orderNo, Date.now(), bankReference]);
-    if (!pr.rowCount) { await c.query('ROLLBACK'); return false; }
-    const o = PACKAGE_OPTIONS[pr.rows[0].package_type], now = Date.now();
-    await c.query("UPDATE lesson_packages SET status='replaced' WHERE user_id=$1 AND status='active'", [pr.rows[0].user_id]);
-    await c.query("INSERT INTO lesson_packages(user_id,package_type,paid_amount,total_pages,daily_limit,starts_at,expires_at,status,created_at) VALUES($1,$2,$3,$4,$5,$6,$7,'active',$6)", [pr.rows[0].user_id, pr.rows[0].package_type, pr.rows[0].amount, o.pages, o.daily, now, o.days ? now + o.days*86400000 : null]);
+    // Lock the payment row so two admin clicks cannot create two entitlements.
+    const found = await c.query('SELECT * FROM lesson_package_payments WHERE order_no=$1 FOR UPDATE', [orderNo]);
+    if (!found.rowCount) { await c.query('ROLLBACK'); return false; }
+    const payment = found.rows[0];
+    const option = PACKAGE_OPTIONS[payment.package_type];
+    if (!option || Number(payment.amount) !== option.amount) {
+      await c.query('ROLLBACK'); throw new Error('Багцын үнэ эсвэл төрөл тохирохгүй байна');
+    }
+
+    // Already activated? Return success only if the entitlement exists.
+    const existing = await c.query('SELECT id FROM lesson_packages WHERE payment_order_no=$1', [orderNo]);
+    if (existing.rowCount) {
+      if (payment.status !== 'paid') {
+        await c.query("UPDATE lesson_package_payments SET status='paid', paid_at=COALESCE(paid_at,$2), confirmed_at=COALESCE(confirmed_at,$2), bank_reference=COALESCE(bank_reference,$3) WHERE order_no=$1", [orderNo, Date.now(), bankReference]);
+      }
+      await c.query('COMMIT'); return true;
+    }
+
+    // For a previously paid legacy order, do not create a second entitlement
+    // if a matching package was already created by the older code.
+    if (payment.status === 'paid') {
+      const legacy = await c.query(
+        "SELECT id FROM lesson_packages WHERE user_id=$1 AND package_type=$2 AND paid_amount=$3 AND created_at BETWEEN $4 AND $5 ORDER BY created_at DESC LIMIT 1",
+        [payment.user_id, payment.package_type, payment.amount, Number(payment.paid_at || payment.confirmed_at || payment.created_at)-120000, Number(payment.paid_at || payment.confirmed_at || payment.created_at)+600000]
+      );
+      if (legacy.rowCount) { await c.query('COMMIT'); return true; }
+      // Paid but no entitlement: only repair if the previous admin confirmation left an audit reference.
+      if (!payment.bank_reference && !bankReference) {
+        await c.query('ROLLBACK'); return false;
+      }
+    } else if (payment.status !== 'pending') {
+      await c.query('ROLLBACK'); return false;
+    }
+
+    const now = Date.now();
+    await c.query("UPDATE lesson_packages SET status='replaced' WHERE user_id=$1 AND status='active'", [payment.user_id]);
+    await c.query(
+      "INSERT INTO lesson_packages(user_id,package_type,paid_amount,total_pages,daily_limit,starts_at,expires_at,status,created_at,payment_order_no) VALUES($1,$2,$3,$4,$5,$6,$7,'active',$6,$8)",
+      [payment.user_id, payment.package_type, payment.amount, option.pages, option.daily, now, option.days ? now + option.days*86400000 : null, orderNo]
+    );
+    await c.query(
+      "UPDATE lesson_package_payments SET status='paid', paid_at=COALESCE(paid_at,$2), bank_reference=COALESCE(bank_reference,$3), confirmed_at=COALESCE(confirmed_at,$2) WHERE order_no=$1",
+      [orderNo, now, bankReference]
+    );
     await c.query('COMMIT'); return true;
   } catch(e) { await c.query('ROLLBACK').catch(()=>{}); throw e; } finally { c.release(); }
 }
@@ -264,6 +305,32 @@ app.post('/api/training/orders', limit(10, 3600e3), ah(async (req, res) => {
 }));
 
 // ---- Бүх үйлчилгээний төлбөрийн нэгтгэсэн админ API ----
+app.get('/api/admin/lesson-package-status/:orderNo', ...A, ah(async (req, res) => {
+  const orderNo = String(req.params.orderNo || '').trim();
+  const payment = (await q(
+    `SELECT p.order_no AS "orderNo", p.user_id AS "userId", u.email, p.package_type AS "packageType",
+            p.amount, p.status AS "paymentStatus", p.bank_reference AS "bankReference",
+            p.created_at AS "createdAt", p.paid_at AS "paidAt", p.confirmed_at AS "confirmedAt"
+       FROM lesson_package_payments p JOIN shop_users u ON u.id=p.user_id WHERE p.order_no=$1`,
+    [orderNo]
+  )).rows[0];
+  if (!payment) return res.status(404).json({ error: 'Захиалга олдсонгүй' });
+  const entitlement = (await q(
+    `SELECT id, package_type AS "packageType", paid_amount AS "paidAmount", total_pages AS "totalPages",
+            used_pages AS "usedPages", daily_limit AS "dailyLimit", starts_at AS "startsAt",
+            expires_at AS "expiresAt", status, payment_order_no AS "paymentOrderNo"
+       FROM lesson_packages
+      WHERE payment_order_no=$1
+         OR (user_id=$2 AND package_type=$3 AND paid_amount=$4
+             AND created_at BETWEEN $5 AND $6)
+      ORDER BY created_at DESC LIMIT 1`,
+    [orderNo, payment.userId, payment.packageType, payment.amount,
+     Number(payment.paidAt || payment.confirmedAt || payment.createdAt)-120000,
+     Number(payment.paidAt || payment.confirmedAt || payment.createdAt)+600000]
+  )).rows[0] || null;
+  res.json({ payment, entitlement, entitlementActive: !!entitlement && entitlement.status === 'active' && (!entitlement.expiresAt || Number(entitlement.expiresAt) > Date.now()) });
+}));
+
 app.get('/api/admin/all-pending', ...A, ah(async (req, res) => {
   const [materials, lessons, worksheets, trainings] = await Promise.all([
     q(`SELECT p.order_no AS "orderNo", p.amount, p.created_at AS "createdAt", u.email, m.title AS detail
@@ -295,8 +362,8 @@ app.post('/api/admin/all-confirm', ...A, ah(async (req, res) => {
     if (!found.rowCount) return res.status(404).json({ error: 'Хүлээгдэж буй захиалга олдсонгүй эсвэл аль хэдийн баталгаажсан байна.' });
     activated = await activate(orderNo, bankReference);
   } else if (kind === 'lesson') {
-    const found = await q("SELECT 1 FROM lesson_package_payments WHERE order_no=$1 AND invoice_id LIKE 'MANUAL-%' AND status='pending'", [orderNo]);
-    if (!found.rowCount) return res.status(404).json({ error: 'Хүлээгдэж буй захиалга олдсонгүй эсвэл аль хэдийн баталгаажсан байна.' });
+    const found = await q("SELECT status, invoice_id FROM lesson_package_payments WHERE order_no=$1", [orderNo]);
+    if (!found.rowCount || !String(found.rows[0].invoice_id).startsWith('MANUAL-')) return res.status(404).json({ error: 'Гар аргаар баталгаажуулах захиалга олдсонгүй.' });
     activated = await activateLessonPackage(orderNo, bankReference);
   } else if (kind === 'worksheet') {
     activated = await bagsh.adminConfirmPayment(orderNo, bankReference);
