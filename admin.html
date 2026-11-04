@@ -1,34 +1,41 @@
 <!doctype html>
 <html lang="mn"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="robots" content="noindex"><title>Нэгдсэн админ</title>
+<meta name="robots" content="noindex,nofollow"><title>Нэгдсэн админ</title>
 <style>
-:root{font-family:system-ui,sans-serif;color:#2b2724;background:#faf9f7}body{max-width:1100px;margin:0 auto;padding:16px}
-h2{margin:28px 0 8px}input,button{font:inherit;padding:9px;margin:3px 0}input{border:1.5px solid #e6e0d6;border-radius:8px;max-width:100%}
-button{background:#b8763f;color:white;border:0;border-radius:8px;cursor:pointer}button:disabled{opacity:.55;cursor:wait}
+:root{font-family:system-ui,-apple-system,"Noto Sans",sans-serif;color:#2b2724;background:#faf9f7}body{max-width:1100px;margin:0 auto;padding:16px}
+h2{margin:28px 0 8px}input,button,select,textarea{font:inherit;padding:9px;margin:3px 0}input,select,textarea{border:1.5px solid #e6e0d6;border-radius:8px;max-width:100%;box-sizing:border-box}
+button{background:#b8763f;color:#fff;border:0;border-radius:8px;cursor:pointer}button:disabled{opacity:.55;cursor:wait}button.sec{background:#f4eee5;color:#995b31;border:1px solid #e6e0d6}button.del{background:#b64f48}
 table{width:100%;border-collapse:collapse;display:block;overflow-x:auto}td,th{border-bottom:1px solid #e6e0d6;padding:8px;text-align:left;white-space:nowrap}
-.msg{color:#a34438;font-weight:700;min-height:1.4em}.ok{color:#28734c}.panel{background:white;border:1px solid #e6e0d6;border-radius:12px;padding:12px;margin:12px 0}
-.f{display:grid;gap:4px;max-width:520px}.muted{color:#716b64;font-size:13px}.hidden{display:none}
+.msg{color:#a34438;font-weight:700;min-height:1.4em}.msg.ok{color:#28734c}.warn{color:#8a5a00;background:#fff6dd;border:1px solid #f0dca0;border-radius:8px;padding:8px 10px;margin:8px 0}
+.panel{background:#fff;border:1px solid #e6e0d6;border-radius:12px;padding:12px;margin:12px 0}.f{display:grid;gap:4px;max-width:520px}.muted{color:#716b64;font-size:13px}.hidden{display:none!important}
 </style></head><body>
 <h1>Нэгдсэн админ</h1><div id="msg" class="msg" role="status" aria-live="polite"></div>
-<div class="panel"><label for="k">Админ түлхүүр</label><br><input id="k" type="password" autocomplete="current-password" placeholder="Админ түлхүүр">
-<button id="login" type="button">Нэвтрэх / Шинэчлэх</button>
+
+<div class="panel" id="loginBox"><label for="k">Админ түлхүүр</label><br>
+<input id="k" type="password" autocomplete="current-password" placeholder="Админ түлхүүр">
+<button id="login" type="button">Нэвтрэх</button>
 <p class="muted">Түлхүүр зөвхөн энэ хуудсанд ашиглагдана. Хэнд ч бүү илгээгээрэй.</p></div>
+
+<div id="app" class="hidden">
+<div class="panel muted">Нэвтэрсэн. <button id="reload" class="sec" type="button">↻ Бүгдийг шинэчлэх</button> <button id="logout" class="sec" type="button">Гарах</button></div>
+
 <h2>Нэгдсэн төлбөрийн удирдлага</h2>
 <p>Банкны апп дахь бодит орлого, дүн, гүйлгээний лавлагааг шалгасны дараа л баталгаажуулна.</p>
+<div id="srcWarn" class="warn hidden" role="alert"></div>
 <div class="panel"><label for="lookup">Захиалгын кодоор төлөв шалгах (Ээлжит хичээлийн багц)</label><br>
-<input id="lookup" placeholder="LP..."><button id="check" type="button">Төлөв шалгах</button><pre id="status" class="muted" style="white-space:pre-wrap"></pre></div>
+<input id="lookup" placeholder="LP12345"><button id="check" type="button">Төлөв шалгах</button><pre id="status" class="muted" style="white-space:pre-wrap"></pre></div>
 <table><thead><tr><th>Захиалгын код</th><th>И-мэйл</th><th>Үйлчилгээ</th><th>Дүн</th><th>Огноо</th><th>Үйлдэл</th></tr></thead><tbody id="allPayments"></tbody></table>
 
 <h2>Анирын тэмдэглэл · Зохиол бичих</h2>
 <div class="panel f" style="max-width:900px">
   <input id="diaryId" type="hidden">
-  <label>Гарчиг<input id="diaryTitle" maxlength="160" placeholder="Тэмдэглэлийн гарчиг"></label>
+  <label>Гарчиг<input id="diaryTitle" maxlength="160" placeholder="Тэмдэглэлийн гарчиг" style="width:100%"></label>
   <label>Огноо<input id="diaryDate" type="date"></label>
-  <label>Товч танилцуулга<input id="diaryExcerpt" maxlength="500" placeholder="Нүүр хуудсанд харагдах товч агуулга"></label>
-  <label>Зохиол / тэмдэглэл<textarea id="diaryBody" rows="12" maxlength="20000" placeholder="Анир энд өөрийн тэмдэглэл, зохиолоо бичнэ..."></textarea></label>
-  <label>Зургийн холбоос (заавал биш)<input id="diaryImage" placeholder="/anir.png эсвэл https://..."></label>
+  <label>Товч танилцуулга<input id="diaryExcerpt" maxlength="500" placeholder="Нүүр хуудсанд харагдах товч агуулга" style="width:100%"></label>
+  <label>Зохиол / тэмдэглэл<textarea id="diaryBody" rows="12" maxlength="20000" placeholder="Анир энд өөрийн тэмдэглэл, зохиолоо бичнэ..." style="width:100%"></textarea></label>
+  <label>Зургийн холбоос (заавал биш)<input id="diaryImage" placeholder="/anir.png эсвэл https://..." style="width:100%"></label>
   <label>Төлөв<select id="diaryStatus"><option value="draft">Ноорог — сайтад харагдахгүй</option><option value="published">Нийтлэх — сайтад харагдана</option></select></label>
-  <div><button id="diarySave" type="button">Хадгалах</button> <button id="diaryClear" type="button">Шинэ тэмдэглэл</button></div>
+  <div><button id="diarySave" type="button">Хадгалах</button> <button id="diaryClear" class="sec" type="button">Шинэ тэмдэглэл</button></div>
   <p class="muted">Ноорог хадгалж болно. “Нийтлэх” төлөв сонгосон үед л үндсэн сайтад нийтлэгдэнэ.</p>
 </div>
 <table><thead><tr><th>Огноо</th><th>Гарчиг</th><th>Төлөв</th><th>Үйлдэл</th></tr></thead><tbody id="diaryRows"></tbody></table>
@@ -36,82 +43,153 @@ table{width:100%;border-collapse:collapse;display:block;overflow-x:auto}td,th{bo
 <h2>Материал нэмэх</h2><div class="f panel">
 <input id="ti" placeholder="Нэр"><input id="de" placeholder="Товч тайлбар"><input id="ca" placeholder="Ангилал">
 <input id="pr" type="number" min="0" placeholder="Үнэ (0 = үнэгүй)">
-<label>Хавтасны зураг<input id="cv" type="file" accept="image/*"></label>
-<label>Хэвлэх хуудсууд (20 хүртэл)<input id="pg" type="file" accept="image/*" multiple></label>
+<label>Хавтасны зураг<input id="cv" type="file" accept="image/jpeg,image/png,image/webp"></label>
+<label>Хэвлэх хуудсууд (20 хүртэл)<input id="pg" type="file" accept="image/jpeg,image/png,image/webp" multiple></label>
 <button id="add" type="button">Нэмэх</button></div>
 <h2>Материалууд</h2><table><thead><tr><th>Нэр</th><th>Үнэ</th><th>Идэвхтэй</th><th>Хуудас</th><th>Зарсан</th><th></th></tr></thead><tbody id="mt"></tbody></table>
+</div>
+
 <script>
 const $=id=>document.getElementById(id);
+let KEY='';
 function say(t,ok=false){$('msg').textContent=t||'';$('msg').className=ok?'msg ok':'msg'}
-async function api(p,b){
- const r=await fetch('/api/admin/'+p,{method:b?'POST':'GET',headers:{'Content-Type':'application/json','x-admin-key':$('k').value},body:b?JSON.stringify(b):undefined});
- let j;try{j=await r.json()}catch{throw new Error('Сервер JSON хариу өгсөнгүй ('+r.status+')')}
- if(!r.ok)throw new Error(j.error||('Алдаа ('+r.status+')'));return j
+
+/* ---- API: JSON биш хариу, 401, сүлжээний алдааг ойлгомжтой мессеж болгоно ---- */
+async function api(path,body,method){
+ let r;
+ try{r=await fetch('/api/admin/'+path,{method:method||(body?'POST':'GET'),headers:{'Content-Type':'application/json','x-admin-key':KEY},body:body?JSON.stringify(body):undefined})}
+ catch{throw new Error('Сүлжээний алдаа. Интернэт холболтоо шалгана уу.')}
+ let j;try{j=await r.json()}catch{throw new Error('Сервер JSON хариу өгсөнгүй (HTTP '+r.status+')')}
+ if(!r.ok)throw new Error(j.error||('Алдаа (HTTP '+r.status+')'));
+ j._sources=r.headers.get('X-Admin-Source-Status')||'';
+ return j
 }
 function cell(tr,v){const c=tr.insertCell();if(v instanceof Node)c.append(v);else c.textContent=String(v??'');return c}
-function date(v){if(v==null)return '—';const n=typeof v==='number'||/^\\d+$/.test(String(v))?new Date(Number(v)):new Date(v);return Number.isNaN(n.getTime())?'—':n.toLocaleString('mn-MN')}
-async function refresh(){
+function mkBtn(text,cls,fn){const b=document.createElement('button');b.type='button';b.textContent=text;if(cls)b.className=cls;b.onclick=fn;return b}
+
+/* ---- огноо ---- */
+function dt(v){ // timestamp (тоо эсвэл тоон мөр) эсвэл ISO мөр
+ if(v==null||v==='')return '—';
+ const n=(typeof v==='number'||/^\d+$/.test(String(v)))?new Date(Number(v)):new Date(v);
+ if(Number.isNaN(n.getTime()))return '—';
+ try{return n.toLocaleString('mn-MN',{timeZone:'Asia/Ulaanbaatar'})}catch{return n.toLocaleString()}
+}
+const dOnly=v=>/^\d{4}-\d{2}-\d{2}/.test(String(v||''))?String(v).slice(0,10):'—';
+const todayUB=()=>{try{return new Date().toLocaleDateString('en-CA',{timeZone:'Asia/Ulaanbaatar'})}catch{return new Date().toISOString().slice(0,10)}};
+
+/* ---- төлбөр ---- */
+const SRC={shop:'Цахим дэлгүүр',lesson:'Ээлжит хичээл',worksheet:'Ажлын хуудас',training:'Сургалтын бүртгэл'};
+async function loadPayments(){
+ const t=$('allPayments');
  try{
-  const rows=await api('all-pending');const t=$('allPayments');t.replaceChildren();
+  const rows=await api('all-pending');t.replaceChildren();
+  const bad=rows._sources.split(',').filter(x=>x&&!x.endsWith(':fulfilled')).map(x=>SRC[x.split(':')[0]]||x.split(':')[0]);
+  $('srcWarn').classList.toggle('hidden',!bad.length);
+  $('srcWarn').textContent=bad.length?'Анхаар: дараах үйлчилгээний өгөгдлийн сантай холбогдож чадсангүй, тэдгээрийн захиалга энд харагдахгүй байна: '+bad.join(', ')+'. Түр хүлээгээд дахин шинэчилнэ үү.':'';
   if(!rows.length){const tr=t.insertRow();cell(tr,'Хүлээгдэж буй төлбөр алга')}
   rows.forEach(r=>{
-   const tr=t.insertRow();[r.orderNo,r.email,r.service+(r.detail?' · '+r.detail:''),Number(r.amount).toLocaleString('mn-MN')+'₮',date(r.createdAt)].forEach(v=>cell(tr,v));
-   const b=document.createElement('button');b.textContent='Баталгаажуулж эрх нээх';
-   b.onclick=async()=>{
-    if(!confirm('Банкны апп дээр '+r.amount+'₮ бодитоор орсныг, захиалгатай таарч байгааг шалгасан уу?'))return;
+   const tr=t.insertRow();
+   [r.orderNo,r.email,r.service+(r.detail?' · '+r.detail:''),Number(r.amount).toLocaleString('mn-MN')+'₮',dt(r.createdAt)].forEach(v=>cell(tr,v));
+   cell(tr,mkBtn('Баталгаажуулж эрх нээх','',async ev=>{
+    const b=ev.currentTarget;
+    if(!confirm('Банкны апп дээр '+Number(r.amount).toLocaleString('mn-MN')+'₮ бодитоор орсныг, гүйлгээний утга ('+r.orderNo+') таарч байгааг шалгасан уу?'))return;
     const ref=prompt('Банкны гүйлгээний лавлагааны дугаар:');if(!ref||!ref.trim())return;
     b.disabled=true;
-    try{const result=await api('all-confirm',{orderNo:r.orderNo,kind:r.kind,bankReference:ref.trim()});
-      say(result.activated?'Төлбөр баталгаажиж, эрх нээгдлээ. Захиалга: '+r.orderNo:'Сервер эрх нээгдсэнийг батлаагүй. Төлөв шалгана уу.',!!result.activated);
-      await refresh();
+    try{const res=await api('all-confirm',{orderNo:r.orderNo,kind:r.kind,bankReference:ref.trim()});
+     say(res.activated?'Төлбөр баталгаажиж, эрх нээгдлээ. Захиалга: '+r.orderNo:'Сервер эрх нээгдсэнийг батлаагүй. Төлөв шалгана уу.',!!res.activated);
+     await loadPayments();
     }catch(e){say(e.message);b.disabled=false}
-   };cell(tr,b)
+   }));
   });
-  const mats=await api('materials');const mt=$('mt');mt.replaceChildren();
-  mats.forEach(x=>{const tr=mt.insertRow(),ti=document.createElement('input'),pr=document.createElement('input'),ac=document.createElement('input');
-   ti.value=x.title;pr.type='number';pr.value=x.price;pr.style.width='90px';ac.type='checkbox';ac.checked=x.active;
-   cell(tr,ti);cell(tr,pr);cell(tr,ac);cell(tr,x.pages);cell(tr,x.sold);
-   const s=document.createElement('button');s.textContent='Хадгалах';s.onclick=async()=>{s.disabled=true;try{await api('materials/'+x.id,{title:ti.value,description:x.description,category:x.category,price:pr.value,active:ac.checked});say('Материал хадгалагдлаа',true);await refresh()}catch(e){say(e.message);s.disabled=false}};cell(tr,s)
-  });
- }catch(e){say(e.message)}
+ }catch(e){t.replaceChildren();cell(t.insertRow(),'Төлбөрийн жагсаалт татаж чадсангүй.');say('Төлбөр: '+e.message)}
 }
 async function checkOrder(){
  $('status').textContent='Шалгаж байна...';
  try{const code=$('lookup').value.trim();if(!code)throw new Error('Захиалгын код оруулна уу');
- const r=await api('lesson-package-status/'+encodeURIComponent(code));
- const p=r.payment,e=r.entitlement;
- $('status').textContent=[
- 'Захиалга: '+p.orderNo,'Хэрэглэгч: '+p.email,'Багц: '+(p.packageType==='week7'?'7 хоногийн багц':'5 хуудасны багц'),
- 'Төлбөр: '+Number(p.amount).toLocaleString('mn-MN')+'₮','Төлбөрийн төлөв: '+p.paymentStatus,
- 'Банкны лавлагаа: '+(p.bankReference||'Бүртгэгдээгүй'),
- 'Эрхийн бүртгэл: '+(e?'байна':'ОЛДСОНГҮЙ'),
- 'Эрхийн төлөв: '+(e?e.status:'—'),'Эхэлсэн: '+(e?date(e.startsAt):'—'),'Дуусах: '+(e&&e.expiresAt?date(e.expiresAt):'—'),
- 'Идэвхтэй эсэх: '+(r.entitlementActive?'ТИЙМ':'ҮГҮЙ')
- ].join('\n');say('Захиалгын төлөв уншлаа',true);
+  const r=await api('lesson-package-status/'+encodeURIComponent(code));const p=r.payment,e=r.entitlement;
+  $('status').textContent=[
+   'Захиалга: '+p.orderNo,'Хэрэглэгч: '+p.email,'Багц: '+(p.packageType==='week7'?'7 хоногийн багц':'5 хуудасны багц'),
+   'Төлбөр: '+Number(p.amount).toLocaleString('mn-MN')+'₮','Төлбөрийн төлөв: '+p.paymentStatus,
+   'Банкны лавлагаа: '+(p.bankReference||'Бүртгэгдээгүй'),
+   'Эрхийн бүртгэл: '+(e?'байна':'ОЛДСОНГҮЙ'),'Эрхийн төлөв: '+(e?e.status:'—'),
+   'Эхэлсэн: '+(e?dt(e.startsAt):'—'),'Дуусах: '+(e&&e.expiresAt?dt(e.expiresAt):'—'),
+   'Идэвхтэй эсэх: '+(r.entitlementActive?'ТИЙМ':'ҮГҮЙ')].join('\n');
+  say('Захиалгын төлөв уншлаа',true);
  }catch(e){$('status').textContent='';say(e.message)}
 }
-async function img(f){const m=await createImageBitmap(f),k=Math.min(1,2000/Math.max(m.width,m.height)),c=document.createElement('canvas');c.width=m.width*k;c.height=m.height*k;c.getContext('2d').drawImage(m,0,0,c.width,c.height);const b=await new Promise(r=>c.toBlob(r,'image/jpeg',.88));return{mime:'image/jpeg',data:await new Promise(r=>{const x=new FileReader();x.onload=()=>r(x.result.split(',')[1]);x.readAsDataURL(b)})}}
+
+/* ---- материал ---- */
+async function loadMaterials(){
+ const mt=$('mt');
+ try{
+  const mats=await api('materials');mt.replaceChildren();
+  if(!mats.length)cell(mt.insertRow(),'Материал бүртгэгдээгүй байна');
+  mats.forEach(x=>{
+   const tr=mt.insertRow(),ti=document.createElement('input'),pr=document.createElement('input'),ac=document.createElement('input');
+   ti.value=x.title;pr.type='number';pr.min='0';pr.value=x.price;pr.style.width='90px';ac.type='checkbox';ac.checked=x.active;
+   cell(tr,ti);cell(tr,pr);cell(tr,ac);cell(tr,x.pages);cell(tr,x.sold);
+   cell(tr,mkBtn('Хадгалах','',async ev=>{const s=ev.currentTarget;s.disabled=true;
+    try{await api('materials/'+encodeURIComponent(x.id),{title:ti.value,description:x.description,category:x.category,price:pr.value,active:ac.checked});say('Материал хадгалагдлаа',true);await loadMaterials()}
+    catch(e){say(e.message);s.disabled=false}}));
+  });
+ }catch(e){mt.replaceChildren();cell(mt.insertRow(),'Материал татаж чадсангүй.');say('Материал: '+e.message)}
+}
+async function img(f){
+ const m=await createImageBitmap(f),k=Math.min(1,2000/Math.max(m.width,m.height)),c=document.createElement('canvas');
+ c.width=Math.round(m.width*k);c.height=Math.round(m.height*k);c.getContext('2d').drawImage(m,0,0,c.width,c.height);
+ const b=await new Promise((res,rej)=>c.toBlob(x=>x?res(x):rej(new Error('Зургийг боловсруулах боломжгүй')),'image/jpeg',.88));
+ return{mime:'image/jpeg',data:await new Promise((res,rej)=>{const x=new FileReader();x.onload=()=>res(String(x.result).split(',')[1]);x.onerror=()=>rej(new Error('Зураг уншиж чадсангүй'));x.readAsDataURL(b)})}
+}
 async function add(){
- const pg=[...$('pg').files];if(!$('ti').value||(!pg.length&&!$('cv').files[0]))return say('Нэр болон зураг оруулна уу');
+ const pg=[...$('pg').files];if(!$('ti').value.trim()||(!pg.length&&!$('cv').files[0]))return say('Нэр болон зураг оруулна уу');
  if(pg.length>20)return say('20-оос олон хуудас оруулж болохгүй');
  $('add').disabled=true;say('Байршуулж байна...');
- try{const body={title:$('ti').value,description:$('de').value,category:$('ca').value,price:$('pr').value,pages:await Promise.all(pg.map(img))};if($('cv').files[0])body.cover=await img($('cv').files[0]);await api('materials',body);say('Материал нэмэгдлээ',true);['ti','de','ca','pr','cv','pg'].forEach(i=>$(i).value='');await refresh()}catch(e){say(e.message)}finally{$('add').disabled=false}
+ try{const body={title:$('ti').value.trim(),description:$('de').value.trim(),category:$('ca').value.trim(),price:$('pr').value||'0',pages:await Promise.all(pg.map(img))};
+  if($('cv').files[0])body.cover=await img($('cv').files[0]);
+  await api('materials',body);say('Материал нэмэгдлээ',true);['ti','de','ca','pr','cv','pg'].forEach(i=>$(i).value='');await loadMaterials()}
+ catch(e){say(e.message)}finally{$('add').disabled=false}
 }
 
-function clearDiary(){['diaryId','diaryTitle','diaryExcerpt','diaryBody','diaryImage'].forEach(id=>$(id).value='');$('diaryDate').value=new Date().toISOString().slice(0,10);$('diaryStatus').value='draft'}
+/* ---- Анирын тэмдэглэл ---- */
+function clearDiary(){['diaryId','diaryTitle','diaryExcerpt','diaryBody','diaryImage'].forEach(id=>$(id).value='');$('diaryDate').value=todayUB();$('diaryStatus').value='draft'}
 async function loadDiary(){
- const rows=await api('diary');const t=$('diaryRows');t.replaceChildren();
- rows.forEach(x=>{const tr=t.insertRow();cell(tr,date(x.date));cell(tr,x.title);cell(tr,x.status==='published'?'Нийтэлсэн':'Ноорог');
- const edit=document.createElement('button');edit.textContent='Засах';edit.onclick=()=>{ $('diaryId').value=x.id;$('diaryTitle').value=x.title;$('diaryDate').value=String(x.date).slice(0,10);$('diaryExcerpt').value=x.excerpt||'';$('diaryBody').value=x.body;$('diaryImage').value=x.imageUrl||'';$('diaryStatus').value=x.status;window.scrollTo({top:$('diaryTitle').getBoundingClientRect().top+scrollY-30,behavior:'smooth'});};
- const del=document.createElement('button');del.textContent='Устгах';del.onclick=async()=>{if(confirm('Энэ тэмдэглэлийг бүрмөсөн устгах уу?')){await fetch('/api/admin/diary/'+x.id,{method:'DELETE',headers:{'x-admin-key':$('k').value}}).then(async r=>{if(!r.ok)throw new Error('Устгаж чадсангүй')});await loadDiary();}};
- cell(tr,edit);cell(tr,del);
- });
+ const t=$('diaryRows');
+ try{
+  const rows=await api('diary');t.replaceChildren();
+  if(!rows.length)cell(t.insertRow(),'Тэмдэглэл алга');
+  rows.forEach(x=>{const tr=t.insertRow();cell(tr,dOnly(x.date));cell(tr,x.title);cell(tr,x.status==='published'?'Нийтэлсэн':'Ноорог');
+   cell(tr,mkBtn('Засах','sec',()=>{$('diaryId').value=x.id;$('diaryTitle').value=x.title;$('diaryDate').value=dOnly(x.date)==='—'?todayUB():dOnly(x.date);$('diaryExcerpt').value=x.excerpt||'';$('diaryBody').value=x.body;$('diaryImage').value=x.imageUrl||'';$('diaryStatus').value=x.status;$('diaryTitle').scrollIntoView({behavior:'smooth',block:'center'})}));
+   cell(tr,mkBtn('Устгах','del',async ev=>{
+    if(!confirm('Энэ тэмдэглэлийг бүрмөсөн устгах уу?'))return;const b=ev.currentTarget;b.disabled=true;
+    try{await api('diary/'+encodeURIComponent(x.id),null,'DELETE');say('Тэмдэглэл устгагдлаа',true);await loadDiary()}
+    catch(e){say('Устгаж чадсангүй: '+e.message);b.disabled=false}}));
+  });
+ }catch(e){t.replaceChildren();cell(t.insertRow(),'Тэмдэглэл татаж чадсангүй.');say('Тэмдэглэл: '+e.message)}
 }
 async function saveDiary(){
- const b=$('diarySave');b.disabled=true;
- try{await api('diary',{id:$('diaryId').value||undefined,title:$('diaryTitle').value,date:$('diaryDate').value,excerpt:$('diaryExcerpt').value,body:$('diaryBody').value,imageUrl:$('diaryImage').value,status:$('diaryStatus').value});say('Тэмдэглэл хадгалагдлаа',true);clearDiary();await loadDiary();}
+ const b=$('diarySave');
+ if(!$('diaryTitle').value.trim()||!$('diaryBody').value.trim())return say('Гарчиг болон бичвэрээ оруулна уу');
+ if(!$('diaryDate').value)return say('Огноогоо сонгоно уу');
+ b.disabled=true;
+ try{await api('diary',{id:$('diaryId').value||undefined,title:$('diaryTitle').value,date:$('diaryDate').value,excerpt:$('diaryExcerpt').value,body:$('diaryBody').value,imageUrl:$('diaryImage').value,status:$('diaryStatus').value});
+  say($('diaryStatus').value==='published'?'Тэмдэглэл нийтлэгдлээ':'Ноорог хадгалагдлаа',true);clearDiary();await loadDiary()}
  catch(e){say(e.message)}finally{b.disabled=false}
 }
 
-$('login').onclick=async()=>{await refresh();try{await loadDiary()}catch(e){say(e.message)}};$('check').onclick=checkOrder;$('add').onclick=add;$('diarySave').onclick=saveDiary;$('diaryClear').onclick=clearDiary;clearDiary();
+/* ---- нэвтрэлт: түлхүүр буруу бол нэвтрэх хэсэг нээлттэй хэвээр үлдэнэ ---- */
+async function reloadAll(){await Promise.allSettled([loadPayments(),loadMaterials(),loadDiary()])}
+async function login(){
+ KEY=$('k').value.trim();
+ if(KEY.length<12)return say('Админ түлхүүрээ шалгана уу (12+ тэмдэгт).');
+ const b=$('login');b.disabled=true;say('Шалгаж байна...');
+ try{await api('materials')}catch(e){KEY='';b.disabled=false;return say(e.message)}
+ b.disabled=false;$('loginBox').classList.add('hidden');$('app').classList.remove('hidden');say('Нэвтэрлээ',true);
+ await reloadAll();
+}
+function logout(){KEY='';$('k').value='';$('app').classList.add('hidden');$('loginBox').classList.remove('hidden');say('')}
+
+$('login').onclick=login;$('k').addEventListener('keydown',e=>{if(e.key==='Enter')login()});
+$('reload').onclick=reloadAll;$('logout').onclick=logout;
+$('check').onclick=checkOrder;$('add').onclick=add;$('diarySave').onclick=saveDiary;$('diaryClear').onclick=clearDiary;
+clearDiary();
 </script></body></html>

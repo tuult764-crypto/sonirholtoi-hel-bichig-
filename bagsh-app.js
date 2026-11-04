@@ -158,16 +158,23 @@ async function verifyAndActivate(orderNo) {
 router.post('/pay/create', auth, limit(20, 3600e3), ah(async (req, res) => {
   const qty = Math.min(50, Math.max(1, parseInt(req.body.qty) || 1)), amount = qty * SHEET_PRICE;
   try {
-    if (qpay.MODE === 'mock' && (process.env.RENDER || process.env.NODE_ENV === 'production')) return res.status(503).json({ error: 'Төлбөрийн горим тохируулаагүй байна. QPAY_MODE=manual эсвэл live тохируулна уу.' });
+    if (qpay.MODE === 'mock' && (process.env.RENDER || process.env.NODE_ENV === 'production')) return res.status(503).json({ error: 'Төлбөрийн горим тохируулаагүй байна. BAGSH_QPAY_MODE=manual (эсвэл QPAY_MODE=manual) эсвэл live тохируулна уу.' });
     const manual = qpay.MODE === 'manual';
     if (manual) {
-      const pending = (await q("SELECT order_no AS \"orderNo\",amount,qty FROM payments WHERE user_id=$1 AND qty=$2 AND status='pending' AND invoice_id LIKE 'MANUAL-%' ORDER BY created_at DESC LIMIT 1", [req.user.id,qty])).rows[0];
-      if (pending) return res.json({ ...pending, invoiceId:'MANUAL-'+pending.orderNo, manual:true, mock:false, qrUrl:'/qr.png', reused:true });
+      // Үнэ өөрчлөгдсөн бол хуучин дүнтэй захиалгыг дахин ашиглахгүй
+      const pending = (await q("SELECT order_no AS \"orderNo\",amount,qty FROM payments WHERE user_id=$1 AND qty=$2 AND amount=$3 AND status='pending' AND invoice_id LIKE 'MANUAL-%' ORDER BY created_at DESC LIMIT 1", [req.user.id, qty, amount])).rows[0];
+      if (pending) return res.json({ ...pending, invoiceId: 'MANUAL-' + pending.orderNo, manual: true, mock: false, qrUrl: '/qr.png', reused: true });
     }
-    const orderNo = 'WS' + Date.now() + crypto.randomBytes(4).toString('hex');
-    const inv = await qpay.createInvoice({ orderNo, amount, description: `Ажлын хуудас ${qty} ширхэг` });
-    await q('INSERT INTO payments(order_no,user_id,invoice_id,amount,qty,created_at) VALUES($1,$2,$3,$4,$5,$6)', [orderNo, req.user.id, inv.invoiceId, amount, qty, Date.now()]);
-    res.json({ orderNo, amount, qty, ...inv, mock: qpay.MODE === 'mock', manual, qrUrl: manual ? '/qr.png' : null });
+    for (let i = 0; i < 5; i++) {
+      // Гар горимд хэрэглэгч гүйлгээний утгад бичих тул богино код (WS12345)
+      const orderNo = manual ? 'WS' + crypto.randomInt(10000, 100000) : 'WS' + Date.now() + crypto.randomBytes(4).toString('hex');
+      try {
+        const inv = await qpay.createInvoice({ orderNo, amount, description: `Ажлын хуудас ${qty} ширхэг` });
+        await q('INSERT INTO payments(order_no,user_id,invoice_id,amount,qty,created_at) VALUES($1,$2,$3,$4,$5,$6)', [orderNo, req.user.id, inv.invoiceId, amount, qty, Date.now()]);
+        return res.json({ orderNo, amount, qty, ...inv, mock: qpay.MODE === 'mock', manual, qrUrl: manual ? '/qr.png' : null });
+      } catch (e) { if (e.code !== '23505') throw e; }
+    }
+    res.status(500).json({ error: 'Дахин оролдоно уу' });
   } catch (e) { console.error('pay:', e.message); res.status(502).json({ error: 'Нэхэмжлэх үүсгэж чадсангүй. Дахин оролдоно уу.' }); }
 }));
 router.post('/pay/check', auth, ah(async (req, res) => {
@@ -196,9 +203,10 @@ router.get('/admin/pending', limit(60, 900e3), adminAuth, ah(async (req, res) =>
     WHERE p.status='pending' AND p.invoice_id LIKE 'MANUAL-%' ORDER BY p.created_at DESC LIMIT 100`)).rows);
 }));
 router.post('/admin/confirm', limit(60, 900e3), adminAuth, ah(async (req, res) => {
-  const o = String(req.body.orderNo || '');
+  const o = String(req.body.orderNo || ''), ref = String(req.body.bankReference || '').trim().slice(0, 120);
+  if (!ref) return res.status(400).json({ error: 'Банкны гүйлгээний дугаар эсвэл лавлагааг оруулна уу.' });
   if (!(await q("SELECT 1 FROM payments WHERE order_no=$1 AND invoice_id LIKE 'MANUAL-%'", [o])).rowCount) return res.status(404).json({ error: 'Олдсонгүй' });
-  res.json({ ok: true, activated: await activate(o) });
+  res.json({ ok: true, activated: await activate(o, ref) });
 }));
 
 

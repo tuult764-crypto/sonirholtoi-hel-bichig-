@@ -2,6 +2,7 @@ require('dotenv').config();
 const express = require('express'), path = require('path'), crypto = require('crypto');
 const { Pool, types } = require('pg'), bcrypt = require('bcryptjs'), jwt = require('jsonwebtoken'), qpay = require('./qpay');
 types.setTypeParser(20, Number);
+types.setTypeParser(1082, v => v); // DATE -> 'YYYY-MM-DD' (цагийн бүсээс болж өдөр зөрөхгүй)
 const { JWT_SECRET, DATABASE_URL } = process.env, ADMIN_KEY = process.env.ADMIN_KEY || '';
 // Тохиргоо дутуу байсан ч сайт (хуучин дэлгүүр) асна; зөвхөн шинэ /api хэсэг 503 өгнө
 const CONFIG_OK = !!(JWT_SECRET && JWT_SECRET.length >= 24 && DATABASE_URL);
@@ -49,7 +50,7 @@ app.use('/api/worksheet', bagsh.router);
 app.get(['/bagsh', '/bagsh/'], (req, res) => res.sendFile(path.join(__dirname, 'bagsh-index.html')));
 app.get(['/bagsh/admin', '/bagsh/admin.html', '/bagsh-admin'], (req, res) => res.sendFile(path.join(__dirname, 'bagsh-admin.html')));
 app.get('/bagsh/pay-qr.jpg', (req, res) => res.redirect(302, '/qr.png'));
-const ah = fn => (req, res, next) => fn(req, res, next).catch(e => { console.error(req.path, e.message); if (!res.headersSent) res.status(500).json({ error: 'Серверийн алдаа' }); });
+const ah = fn => (req, res, next) => fn(req, res, next).catch(e => { console.error(req.path, e.message); if (!res.headersSent) res.status(500).json({ error: req.path.startsWith('/api/admin/') ? 'Серверийн алдаа: ' + e.message : 'Серверийн алдаа' }); });
 const hits = new Map();
 const limit = (max, ms) => (req, res, next) => { const k = req.ip + req.path, now = Date.now(), a = (hits.get(k) || []).filter(t => now - t < ms); if (a.length >= max) return res.status(429).json({ error: 'Хэт олон оролдлого. Түр хүлээнэ үү.' }); a.push(now); hits.set(k, a); next(); };
 setInterval(() => { const n = Date.now(); for (const [k, a] of hits) if (!a.some(t => n - t < 3600e3)) hits.delete(k); }, 600e3).unref();
@@ -152,7 +153,7 @@ app.post('/api/buy', need, limit(30, 3600e3), ah(async (req, res) => {
   if (await owned(m, req.user)) return res.status(409).json({ error: 'Та энэ материалыг аль хэдийн авсан байна (Миний сан)' });
   const manual = qpay.MODE === 'manual';
   if (manual) {
-    const pending = (await q("SELECT order_no AS \"orderNo\",amount FROM shop_payments WHERE user_id=$1 AND material_id=$2 AND status='pending' AND invoice_id LIKE 'MANUAL-%' ORDER BY created_at DESC LIMIT 1", [req.user.id,m.id])).rows[0];
+    const pending = (await q("SELECT order_no AS \"orderNo\",amount FROM shop_payments WHERE user_id=$1 AND material_id=$2 AND amount=$3 AND status='pending' AND invoice_id LIKE 'MANUAL-%' ORDER BY created_at DESC LIMIT 1", [req.user.id,m.id,m.price])).rows[0];
     if (pending) return res.json({ ...pending, invoiceId:'MANUAL-'+pending.orderNo, manual:true, mock:false, qrUrl:'/qr.png', reused:true });
   }
   for (let i = 0; i < 3; i++) {
@@ -182,9 +183,10 @@ const A = [limit(120, 900e3), adminAuth];
 app.get('/admin', (req, res) => res.sendFile(path.join(__dirname, 'admin.html')));
 app.get('/api/admin/pending', ...A, ah(async (req, res) => res.json((await q(`SELECT p.order_no "orderNo", p.amount, p.created_at "createdAt", u.email, m.title FROM shop_payments p JOIN shop_users u ON u.id=p.user_id JOIN shop_materials m ON m.id=p.material_id WHERE p.status='pending' AND p.invoice_id LIKE 'MANUAL-%' ORDER BY p.created_at DESC LIMIT 100`)).rows)));
 app.post('/api/admin/confirm', ...A, ah(async (req, res) => {
-  const o = String(req.body.orderNo || '');
+  const o = String(req.body.orderNo || ''), ref = String(req.body.bankReference || '').trim().slice(0, 120);
+  if (!ref) return res.status(400).json({ error: 'Банкны гүйлгээний дугаар эсвэл лавлагааг оруулна уу.' });
   if (!(await q("SELECT 1 FROM shop_payments WHERE order_no=$1 AND invoice_id LIKE 'MANUAL-%'", [o])).rowCount) return res.status(404).json({ error: 'Олдсонгүй' });
-  res.json({ ok: true, activated: await activate(o) });
+  res.json({ ok: true, activated: await activate(o, ref) });
 }));
 app.get('/api/admin/materials', ...A, ah(async (req, res) => res.json((await q(`SELECT m.id,m.title,m.description,m.category,m.price,m.active,(SELECT COUNT(*) FROM shop_files f WHERE f.material_id=m.id AND f.role='page') pages,(SELECT COUNT(*) FROM shop_purchases p WHERE p.material_id=m.id) sold FROM shop_materials m ORDER BY m.created_at DESC`)).rows)));
 const b64 = f => { const m = String((f && f.mime) || ''), d = String((f && f.data) || '').replace(/^data:[^,]*,/, ''); return IMG.includes(m) && /^[A-Za-z0-9+/=]+$/.test(d) && d.length > 20 ? { mime: m, data: Buffer.from(d, 'base64') } : null; };
@@ -281,14 +283,21 @@ app.get('/api/lesson-package/status', need, ah(async(req,res)=>res.json(await cu
 app.post('/api/lesson-package/buy', need, limit(10,3600e3), ah(async(req,res)=>{
   if(qpay.MODE==='mock' && (process.env.RENDER || process.env.NODE_ENV==='production')) return res.status(503).json({error:'Төлбөрийн горим тохируулаагүй байна. QPAY_MODE=manual эсвэл live тохируулна уу.'});
   const type=String(req.body.packageType||''), o=PACKAGE_OPTIONS[type]; if(!o) return res.status(400).json({error:'Багцаа сонгоно уу'});
-  if (qpay.MODE === 'manual') {
-    const pending=(await q("SELECT order_no AS \"orderNo\",amount FROM lesson_package_payments WHERE user_id=$1 AND package_type=$2 AND status='pending' AND invoice_id LIKE 'MANUAL-%' ORDER BY created_at DESC LIMIT 1",[req.user.id,type])).rows[0];
+  const manual = qpay.MODE === 'manual';
+  if (manual) {
+    const pending=(await q("SELECT order_no AS \"orderNo\",amount FROM lesson_package_payments WHERE user_id=$1 AND package_type=$2 AND amount=$3 AND status='pending' AND invoice_id LIKE 'MANUAL-%' ORDER BY created_at DESC LIMIT 1",[req.user.id,type,o.amount])).rows[0];
     if(pending) return res.json({...pending,title:o.title,invoiceId:'MANUAL-'+pending.orderNo,manual:true,mock:false,qrUrl:'/qr.png',reused:true});
   }
-  const orderNo='LP'+Date.now()+crypto.randomBytes(3).toString('hex');
-  const inv=await qpay.createInvoice({orderNo,amount:o.amount,description:o.title,callbackUrl:`${process.env.PUBLIC_URL||''}/api/lesson-package/callback?order=${orderNo}`});
-  await q('INSERT INTO lesson_package_payments(order_no,user_id,package_type,invoice_id,amount,created_at) VALUES($1,$2,$3,$4,$5,$6)',[orderNo,req.user.id,type,inv.invoiceId,o.amount,Date.now()]);
-  res.json({orderNo,amount:o.amount,title:o.title,...inv,manual:qpay.MODE==='manual',mock:qpay.MODE==='mock',qrUrl:qpay.MODE==='manual'?'/qr.png':null});
+  for (let i = 0; i < 5; i++) {
+    // Гар горимд хэрэглэгч гүйлгээний утгад бичих тул богино код (LP12345); бусад горимд урт код
+    const orderNo = manual ? 'LP' + crypto.randomInt(10000, 100000) : 'LP' + Date.now() + crypto.randomBytes(3).toString('hex');
+    try {
+      const inv = await qpay.createInvoice({ orderNo, amount: o.amount, description: o.title, callbackUrl: process.env.PUBLIC_URL ? `${String(process.env.PUBLIC_URL).replace(/\/+$/,'')}/api/lesson-package/callback?order=${orderNo}` : undefined });
+      await q('INSERT INTO lesson_package_payments(order_no,user_id,package_type,invoice_id,amount,created_at) VALUES($1,$2,$3,$4,$5,$6)',[orderNo,req.user.id,type,inv.invoiceId,o.amount,Date.now()]);
+      return res.json({orderNo,amount:o.amount,title:o.title,...inv,manual,mock:qpay.MODE==='mock',qrUrl:manual?'/qr.png':null});
+    } catch (e) { if (e.code !== '23505') { console.error('lesson-package buy:', e.message); return res.status(502).json({ error: 'Нэхэмжлэх үүсгэж чадсангүй. Дахин оролдоно уу.' }); } }
+  }
+  res.status(500).json({ error: 'Дахин оролдоно уу' });
 }));
 app.post('/api/lesson-package/check', need, ah(async(req,res)=>{
   const orderNo=String(req.body.orderNo||''), p=(await q('SELECT 1 FROM lesson_package_payments WHERE order_no=$1 AND user_id=$2',[orderNo,req.user.id])).rowCount;
@@ -298,7 +307,7 @@ app.post('/api/lesson-package/check', need, ah(async(req,res)=>{
 }));
 app.all('/api/lesson-package/callback',async(req,res)=>{try{await verifyLessonPackage(String(req.query.order||''));}catch(e){console.error('package callback:',e.message);}res.sendStatus(200);});
 app.get('/api/admin/lesson-packages/pending', ...A, ah(async(req,res)=>res.json((await q("SELECT p.order_no \"orderNo\",p.amount,p.package_type \"packageType\",p.created_at \"createdAt\",u.email FROM lesson_package_payments p JOIN shop_users u ON u.id=p.user_id WHERE p.status='pending' AND p.invoice_id LIKE 'MANUAL-%' ORDER BY p.created_at DESC LIMIT 100")).rows)));
-app.post('/api/admin/lesson-packages/confirm', ...A, ah(async(req,res)=>{const o=String(req.body.orderNo||'');if(!(await q("SELECT 1 FROM lesson_package_payments WHERE order_no=$1 AND invoice_id LIKE 'MANUAL-%'",[o])).rowCount)return res.status(404).json({error:'Олдсонгүй'});res.json({ok:true,activated:await activateLessonPackage(o)});}));
+app.post('/api/admin/lesson-packages/confirm', ...A, ah(async(req,res)=>{const o=String(req.body.orderNo||''),ref=String(req.body.bankReference||'').trim().slice(0,120);if(!ref)return res.status(400).json({error:'Банкны гүйлгээний дугаар эсвэл лавлагааг оруулна уу.'});if(!(await q("SELECT 1 FROM lesson_package_payments WHERE order_no=$1 AND invoice_id LIKE 'MANUAL-%'",[o])).rowCount)return res.status(404).json({error:'Олдсонгүй'});res.json({ok:true,activated:await activateLessonPackage(o,ref)});}));
 
 
 // ---- Сургалтын бүртгэлийн төлбөр (банкнаас гар аргаар тулган баталгаажуулна) ----
@@ -464,7 +473,8 @@ app.post('/api/admin/diary', ...A, ah(async (req,res) => {
   const date = String(req.body.date || '').trim();
   const status = req.body.status === 'published' ? 'published' : 'draft';
   const imageUrl = String(req.body.imageUrl || '').trim().slice(0,1000);
-  if (!title || !body || !/^\\d{4}-\\d{2}-\\d{2}$/.test(date)) return res.status(400).json({error:'Гарчиг, бичвэр, огноог зөв оруулна уу.'});
+  const realDate = (() => { if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) return false; const d = new Date(date + 'T00:00:00Z'); return !Number.isNaN(d.getTime()) && d.toISOString().slice(0, 10) === date; })();
+  if (!title || !body || !realDate) return res.status(400).json({error:'Гарчиг, бичвэр, огноог зөв оруулна уу.'});
   if (imageUrl && !/^https:\/\//i.test(imageUrl) && !/^\/(?!\/)/.test(imageUrl)) return res.status(400).json({error:'Зургийн холбоос буруу байна.'});
   const now=Date.now();
   if (id) {
@@ -483,6 +493,12 @@ app.delete('/api/admin/diary/:id', ...A, ah(async (req,res) => {
 }));
 
 app.use(express.static(path.join(__dirname)));
+app.use('/api', (req, res) => res.status(404).json({ error: 'Олдсонгүй' }));
+app.use((err, req, res, next) => {
+  if (res.headersSent) return next(err);
+  const st = err.status || err.statusCode || 500;
+  res.status(st).json({ error: st === 413 ? 'Файл эсвэл өгөгдөл хэт том байна.' : st >= 400 && st < 500 ? 'Хүсэлтийн өгөгдөл буруу байна.' : 'Серверийн алдаа' });
+});
 app.listen(process.env.PORT || 3000, () => console.log('Ажиллаж байна. Port:', process.env.PORT || 3000, '| QPay горим:', qpay.MODE));
 (async function boot() {
   if (!CONFIG_OK) return;

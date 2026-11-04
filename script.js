@@ -835,17 +835,24 @@ async function cpConfirmPaid() {
   btn.disabled=true;btn.textContent='⏳ Илгээж байна...';
 
   try {
-    const response = await fetch('/api/training/orders',{method:'POST',headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({email,item:label,note:`Хуваарь: ${schedDays} | Цаг: ${timeSlot}` + (isDeposit ? ` | Нийт үнэ: ${fmtMNT(total)}, үлдэгдэл: ${fmtMNT(total-payNow)}` : ''),amount:payNow})
-    });
-    const result = await response.json();
-    if(!response.ok) throw new Error(result.error || 'Захиалга бүртгэж чадсангүй');
+    let response;
+    try {
+      response = await fetch('/api/training/orders',{method:'POST',headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({email,item:label,note:`Хуваарь: ${schedDays} | Цаг: ${timeSlot}` + (isDeposit ? ` | Нийт үнэ: ${fmtMNT(total)}, үлдэгдэл: ${fmtMNT(total-payNow)}` : ''),amount:payNow})
+      });
+    } catch(netErr) { throw new Error('Сүлжээний алдаа. Интернэт холболтоо шалгаад дахин оролдоно уу.'); }
+    const result = await response.json().catch(()=>({}));
+    if(!response.ok) throw new Error(result.error || ('Захиалга бүртгэж чадсангүй (HTTP '+response.status+'). Түр хүлээгээд дахин оролдоно уу.'));
     const done = document.getElementById('cpStep3');
-    if(done) { const info=document.createElement('p'); info.style.cssText='font-weight:700;color:#8a552f;margin-top:12px'; info.textContent=`Захиалгын код: ${result.orderNo}. Төлбөрийг банкны хуулгатай тулгасны дараа админ баталгаажуулна.`; done.appendChild(info); }
+    if(done) {
+      const old=document.getElementById('cpOrderInfo'); if(old) old.remove();
+      const info=document.createElement('p'); info.id='cpOrderInfo'; info.style.cssText='font-weight:700;color:#8a552f;margin-top:12px';
+      info.textContent=`Захиалгын код: ${result.orderNo}. Төлбөрийг банкны хуулгатай тулгасны дараа админ баталгаажуулна.`; done.appendChild(info);
+    }
     cpGoDone();
     showToast('Төлбөрийн хүсэлт бүртгэгдлээ. Банкны орлогыг шалгасны дараа баталгаажуулна.','success');
   } catch(e) {
-    showToast('Сүлжээний алдаа. Дахин оролдоно уу.','error');
+    showToast(e.message || 'Алдаа гарлаа. Дахин оролдоно уу.','error');
   } finally {
     btn.disabled=false;btn.textContent='✅ Төлбөрөө хийлээ';
   }

@@ -266,12 +266,21 @@
   async function buyPackage(type){
     if(!currentUser){if(typeof openAuth==='function')openAuth('login');else toast('Эхлээд и-мэйлээр нэвтэрнэ үү','error');return;}
     const box=$('lpPayBox'), wrap=$('lpPackages'); box.hidden=false;box.textContent='Нэхэмжлэх үүсгэж байна…';
-    try{const r=await fetch('/api/lesson-package/buy',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({packageType:type})});const d=await r.json();if(!r.ok)throw new Error(d.error||'Нэхэмжлэх үүссэнгүй');
+    try{const r=await fetch('/api/lesson-package/buy',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({packageType:type})});const d=await r.json().catch(()=>({}));if(!r.ok)throw new Error(d.error||('Нэхэмжлэх үүссэнгүй (HTTP '+r.status+')'));
       box.textContent='';box.append(h('b',{text:d.title+' · '+Number(d.amount).toLocaleString('mn-MN')+'₮'}));
       if(d.qr){const im=h('img',{alt:'QPay QR код',src:d.qr.startsWith('data:')?d.qr:'data:image/png;base64,'+d.qr});box.append(im);}
       else if(d.qrUrl){box.append(h('img',{alt:'Төлбөрийн QR код',src:d.qrUrl}));}
       if(d.shortUrl)box.append(h('p',{},h('a',{href:d.shortUrl,target:'_blank',rel:'noopener',text:'QPay-ээр төлөх'})));
-      box.append(h('p',{text:d.manual?'Төлбөр хийсний дараа админ баталгаажуулна.':'Төлбөр хийсний дараа төлөвөө шалгана уу.'}));
+      if(d.manual){
+        // Гар горим: захиалгын кодыг гүйлгээний утганд бичихгүй бол админ төлбөрийг таних боломжгүй
+        box.append(h('ol',{style:'padding-left:22px;line-height:1.65;margin:10px 0'},
+          h('li',{},'Дээрх QR кодыг банкны апп-аараа уншуулна.'),
+          h('li',{},'Төлөх дүн: ',h('b',{text:Number(d.amount).toLocaleString('mn-MN')+'₮'}),' (QR-д дүн орохгүй тул өөрөө оруулна).'),
+          h('li',{},'Гүйлгээний утгад захиалгын кодыг яг хэвээр нь бичнэ.'),
+          h('li',{},'Админ банкны орлоготой тулгаж баталгаажуулмагц эрх нээгдэнэ.')));
+        box.append(h('div',{style:'text-align:center;margin:8px 0'},h('div',{text:'Захиалгын код (гүйлгээний утга)'}),h('div',{style:'font-size:1.4em;font-weight:800;letter-spacing:.04em;user-select:all',text:d.orderNo})));
+        if(d.reused)box.append(h('p',{class:'small',text:'Өмнөх төлөгдөөгүй захиалгыг дахин харууллаа — шинэ код үүсгээгүй.'}));
+      } else box.append(h('p',{text:'Төлбөр хийсний дараа төлөвөө шалгана уу.'}));
       box.append(h('button',{type:'button',class:'btn-p',onclick:()=>checkPackage(d.orderNo)},'Төлбөр шалгах'));
       box.append(h('button',{type:'button',class:'btn-g',onclick:()=>{box.hidden=true;wrap.hidden=true;}},'Хаах'));
     }catch(e){box.textContent=e.message;if(/нэвтэр|401/i.test(e.message)&&typeof openAuth==='function')openAuth('login');}
