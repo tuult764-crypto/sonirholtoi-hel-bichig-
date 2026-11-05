@@ -7,6 +7,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;700;800;900&family=Montserrat:wght@600;700;800&family=Manrope:wght@400;500;600;700;800&family=Noto+Sans+Mongolian&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
 <link rel="stylesheet" href="home-v3.css">
+<link rel="stylesheet" href="diary-notebook.css">
 </head>
 <body>
 
@@ -146,30 +147,20 @@
     <h2>Анирын өдрийн тэмдэглэл</h2>
     <p>Зарим өдөр инээдтэй. Зарим өдөр бодолд автуулна. Харин өдөр бүрт бичиж үлдээх нэг зүйл байдаг.</p>
   </header>
-  <div class="diary-stage" id="diaryStage">
-    <div class="diary-book" id="diaryBook" aria-label="Анирын тэмдэглэлийн дэвтэр">
-      <div class="diary-cover">
-        <div class="diary-cover-inner">
-          <span class="diary-cover-small">МИНИЙ НУУЦХАН ЕРТӨНЦ</span>
-          <img src="/anir.png" alt="Анир" class="diary-anir-cover">
-          <h3>Анирын<br>өдрийн тэмдэглэл</h3>
-          <span class="diary-cover-rule"></span>
-          <p>Бодол · Дурсамж · Найзууд</p>
-          <span class="diary-cover-year">2026</span>
-        </div>
-      </div>
-      <div class="diary-pages" id="diaryPages">
-        <div class="diary-page diary-page-left"><span class="diary-page-mark">А</span><p>Энэ дэвтэрт миний өдөр хоног, бодол, асуулт, жижигхэн нээлтүүд үлдэнэ.</p><span class="diary-page-foot">Анирын тэмдэглэл</span></div>
-        <div class="diary-page diary-page-right"><span class="diary-page-date">ЭХЛЭЛ</span><h3>Сайн уу, уншигч минь.</h3><p>Намайг Анир гэдэг. Би заримдаа олон зүйл боддог ч тэр бүр чангаар хэлж чаддаггүй.</p><p>Тиймээс бодлоо энэ дэвтэрт бичиж үлдээхээр шийдлээ. Магадгүй миний туулсан зүйлс чамд ч танил санагдах байх.</p><p>Хамтдаа миний ертөнцөөр аялцгаая.</p><span class="diary-sign">— Анир</span><span class="diary-page-number">1</span></div>
+  <div class="nb-stage" id="nbStage">
+    <div class="nb-fit">
+      <div class="nb-wrap" id="nbWrap" data-state="closed">
+        <div class="nb-shadow" aria-hidden="true"></div>
+        <div class="nb-book" id="nbBook" data-state="closed" tabindex="0" role="group" aria-label="Анирын өдрийн тэмдэглэлийн дэвтэр. Хуудсыг чирж, захаас нь товшиж эсвэл сумтай товчоор эргүүлнэ."></div>
       </div>
     </div>
-    <button class="diary-open-btn" id="diaryOpenBtn" type="button" onclick="openAnirDiary()">ДЭВТРИЙГ НЭЭХ <span>↗</span></button>
-    <div class="diary-reading-controls" id="diaryReadingControls" hidden>
-      <button type="button" id="diaryPrevBtn" onclick="turnDiaryPage(-1)" disabled>← Өмнөх</button>
-      <span id="diaryPageStatus">Эхлэл</span>
-      <button type="button" id="diaryNextBtn" onclick="turnDiaryPage(1)">Дараагийн →</button>
-      <button type="button" class="diary-close-btn" onclick="closeAnirDiary()">Дэвтрээ хаах</button>
+    <div class="nb-foot">
+      <p class="nb-hint" id="nbHint">Хуудсыг чирж, захаас нь товшиж эсвэл хулганын дугуйгаар эргүүлээрэй</p>
+      <span class="nb-pager" id="nbPager" aria-hidden="true"></span>
+      <button type="button" class="nb-sound" id="nbSound" aria-pressed="true" title="Цаасны чимээг хаах" aria-label="Цаасны чимээ"><span aria-hidden="true">♪</span></button>
     </div>
+    <div class="nb-sr" id="nbLive" aria-live="polite"></div>
+    <button type="button" class="nb-sr" id="diaryPrevBtn">Өмнөх хуудас</button><button type="button" class="nb-sr" id="diaryNextBtn">Дараагийн хуудас</button>
   </div>
   <section class="diary-archive" aria-labelledby="diaryArchiveTitle">
     <div><p class="diary-kicker">ХУУДАС БҮР НЬ ДУРСАМЖ</p><h3 id="diaryArchiveTitle">Өмнөх тэмдэглэлүүд</h3><p>Анир долоо хоног бүр шинэ тэмдэглэлээ энд нэмнэ.</p></div>
