@@ -205,7 +205,7 @@
 </div>
 <div id="lessonPanel" class="teacher-tool-panel" hidden>
 <h2 class="sec-title">Ээлжит хичээлийн төлөвлөлт</h2>
-  <p class="lp-lead">Анги, сурах бичиг, хуудасны дугаараа сонгоод төлөвлөгөөгөө боловсруулна.</p>
+  <p class="lp-lead">Ямар ч хичээлийн багш хэрэглэнэ: анги, судлагдахуунаа сонгоод сурах бичгийнхээ хуудасны зургийг оруулна. Хуудсан дээрх дасгал, даалгавар төлөвлөгөөнд алхам бүрээр оруулагдана.</p>
 <div class="lp-access" id="lpAccess" aria-live="polite"><div><b id="lpAccessTitle">Эрхийн төлөв шалгаж байна…</b><small id="lpAccessInfo">Багцын эрхээ харахын тулд и-мэйлээр нэвтэрнэ үү.</small></div><button type="button" class="btn-g" id="lpBuyOpen">Багц авах</button></div>
 <div class="lp-packages" id="lpPackages" hidden><h3>Ээлжит хичээл боловсруулах багц</h3><div class="lp-package-grid"><button type="button" class="lp-package" data-package="pages5"><b>5 хуудасны багц</b><strong>5,000₮</strong><small>Нийт 5 эх хуудас ашиглах эрхтэй. Хугацаагүй.</small></button><button type="button" class="lp-package" data-package="week7"><b>7 хоногийн багц</b><strong>10,000₮</strong><small>Өдөрт 10 хүртэл, нийт 70 эх хуудас. 7 хоног хүчинтэй.</small></button></div><div id="lpPayBox" class="lp-paybox" hidden></div></div>
 <div class="lp-card" id="lpForm">
@@ -232,7 +232,7 @@
       <textarea id="lpText" rows="5" placeholder="Эх, асуулт, дасгал, даалгаврыг энд буулгана уу"></textarea><small>Зураг оруулсан бол хуудасны тоог автоматаар тоолно. Зөвхөн эх буулгасан бол:</small><input id="lpPageCount" type="number" min="1" max="10" value="1" aria-label="Эх хуудасны тоо"></label>
     <div class="lp-grid3">
       <label class="lp-f"><span>Анги</span><select id="lpGrade"><option value="1-р анги">1-р анги</option><option value="2-р анги">2-р анги</option><option value="3-р анги">3-р анги</option><option value="4-р анги">4-р анги</option><option value="5-р анги">5-р анги</option><option value="6-р анги">6-р анги</option><option value="7-р анги">7-р анги</option><option value="8-р анги" selected>8-р анги</option><option value="9-р анги">9-р анги</option><option value="10-р анги">10-р анги</option><option value="11-р анги">11-р анги</option><option value="12-р анги">12-р анги</option></select></label>
-      <label class="lp-f"><span>Судлагдахуун</span><input id="lpSubject" type="text" value="Монгол хэл"></label>
+      <label class="lp-f"><span>Судлагдахуун (ямар ч хичээл)</span><input id="lpSubject" type="text" list="lpSubjectList" placeholder="Жишээ: Математик, Англи хэл, Биологи… (хоосон бол зургаас тодорхойлно)" autocomplete="off"><datalist id="lpSubjectList"><option value="Монгол хэл"><option value="Уран зохиол"><option value="Математик"><option value="Англи хэл"><option value="Орос хэл"><option value="Физик"><option value="Хими"><option value="Биологи"><option value="Газарзүй"><option value="Монгол улсын түүх"><option value="Дэлхийн түүх"><option value="Нийгэм судлал"><option value="Иргэний ёс зүй"><option value="Мэдээллийн технологи"><option value="Дизайн, технологи"><option value="Дүрслэх урлаг"><option value="Хөгжим"><option value="Биеийн тамир"><option value="Хүрээлэн буй орчин"><option value="Байгалийн ухаан"><option value="Эрүүл мэнд"></datalist></label>
       <label class="lp-f"><span>Нийт хугацаа (минут)</span><input id="lpMinutes" type="number" min="10" max="240" value="40" list="lpMinList"><datalist id="lpMinList"><option value="40"><option value="45"><option value="80"><option value="90"></datalist></label>
     </div>
     <div class="lp-grid3">

@@ -201,6 +201,8 @@
         field('Зорилго', bindText(h('textarea', { rows: 2 }), s, 'goal')),
         field('Багшийн үйл ажиллагаа', bindText(h('textarea', { rows: 4 }), s, 'teacher')),
         field('Сурагчийн үйл ажиллагаа', bindText(h('textarea', { rows: 4 }), s, 'student')),
+        field('Сурах бичгийн дасгал, даалгавар (мөр бүр нэг даалгавар)', bindLines(h('textarea', { rows: 3, placeholder: 'Дасгал 2 (х.45): ...' }), s, 'tasks')),
+        field('Багшийн тавих тодорхой асуултууд (мөр бүр нэг асуулт)', bindLines(h('textarea', { rows: 3 }), s, 'questions')),
         field('Хэрэглэгдэхүүн', bindText(h('input', { type: 'text' }), s, 'materials')),
         field('Үнэлгээ, хүлээгдэх үр дүн', bindText(h('input', { type: 'text' }), s, 'result'))));
   }
@@ -230,6 +232,10 @@
       h('div', { class: 'lp-grid2' },
         field('Зорилт (мөр бүр нэг зорилт)', bindLines(h('textarea', { rows: 4 }), P, 'objectives')),
         field('Хичээлийн хэрэгсэл (мөр бүр нэг зүйл)', bindLines(h('textarea', { rows: 4 }), P, 'materials')))));
+
+    root.append(h('div', { class: 'lp-card' },
+      field('Сурах бичгээс олдсон дасгал, даалгавар (мөр бүр нэг даалгавар: «Дасгал 2 (х.45): агуулга → Хариу»)', bindLines(h('textarea', { rows: 5 }), P, 'textbookTasks')),
+      h('small', { class: 'lp-hint', text: 'Эдгээр нь доорх алхмуудад хуваарилагдсан. Алхмын «Сурах бичгийн дасгал, даалгавар» талбарт мөн ижил дугаартайгаар бичигдсэн байна.' })));
 
     P.stages.forEach((st, si) => {
       root.append(h('div', { class: 'lp-stage' },
@@ -291,8 +297,8 @@
   function escHtml(v){return String(v==null?'':v).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
   function printable(){
     const P=C.prepareForExport(S.plan);let n=1;
-    const stages=P.stages.map(st=>`<section><h2>${escHtml(st.name)}</h2>${st.steps.map(x=>`<article><h3>${n++}. ${escHtml(x.title)} <small>(${x.minutes} минут)</small></h3><p><b>Зорилго:</b> ${escHtml(x.goal)}</p><p><b>Багш:</b> ${escHtml(x.teacher)}</p><p><b>Сурагч:</b> ${escHtml(x.student)}</p><p><b>Хэрэглэгдэхүүн:</b> ${escHtml(x.materials)}</p><p><b>Үнэлгээ, үр дүн:</b> ${escHtml(x.result)}</p></article>`).join('')}</section>`).join('');
-    return `<!doctype html><html lang="mn"><meta charset="utf-8"><title>Ээлжит хичээлийн төлөвлөлт</title><style>body{font:14px Arial,sans-serif;color:#111;line-height:1.5;max-width:900px;margin:24px auto;padding:0 20px}h1{text-align:center;font-size:22px}h2{border-bottom:1px solid #333;padding-bottom:5px;margin-top:24px}article{page-break-inside:avoid;margin:12px 0 18px}h3{font-size:16px;margin-bottom:6px}p{margin:4px 0}small{font-weight:normal}@media print{body{margin:0 auto}.noprint{display:none}}</style><body><h1>ЭЭЛЖИТ ХИЧЭЭЛИЙН ТӨЛӨВЛӨЛТ</h1><p><b>Анги:</b> ${escHtml(P.grade)}　<b>Судлагдахуун:</b> ${escHtml(P.subject)}　<b>Хугацаа:</b> ${P.totalMinutes} минут</p><p><b>Нэгжийн сэдэв:</b> ${escHtml(P.unitTopic)}</p><p><b>Хичээлийн сэдэв:</b> ${escHtml(P.lessonTopic)}</p><p><b>Зорилго:</b> ${escHtml(P.goal)}</p><p><b>Зорилт:</b><br>${(P.objectives||[]).map(x=>'• '+escHtml(x)).join('<br>')}</p>${stages}<h2>Гэрийн даалгавар</h2><p>${escHtml(P.homework)}</p><h2>Үнэлгээ</h2><p>${(P.assessment||[]).map(escHtml).join('<br>')}</p><div class="noprint"><button onclick="window.print()">Хэвлэх</button></div></body></html>`;
+    const stages=P.stages.map(st=>`<section><h2>${escHtml(st.name)}</h2>${st.steps.map(x=>`<article><h3>${n++}. ${escHtml(x.title)} <small>(${x.minutes} минут)</small></h3><p><b>Зорилго:</b> ${escHtml(x.goal)}</p><p><b>Багш:</b> ${escHtml(x.teacher)}</p><p><b>Сурагч:</b> ${escHtml(x.student)}</p>${(x.questions&&x.questions.length)?`<p><b>Асуулт:</b></p><ul>${x.questions.map(q=>'<li>'+escHtml(q)+'</li>').join('')}</ul>`:''}${(x.tasks&&x.tasks.length)?`<p><b>Сурах бичгийн даалгавар:</b></p><ul>${x.tasks.map(q=>'<li>'+escHtml(q)+'</li>').join('')}</ul>`:''}<p><b>Хэрэглэгдэхүүн:</b> ${escHtml(x.materials)}</p><p><b>Үнэлгээ, үр дүн:</b> ${escHtml(x.result)}</p></article>`).join('')}</section>`).join('');
+    return `<!doctype html><html lang="mn"><meta charset="utf-8"><title>Ээлжит хичээлийн төлөвлөлт</title><style>body{font:14px Arial,sans-serif;color:#111;line-height:1.5;max-width:900px;margin:24px auto;padding:0 20px}h1{text-align:center;font-size:22px}h2{border-bottom:1px solid #333;padding-bottom:5px;margin-top:24px}article{page-break-inside:avoid;margin:12px 0 18px}h3{font-size:16px;margin-bottom:6px}p{margin:4px 0}small{font-weight:normal}@media print{body{margin:0 auto}.noprint{display:none}}</style><body><h1>ЭЭЛЖИТ ХИЧЭЭЛИЙН ТӨЛӨВЛӨЛТ</h1><p><b>Анги:</b> ${escHtml(P.grade)}　<b>Судлагдахуун:</b> ${escHtml(P.subject)}　<b>Хугацаа:</b> ${P.totalMinutes} минут</p><p><b>Нэгжийн сэдэв:</b> ${escHtml(P.unitTopic)}</p><p><b>Хичээлийн сэдэв:</b> ${escHtml(P.lessonTopic)}</p><p><b>Зорилго:</b> ${escHtml(P.goal)}</p><p><b>Зорилт:</b><br>${(P.objectives||[]).map(x=>'• '+escHtml(x)).join('<br>')}</p>${stages}<h2>Гэрийн даалгавар</h2><p>${escHtml(P.homework)}</p>${(P.textbookTasks&&P.textbookTasks.length)?`<h2>Хавсралт: сурах бичгийн дасгал, даалгавар</h2><ol>${P.textbookTasks.map(t=>'<li>'+escHtml(t)+'</li>').join('')}</ol>`:''}<h2>Үнэлгээ</h2><p>${(P.assessment||[]).map(escHtml).join('<br>')}</p><div class="noprint"><button onclick="window.print()">Хэвлэх</button></div></body></html>`;
   }
   function previewPlan(){if(!S.plan)return;const w=window.open('','_blank');if(!w){toast('Цонх нээхийг зөвшөөрнө үү','error');return;}w.document.open();w.document.write(printable());w.document.close();}
   function printPlan(){if(!S.plan)return;const w=window.open('','_blank');if(!w){toast('Цонх нээхийг зөвшөөрнө үү','error');return;}w.document.open();w.document.write(printable());w.document.close();w.onload=()=>{w.focus();w.print();};}

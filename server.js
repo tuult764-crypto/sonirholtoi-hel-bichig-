@@ -404,22 +404,28 @@ const LESSON_MODEL = process.env.LESSON_MODEL || 'gpt-4o';
 const LESSON_DAILY_CAP = parseInt(process.env.LESSON_DAILY_CAP) || 150; // өдөрт нийт хэдэн удаа AI дуудахыг хязгаарлана (зардлаас хамгаална)
 let lessonDay = '', lessonCount = 0;
 const IMG_URL = /^data:image\/(jpeg|png|webp);base64,[A-Za-z0-9+/=]+$/;
-const LESSON_SYS = `Та Монгол Улсын ерөнхий боловсролын сургуулийн туршлагатай багш, арга зүйч. Багшийн өгсөн сурах бичгийн хуудасны зураг, эх, ангийн түвшин, хичээлийн хугацаанд тулгуурлан "Ээлжит хичээлийн төлөвлөлт" боловсруулна. Хариуг ЗӨВХӨН нэг JSON объект байдлаар, монгол хэлээр (кирилл) бич. JSON-оос өөр текст бүү нэм.
+const LESSON_SYS = `Та Монгол Улсын ерөнхий боловсролын сургуулийн ЯМАР Ч судлагдахууны (монгол хэл, математик, англи хэл, байгалийн ухаан, нийгэм, урлаг, биеийн тамир, технологи, мэдээлэл зүй гэх мэт) туршлагатай багш, арга зүйч. Багшийн өгсөн сурах бичгийн хуудасны зураг, эх, ангийн түвшин, хичээлийн хугацаанд тулгуурлан \"Ээлжит хичээлийн төлөвлөлт\" боловсруулна. Хариуг ЗӨВХӨН нэг JSON объект байдлаар, монгол хэлээр (кирилл) бич. JSON-оос өөр текст бүү нэм.
+
+ХАМГИЙН ЧУХАЛ: төлөвлөгөө сурах бичгийн тухайн хуудсуудын БОДИТ агуулгад тулгуурласан, ерөнхий биш байна. \"Өмнөх мэдлэгээ сэргээе\", \"дүгнэе\" гэх мэт ерөнхий өгүүлбэр бичихийг хориглоно: эхлэл, төгсгөлийн алхам бүрд тухайн хуудасны сэдэвт хамаарах тодорхой асуулт, жишээ, даалгаврыг нэр, тоо, ойлголтоор нь бич.
 
 ДҮРЭМ:
-1. Сурах бичгийн эх, асуулт, дасгалыг зурагнаас болон өгсөн эхээс уншиж, төлөвлөгөөг тэдгээрт тулгуурла. Дасгал, даалгаврын дугаар, гарчгийг зөв иш татаж болно. Зурагнаас уншигдаагүй, мэдэгдэхгүй зүйлийг зохиож бүү нэм; уншигдахгүй хэсэг байвал "warnings" талбарт товч бич.
-2. Алхмын тоог хичээлийн зорилго, агуулга, ангийн нас, хугацаа, арга, ажлын зохион байгуулалтаас хамааруулан өөрөө тогтоо. Заавал 11 алхамтай байх албагүй; 6, 8, 10, 12 эсвэл түүнээс олон байж болно. Алхам олшруулахын тулд агуулгыг давтах, шаардлагагүй үйл ажиллагаа зохиохыг хориглоно.
-3. "stages" нь яг 3 үе шат: Эхлэл, Өрнөл, Төгсгөл. Бүх алхмын "minutes" (бүхэл тоо)-ын нийлбэр нийт хугацаатай яг тэнцүү байх ёстой. Үе шатны хугацаа хичээлийн онцлогт тохирно (ихэвчлэн эхлэл, төгсгөл тус бүр ойролцоогоор 10–15%).
-4. Алхам бүрд: title (нэр), minutes, goal (зорилго), teacher (багшийн хийх үйл ажиллагаа), student (сурагчийн хийх үйл ажиллагаа), materials (хэрэглэгдэхүүн, байхгүй бол ""), result (үнэлгээний арга эсвэл хүлээгдэх үр дүн). Багшийн болон сурагчийн үйл ажиллагаа бие биедээ яг харгалзсан байна. Тодорхой, хэрэгжихүйц бич (teacher, student тус бүр 2–4 өгүүлбэр).
-5. Хичээл нь өмнөх мэдлэгийг идэвхжүүлэх, шинэ агуулгыг бие даан болон хамтран ойлгох, хэрэглэх (дасгал, даалгавар), дүгнэж үнэлэх үе шатуудыг агуулсан байна. Ганцаарчилсан, хосын, багийн ажлыг агуулгад тохируулан хослуул.
-6. objectives нь 3–5 хэмжигдэхүйц зорилт ("...ж чадна" хэлбэртэй). goal нь нэг өгүүлбэр.
-7. Багш сургалтын арга заасан бол түүнийг ашигла; заагаагүй бол агуулгад тохирох 3–5 аргыг өөрөө сонго.
-8. assessment: 2–4 мөр — явцын үнэлгээ ба гүйцэтгэлийн үнэлгээний шалгуур (оноо эсвэл түвшинтэй).
-9. homework: сурах бичгийн агуулгатай холбоотой, 10 минутад хийхээр нэг даалгавар.
-10. Багш хичээлийн сэдэв өгөөгүй бол "lessonTopic"-ийг сурах бичгийн агуулгаас тодорхойл.
+1. ДАСГАЛ, ДААЛГАВАР ТОГТООХ: зураг болон өгсөн эхээс бүх дасгал, даалгавар, бодлого, асуулт, үйл ажиллагааг (дугаар, хуудастай нь) олж \"textbookTasks\" жагсаалтад ЭХЭЛЖ бич. Мөр бүр: \"Дасгал 2 (х.45): даалгаврын агуулга товч → Хариу: ...\" хэлбэртэй (Хариу нь зурагнаас мэдэгдэж байвал, эсвэл математик, шинжлэх ухааны тодорхой бодлогыг зөв бодож гаргах боломжтой бол; мэдэхгүй бол хариуг бүү зохио). Дугаар, хуудас нь \":\"-ээс өмнө байна. Уншигдаагүй зүйлийг зохиохгүй.
+2. ДАСГАЛЫГ АЛХАМД ТАРААХ: textbookTasks дахь дасгал бүрийг тохирох алхмын \"tasks\" талбарт яг ижил \"Дасгал 2 (х.45): ...\" хэлбэрээр оруул (нэг дасгал нэгээс олонгүй алхамд гол байрлалтай). Дасгал бүр заавал ямар нэг алхамд орсон байх ёстой. Хичээлийн хугацаанд багтахгүй бол үлдсэнийг homework-д тусгаж, дугаарыг нь бич. Дасгалыг алхмын teacher, student дотор ч ашигла (хэрхэн удирдах, сурагч яаж гүйцэтгэх, хэр хугацаа, хосоор/багаар эсэх).
+3. ЭХЛЭЛ, ТӨГСГӨЛ: Эхлэлд тухайн хуудасны сэдэвтэй холбоотой 2–4 тодорхой асуулт эсвэл жишээ (\"questions\" талбар) тавьж өмнөх мэдлэгийг идэвхжүүл. Төгсгөлд хуудасны гол ойлголтыг дүгнэх, сурагч өөрийгөө үнэлэх 2–3 тодорхой асуулт эсвэл богино шалгалтын даалгавар (\"questions\") болон гэрийн даалгавар өг. Эдгээр нь сурах бичгийн агуулгаас шууд гарсан байна.
+4. Алхмын тоог хичээлийн зорилго, агуулга, ангийн нас, хугацаа, арга, ажлын зохион байгуулалтаас хамааруулан өөрөө тогтоо. Заавал 11 алхамтай байх албагүй; 6, 8, 10, 12 эсвэл түүнээс олон байж болно. Алхам олшруулахын тулд агуулгыг давтах, шаардлагагүй үйл ажиллагаа зохиохыг хориглоно.
+5. \"stages\" нь яг 3 үе шат: Эхлэл, Өрнөл, Төгсгөл. Бүх алхмын \"minutes\" (бүхэл тоо)-ын нийлбэр нийт хугацаатай яг тэнцүү байх ёстой. Үе шатны хугацаа хичээлийн онцлогт тохирно (ихэвчлэн эхлэл, төгсгөл тус бүр ойролцоогоор 10–15%).
+6. Алхам бүрд: title, minutes, goal, teacher, student, materials (байхгүй бол \"\"), result (үнэлгээний арга эсвэл хүлээгдэх үр дүн), questions (байхгүй бол []), tasks (байхгүй бол []). Багшийн болон сурагчийн үйл ажиллагаа бие биедээ яг харгалзсан, хэрэгжихүйц байна (teacher, student тус бүр 2–4 өгүүлбэр).
+7. СУДЛАГДАХУУНД ТОХИРУУЛАХ: судлагдахууны онцлогт арга зүйгээ тохируул. Математик/физик/хими: жишээ бодлогыг шат шатаар шийдэх, бие даан бодох, алдаа засах, хариугаа шалгах. Хэл (монгол, англи, орос): сонсох, ярих, унших, бичих чадвар, үг хэллэг, дүрмийн дадлага. Биологи/газарзүй/байгалийн ухаан: ажиглалт, туршилт, зураг-схем, аюулгүй байдал. Түүх/нийгэм: эх сурвалж, шалтгаан-үр дагавар, дүгнэлт, хэлэлцүүлэг. Урлаг/хөгжим/дизайн технологи: бүтээлч ажил, техник, үзүүлэн, үнэлгээний шалгуур. Биеийн тамир: бэлтгэл, гол дасгал, тайвшрах, аюулгүй байдал (сурах бичиг байхгүй бол эхээс). Мэдээлэл зүй: практик даалгавар, алгоритм/програм.
+8. Хичээл нь өмнөх мэдлэгийг идэвхжүүлэх, шинэ агуулгыг бие даан болон хамтран ойлгох, хэрэглэх (дасгал, даалгавар), дүгнэж үнэлэх үе шатуудыг агуулсан байна. Ганцаарчилсан, хосын, багийн ажлыг агуулгад тохируул.
+9. objectives нь 3–5 хэмжигдэхүйц зорилт (\"...ж чадна\" хэлбэртэй). goal нь нэг өгүүлбэр.
+10. Багш сургалтын арга заасан бол түүнийг ашигла; заагаагүй бол агуулгад тохирох 3–5 аргыг өөрөө сонго.
+11. assessment: 2–4 мөр — явцын үнэлгээ ба гүйцэтгэлийн үнэлгээний шалгуур (оноо эсвэл түвшинтэй).
+12. homework: сурах бичгийн агуулга, дасгалтай холбоотой, 10 минутад хийхээр даалгавар (дасгалын дугаартай).
+13. Багш сэдэв, судлагдахуун өгөөгүй бол \"lessonTopic\", \"subject\"-ийг сурах бичгийн агуулгаас тодорхойл.
+14. Зурагнаас уншигдаагүй, бүдэг, таслагдсан хэсэг байвал \"warnings\" талбарт товч бич.
 
-JSON БҮТЭЦ:
-{"lessonTopic":"","unitTopic":"","organization":["Хичээлийн төрөл: ...","Ажлын хэлбэр: ..."],"methods":[""],"goal":"","objectives":[""],"materials":[""],"stages":[{"name":"Эхлэл","steps":[{"title":"","minutes":5,"goal":"","teacher":"","student":"","materials":"","result":""}]},{"name":"Өрнөл","steps":[]},{"name":"Төгсгөл","steps":[]}],"homework":"","assessment":[""],"warnings":[]}`;
+JSON БҮТЭЦ (талбаруудыг энэ дарааллаар бич, textbookTasks-ыг ЭХЭНД):
+{\"textbookTasks\":[\"\"],\"subject\":\"\",\"lessonTopic\":\"\",\"unitTopic\":\"\",\"organization\":[\"Хичээлийн төрөл: ...\",\"Ажлын хэлбэр: ...\"],\"methods\":[\"\"],\"goal\":\"\",\"objectives\":[\"\"],\"materials\":[\"\"],\"stages\":[{\"name\":\"Эхлэл\",\"steps\":[{\"title\":\"\",\"minutes\":5,\"goal\":\"\",\"teacher\":\"\",\"student\":\"\",\"materials\":\"\",\"result\":\"\",\"questions\":[\"\"],\"tasks\":[\"\"]}]},{\"name\":\"Өрнөл\",\"steps\":[]},{\"name\":\"Төгсгөл\",\"steps\":[]}],\"homework\":\"\",\"assessment\":[\"\"],\"warnings\":[]}`;
 app.post('/api/lesson-plan', limit(8, 3600e3), express.json({ limit: '25mb' }), ah(async (req, res) => {
   if (!process.env.OPENAI_API_KEY) return res.status(503).json({ error: 'AI хараахан тохируулагдаагүй байна (OPENAI_API_KEY).' });
   const b = req.body || {}, t = (v, n) => String(v == null ? '' : v).trim().slice(0, n);
@@ -427,22 +433,22 @@ app.post('/api/lesson-plan', limit(8, 3600e3), express.json({ limit: '25mb' }), 
   if (images.some(u => typeof u !== 'string' || u.length > 7e6 || !IMG_URL.test(u))) return res.status(400).json({ error: 'Зураг JPG/PNG/WEBP байх ёстой' });
   if (!images.length && text.length < 30) return res.status(400).json({ error: 'Сурах бичгийн зураг эсвэл эхийг оруулна уу' });
   const minutes = Math.max(10, Math.min(240, parseInt(b.minutes) || 40));
-  const inp = { grade: t(b.grade, 30), subject: t(b.subject, 60) || 'Монгол хэл', lessonTopic: t(b.lessonTopic, 250), unitTopic: t(b.unitTopic, 200), method: t(b.method, 300), minutes };
+  const inp = { grade: t(b.grade, 30), subject: t(b.subject, 60), lessonTopic: t(b.lessonTopic, 250), unitTopic: t(b.unitTopic, 200), method: t(b.method, 300), minutes };
   const user = await userOf(req); if (!user) return res.status(401).json({ error: 'Ээлжит хичээл боловсруулахын тулд и-мэйлээр нэвтэрнэ үү.' });
   const sourcePages = images.length ? images.length : Math.max(1, Math.min(10, parseInt(b.sourcePages) || 1));
   const access = await currentLessonPackage(user.id); if (!access.package) return res.status(402).json({ error: 'Эрх дууссан. Багц сонгон төлбөр төлнө үү.', access });
   if (sourcePages > access.package.dailyLimit - access.package.usedToday) return res.status(429).json({ error: `Өнөөдөр ${access.package.dailyLimit-access.package.usedToday} хуудас ашиглах эрх үлдсэн.`, access });
   if (sourcePages > access.package.remainingPages) return res.status(429).json({ error: `Нийт ${access.package.remainingPages} хуудасны эрх үлдсэн.`, access });
-  const info = `Анги: ${inp.grade || '(заагаагүй)'}\nСудлагдахуун: ${inp.subject}\nНийт хугацаа: ${minutes} минут (алхмуудын минутын нийлбэр яг ${minutes} байна)\nХичээлийн сэдэв: ${inp.lessonTopic || '(өгөөгүй — сурах бичгээс тодорхойл)'}\nНэгжийн сэдэв: ${inp.unitTopic || '(өгөөгүй)'}\nСургалтын арга: ${inp.method || '(өгөөгүй — өөрөө сонго)'}\n` +
+  const info = `Анги: ${inp.grade || '(заагаагүй)'}\nСудлагдахуун: ${inp.subject || '(заагаагүй — сурах бичгийн агуулгаас тодорхойл)'}\nНийт хугацаа: ${minutes} минут (алхмуудын минутын нийлбэр яг ${minutes} байна)\nХичээлийн сэдэв: ${inp.lessonTopic || '(өгөөгүй — сурах бичгээс тодорхойл)'}\nНэгжийн сэдэв: ${inp.unitTopic || '(өгөөгүй)'}\nСургалтын арга: ${inp.method || '(өгөөгүй — өөрөө сонго)'}\n` +
     (text ? `\nСурах бичгийн эх (багшийн оруулсан):\n${text}\n` : '') + (images.length ? `\nДараах ${images.length} зураг нь сурах бичгийн хуудас.` : '');
   const content = [{ type: 'text', text: info }, ...images.map(u => ({ type: 'image_url', image_url: { url: u, detail: 'high' } }))];
   const ctl = new AbortController(), timer = setTimeout(() => ctl.abort(), 150e3);
   let r, data;
   try {
-    r = await fetch('https://api.openai.com/v1/chat/completions', {
+    r = await fetch((process.env.OPENAI_BASE_URL || 'https://api.openai.com') + '/v1/chat/completions', {
       method: 'POST', signal: ctl.signal,
       headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + process.env.OPENAI_API_KEY },
-      body: JSON.stringify({ model: LESSON_MODEL, temperature: 0.4, max_tokens: 6000, response_format: { type: 'json_object' }, messages: [{ role: 'system', content: LESSON_SYS }, { role: 'user', content }] })
+      body: JSON.stringify({ model: LESSON_MODEL, temperature: 0.4, max_tokens: 9000, response_format: { type: 'json_object' }, messages: [{ role: 'system', content: LESSON_SYS }, { role: 'user', content }] })
     });
     data = await r.json().catch(() => ({}));
   } catch (e) {
@@ -450,11 +456,13 @@ app.post('/api/lesson-plan', limit(8, 3600e3), express.json({ limit: '25mb' }), 
   } finally { clearTimeout(timer); }
   if (!r.ok) { console.error('lesson-plan OpenAI:', r.status, data && data.error && data.error.message); return res.status(502).json({ error: 'AI үйлчилгээ хариулсангүй. Түр хүлээгээд дахин оролдоно уу.' }); }
   let raw; try { raw = JSON.parse(data.choices[0].message.content); } catch { return res.status(502).json({ error: 'AI-ийн хариуг уншиж чадсангүй. Дахин оролдоно уу.' }); }
-  const plan = lesson.sanitizePlan(raw, { totalMinutes: minutes, grade: inp.grade, subject: inp.subject, lessonTopic: inp.lessonTopic, unitTopic: inp.unitTopic });
+  const plan = lesson.sanitizePlan(raw, { totalMinutes: minutes, grade: inp.grade, subject: inp.subject || t(raw.subject, 60), lessonTopic: inp.lessonTopic, unitTopic: inp.unitTopic });
   if (lesson.allSteps(plan).length < 3) return res.status(502).json({ error: 'AI бүрэн төлөвлөгөө гаргаж чадсангүй. Дахин оролдоно уу.' });
   await q('UPDATE lesson_packages SET used_pages=used_pages+$2 WHERE id=$1', [access.package.id, sourcePages]);
   await q('INSERT INTO lesson_usage(user_id,package_id,source_pages,input_tokens,output_tokens,model,created_at) VALUES($1,$2,$3,$4,$5,$6,$7)', [user.id, access.package.id, sourcePages, Number(data.usage?.prompt_tokens||0), Number(data.usage?.completion_tokens||0), LESSON_MODEL, Date.now()]);
-  res.json({ plan, warnings: (Array.isArray(raw.warnings) ? raw.warnings : []).slice(0, 5).map(w => t(w, 200)).filter(Boolean), usage: { sourcePages, inputTokens: Number(data.usage?.prompt_tokens||0), outputTokens: Number(data.usage?.completion_tokens||0) }, access: await currentLessonPackage(user.id) });
+  const warnings = (Array.isArray(raw.warnings) ? raw.warnings : []).slice(0, 5).map(w => t(w, 200)).filter(Boolean);
+  if (images.length && !plan.textbookTasks.length) warnings.push('Зургаас дасгал, даалгавар илрээгүй. Хуудас тод, бүтэн орсон эсэхийг шалгаж, шаардлагатай бол эхийг «Сурах бичгийн эх» талбарт буулгана уу.');
+  res.json({ plan, warnings, usage: { sourcePages, inputTokens: Number(data.usage?.prompt_tokens||0), outputTokens: Number(data.usage?.completion_tokens||0) }, access: await currentLessonPackage(user.id) });
 }));
 
 // ---- Анирын тэмдэглэл: админ бичиж/засаж, нийтэлсэн бичвэрийг сайт харуулна ----

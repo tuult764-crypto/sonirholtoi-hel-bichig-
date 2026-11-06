@@ -74,9 +74,12 @@
         if (role === 'teacher') {
           if (s.goal) out.push(para([run('Зорилго: ', { i: 1, sz: 20 }), run(s.goal, { sz: 20 })], 0, 40));
           if (s.teacher) out.push(para([run('Багш: ', { i: 1, sz: 20 }), run(s.teacher, { sz: 20 })], 0, 40));
+          if (s.questions && s.questions.length) { out.push(para([run('Асуулт:', { i: 1, sz: 20 })], 0, 20)); s.questions.forEach(q => out.push(para([run('• ' + q, { sz: 20 })], 0, 20))); }
+          if (s.tasks && s.tasks.length) { out.push(para([run('Сурах бичгийн даалгавар:', { i: 1, sz: 20 })], 40, 20)); s.tasks.forEach(t => out.push(para([run('• ' + t, { sz: 20 })], 0, 20))); }
           if (s.materials) out.push(para([run('Хэрэглэгдэхүүн: ', { i: 1, sz: 20 }), run(s.materials, { sz: 20 })], 0, 40));
         } else {
           if (s.student) out.push(para([run('Сурагч: ', { i: 1, sz: 20 }), run(s.student, { sz: 20 })], 0, 40));
+          if (s.tasks && s.tasks.length) out.push(para([run('Гүйцэтгэх даалгавар: ', { i: 1, sz: 20 }), run(s.tasks.map(t => String(t).split(/[:：]/)[0].trim()).join('; '), { sz: 20 })], 0, 40));
           if (s.result) out.push(para([run('Үнэлгээ, үр дүн: ', { i: 1, sz: 20 }), run(s.result, { sz: 20 })], 0, 40));
         }
       });
@@ -88,7 +91,7 @@
     const [T1, T2, T3, T4, T5] = tbls;
     const p = plan;
     const total = p.totalMinutes;
-    const subject = p.subject || 'Монгол хэл';
+    const subject = p.subject || DOTS;
 
     // 1. Толгой хэсэг
     setTextCell(cell(T1, 0, 0), ['Нэгжийн сэдэв: ' + (p.unitTopic || DOTS)]);
@@ -129,6 +132,14 @@
     setTextCell(cell(T5, 2, 0), ['Үнэлгээ']); setTextCell(cell(T5, 2, 1), ['Засан сайжруулах']); setTextCell(cell(T5, 2, 2), ['Нэмэлт тэмдэглэл']);
     setTextCell(cell(T5, 3, 0), p.assessment ? p.assessment.split('\n') : [''], 0);
     if (p.notes) setTextCell(cell(T5, 3, 2), [p.notes], 0);
+
+    // 7. Хавсралт: сурах бичгээс олдсон бүх дасгал, даалгавар (хариутай нь)
+    if (p.textbookTasks && p.textbookTasks.length) {
+      const sect = kids(body, 'sectPr')[0];
+      const add = n => (sect ? body.insertBefore(n, sect) : body.appendChild(n));
+      add(para([run('Хавсралт: сурах бичгийн дасгал, даалгавар', { b: 1, sz: 24 })], 240, 80));
+      p.textbookTasks.forEach((t, i) => add(para([run((i + 1) + '. ' + t, { sz: 20 })], 0, 60)));
+    }
 
     let xml = new XS().serializeToString(doc).replace(/^<\?xml[^>]*\?>\s*/, '');
     zip.file('word/document.xml', '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\n' + xml);

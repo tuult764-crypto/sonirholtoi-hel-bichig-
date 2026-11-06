@@ -21,11 +21,14 @@
       teacher: str(s.teacher, 1200),
       student: str(s.student, 1000),
       materials: str(s.materials, 300),
-      result: str(s.result, 400)
+      result: str(s.result, 400),
+      questions: list(s.questions, 8, 300),   // багшийн тавих тодорхой асуултууд
+      tasks: list(s.tasks, 10, 600)           // сурах бичгийн дасгал, даалгавар (дугаар, агуулгатай нь)
     };
     return step;
   }
   const stepIsEmpty = s => !(s.title || s.teacher || s.student);
+  const refOf = t => String(t || '').split(/[:：]/)[0].toLowerCase().replace(/\s+/g, ' ').trim();
 
   // Үе шат үргэлж 3 (эхлэл, өрнөл, төгсгөл). Алхмын тоо чөлөөтэй.
   function sanitizeStages(raw) {
@@ -69,7 +72,7 @@
     return {
       unitTopic: str(opts.unitTopic != null && opts.unitTopic !== '' ? opts.unitTopic : raw.unitTopic, 200),
       lessonTopic: str(opts.lessonTopic != null && opts.lessonTopic !== '' ? opts.lessonTopic : raw.lessonTopic, 250),
-      subject: str(opts.subject || raw.subject || 'Монгол хэл', 60),
+      subject: str(opts.subject || raw.subject || '', 60),
       grade: str(opts.grade || raw.grade, 30),
       totalMinutes: total,
       organization: list(raw.organization, 6, 200),
@@ -78,19 +81,31 @@
       objectives: list(raw.objectives, 7, 300),
       materials: list(raw.materials, 12, 200),
       stages: sanitizeStages(raw.stages),
+      textbookTasks: list(raw.textbookTasks, 40, 700),   // зургаас уншсан бүх дасгал, даалгавар: «Дасгал 2 (х.45): текст → Хариу: ...»
       homework: str(raw.homework, 600),
       assessment: list(raw.assessment, 8, 400).join('\n'),
       notes: str(raw.notes, 600)
     };
   }
   // AI-аас ирсэн төлөвлөгөө: цэвэрлээд минутыг нийт хугацаатай тэнцүүлнэ.
-  const sanitizePlan = (raw, opts) => balanceMinutes(normalize(raw, opts));
+  function coverTasks(plan) {
+    const used = allSteps(plan).flatMap(s => s.tasks).map(refOf);
+    const hw = String(plan.homework || '').toLowerCase();
+    const missing = plan.textbookTasks.filter(t => { const r = refOf(t); return r && !used.some(u => u === r || u.includes(r) || r.includes(u)) && !hw.includes(r); });
+    if (missing.length) {
+      const mid = plan.stages[1].steps, pool = mid.length ? mid : allSteps(plan);
+      const target = pool[pool.length - 1];
+      if (target) missing.forEach(t => { if (target.tasks.length < 10) target.tasks.push(t); });
+    }
+    return plan;
+  }
+  const sanitizePlan = (raw, opts) => coverTasks(balanceMinutes(normalize(raw, opts)));
   // Word болгохын өмнө: хоосон алхмыг хасаж, мэдээллийг цэвэрлэнэ (минутыг өөрчлөхгүй).
   const prepareForExport = plan => normalize(plan, {});
 
   function emptyStep() {
-    return { title: 'Шинэ алхам', minutes: 5, goal: '', teacher: '', student: '', materials: '', result: '' };
+    return { title: 'Шинэ алхам', minutes: 5, goal: '', teacher: '', student: '', materials: '', result: '', questions: [], tasks: [] };
   }
 
-  return { STAGES, sanitizePlan, prepareForExport, sanitizeStep, emptyStep, balanceMinutes, stageMinutes, totalOf, timeMismatch, allSteps, stepIsEmpty };
+  return { STAGES, coverTasks, refOf, sanitizePlan, prepareForExport, sanitizeStep, emptyStep, balanceMinutes, stageMinutes, totalOf, timeMismatch, allSteps, stepIsEmpty };
 });
