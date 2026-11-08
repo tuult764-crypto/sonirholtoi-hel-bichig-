@@ -218,6 +218,12 @@ async function adminPendingPayments() {
     WHERE p.status='pending' AND p.invoice_id LIKE 'MANUAL-%'
     ORDER BY p.created_at DESC LIMIT 100`)).rows;
 }
+// Бүх төлөвтэй сүүлийн төлбөрүүд (админы «Сүүлийн захиалгууд» хүснэгтэд)
+async function adminRecentPayments(limit = 40) {
+  if (!ready) throw new Error('Ажлын хуудасны өгөгдлийн сан бэлэн биш байна.');
+  return (await q(`SELECT p.order_no AS "orderNo", p.status, p.amount, p.created_at AS "createdAt", p.paid_at AS "paidAt", p.invoice_id AS "invoiceId", u.email, p.qty
+    FROM payments p JOIN users u ON u.id=p.user_id ORDER BY p.created_at DESC LIMIT $1`, [limit])).rows;
+}
 async function adminConfirmPayment(orderNo, bankReference) {
   if (!ready) throw new Error('Ажлын хуудасны өгөгдлийн сан бэлэн биш байна.');
   const found = await q("SELECT 1 FROM payments WHERE order_no=$1 AND invoice_id LIKE 'MANUAL-%' AND status='pending'", [orderNo]);
@@ -226,4 +232,4 @@ async function adminConfirmPayment(orderNo, bankReference) {
 }
 
 async function initBagsh() { if (!DATABASE_URL || !JWT_SECRET || JWT_SECRET.length < 24) throw new Error('BAGSH_DATABASE_URL эсвэл BAGSH_JWT_SECRET тохируулаагүй'); await init(); ready = true; console.log('Багшийн туслах өгөгдлийн сан бэлэн. QPay:', qpay.MODE); }
-module.exports = { router, initBagsh, pool, adminPendingPayments, adminConfirmPayment };
+module.exports = { router, initBagsh, pool, adminPendingPayments, adminRecentPayments, adminConfirmPayment };

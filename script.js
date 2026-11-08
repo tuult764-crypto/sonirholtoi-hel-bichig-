@@ -940,12 +940,18 @@ function goToStep1(){['payStep1','payStep2','payStep3'].forEach((id,i)=>document
 function goToStep2(){['payStep1','payStep2','payStep3'].forEach((id,i)=>document.getElementById(id).style.display=i===1?'':'none');}
 function closePayment(){document.getElementById('payModal').classList.add('hidden');goToStep1();}
 async function submitOrder(){
-  const email=document.getElementById('payEmail').value.trim(),note=document.getElementById('payNote').value.trim();
+  const email=document.getElementById('payEmail').value.trim(),note=document.getElementById('payNote').value.trim(),refEl=document.getElementById('payRef');
   if(!email||!email.includes('@')){showToast('Зөв и-мэйл хаяг оруулна уу','error');return;}
   const btn=document.getElementById('submitOrderBtn');btn.disabled=true;btn.textContent='⏳ Илгээж байна...';
   const total=cartItems.reduce((s,p)=>s+p.price,0);
-  try{await fetch(GAS_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'submitOrder',email,note,total,items:cartItems.map(p=>p.title).join(', '),itemLinks:cartItems.map(p=>p.link||'').join(', '),date:new Date().toLocaleString('mn-MN')})});
+  try{
+    // Захиалга сервер дээр хадгалагдаж, админ хуудаснаас баталгаажна
+    const r=await fetch('/api/shop/orders',{method:'POST',headers:{'Content-Type':'application/json'},credentials:'same-origin',body:JSON.stringify({email,note,reference:refEl?refEl.value.trim():'',items:cartItems.map(p=>({id:p.id,title:p.title,price:p.price,link:p.link||''}))})});
+    const j=await r.json().catch(()=>({}));
+    if(!r.ok||!j.orderNo){showToast(j.error||'Захиалга илгээж чадсангүй. Дахин оролдоно уу.','error');btn.disabled=false;btn.textContent='🚀 Захиалга илгээх';return;}
     document.getElementById('confirmEmail').textContent=email;
+    const codeEl=document.getElementById('confirmCode');if(codeEl)codeEl.textContent=j.orderNo;
+    const amtEl=document.getElementById('confirmAmount');if(amtEl)amtEl.textContent=Number(j.amount||total).toLocaleString()+'₮';
     ['payStep1','payStep2','payStep3'].forEach((id,i)=>document.getElementById(id).style.display=i===2?'':'none');
     cartItems=[];document.getElementById('cartBadge').textContent='0';
   }catch(e){showToast('Сүлжээний алдаа. Дахин оролдоно уу.','error');}
@@ -958,8 +964,10 @@ async function loadLibrary(){
   grid.innerHTML=`<div style="grid-column:1/-1;text-align:center;padding:44px"><div style="width:32px;height:32px;border:3px solid var(--border);border-top-color:var(--amber);border-radius:50%;animation:spin .8s linear infinite;margin:0 auto 12px"></div><p style="font-size:12px;font-weight:600;color:#bbb">Шалгаж байна...</p></div>`;
   status.style.display='none';
   try{
-    const resp=await fetch(GAS_URL+'?action=getApproved&email='+encodeURIComponent(currentUser));
-    const data=await resp.json();
+    // Шинэ захиалгууд сервер дээрээс, өмнөх (Google Sheet-ээр баталгаажсан) худалдан авалтууд хуучин замаар — хоёуланг нэгтгэнэ
+    let data=[];
+    try{const r1=await fetch('/api/shop/library',{credentials:'same-origin'});if(r1.ok)data=await r1.json();}catch(e){}
+    try{const r2=await fetch(GAS_URL+'?action=getApproved&email='+encodeURIComponent(currentUser));const old=await r2.json();if(Array.isArray(old)){const seen=new Set(data.map(x=>x.link));old.forEach(x=>{if(!seen.has(x.link)){seen.add(x.link);data.push(x);}});}}catch(e){}
     if(!data||!data.length){grid.innerHTML=`<div style="grid-column:1/-1;text-align:center;padding:56px;color:#bbb"><div style="font-size:44px;margin-bottom:12px">📭</div><p style="font-size:13px;font-weight:600">Баталгаажсан захиалга байхгүй байна.</p><button class="btn-p" style="margin-top:18px" onclick="showSec('shop')">Сургалтын материалт очих</button></div>`;return;}
     status.style.display='block';status.textContent=`✅ ${data.length} файл таны санд байна`;
     grid.innerHTML=data.map(item=>`<div class="prod-card" style="border:2px solid #d1fae5"><div class="prod-img" style="background:#f0fdf4"><span style="font-size:44px">📄</span><span class="prod-badge" style="background:#d1fae5;color:#065f46">Баталгаажсан</span></div><div class="prod-body"><div class="prod-title">${item.title}</div><div style="font-size:10px;color:#999;margin-bottom:10px">📅 ${item.date}</div><a href="${item.link}" target="_blank" rel="noopener" style="display:block;text-align:center;background:var(--green);color:#fff;padding:9px;border-radius:11px;font-size:12px;font-weight:700;text-decoration:none">⬇ Татаж авах</a></div></div>`).join('');

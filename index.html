@@ -733,8 +733,9 @@
       </div>
       <div class="pay-body">
         <input id="payEmail" type="email" class="modal-field" style="padding:13px 15px;font-size:16px;margin-bottom:9px" placeholder="tanii@gmail.com">
+        <input id="payRef" type="text" class="modal-field" style="padding:11px 15px;font-size:15px;margin-bottom:9px" placeholder="Банкны гүйлгээний лавлагаа (заавал биш, хурдан баталгаажуулна)">
         <input id="payNote" type="text" class="modal-field" style="padding:11px 15px;font-size:15px;margin-bottom:14px" placeholder="Нэмэлт тайлбар (заавал биш)">
-        <div style="background:#f0fdf4;border-radius:11px;padding:11px 13px;margin-bottom:14px;font-size:14px;color:#166534;line-height:1.6">Захиалга баталгаажсаны дараа та <strong>24 цагийн дотор</strong> файлаа и-мэйлээр хүлээн авна.</div>
+        <div style="background:#f0fdf4;border-radius:11px;padding:11px 13px;margin-bottom:14px;font-size:14px;color:#166534;line-height:1.6">Төлбөр шалгагдаж баталгаажсаны дараа файл таны <strong>«Миний сан»</strong>-д гарч ирнэ.</div>
         <button id="submitOrderBtn" class="pay-next" onclick="submitOrder()">Захиалга илгээх</button>
         <button class="pay-close-lnk" onclick="goToStep1()">← Буцах</button>
       </div>
@@ -742,8 +743,8 @@
     <div id="payStep3" style="display:none;text-align:center;padding:42px 26px">
       <div style="font-size:52px;margin-bottom:14px">🎉</div>
       <div style="font-size:18px;font-weight:800;color:var(--green);margin-bottom:8px">Захиалга амжилттай!</div>
-      <div style="font-size:15px;color:var(--mid);line-height:1.7;margin-bottom:20px">Таны захиалга бүртгэгдлээ.<br>Төлбөр шалгагдсаны дараа файлыг<br><strong id="confirmEmail" style="color:var(--amber)"></strong><br>хаяг руу илгээнэ.</div>
-      <div style="background:#f0fdf4;border-radius:13px;padding:13px;font-size:14px;color:#166534;margin-bottom:18px">⏱ Ихэвчлэн <strong>1-24 цагийн дотор</strong> хүргэгдэнэ.<br>Асуух зүйл: <strong>sonirholtoihelbichig@gmail.com</strong></div>
+      <div style="font-size:15px;color:var(--mid);line-height:1.7;margin-bottom:20px">Таны захиалга бүртгэгдлээ.<br>Захиалгын код: <strong id="confirmCode" style="color:var(--amber)"></strong> · Дүн: <strong id="confirmAmount"></strong><br>Төлбөр шалгагдсаны дараа файл <strong>«Миний сан»</strong>-д нэмэгдэнэ.<br><small>Бүртгэлийн и-мэйл: <span id="confirmEmail"></span></small></div>
+      <div style="background:#f0fdf4;border-radius:13px;padding:13px;font-size:14px;color:#166534;margin-bottom:18px">⏱ Ихэвчлэн <strong>1-24 цагийн дотор</strong> баталгаажна.<br>Асуух зүйл: <strong>sonirholtoihelbichig@gmail.com</strong></div>
       <button class="pay-next" onclick="closePayment()">Хаах</button>
     </div>
   </div>

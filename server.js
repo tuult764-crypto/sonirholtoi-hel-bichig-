@@ -33,12 +33,13 @@ CREATE INDEX IF NOT EXISTS lesson_packages_user ON lesson_packages(user_id, stat
 CREATE TABLE IF NOT EXISTS lesson_usage(id BIGSERIAL PRIMARY KEY, user_id BIGINT NOT NULL REFERENCES shop_users(id), package_id BIGINT NOT NULL REFERENCES lesson_packages(id), source_pages INTEGER NOT NULL, input_tokens INTEGER NOT NULL DEFAULT 0, output_tokens INTEGER NOT NULL DEFAULT 0, model TEXT NOT NULL, created_at BIGINT NOT NULL);
 CREATE TABLE IF NOT EXISTS training_orders(id BIGSERIAL PRIMARY KEY, order_no TEXT UNIQUE NOT NULL, email TEXT NOT NULL, item TEXT NOT NULL, note TEXT NOT NULL DEFAULT '', amount INTEGER NOT NULL CHECK(amount > 0), status TEXT NOT NULL DEFAULT 'pending', created_at BIGINT NOT NULL, paid_at BIGINT, bank_reference TEXT, confirmed_at BIGINT);
 CREATE TABLE IF NOT EXISTS diary_entries(id BIGSERIAL PRIMARY KEY, title TEXT NOT NULL, body TEXT NOT NULL, excerpt TEXT NOT NULL DEFAULT '', entry_date DATE NOT NULL DEFAULT CURRENT_DATE, status TEXT NOT NULL DEFAULT 'draft', image_url TEXT, created_at BIGINT NOT NULL, updated_at BIGINT NOT NULL);
-CREATE INDEX IF NOT EXISTS diary_entries_public ON diary_entries(status, entry_date DESC, id DESC);`);
+CREATE INDEX IF NOT EXISTS diary_entries_public ON diary_entries(status, entry_date DESC, id DESC);
+${sheetshop.ddl}`);
 }
 const app = express();
 app.set('trust proxy', 1);
 // Нууц файлуудыг (код, тохиргоо, өгөгдөл) нийтэд нээхгүй
-const DENY = /^\/(server\.js|server-code\.txt|qpay\.js|bagsh-app\.js|bagsh-qpay\.js|worksheet\.js|package(-lock)?\.json|\.env.*|env\.(example|integrated\.example)|\.git.*|netlify.*|readme\.md|.*-MN\.(txt|md)|literature_db\.txt|node_modules.*|.*\.xlsx)$/i;
+const DENY = /^\/(server\.js|server-code\.txt|qpay\.js|bagsh-app\.js|bagsh-qpay\.js|sheetshop-api\.js|worksheet\.js|package(-lock)?\.json|\.env.*|env\.(example|integrated\.example)|\.git.*|netlify.*|readme\.md|.*-MN\.(txt|md)|literature_db\.txt|node_modules.*|.*\.xlsx)$/i;
 app.use((req, res, next) => { let p = ''; try { p = decodeURIComponent(req.path); } catch { return res.status(400).end(); } DENY.test(p) ? res.status(404).end() : next(); });
 app.use((req, res, next) => (req.path.startsWith('/api/worksheet/') || req.path === '/api/admin/materials' || req.path === '/api/lesson-plan') && req.method === 'POST' ? next() : express.json({ limit: '100kb' })(req, res, next));
 let ready = false;
@@ -350,6 +351,30 @@ app.get('/api/admin/lesson-package-status/:orderNo', ...A, ah(async (req, res) =
   res.json({ payment, entitlement, entitlementActive: !!entitlement && entitlement.status === 'active' && (!entitlement.expiresAt || Number(entitlement.expiresAt) > Date.now()) });
 }));
 
+// Бүх төлөвтэй сүүлийн захиалгууд + төлбөрийн горим: «захиалга харагдахгүй байна» гэх үед шалтгааныг шууд харуулна
+const sheetshop = require('./sheetshop-api')({ app, q, ah, limit, need, userOf, crypto });
+app.get('/api/admin/recent-orders', ...A, ah(async (req, res) => {
+  const mk = (kind, service) => r => ({ ...r, kind, service, amount: Number(r.amount), createdAt: Number(r.createdAt), paidAt: r.paidAt == null ? null : Number(r.paidAt),
+    channel: String(r.invoiceId || '').startsWith('MANUAL-') ? 'manual' : String(r.invoiceId || '').startsWith('MOCK-') ? 'mock' : (r.invoiceId ? 'live' : '') });
+  const names = ['shop', 'lesson', 'worksheet', 'training', 'sheetshop'];
+  const res4 = await Promise.allSettled([
+    q(`SELECT p.order_no AS "orderNo", p.status, p.amount, p.created_at AS "createdAt", p.paid_at AS "paidAt", p.invoice_id AS "invoiceId", u.email, m.title AS detail
+       FROM shop_payments p JOIN shop_users u ON u.id=p.user_id JOIN shop_materials m ON m.id=p.material_id ORDER BY p.created_at DESC LIMIT 40`),
+    q(`SELECT p.order_no AS "orderNo", p.status, p.amount, p.created_at AS "createdAt", p.paid_at AS "paidAt", p.invoice_id AS "invoiceId", u.email,
+       CASE p.package_type WHEN 'week7' THEN '7 хоногийн багц' ELSE '5 хуудасны багц' END AS detail FROM lesson_package_payments p JOIN shop_users u ON u.id=p.user_id ORDER BY p.created_at DESC LIMIT 40`),
+    bagsh.adminRecentPayments(40),
+    q(`SELECT order_no AS "orderNo", status, amount, created_at AS "createdAt", paid_at AS "paidAt", email, item AS detail FROM training_orders ORDER BY created_at DESC LIMIT 40`),
+    sheetshop.recent(40)
+  ]);
+  const val = i => res4[i].status === 'fulfilled' ? (res4[i].value.rows || res4[i].value) : [];
+  const rows = [
+    ...val(0).map(mk('material', 'Цахим дэлгүүр')), ...val(1).map(mk('lesson', 'Ээлжит хичээл')),
+    ...val(2).map(r => mk('worksheet', 'Ажлын хуудас')({ ...r, detail: `${r.qty || 1} эрх` })), ...val(3).map(mk('training', 'Сургалтын бүртгэл')),
+    ...val(4).map(({ items, ...r }) => mk('sheetshop', 'Цахим дэлгүүр (PDF, судоку)')({ ...r, detail: sheetshop.detail(items) }))
+  ].sort((a, b) => b.createdAt - a.createdAt).slice(0, 80).map(r => { const { invoiceId, ...rest } = r; return rest; });
+  res.json({ mode: qpay.MODE, rows, sources: res4.map((x, i) => names[i] + ':' + x.status).join(',') });
+}));
+
 app.get('/api/admin/all-pending', ...A, ah(async (req, res) => {
   // Нэг үйлчилгээний сан түр тасарсан ч бусад үйлчилгээний захиалгыг харуулна.
   const sources = await Promise.allSettled([
@@ -360,16 +385,18 @@ app.get('/api/admin/all-pending', ...A, ah(async (req, res) => {
        FROM lesson_package_payments p JOIN shop_users u ON u.id=p.user_id
        WHERE p.status='pending' AND p.invoice_id LIKE 'MANUAL-%' ORDER BY p.created_at DESC LIMIT 100`),
     bagsh.adminPendingPayments(),
-    q(`SELECT order_no AS "orderNo", amount, created_at AS "createdAt", email, item AS detail FROM training_orders WHERE status='pending' ORDER BY created_at DESC LIMIT 100`)
+    q(`SELECT order_no AS "orderNo", amount, created_at AS "createdAt", email, item AS detail FROM training_orders WHERE status='pending' ORDER BY created_at DESC LIMIT 100`),
+    sheetshop.pending()
   ]);
   const get = i => sources[i].status === 'fulfilled' ? sources[i].value : null;
   const rows = [
     ...(get(0)?.rows || []).map(r => ({ ...r, service: 'Цахим дэлгүүр', kind: 'material' })),
     ...(get(1)?.rows || []).map(r => ({ ...r, service: 'Ээлжит хичээл', detail: r.detail === 'week7' ? '7 хоногийн багц' : '5 хуудасны багц', kind: 'lesson' })),
     ...(get(2) || []).map(r => ({ ...r, service: 'Ажлын хуудас', detail: `${r.qty || 1} эрх`, kind: 'worksheet' })),
-    ...(get(3)?.rows || []).map(r => ({ ...r, service: 'Сургалтын бүртгэл', kind: 'training' }))
+    ...(get(3)?.rows || []).map(r => ({ ...r, service: 'Сургалтын бүртгэл', kind: 'training' })),
+    ...(get(4)?.rows || []).map(({ items, unverified, ...r }) => ({ ...r, service: 'Цахим дэлгүүр (PDF, судоку)', detail: sheetshop.detail(items) + (unverified ? ' ⚠ үнэ шалгагдаагүй' : ''), kind: 'sheetshop' }))
   ].sort((a,b) => Number(b.createdAt) - Number(a.createdAt));
-  res.set('X-Admin-Source-Status', sources.map((x,i) => `${['shop','lesson','worksheet','training'][i]}:${x.status}`).join(','));
+  res.set('X-Admin-Source-Status', sources.map((x,i) => `${['shop','lesson','worksheet','training','sheetshop'][i]}:${x.status}`).join(','));
   res.json(rows);
 }));
 app.post('/api/admin/all-confirm', ...A, ah(async (req, res) => {
@@ -377,7 +404,7 @@ app.post('/api/admin/all-confirm', ...A, ah(async (req, res) => {
   const kind = String(req.body.kind || '');
   const bankReference = String(req.body.bankReference || '').trim().slice(0, 120);
   if (!bankReference) return res.status(400).json({ error: 'Банкны гүйлгээний дугаар эсвэл лавлагааг оруулна уу.' });
-  if (!orderNo || !['material','lesson','worksheet','training'].includes(kind)) return res.status(400).json({ error: 'Захиалгын мэдээлэл буруу байна.' });
+  if (!orderNo || !['material','lesson','worksheet','training','sheetshop'].includes(kind)) return res.status(400).json({ error: 'Захиалгын мэдээлэл буруу байна.' });
   let activated = false;
   if (kind === 'material') {
     const found = await q("SELECT 1 FROM shop_payments WHERE order_no=$1 AND invoice_id LIKE 'MANUAL-%' AND status='pending'", [orderNo]);
@@ -390,6 +417,9 @@ app.post('/api/admin/all-confirm', ...A, ah(async (req, res) => {
   } else if (kind === 'worksheet') {
     activated = await bagsh.adminConfirmPayment(orderNo, bankReference);
     if (!activated) return res.status(404).json({ error: 'Хүлээгдэж буй ажлын хуудасны захиалга олдсонгүй эсвэл аль хэдийн баталгаажсан байна.' });
+  } else if (kind === 'sheetshop') {
+    activated = await sheetshop.confirm(orderNo, bankReference);
+    if (!activated) return res.status(404).json({ error: 'Хүлээгдэж буй захиалга олдсонгүй эсвэл аль хэдийн баталгаажсан байна.' });
   } else {
     const r = await q("UPDATE training_orders SET status='paid', paid_at=$2, bank_reference=$3, confirmed_at=$2 WHERE order_no=$1 AND status='pending' RETURNING order_no", [orderNo, Date.now(), bankReference]);
     activated = r.rowCount === 1;

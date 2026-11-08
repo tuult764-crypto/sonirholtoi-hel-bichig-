@@ -26,6 +26,11 @@ table{width:100%;border-collapse:collapse;display:block;overflow-x:auto}td,th{bo
 <input id="lookup" placeholder="LP12345"><button id="check" type="button">Төлөв шалгах</button><pre id="status" class="muted" style="white-space:pre-wrap"></pre></div>
 <table><thead><tr><th>Захиалгын код</th><th>И-мэйл</th><th>Үйлчилгээ</th><th>Дүн</th><th>Огноо</th><th>Үйлдэл</th></tr></thead><tbody id="allPayments"></tbody></table>
 
+<h2>Сүүлийн захиалгууд (бүх төлөв)</h2>
+<div id="modeBanner" class="warn hidden" role="alert"></div>
+<p class="muted">Хүлээгдэж буй жагсаалтад харагдахгүй байгаа захиалга энд төлөвтэйгөө харагдана (хүлээгдэж байна, баталгаажсан, амжилтгүй).</p>
+<table><thead><tr><th>Захиалгын код</th><th>И-мэйл</th><th>Үйлчилгээ</th><th>Дүн</th><th>Төлөв</th><th>Огноо</th></tr></thead><tbody id="recentOrders"></tbody></table>
+
 <h2>Анирын тэмдэглэл · Зохиол бичих</h2>
 <div class="panel f" style="max-width:900px">
   <input id="diaryId" type="hidden">
@@ -97,11 +102,23 @@ async function loadPayments(){
     b.disabled=true;
     try{const res=await api('all-confirm',{orderNo:r.orderNo,kind:r.kind,bankReference:ref.trim()});
      say(res.activated?'Төлбөр баталгаажиж, эрх нээгдлээ. Захиалга: '+r.orderNo:'Сервер эрх нээгдсэнийг батлаагүй. Төлөв шалгана уу.',!!res.activated);
-     await loadPayments();
+     await loadPayments();await loadRecent();
     }catch(e){say(e.message);b.disabled=false}
    }));
   });
  }catch(e){t.replaceChildren();cell(t.insertRow(),'Төлбөрийн жагсаалт татаж чадсангүй.');say('Төлбөр: '+e.message)}
+}
+const STATUS_MN={pending:'Төлбөр хүлээгдэж байна',paid:'Төлбөр баталгаажсан',failed:'Төлбөр амжилтгүй'};
+async function loadRecent(){
+ const t=$('recentOrders'),mb=$('modeBanner');
+ try{
+  const j=await api('recent-orders');t.replaceChildren();
+  const manual=j.mode==='manual';
+  mb.classList.toggle('hidden',manual);
+  mb.textContent=manual?'':(j.mode==='live'?'Төлбөрийн горим: live (QPay). Төлбөрийг QPay автоматаар шалгаж эрхийг нээнэ, тиймээс «Хүлээгдэж буй төлбөр» жагсаалтад гар баталгаажуулах захиалга гарахгүй. Гар баталгаажуулах бол серверт QPAY_MODE=manual тохируулна уу.':'Төлбөрийн горим: '+j.mode+'. Бодит төлбөрт QPAY_MODE=manual (банкны QR) эсвэл live тохируулна уу.');
+  if(!j.rows.length){cell(t.insertRow(),'Одоогоор захиалга бүртгэгдээгүй байна')}
+  j.rows.forEach(r=>{const tr=t.insertRow();[r.orderNo,r.email,r.service+(r.detail?' · '+r.detail:''),Number(r.amount).toLocaleString('mn-MN')+'₮',(STATUS_MN[r.status]||r.status)+(r.channel&&r.channel!=='manual'?' ('+r.channel+')':''),dt(r.createdAt)].forEach(v=>cell(tr,v))});
+ }catch(e){t.replaceChildren();cell(t.insertRow(),'Сүүлийн захиалгуудыг татаж чадсангүй.')}
 }
 async function checkOrder(){
  $('status').textContent='Шалгаж байна...';
@@ -177,7 +194,7 @@ async function saveDiary(){
 }
 
 /* ---- нэвтрэлт: түлхүүр буруу бол нэвтрэх хэсэг нээлттэй хэвээр үлдэнэ ---- */
-async function reloadAll(){await Promise.allSettled([loadPayments(),loadMaterials(),loadDiary()])}
+async function reloadAll(){await Promise.allSettled([loadPayments(),loadRecent(),loadMaterials(),loadDiary()])}
 async function login(){
  KEY=$('k').value.trim();
  if(KEY.length<12)return say('Админ түлхүүрээ шалгана уу (12+ тэмдэгт).');
