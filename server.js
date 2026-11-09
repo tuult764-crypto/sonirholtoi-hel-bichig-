@@ -454,8 +454,11 @@ const LESSON_SYS = `Та Монгол Улсын ерөнхий боловсро
 13. Багш сэдэв, судлагдахуун өгөөгүй бол \"lessonTopic\", \"subject\"-ийг сурах бичгийн агуулгаас тодорхойл.
 14. Зурагнаас уншигдаагүй, бүдэг, таслагдсан хэсэг байвал \"warnings\" талбарт товч бич.
 
-JSON БҮТЭЦ (талбаруудыг энэ дарааллаар бич, textbookTasks-ыг ЭХЭНД):
-{\"textbookTasks\":[\"\"],\"subject\":\"\",\"lessonTopic\":\"\",\"unitTopic\":\"\",\"organization\":[\"Хичээлийн төрөл: ...\",\"Ажлын хэлбэр: ...\"],\"methods\":[\"\"],\"goal\":\"\",\"objectives\":[\"\"],\"materials\":[\"\"],\"stages\":[{\"name\":\"Эхлэл\",\"steps\":[{\"title\":\"\",\"minutes\":5,\"goal\":\"\",\"teacher\":\"\",\"student\":\"\",\"materials\":\"\",\"result\":\"\",\"questions\":[\"\"],\"tasks\":[\"\"]}]},{\"name\":\"Өрнөл\",\"steps\":[]},{\"name\":\"Төгсгөл\",\"steps\":[]}],\"homework\":\"\",\"assessment\":[\"\"],\"warnings\":[]}`;
+15. ЗУРАГ: сурах бичгийн хуудсанд зураг, фото, диаграмм, схем, график, газрын зураг, дүрс, хүснэгтэн дүрслэл байвал \"pictures\" жагсаалтад бүгдийг нь бич (хуудасны чимэглэл, лого, хуудасны дугаарыг бүү оруул). Зураг бүрд: \"id\" (\"Зураг 1\", \"Зураг 2\"... дарааллаар), \"page\" (оруулсан зургуудын хэддэх нь, 1-ээс), \"box\" ([x, y, өргөн, өндөр] — хуудасны зүүн дээд буланг (0,0), баруун доод буланг (1,1) гэж үзсэн харьцаа, зургийг хүрээлж, тайлбар бичвэрийг оруулахгүй), \"caption\" (зураг юу харуулж буй), \"activity\" (зурагтай хийх тодорхой даалгавар: ажиглах, тоолох, харьцуулах, нэрлэх, тайлбарлах гэх мэт 2–4 өгүүлбэр), \"questions\" (зураг дээр суурилсан 2–4 асуулт). Зураг байхгүй бол \"pictures\":[]. Зураг ашигласан алхамд тэдгээрийн id-г \"pictures\" талбарт бич, зургийн даалгавар, асуултыг алхмын teacher, student-д тусга.
+16. ДАСГАЛ, ДААЛГАВРЫГ НАРИЙН ТӨЛӨВЛӨХ: алхамд оруулсан дасгал бүрийн хувьд \"taskPlans\" талбарт \"Дасгал 2 (х.45): ажлын хэлбэр (ганцаар/хосоор/багаар), хугацаа, багшийн удирдлага (юу гэж асууж, юуг үзүүлэх), сурагчийн гүйцэтгэх алхмууд, хүлээгдэх зөв хариу эсвэл үнэлгээний шалгуур, хүндрэл гарвал дэмжих арга, хурдан хийсэн сурагчид өгөх нэмэлт сорилт\" хэлбэрээр нэг мөр бич. Зураг агуулсан даалгаварт зургийг яаж ашиглахыг тодорхой заа.
+
+JSON БҮТЭЦ (талбаруудыг энэ дарааллаар бич, textbookTasks болон pictures-ыг ЭХЭНД):
+{\"textbookTasks\":[\"\"],\"pictures\":[{\"id\":\"Зураг 1\",\"page\":1,\"box\":[0.1,0.2,0.4,0.3],\"caption\":\"\",\"activity\":\"\",\"questions\":[\"\"]}],\"subject\":\"\",\"lessonTopic\":\"\",\"unitTopic\":\"\",\"organization\":[\"Хичээлийн төрөл: ...\",\"Ажлын хэлбэр: ...\"],\"methods\":[\"\"],\"goal\":\"\",\"objectives\":[\"\"],\"materials\":[\"\"],\"stages\":[{\"name\":\"Эхлэл\",\"steps\":[{\"title\":\"\",\"minutes\":5,\"goal\":\"\",\"teacher\":\"\",\"student\":\"\",\"materials\":\"\",\"result\":\"\",\"questions\":[\"\"],\"tasks\":[\"\"],\"taskPlans\":[\"\"],\"pictures\":[\"\"]}]},{\"name\":\"Өрнөл\",\"steps\":[]},{\"name\":\"Төгсгөл\",\"steps\":[]}],\"homework\":\"\",\"assessment\":[\"\"],\"warnings\":[]}`;
 app.post('/api/lesson-plan', limit(30, 3600e3), express.json({ limit: '25mb' }), ah(async (req, res) => {
   if (!process.env.OPENAI_API_KEY) return res.status(503).json({ error: 'AI хараахан тохируулагдаагүй байна (OPENAI_API_KEY).' });
   const b = req.body || {}, t = (v, n) => String(v == null ? '' : v).trim().slice(0, n);
@@ -478,7 +481,7 @@ app.post('/api/lesson-plan', limit(30, 3600e3), express.json({ limit: '25mb' }),
     r = await fetch((process.env.OPENAI_BASE_URL || 'https://api.openai.com') + '/v1/chat/completions', {
       method: 'POST', signal: ctl.signal,
       headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + process.env.OPENAI_API_KEY },
-      body: JSON.stringify({ model: LESSON_MODEL, temperature: 0.4, max_tokens: 9000, response_format: { type: 'json_object' }, messages: [{ role: 'system', content: LESSON_SYS }, { role: 'user', content }] })
+      body: JSON.stringify({ model: LESSON_MODEL, temperature: 0.4, max_tokens: 11000, response_format: { type: 'json_object' }, messages: [{ role: 'system', content: LESSON_SYS }, { role: 'user', content }] })
     });
     data = await r.json().catch(() => ({}));
   } catch (e) {

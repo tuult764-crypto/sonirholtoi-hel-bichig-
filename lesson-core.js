@@ -23,10 +23,24 @@
       materials: str(s.materials, 300),
       result: str(s.result, 400),
       questions: list(s.questions, 8, 300),   // багшийн тавих тодорхой асуултууд
-      tasks: list(s.tasks, 10, 600)           // сурах бичгийн дасгал, даалгавар (дугаар, агуулгатай нь)
+      tasks: list(s.tasks, 10, 600),          // сурах бичгийн дасгал, даалгавар (дугаар, агуулгатай нь)
+      taskPlans: list(s.taskPlans, 10, 700),  // даалгавар бүрийн нарийн төлөвлөлт: хэлбэр, хугацаа, удирдлага, хүлээгдэх хариу, дэмжлэг/сорилт
+      pictures: list(s.pictures, 5, 30)       // энэ алхамд ашиглах сурах бичгийн зургийн дугаарууд («Зураг 1»)
     };
     return step;
   }
+  const num01 = v => { const n = Number(v); return isFinite(n) ? Math.min(1, Math.max(0, n)) : 0; };
+  const pics = v => (Array.isArray(v) ? v : []).slice(0, 12).map((x, i) => {
+    x = x && typeof x === 'object' ? x : {};
+    let box = null;
+    if (Array.isArray(x.box) && x.box.length === 4) {
+      let [bx, by, bw, bh] = x.box.map(num01); bw = Math.min(bw, 1 - bx); bh = Math.min(bh, 1 - by);
+      if (bw >= 0.04 && bh >= 0.04) box = [bx, by, bw, bh];
+    }
+    const out = { id: str(x.id, 30) || ('Зураг ' + (i + 1)), page: Math.max(1, Math.min(10, parseInt(x.page) || 1)), box, caption: str(x.caption, 240), activity: str(x.activity, 800), questions: list(x.questions, 6, 300) };
+    if (typeof x.dataUrl === 'string' && /^data:image\/(jpeg|png);base64,/.test(x.dataUrl) && x.dataUrl.length < 2.5e6) { out.dataUrl = x.dataUrl; out.w = Math.max(1, parseInt(x.w) || 1); out.h = Math.max(1, parseInt(x.h) || 1); }
+    return out;
+  });
   const stepIsEmpty = s => !(s.title || s.teacher || s.student);
   const refOf = t => String(t || '').split(/[:：]/)[0].toLowerCase().replace(/\s+/g, ' ').trim();
 
@@ -81,6 +95,7 @@
       objectives: list(raw.objectives, 7, 300),
       materials: list(raw.materials, 12, 200),
       stages: sanitizeStages(raw.stages),
+      pictures: pics(raw.pictures),                     // сурах бичгийн хуудсан дахь зургууд (хуудас, байрлал, тайлбар, зургийн даалгавар)
       textbookTasks: list(raw.textbookTasks, 40, 700),   // зургаас уншсан бүх дасгал, даалгавар: «Дасгал 2 (х.45): текст → Хариу: ...»
       homework: str(raw.homework, 600),
       assessment: list(raw.assessment, 8, 400).join('\n'),
@@ -99,13 +114,24 @@
     }
     return plan;
   }
-  const sanitizePlan = (raw, opts) => coverTasks(balanceMinutes(normalize(raw, opts)));
+function coverPictures(plan) {
+    const ids = new Set(plan.pictures.map(p => p.id));
+    allSteps(plan).forEach(s => { s.pictures = s.pictures.filter(id => ids.has(id)); });          // байхгүй зургийн холбоосыг цэвэрлэнэ
+    const used = new Set(allSteps(plan).flatMap(s => s.pictures));
+    const missing = plan.pictures.filter(p => !used.has(p.id));
+    if (missing.length) {
+      const pool = plan.stages[1].steps.length ? plan.stages[1].steps : allSteps(plan), target = pool[0];
+      if (target) missing.forEach(p => { if (target.pictures.length < 5) target.pictures.push(p.id); });
+    }
+    return plan;
+  }
+  const sanitizePlan = (raw, opts) => coverPictures(coverTasks(balanceMinutes(normalize(raw, opts))));
   // Word болгохын өмнө: хоосон алхмыг хасаж, мэдээллийг цэвэрлэнэ (минутыг өөрчлөхгүй).
   const prepareForExport = plan => normalize(plan, {});
 
   function emptyStep() {
-    return { title: 'Шинэ алхам', minutes: 5, goal: '', teacher: '', student: '', materials: '', result: '', questions: [], tasks: [] };
+    return { title: 'Шинэ алхам', minutes: 5, goal: '', teacher: '', student: '', materials: '', result: '', questions: [], tasks: [], taskPlans: [], pictures: [] };
   }
 
-  return { STAGES, coverTasks, refOf, sanitizePlan, prepareForExport, sanitizeStep, emptyStep, balanceMinutes, stageMinutes, totalOf, timeMismatch, allSteps, stepIsEmpty };
+  return { STAGES, coverPictures, coverTasks, refOf, sanitizePlan, prepareForExport, sanitizeStep, emptyStep, balanceMinutes, stageMinutes, totalOf, timeMismatch, allSteps, stepIsEmpty };
 });
