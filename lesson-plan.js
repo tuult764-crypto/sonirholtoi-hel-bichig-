@@ -4,8 +4,7 @@
   const C = window.LessonCore;
   const DRAFT_KEY = 'shb_lesson_draft_v1';
   const MAX_IMAGES = 10;
-  const PICS_KEY = 'shb_lesson_pics_v1';
-  const S = { pics: {}, images: [], plan: null, warnings: [], busy: false, pdf: null, pdfName: '' };
+  const S = { images: [], plan: null, warnings: [], busy: false, pdf: null, pdfName: '' };
   const $ = id => document.getElementById(id);
   const toast = (m, t) => (typeof showToast === 'function' ? showToast(m, t) : alert(m));
 
@@ -144,7 +143,6 @@
       let data = {}; try { data = await r.json(); } catch (e) { /* JSON биш хариу */ }
       if (!r.ok) throw new Error(data.error || (r.status === 413 ? 'Зураг хэт том байна. Цөөн эсвэл жижиг зураг оруулна уу.' : 'Алдаа гарлаа (' + r.status + ')'));
       S.plan = C.sanitizePlan(data.plan, { totalMinutes: minutes });
-      await cropPictures();
       if (data.access) showAccess(data.access);
       S.warnings = data.warnings || [];
       save(); render();
@@ -156,34 +154,6 @@
     } finally { S.busy = false; $('lpGo').disabled = false; }
   }
 
-
-  /* ── сурах бичгийн хуудсан дахь зургуудыг таслан авах (AI хэлсэн байрлалаар) ── */
-  const loadPic = url => new Promise((ok, no) => { const i = new Image(); i.onload = () => ok(i); i.onerror = () => no(new Error('зураг ачаалсангүй')); i.src = url; });
-  async function cropPictures() {
-    S.pics = {};
-    const list = (S.plan && S.plan.pictures) || [];
-    for (const p of list) {
-      try {
-        const src = S.images[p.page - 1]; if (!src || !p.box) continue;
-        const im = await loadPic(src.url), W = im.naturalWidth, H = im.naturalHeight, pad = 0.015;
-        const x = Math.max(0, p.box[0] - pad) * W, y = Math.max(0, p.box[1] - pad) * H;
-        const w = Math.min(W - x, (p.box[2] + 2 * pad) * W), hh = Math.min(H - y, (p.box[3] + 2 * pad) * H);
-        if (w < 40 || hh < 40) continue;
-        const k = Math.min(1, 900 / w), cw = Math.round(w * k), ch = Math.round(hh * k);
-        const cv = document.createElement('canvas'); cv.width = cw; cv.height = ch;
-        const cx = cv.getContext('2d'); cx.fillStyle = '#fff'; cx.fillRect(0, 0, cw, ch); cx.drawImage(im, x, y, w, hh, 0, 0, cw, ch);
-        S.pics[p.id] = { dataUrl: cv.toDataURL('image/jpeg', 0.85), w: cw, h: ch };
-      } catch (e) { /* энэ зургийг алгасна */ }
-    }
-    try { localStorage.setItem(PICS_KEY, JSON.stringify(S.pics)); } catch (e) { /* багтахгүй бол зөвхөн энэ сессэд */ }
-  }
-  function attachPics(P) { (P.pictures || []).forEach(p => { const im = S.pics[p.id]; if (im) { p.dataUrl = im.dataUrl; p.w = im.w; p.h = im.h; } }); return P; }
-  function removePicture(id) {
-    S.plan.pictures = S.plan.pictures.filter(p => p.id !== id); delete S.pics[id];
-    C.allSteps(S.plan).forEach(st => { st.pictures = (st.pictures || []).filter(x => x !== id); });
-    try { localStorage.setItem(PICS_KEY, JSON.stringify(S.pics)); } catch (e) { /* */ }
-    save(); render();
-  }
 
   /* ── засварлагч ── */
   let saveTimer = 0;
@@ -232,7 +202,6 @@
         field('Зорилго', bindText(h('textarea', { rows: 2 }), s, 'goal')),
         field('Багшийн үйл ажиллагаа', bindText(h('textarea', { rows: 4 }), s, 'teacher')),
         field('Сурагчийн үйл ажиллагаа', bindText(h('textarea', { rows: 4 }), s, 'student')),
-        field('Ашиглах зураг (мөр бүр нэг зураг: «Зураг 1»)', bindLines(h('textarea', { rows: 2, placeholder: 'Зураг 1' }), s, 'pictures')),
         field('Даалгаврын нарийн төлөвлөлт (даалгавар бүрд нэг мөр: хэлбэр, хугацаа, удирдлага, хүлээгдэх хариу, дэмжлэг/сорилт)', bindLines(h('textarea', { rows: 4 }), s, 'taskPlans')),
         field('Сурах бичгийн дасгал, даалгавар (мөр бүр нэг даалгавар)', bindLines(h('textarea', { rows: 3, placeholder: 'Дасгал 2 (х.45): ...' }), s, 'tasks')),
         field('Багшийн тавих тодорхой асуултууд (мөр бүр нэг асуулт)', bindLines(h('textarea', { rows: 3 }), s, 'questions')),
@@ -270,15 +239,19 @@
       field('Сурах бичгээс олдсон дасгал, даалгавар (мөр бүр нэг даалгавар: «Дасгал 2 (х.45): агуулга → Хариу»)', bindLines(h('textarea', { rows: 5 }), P, 'textbookTasks')),
       h('small', { class: 'lp-hint', text: 'Эдгээр нь доорх алхмуудад хуваарилагдсан. Алхмын «Сурах бичгийн дасгал, даалгавар» талбарт мөн ижил дугаартайгаар бичигдсэн байна.' })));
 
-    if ((P.pictures || []).length) root.append(h('div', { class: 'lp-card' },
-      h('h3', { text: 'Сурах бичгийн зургууд' }),
-      h('small', { class: 'lp-hint', text: 'Хуудаснаас таслан авсан зургууд Word, хэвлэх хувилбарт алхамдаа орно. Зөв таслагдаагүй бол «Хасах» дарна уу (тайлбар, даалгавар хэвээр үлдэнэ).' }),
-      ...P.pictures.map(pc => h('div', { class: 'lp-pic' },
-        S.pics[pc.id] ? h('img', { src: S.pics[pc.id].dataUrl, alt: pc.caption || pc.id, style: 'max-width:240px;max-height:180px;border:1px solid #ddd;border-radius:6px;display:block;margin-bottom:6px' }) : h('small', { class: 'lp-hint', text: pc.id + ': зураг таслагдаагүй (хуудас ' + pc.page + ')' }),
-        field(pc.id + ' — тайлбар', bindText(h('input', { type: 'text' }), pc, 'caption')),
-        field('Зурагтай хийх даалгавар', bindText(h('textarea', { rows: 3 }), pc, 'activity')),
-        field('Зураг дээрх асуултууд (мөр бүр нэг асуулт)', bindLines(h('textarea', { rows: 3 }), pc, 'questions')),
-        S.pics[pc.id] ? h('button', { type: 'button', class: 'btn-g', onclick: () => { delete S.pics[pc.id]; try { localStorage.setItem(PICS_KEY, JSON.stringify(S.pics)); } catch (e) { /* */ } render(); } }, 'Зургийг хасах') : null))));
+    if ((P.pictureTasks || []).length) root.append(h('div', { class: 'lp-card' },
+      h('h3', { text: 'Зурагт даалгаврууд' }),
+      h('small', { class: 'lp-hint', text: 'Сурах бичгийн зураг дээр суурилсан даалгавруудыг AI таньж боловсруулсан. Зургийн тайлбар буруу бол засна уу.' }),
+      ...P.pictureTasks.map(pt => h('div', { class: 'lp-pic' },
+        h('div', { class: 'lp-grid2' },
+          field('Даалгавар (дугаар)', bindText(h('input', { type: 'text' }), pt, 'ref')),
+          field('Төрөл', bindText(h('input', { type: 'text' }), pt, 'type'))),
+        field('Зураг дээр юу харагдаж буй (цуврал бол зураг бүрээр)', bindText(h('textarea', { rows: 4 }), pt, 'scene')),
+        field('Үйл ажиллагааны дараалал (мөр бүр нэг алхам)', bindLines(h('textarea', { rows: 4 }), pt, 'process')),
+        field('Удирдах асуулт, өгүүлбэрийн эхлэл (мөр бүр нэг)', bindLines(h('textarea', { rows: 4 }), pt, 'prompts')),
+        field('Жишээ хариу (мөр бүр нэг)', bindLines(h('textarea', { rows: 3 }), pt, 'sample')),
+        field('Үнэлгээний шалгуур (мөр бүр нэг)', bindLines(h('textarea', { rows: 3 }), pt, 'criteria')),
+        field('Хэрэглэгдэхүүн', bindText(h('input', { type: 'text' }), pt, 'materials'))))));
 
     P.stages.forEach((st, si) => {
       root.append(h('div', { class: 'lp-stage' },
@@ -340,8 +313,8 @@
   function escHtml(v){return String(v==null?'':v).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
   // A4 хэвлэх хувилбар: захын зай зүүн 30 / баруун 15 / дээд 20 / доод 20 мм (Word-той ижил), хүснэгт хуудас таслахад толгойгоо давтана
   function printable(){
-    const P=attachPics(C.prepareForExport(S.plan)), e=escHtml, arr=v=>Array.isArray(v)?v:(v?String(v).split(/\n+/):[]), li=a=>arr(a).map(x=>`<li>${e(x)}</li>`).join('');
-    const picHtml=(P,x)=>(x.pictures||[]).map(id=>(P.pictures||[]).find(q=>q.id===id)).filter(Boolean).map(q=>`<div class="pic">${q.dataUrl?`<img src="${q.dataUrl}" alt="">`:''}<p><b>${e(q.id)}.</b> ${e(q.caption)}</p>${q.activity?`<p><i>Даалгавар:</i> ${e(q.activity)}</p>`:''}${(q.questions&&q.questions.length)?`<ul>${li(q.questions)}</ul>`:''}</div>`).join('');
+    const P=C.prepareForExport(S.plan), e=escHtml, arr=v=>Array.isArray(v)?v:(v?String(v).split(/\n+/):[]), li=a=>arr(a).map(x=>`<li>${e(x)}</li>`).join('');
+    const picHtml=(P,x)=>C.pictureTasksOf(P,x).map(q=>`<div class="pic"><p><b>Зурагт даалгавар${q.ref?' — '+e(q.ref):''}${q.type?' ('+e(q.type)+')':''}</b></p>${q.scene?`<p><i>Зураг дээр:</i> ${e(q.scene)}</p>`:''}${arr(q.process).length?`<p><i>Явц:</i></p><ol>${li(q.process)}</ol>`:''}${arr(q.prompts).length?`<p><i>Удирдах асуулт:</i></p><ul>${li(q.prompts)}</ul>`:''}${arr(q.sample).length?`<p><i>Жишээ хариу:</i></p><ul>${li(q.sample)}</ul>`:''}${arr(q.criteria).length?`<p><i>Шалгуур:</i></p><ul>${li(q.criteria)}</ul>`:''}${q.materials?`<p><i>Хэрэглэгдэхүүн:</i> ${e(q.materials)}</p>`:''}</div>`).join('');
     let n=1;
     const rows=P.stages.map(st=>`<tr class="st"><td colspan="4">${e(st.name)} <span>(${st.steps.reduce((a,x)=>a+x.minutes,0)} минут)</span></td></tr>`+st.steps.map(x=>`<tr>
       <td class="c"><b>${n++}.</b> ${e(x.title)}<br><span class="m">${x.minutes} мин</span></td>
@@ -353,7 +326,7 @@ h1{text-align:center;font-size:15pt;margin:0 0 8pt;text-transform:uppercase}h2{f
 p{margin:0 0 3pt}ul,ol{margin:0 0 3pt;padding-left:14pt}li{margin:0}i{font-style:italic}
 table{width:100%;border-collapse:collapse;table-layout:fixed}th,td{border:.75pt solid #000;padding:3pt 4pt;vertical-align:top;overflow-wrap:anywhere;font-size:11pt}
 thead{display:table-header-group}tr{page-break-inside:avoid}th{background:#eee;text-align:center}.st{break-after:avoid;page-break-after:avoid}.st td{background:#f3f3f3;font-weight:bold}.st span{font-weight:normal}
-td.c{text-align:left}.pic{margin:4pt 0;page-break-inside:avoid}.pic img{display:block;max-width:100%;max-height:60mm;margin:0 auto 2pt;border:.5pt solid #999}.m{font-size:10pt;color:#222}.info td{border:none;padding:1pt 0;font-size:12pt}.info td:first-child{width:36mm;font-weight:bold}.ob{page-break-inside:avoid}`;
+td.c{text-align:left}.pic{margin:4pt 0;padding:3pt;border:.5pt solid #999}.m{font-size:10pt;color:#222}.info td{border:none;padding:1pt 0;font-size:12pt}.info td:first-child{width:36mm;font-weight:bold}.ob{page-break-inside:avoid}`;
     return `<!doctype html><html lang="mn"><head><meta charset="utf-8"><title>Ээлжит хичээлийн төлөвлөлт</title><style>${css}</style></head><body>
 <h1>Ээлжит хичээлийн төлөвлөлт</h1>
 <table class="info"><tr><td>Анги:</td><td>${e(P.grade)}</td></tr><tr><td>Судлагдахуун:</td><td>${e(P.subject)}</td></tr><tr><td>Хугацаа:</td><td>${P.totalMinutes} минут</td></tr><tr><td>Нэгжийн сэдэв:</td><td>${e(P.unitTopic)}</td></tr><tr><td>Хичээлийн сэдэв:</td><td>${e(P.lessonTopic)}</td></tr><tr><td>Зорилго:</td><td>${e(P.goal)}</td></tr>${arr(P.objectives).length?`<tr><td>Зорилт:</td><td><ul>${li(P.objectives)}</ul></td></tr>`:''}${arr(P.methods).length?`<tr><td>Арга зүй:</td><td>${e(arr(P.methods).join(', '))}</td></tr>`:''}${arr(P.materials).length?`<tr><td>Хэрэглэгдэхүүн:</td><td>${e(arr(P.materials).join(', '))}</td></tr>`:''}</table>
@@ -390,14 +363,15 @@ ${arr(P.textbookTasks).length?`<div class="ob"><h2>Хавсралт: сурах 
   function printPlan(){openView(true);}
 
   function reset() {
-    S.plan = null; S.pics = {}; S.warnings = []; try { localStorage.removeItem(PICS_KEY); localStorage.removeItem(DRAFT_KEY); } catch (e) { /* */ }
+    S.plan = null; S.warnings = []; try { localStorage.removeItem(DRAFT_KEY); } catch (e) { /* */ }
     render(); window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
   /* ── Word татах ── */
   async function download() {
-    const P = attachPics(C.prepareForExport(S.plan)), total = C.totalOf(P);
+    const P = C.prepareForExport(S.plan), total = C.totalOf(P);
     if (!C.allSteps(P).length) { toast('Нэг ч алхам алга байна', 'error'); return; }
+    C.allSteps(P).forEach(st => { st.pictureTasks = C.pictureTasksOf(P, st); });
     if (total !== P.totalMinutes && !confirm('Алхмуудын нийлбэр ' + total + ' минут, нийт хугацаа ' + P.totalMinutes + ' минут байна. Гэсэн ч татах уу?\n(“Хугацааг тэгшлэх” товчоор засаж болно.)')) return;
     if (!window.JSZip) { toast('Word үүсгэх сан ачаалагдсангүй. Интернэтээ шалгаад хуудсыг дахин нээнэ үү.', 'error'); return; }
     try {
@@ -427,7 +401,7 @@ ${arr(P.textbookTasks).length?`<div class="ob"><h2>Хавсралт: сурах 
     setInterval(refreshLessonAccess, 60000);
     try {
       const d = localStorage.getItem(DRAFT_KEY);
-      if (d) { S.plan = C.prepareForExport(JSON.parse(d)); try { S.pics = JSON.parse(localStorage.getItem(PICS_KEY) || '{}'); } catch (e) { S.pics = {}; } render(); }
+      if (d) { S.plan = C.prepareForExport(JSON.parse(d)); render(); }
     } catch (e) { /* эвдэрсэн ноорог */ }
   }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init); else init();

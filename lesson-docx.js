@@ -66,25 +66,14 @@
       p.appendChild(pp); runs.forEach(r => p.appendChild(r)); return p;
     }
 
-    // ── Зураг шигтгэх (word/media + холбоос) ──
-    const media = [];
-    const NS_FRAG = 'xmlns:w="' + W + '" xmlns:wp="http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing" xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main" xmlns:pic="http://schemas.openxmlformats.org/drawingml/2006/picture" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"';
-    function imgPara(pc, maxMm) {
-      const m = /^data:image\/(jpeg|png);base64,(.+)$/.exec(pc.dataUrl || ''); if (!m) return null;
-      const n = media.length + 1, ext = m[1] === 'png' ? 'png' : 'jpg', rid = 'rIdLessonImg' + n;
-      media.push({ name: 'lessonimg' + n + '.' + ext, b64: m[2], ext, rid });
-      let cx = Math.round(maxMm * 36000), cy = Math.round(cx * (pc.h || 1) / (pc.w || 1));
-      const maxH = 65 * 36000; if (cy > maxH) { cx = Math.round(cx * maxH / cy); cy = maxH; }
-      const xml = '<w:p ' + NS_FRAG + '><w:pPr><w:spacing w:before="40" w:after="20"/><w:ind w:left="60" w:right="40" w:firstLine="0"/></w:pPr><w:r><w:drawing><wp:inline distT="0" distB="0" distL="0" distR="0"><wp:extent cx="' + cx + '" cy="' + cy + '"/><wp:docPr id="' + (1000 + n) + '" name="Зураг ' + n + '" descr="' + String(pc.caption || pc.id).replace(/[<>&"]/g, ' ') + '"/><wp:cNvGraphicFramePr><a:graphicFrameLocks noChangeAspect="1"/></wp:cNvGraphicFramePr><a:graphic><a:graphicData uri="http://schemas.openxmlformats.org/drawingml/2006/picture"><pic:pic><pic:nvPicPr><pic:cNvPr id="' + (1000 + n) + '" name="' + 'lessonimg' + n + '.' + ext + '"/><pic:cNvPicPr/></pic:nvPicPr><pic:blipFill><a:blip r:embed="' + rid + '"/><a:stretch><a:fillRect/></a:stretch></pic:blipFill><pic:spPr><a:xfrm><a:off x="0" y="0"/><a:ext cx="' + cx + '" cy="' + cy + '"/></a:xfrm><a:prstGeom prst="rect"><a:avLst/></a:prstGeom></pic:spPr></pic:pic></a:graphicData></a:graphic></wp:inline></w:drawing></w:r></w:p>';
-      return doc.importNode(new DP().parseFromString(xml, 'application/xml').documentElement, true);
-    }
-    function picBlock(id) {
-      const pc = (plan.pictures || []).find(x => x.id === id); if (!pc) return [];
+    // Зурагт даалгавар (зургийн агуулга, явц, асуулт, жишээ, шалгуур) — текстээр
+    function picTaskBlock(q) {
       const o = [];
-      const im = imgPara(pc, 50); if (im) o.push(im);
-      o.push(para([run(pc.id + '. ', { b: 1, sz: 20 }), run(pc.caption || '', { sz: 20 })], 0, 20));
-      if (pc.activity) o.push(para([run('Даалгавар: ', { i: 1, sz: 20 }), run(pc.activity, { sz: 20 })], 0, 20));
-      (pc.questions || []).forEach(q => o.push(para([run('• ' + q, { sz: 20 })], 0, 20)));
+      o.push(para([run('Зурагт даалгавар' + (q.ref ? ' — ' + q.ref : '') + (q.type ? ' (' + q.type + ')' : ''), { b: 1, sz: 20 })], 60, 20));
+      if (q.scene) o.push(para([run('Зураг дээр: ', { i: 1, sz: 20 }), run(q.scene, { sz: 20 })], 0, 20));
+      const list = (label, arr, numbered) => { if (arr && arr.length) { o.push(para([run(label, { i: 1, sz: 20 })], 20, 10)); arr.forEach((t, k) => o.push(para([run((numbered ? (k + 1) + '. ' : '• ') + t, { sz: 20 })], 0, 10))); } };
+      list('Явц:', q.process, true); list('Удирдах асуулт:', q.prompts); list('Жишээ хариу:', q.sample); list('Шалгуур:', q.criteria);
+      if (q.materials) o.push(para([run('Хэрэглэгдэхүүн: ', { i: 1, sz: 20 }), run(q.materials, { sz: 20 })], 0, 20));
       return o;
     }
 
@@ -99,7 +88,7 @@
           if (s.questions && s.questions.length) { out.push(para([run('Асуулт:', { i: 1, sz: 20 })], 0, 20)); s.questions.forEach(q => out.push(para([run('• ' + q, { sz: 20 })], 0, 20))); }
           if (s.tasks && s.tasks.length) { out.push(para([run('Сурах бичгийн даалгавар:', { i: 1, sz: 20 })], 40, 20)); s.tasks.forEach(t => out.push(para([run('• ' + t, { sz: 20 })], 0, 20))); }
           if (s.taskPlans && s.taskPlans.length) { out.push(para([run('Даалгаврын төлөвлөлт:', { i: 1, sz: 20 })], 40, 20)); s.taskPlans.forEach(t => out.push(para([run('• ' + t, { sz: 20 })], 0, 20))); }
-          (s.pictures || []).forEach(id => picBlock(id).forEach(n => out.push(n)));
+          (s.pictureTasks || []).forEach(q => picTaskBlock(q).forEach(n => out.push(n)));
           if (s.materials) out.push(para([run('Хэрэглэгдэхүүн: ', { i: 1, sz: 20 }), run(s.materials, { sz: 20 })], 0, 40));
         } else {
           if (s.student) out.push(para([run('Сурагч: ', { i: 1, sz: 20 }), run(s.student, { sz: 20 })], 0, 40));
@@ -189,14 +178,6 @@
 
     let xml = new XS().serializeToString(doc).replace(/^<\?xml[^>]*\?>\s*/, '');
     zip.file('word/document.xml', '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\n' + xml);
-    if (media.length) {
-      media.forEach(m => zip.file('word/media/' + m.name, m.b64, { base64: true }));
-      const rels = await zip.file('word/_rels/document.xml.rels').async('string');
-      zip.file('word/_rels/document.xml.rels', rels.replace('</Relationships>', media.map(m => '<Relationship Id="' + m.rid + '" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/image" Target="media/' + m.name + '"/>').join('') + '</Relationships>'));
-      let ct = await zip.file('[Content_Types].xml').async('string');
-      ['jpg:image/jpeg', 'png:image/png'].forEach(x => { const [e, t] = x.split(':'); if (media.some(m => m.ext === e) && !new RegExp('Extension="' + e + '"', 'i').test(ct)) ct = ct.replace(/<Types[^>]*>/, mm => mm + '<Default Extension="' + e + '" ContentType="' + t + '"/>'); });
-      zip.file('[Content_Types].xml', ct);
-    }
     return zip.generateAsync({ type: deps.type || 'blob', compression: 'DEFLATE' });
   }
 
