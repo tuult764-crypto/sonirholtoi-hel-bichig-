@@ -133,6 +133,28 @@
     setTextCell(cell(T5, 3, 0), p.assessment ? p.assessment.split('\n') : [''], 0);
     if (p.notes) setTextCell(cell(T5, 3, 2), [p.notes], 0);
 
+    // 6.5 Хуудасны стандарт: A4, захын зай — зүүн 30 мм, баруун 10 мм, дээд 20 мм, доод 20 мм (баримт бичгийн нийтлэг стандарт).
+    //     Өмнө нь доод зай 50 мм, хүснэгт текстийн талбараас гарсан байсан тул хэвлэхэд таарахгүй байв.
+    const MM = 56.6929;                                           // 1 мм = 56.69 twip
+    const PG = { top: Math.round(20 * MM), bottom: Math.round(20 * MM), left: Math.round(30 * MM), right: Math.round(10 * MM) };
+    const TEXT_W = 11906 - PG.left - PG.right;
+    const sp = kids(body, 'sectPr')[0];
+    if (sp) {
+      const set = (n, a) => { for (const k in a) n.setAttributeNS(W, 'w:' + k, String(a[k])); };
+      let sz = kids(sp, 'pgSz')[0]; if (!sz) { sz = el('pgSz'); sp.insertBefore(sz, sp.firstChild); } set(sz, { w: 11906, h: 16838, orient: 'portrait' });
+      let mar = kids(sp, 'pgMar')[0]; if (!mar) { mar = el('pgMar'); sp.appendChild(mar); } set(mar, { top: PG.top, bottom: PG.bottom, left: PG.left, right: PG.right, header: 567, footer: 567, gutter: 0 });
+    }
+    Array.from(doc.getElementsByTagNameNS(W, 'tbl')).forEach(tbl => {      // хүснэгт бүрийг текстийн өргөнд яг тааруулна
+      const grid = kids(tbl, 'tblGrid')[0]; if (!grid) return;
+      kids(grid, 'tblGridChange').forEach(n => grid.removeChild(n));   // хуучин өргөний өөрчлөлтийн бүртгэлийг цэвэрлэнэ
+      const cols = kids(grid, 'gridCol'), sum = cols.reduce((s, c) => s + Number(c.getAttributeNS(W, 'w') || c.getAttribute('w:w') || 0), 0);
+      if (!sum) return;
+      let acc = 0;
+      cols.forEach((c, i) => { const w0 = Number(c.getAttributeNS(W, 'w') || c.getAttribute('w:w') || 0); const w1 = i === cols.length - 1 ? TEXT_W - acc : Math.round(w0 * TEXT_W / sum); acc += w1; c.setAttributeNS(W, 'w:w', String(w1)); });
+      const pr = kids(tbl, 'tblPr')[0];
+      if (pr) { let tw = kids(pr, 'tblW')[0]; if (!tw) { tw = el('tblW'); pr.appendChild(tw); } tw.setAttributeNS(W, 'w:w', String(TEXT_W)); tw.setAttributeNS(W, 'w:type', 'dxa'); kids(pr, 'tblInd').forEach(n => pr.removeChild(n)); }
+    });
+
     // 7. Хавсралт: сурах бичгээс олдсон бүх дасгал, даалгавар (хариутай нь)
     if (p.textbookTasks && p.textbookTasks.length) {
       const sect = kids(body, 'sectPr')[0];

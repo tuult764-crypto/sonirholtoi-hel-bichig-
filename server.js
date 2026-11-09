@@ -212,7 +212,7 @@ app.post('/api/admin/materials/:id', ...A, ah(async (req, res) => {
 }));
 
 // ---- Ээлжит хичээлийн төлбөрт багц ----
-const PACKAGE_OPTIONS = { pages5: { amount: 5000, pages: 5, daily: 5, days: null, title: '5 хуудасны багц' }, week7: { amount: 10000, pages: 70, daily: 10, days: 7, title: '7 хоногийн багц' } };
+const PACKAGE_OPTIONS = { pages5: { amount: 5000, pages: 5, daily: 10, days: null, title: '5 ээлжит хичээлийн багц' }, week7: { amount: 10000, pages: 70, daily: 10, days: 7, title: '7 хоногийн багц' } };
 async function currentLessonPackage(userId) {
   const now = Date.now();
   await q("UPDATE lesson_packages SET status='expired' WHERE user_id=$1 AND status='active' AND expires_at IS NOT NULL AND expires_at <= $2", [userId, now]);
@@ -220,7 +220,7 @@ async function currentLessonPackage(userId) {
   const pkg = r.rows[0] || null;
   if (!pkg) return { package: null, status: 'expired', message: 'Эрх дууссан' };
   const day = new Date(now).toLocaleDateString('en-CA', { timeZone: 'Asia/Ulaanbaatar' });
-  const daily = await q("SELECT COALESCE(SUM(source_pages),0)::int n FROM lesson_usage WHERE package_id=$1 AND (to_timestamp(created_at/1000.0) AT TIME ZONE 'Asia/Ulaanbaatar')::date=$2::date", [pkg.id, day]);
+  const daily = await q("SELECT COUNT(*)::int n FROM lesson_usage WHERE package_id=$1 AND (to_timestamp(created_at/1000.0) AT TIME ZONE 'Asia/Ulaanbaatar')::date=$2::date", [pkg.id, day]);
   return { package: { id: pkg.id, type: pkg.package_type, totalPages: pkg.total_pages, usedPages: pkg.used_pages, remainingPages: pkg.remaining_pages, dailyLimit: pkg.daily_limit, usedToday: daily.rows[0].n, expiresAt: pkg.expires_at, status: 'active' }, status: 'active', message: 'Танд эрх байна' };
 }
 async function activateLessonPackage(orderNo, bankReference = null) {
@@ -361,7 +361,7 @@ app.get('/api/admin/recent-orders', ...A, ah(async (req, res) => {
     q(`SELECT p.order_no AS "orderNo", p.status, p.amount, p.created_at AS "createdAt", p.paid_at AS "paidAt", p.invoice_id AS "invoiceId", u.email, m.title AS detail
        FROM shop_payments p JOIN shop_users u ON u.id=p.user_id JOIN shop_materials m ON m.id=p.material_id ORDER BY p.created_at DESC LIMIT 40`),
     q(`SELECT p.order_no AS "orderNo", p.status, p.amount, p.created_at AS "createdAt", p.paid_at AS "paidAt", p.invoice_id AS "invoiceId", u.email,
-       CASE p.package_type WHEN 'week7' THEN '7 хоногийн багц' ELSE '5 хуудасны багц' END AS detail FROM lesson_package_payments p JOIN shop_users u ON u.id=p.user_id ORDER BY p.created_at DESC LIMIT 40`),
+       CASE p.package_type WHEN 'week7' THEN '7 хоногийн багц' ELSE '5 ээлжит хичээлийн багц' END AS detail FROM lesson_package_payments p JOIN shop_users u ON u.id=p.user_id ORDER BY p.created_at DESC LIMIT 40`),
     bagsh.adminRecentPayments(40),
     q(`SELECT order_no AS "orderNo", status, amount, created_at AS "createdAt", paid_at AS "paidAt", email, item AS detail FROM training_orders ORDER BY created_at DESC LIMIT 40`),
     sheetshop.recent(40)
@@ -391,7 +391,7 @@ app.get('/api/admin/all-pending', ...A, ah(async (req, res) => {
   const get = i => sources[i].status === 'fulfilled' ? sources[i].value : null;
   const rows = [
     ...(get(0)?.rows || []).map(r => ({ ...r, service: 'Цахим дэлгүүр', kind: 'material' })),
-    ...(get(1)?.rows || []).map(r => ({ ...r, service: 'Ээлжит хичээл', detail: r.detail === 'week7' ? '7 хоногийн багц' : '5 хуудасны багц', kind: 'lesson' })),
+    ...(get(1)?.rows || []).map(r => ({ ...r, service: 'Ээлжит хичээл', detail: r.detail === 'week7' ? '7 хоногийн багц' : '5 ээлжит хичээлийн багц', kind: 'lesson' })),
     ...(get(2) || []).map(r => ({ ...r, service: 'Ажлын хуудас', detail: `${r.qty || 1} эрх`, kind: 'worksheet' })),
     ...(get(3)?.rows || []).map(r => ({ ...r, service: 'Сургалтын бүртгэл', kind: 'training' })),
     ...(get(4)?.rows || []).map(({ items, unverified, ...r }) => ({ ...r, service: 'Цахим дэлгүүр (PDF, судоку)', detail: sheetshop.detail(items) + (unverified ? ' ⚠ үнэ шалгагдаагүй' : ''), kind: 'sheetshop' }))
@@ -456,7 +456,7 @@ const LESSON_SYS = `Та Монгол Улсын ерөнхий боловсро
 
 JSON БҮТЭЦ (талбаруудыг энэ дарааллаар бич, textbookTasks-ыг ЭХЭНД):
 {\"textbookTasks\":[\"\"],\"subject\":\"\",\"lessonTopic\":\"\",\"unitTopic\":\"\",\"organization\":[\"Хичээлийн төрөл: ...\",\"Ажлын хэлбэр: ...\"],\"methods\":[\"\"],\"goal\":\"\",\"objectives\":[\"\"],\"materials\":[\"\"],\"stages\":[{\"name\":\"Эхлэл\",\"steps\":[{\"title\":\"\",\"minutes\":5,\"goal\":\"\",\"teacher\":\"\",\"student\":\"\",\"materials\":\"\",\"result\":\"\",\"questions\":[\"\"],\"tasks\":[\"\"]}]},{\"name\":\"Өрнөл\",\"steps\":[]},{\"name\":\"Төгсгөл\",\"steps\":[]}],\"homework\":\"\",\"assessment\":[\"\"],\"warnings\":[]}`;
-app.post('/api/lesson-plan', limit(8, 3600e3), express.json({ limit: '25mb' }), ah(async (req, res) => {
+app.post('/api/lesson-plan', limit(30, 3600e3), express.json({ limit: '25mb' }), ah(async (req, res) => {
   if (!process.env.OPENAI_API_KEY) return res.status(503).json({ error: 'AI хараахан тохируулагдаагүй байна (OPENAI_API_KEY).' });
   const b = req.body || {}, t = (v, n) => String(v == null ? '' : v).trim().slice(0, n);
   const images = (Array.isArray(b.images) ? b.images : []).slice(0, 10), text = t(b.text, 12000);
@@ -467,8 +467,8 @@ app.post('/api/lesson-plan', limit(8, 3600e3), express.json({ limit: '25mb' }), 
   const user = await userOf(req); if (!user) return res.status(401).json({ error: 'Ээлжит хичээл боловсруулахын тулд и-мэйлээр нэвтэрнэ үү.' });
   const sourcePages = images.length ? images.length : Math.max(1, Math.min(10, parseInt(b.sourcePages) || 1));
   const access = await currentLessonPackage(user.id); if (!access.package) return res.status(402).json({ error: 'Эрх дууссан. Багц сонгон төлбөр төлнө үү.', access });
-  if (sourcePages > access.package.dailyLimit - access.package.usedToday) return res.status(429).json({ error: `Өнөөдөр ${access.package.dailyLimit-access.package.usedToday} хуудас ашиглах эрх үлдсэн.`, access });
-  if (sourcePages > access.package.remainingPages) return res.status(429).json({ error: `Нийт ${access.package.remainingPages} хуудасны эрх үлдсэн.`, access });
+  if (access.package.dailyLimit - access.package.usedToday < 1) return res.status(429).json({ error: `Өнөөдрийн ${access.package.dailyLimit} ээлжит хичээлийн хязгаар дууссан. Маргааш дахин боловсруулна уу.`, access });
+  if (access.package.remainingPages < 1) return res.status(429).json({ error: 'Багцын ээлжит хичээлийн эрх дууссан.', access });
   const info = `Анги: ${inp.grade || '(заагаагүй)'}\nСудлагдахуун: ${inp.subject || '(заагаагүй — сурах бичгийн агуулгаас тодорхойл)'}\nНийт хугацаа: ${minutes} минут (алхмуудын минутын нийлбэр яг ${minutes} байна)\nХичээлийн сэдэв: ${inp.lessonTopic || '(өгөөгүй — сурах бичгээс тодорхойл)'}\nНэгжийн сэдэв: ${inp.unitTopic || '(өгөөгүй)'}\nСургалтын арга: ${inp.method || '(өгөөгүй — өөрөө сонго)'}\n` +
     (text ? `\nСурах бичгийн эх (багшийн оруулсан):\n${text}\n` : '') + (images.length ? `\nДараах ${images.length} зураг нь сурах бичгийн хуудас.` : '');
   const content = [{ type: 'text', text: info }, ...images.map(u => ({ type: 'image_url', image_url: { url: u, detail: 'high' } }))];
@@ -488,7 +488,7 @@ app.post('/api/lesson-plan', limit(8, 3600e3), express.json({ limit: '25mb' }), 
   let raw; try { raw = JSON.parse(data.choices[0].message.content); } catch { return res.status(502).json({ error: 'AI-ийн хариуг уншиж чадсангүй. Дахин оролдоно уу.' }); }
   const plan = lesson.sanitizePlan(raw, { totalMinutes: minutes, grade: inp.grade, subject: inp.subject || t(raw.subject, 60), lessonTopic: inp.lessonTopic, unitTopic: inp.unitTopic });
   if (lesson.allSteps(plan).length < 3) return res.status(502).json({ error: 'AI бүрэн төлөвлөгөө гаргаж чадсангүй. Дахин оролдоно уу.' });
-  await q('UPDATE lesson_packages SET used_pages=used_pages+$2 WHERE id=$1', [access.package.id, sourcePages]);
+  await q('UPDATE lesson_packages SET used_pages=used_pages+$2 WHERE id=$1', [access.package.id, 1]);
   await q('INSERT INTO lesson_usage(user_id,package_id,source_pages,input_tokens,output_tokens,model,created_at) VALUES($1,$2,$3,$4,$5,$6,$7)', [user.id, access.package.id, sourcePages, Number(data.usage?.prompt_tokens||0), Number(data.usage?.completion_tokens||0), LESSON_MODEL, Date.now()]);
   const warnings = (Array.isArray(raw.warnings) ? raw.warnings : []).slice(0, 5).map(w => t(w, 200)).filter(Boolean);
   if (images.length && !plan.textbookTasks.length) warnings.push('Зургаас дасгал, даалгавар илрээгүй. Хуудас тод, бүтэн орсон эсэхийг шалгаж, шаардлагатай бол эхийг «Сурах бичгийн эх» талбарт буулгана уу.');

@@ -262,7 +262,7 @@
 
   function showAccess(data) {
     const title=$('lpAccessTitle'), info=$('lpAccessInfo'); if(!title||!info)return;
-    if(data && data.package){const a=data.package;title.textContent='Танд эрх байна';info.textContent=`${a.type==='week7'?'7 хоногийн багц':'5 хуудасны багц'} · Үлдсэн ${a.remainingPages}/${a.totalPages} хуудас · Өнөөдөр ${Math.max(0,a.dailyLimit-a.usedToday)} хуудас ашиглах боломжтой`+(a.expiresAt?' · Дуусах: '+new Date(Number(a.expiresAt)).toLocaleString('mn-MN'): ' · Хугацаагүй');}
+    if(data && data.package){const a=data.package;title.textContent='Танд эрх байна';info.textContent=`${a.type==='week7'?'7 хоногийн багц':'5 ээлжит хичээлийн багц'} · Үлдсэн ${a.remainingPages}/${a.totalPages} ээлжит · Өнөөдөр ${Math.max(0,a.dailyLimit-a.usedToday)}/${a.dailyLimit} ээлжит боловсруулах боломжтой`+(a.expiresAt?' · Дуусах: '+new Date(Number(a.expiresAt)).toLocaleString('mn-MN'): ' · Хугацаагүй');}
     else {title.textContent='Эрх дууссан';info.textContent='Ээлжит хичээл боловсруулахын тулд багц сонгоно уу.';}
   }
   async function refreshLessonAccess(){
@@ -295,13 +295,55 @@
     try{const r=await fetch('/api/lesson-package/check',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({orderNo})});const d=await r.json();if(!r.ok)throw new Error(d.error||'Шалгаж чадсангүй');if(d.status==='paid'){toast('Төлбөр баталгаажлаа. Эрх идэвхжлээ.','success');$('lpPackages').hidden=true;await refreshLessonAccess();}else toast('Төлбөр хараахан баталгаажаагүй байна.','error');}catch(e){toast(e.message,'error');}
   }
   function escHtml(v){return String(v==null?'':v).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+  // A4 хэвлэх хувилбар: захын зай зүүн 30 / баруун 10 / дээд 20 / доод 20 мм (Word-той ижил), хүснэгт хуудас таслахад толгойгоо давтана
   function printable(){
-    const P=C.prepareForExport(S.plan);let n=1;
-    const stages=P.stages.map(st=>`<section><h2>${escHtml(st.name)}</h2>${st.steps.map(x=>`<article><h3>${n++}. ${escHtml(x.title)} <small>(${x.minutes} минут)</small></h3><p><b>Зорилго:</b> ${escHtml(x.goal)}</p><p><b>Багш:</b> ${escHtml(x.teacher)}</p><p><b>Сурагч:</b> ${escHtml(x.student)}</p>${(x.questions&&x.questions.length)?`<p><b>Асуулт:</b></p><ul>${x.questions.map(q=>'<li>'+escHtml(q)+'</li>').join('')}</ul>`:''}${(x.tasks&&x.tasks.length)?`<p><b>Сурах бичгийн даалгавар:</b></p><ul>${x.tasks.map(q=>'<li>'+escHtml(q)+'</li>').join('')}</ul>`:''}<p><b>Хэрэглэгдэхүүн:</b> ${escHtml(x.materials)}</p><p><b>Үнэлгээ, үр дүн:</b> ${escHtml(x.result)}</p></article>`).join('')}</section>`).join('');
-    return `<!doctype html><html lang="mn"><meta charset="utf-8"><title>Ээлжит хичээлийн төлөвлөлт</title><style>body{font:14px Arial,sans-serif;color:#111;line-height:1.5;max-width:900px;margin:24px auto;padding:0 20px}h1{text-align:center;font-size:22px}h2{border-bottom:1px solid #333;padding-bottom:5px;margin-top:24px}article{page-break-inside:avoid;margin:12px 0 18px}h3{font-size:16px;margin-bottom:6px}p{margin:4px 0}small{font-weight:normal}@media print{body{margin:0 auto}.noprint{display:none}}</style><body><h1>ЭЭЛЖИТ ХИЧЭЭЛИЙН ТӨЛӨВЛӨЛТ</h1><p><b>Анги:</b> ${escHtml(P.grade)}　<b>Судлагдахуун:</b> ${escHtml(P.subject)}　<b>Хугацаа:</b> ${P.totalMinutes} минут</p><p><b>Нэгжийн сэдэв:</b> ${escHtml(P.unitTopic)}</p><p><b>Хичээлийн сэдэв:</b> ${escHtml(P.lessonTopic)}</p><p><b>Зорилго:</b> ${escHtml(P.goal)}</p><p><b>Зорилт:</b><br>${(P.objectives||[]).map(x=>'• '+escHtml(x)).join('<br>')}</p>${stages}<h2>Гэрийн даалгавар</h2><p>${escHtml(P.homework)}</p>${(P.textbookTasks&&P.textbookTasks.length)?`<h2>Хавсралт: сурах бичгийн дасгал, даалгавар</h2><ol>${P.textbookTasks.map(t=>'<li>'+escHtml(t)+'</li>').join('')}</ol>`:''}<h2>Үнэлгээ</h2><p>${(P.assessment||[]).map(escHtml).join('<br>')}</p><div class="noprint"><button onclick="window.print()">Хэвлэх</button></div></body></html>`;
+    const P=C.prepareForExport(S.plan), e=escHtml, arr=v=>Array.isArray(v)?v:(v?String(v).split(/\n+/):[]), li=a=>arr(a).map(x=>`<li>${e(x)}</li>`).join('');
+    let n=1;
+    const rows=P.stages.map(st=>`<tr class="st"><td colspan="4">${e(st.name)} <span>(${st.steps.reduce((a,x)=>a+x.minutes,0)} минут)</span></td></tr>`+st.steps.map(x=>`<tr>
+      <td class="c"><b>${n++}.</b> ${e(x.title)}<br><span class="m">${x.minutes} мин</span></td>
+      <td>${x.goal?`<p><i>Зорилго:</i> ${e(x.goal)}</p>`:''}<p>${e(x.teacher)}</p>${(x.questions&&x.questions.length)?`<p><i>Асуулт:</i></p><ul>${li(x.questions)}</ul>`:''}${(x.tasks&&x.tasks.length)?`<p><i>Сурах бичгийн даалгавар:</i></p><ul>${li(x.tasks)}</ul>`:''}</td>
+      <td><p>${e(x.student)}</p>${(x.tasks&&x.tasks.length)?`<p><i>Гүйцэтгэх:</i> ${e(x.tasks.map(t=>String(t).split(/[:：]/)[0].trim()).join('; '))}</p>`:''}</td>
+      <td>${x.materials?`<p><i>Хэрэглэгдэхүүн:</i> ${e(x.materials)}</p>`:''}${x.result?`<p><i>Үнэлгээ:</i> ${e(x.result)}</p>`:''}</td></tr>`).join('')).join('');
+    const css=`@page{size:A4;margin:20mm 10mm 20mm 30mm}*{box-sizing:border-box}html,body{margin:0;padding:0}body{font:12pt/1.35 "Times New Roman",Times,serif;color:#000}
+h1{text-align:center;font-size:15pt;margin:0 0 8pt;text-transform:uppercase}h2{font-size:12.5pt;margin:12pt 0 4pt;border-bottom:.75pt solid #000;padding-bottom:2pt;page-break-after:avoid}
+p{margin:0 0 3pt}ul,ol{margin:0 0 3pt;padding-left:14pt}li{margin:0}i{font-style:italic}
+table{width:100%;border-collapse:collapse;table-layout:fixed}th,td{border:.75pt solid #000;padding:3pt 4pt;vertical-align:top;overflow-wrap:anywhere;font-size:11pt}
+thead{display:table-header-group}tr{page-break-inside:avoid}th{background:#eee;text-align:center}.st{break-after:avoid;page-break-after:avoid}.st td{background:#f3f3f3;font-weight:bold}.st span{font-weight:normal}
+td.c{text-align:left}.m{font-size:10pt;color:#222}.info td{border:none;padding:1pt 0;font-size:12pt}.info td:first-child{width:36mm;font-weight:bold}.ob{page-break-inside:avoid}`;
+    return `<!doctype html><html lang="mn"><head><meta charset="utf-8"><title>Ээлжит хичээлийн төлөвлөлт</title><style>${css}</style></head><body>
+<h1>Ээлжит хичээлийн төлөвлөлт</h1>
+<table class="info"><tr><td>Анги:</td><td>${e(P.grade)}</td></tr><tr><td>Судлагдахуун:</td><td>${e(P.subject)}</td></tr><tr><td>Хугацаа:</td><td>${P.totalMinutes} минут</td></tr><tr><td>Нэгжийн сэдэв:</td><td>${e(P.unitTopic)}</td></tr><tr><td>Хичээлийн сэдэв:</td><td>${e(P.lessonTopic)}</td></tr><tr><td>Зорилго:</td><td>${e(P.goal)}</td></tr>${arr(P.objectives).length?`<tr><td>Зорилт:</td><td><ul>${li(P.objectives)}</ul></td></tr>`:''}${arr(P.methods).length?`<tr><td>Арга зүй:</td><td>${e(arr(P.methods).join(', '))}</td></tr>`:''}${arr(P.materials).length?`<tr><td>Хэрэглэгдэхүүн:</td><td>${e(arr(P.materials).join(', '))}</td></tr>`:''}</table>
+<h2>Хичээлийн явц</h2>
+<table><colgroup><col style="width:20%"><col style="width:34%"><col style="width:28%"><col style="width:18%"></colgroup><thead><tr><th>Алхам</th><th>Багшийн үйл ажиллагаа</th><th>Сурагчийн үйл ажиллагаа</th><th>Хэрэглэгдэхүүн, үнэлгээ</th></tr></thead><tbody>${rows}</tbody></table>
+<div class="ob"><h2>Гэрийн даалгавар</h2><p>${e(P.homework)}</p></div>
+${arr(P.assessment).length?`<div class="ob"><h2>Үнэлгээ</h2><ul>${li(P.assessment)}</ul></div>`:''}
+${arr(P.textbookTasks).length?`<div class="ob"><h2>Хавсралт: сурах бичгийн дасгал, даалгавар</h2><ol>${li(P.textbookTasks)}</ol></div>`:''}</body></html>`;
   }
-  function previewPlan(){if(!S.plan)return;const w=window.open('','_blank');if(!w){toast('Цонх нээхийг зөвшөөрнө үү','error');return;}w.document.open();w.document.write(printable());w.document.close();}
-  function printPlan(){if(!S.plan)return;const w=window.open('','_blank');if(!w){toast('Цонх нээхийг зөвшөөрнө үү','error');return;}w.document.open();w.document.write(printable());w.document.close();w.onload=()=>{w.focus();w.print();};}
+  // «Харах»: шинэ цонх нээхгүй (хөтөч хааж болзошгүй), хуудас дотор цаасан хэлбэрээр харуулна
+  function openView(thenPrint){
+    if(!S.plan)return;
+    let box=document.getElementById('lpViewer'); if(box)box.remove();
+    const scaleFit=()=>{const f=box.querySelector('iframe'),wrap=box.querySelector('.lp-paper');const avail=Math.min(box.clientWidth-24,794);const k=Math.min(1,avail/794);f.style.transform=`scale(${k})`;wrap.style.width=(794*k)+'px';wrap.style.height=(f.__h||1123)*k+'px';};
+    const frame=h('iframe',{title:'Ээлжит хичээлийн төлөвлөлт',style:'width:794px;border:0;background:#fff;transform-origin:0 0;display:block'});
+    const close=()=>{document.removeEventListener('keydown',onKey);box.remove();document.body.style.overflow='';};
+    const onKey=ev=>{if(ev.key==='Escape')close();};
+    const doPrint=()=>{try{frame.contentWindow.focus();frame.contentWindow.print();}catch(err){toast('Хэвлэх боломжгүй байна. Word татаж хэвлээрэй.','error');}};
+    box=h('div',{id:'lpViewer',role:'dialog','aria-modal':'true','aria-label':'Төлөвлөлтийг харах',style:'position:fixed;inset:0;z-index:9999;background:rgba(40,36,30,.72);display:flex;flex-direction:column;overflow:auto'},
+      h('div',{style:'position:sticky;top:0;z-index:1;display:flex;gap:8px;justify-content:center;flex-wrap:wrap;padding:10px;background:#2b2722'},
+        h('button',{type:'button',class:'btn-p',onclick:doPrint},'🖨 Хэвлэх'),
+        h('button',{type:'button',class:'btn-g',onclick:()=>{close();download();}},'⬇ Word татах'),
+        h('button',{type:'button',class:'btn-g',onclick:close},'✕ Хаах')),
+      h('div',{style:'padding:14px 0 30px;display:flex;justify-content:center'},h('div',{class:'lp-paper',style:'background:#fff;box-shadow:0 4px 24px rgba(0,0,0,.4);overflow:hidden'},frame)));
+    document.body.append(box); document.body.style.overflow='hidden'; document.addEventListener('keydown',onKey);
+    box.addEventListener('click',ev=>{if(ev.target===box)close();});
+    // A4 хуудасны хэмжээг (210мм ≈ 794px) хадгалж, багтахгүй үед масштаблана
+    frame.addEventListener('load',()=>{try{const d=frame.contentDocument;frame.style.height=Math.max(1123,d.documentElement.scrollHeight)+'px';frame.__h=Math.max(1123,d.documentElement.scrollHeight);}catch(err){}scaleFit();if(thenPrint)setTimeout(doPrint,200);});
+    window.addEventListener('resize',()=>{if(document.getElementById('lpViewer'))scaleFit();});
+    // A4 дотор захын зайг дүрслэн харуулахын тулд агуулгыг цаасан дотор (30/10/20/20 мм) харуулна
+    frame.srcdoc=printable().replace('<body>','<body style="padding:20mm 10mm 20mm 30mm">');
+  }
+  function previewPlan(){openView(false);}
+  function printPlan(){openView(true);}
 
   function reset() {
     S.plan = null; S.warnings = []; try { localStorage.removeItem(DRAFT_KEY); } catch (e) { /* */ }

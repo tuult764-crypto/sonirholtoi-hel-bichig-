@@ -125,7 +125,7 @@ async function checkOrder(){
  try{const code=$('lookup').value.trim();if(!code)throw new Error('Захиалгын код оруулна уу');
   const r=await api('lesson-package-status/'+encodeURIComponent(code));const p=r.payment,e=r.entitlement;
   $('status').textContent=[
-   'Захиалга: '+p.orderNo,'Хэрэглэгч: '+p.email,'Багц: '+(p.packageType==='week7'?'7 хоногийн багц':'5 хуудасны багц'),
+   'Захиалга: '+p.orderNo,'Хэрэглэгч: '+p.email,'Багц: '+(p.packageType==='week7'?'7 хоногийн багц':'5 ээлжит хичээлийн багц'),
    'Төлбөр: '+Number(p.amount).toLocaleString('mn-MN')+'₮','Төлбөрийн төлөв: '+p.paymentStatus,
    'Банкны лавлагаа: '+(p.bankReference||'Бүртгэгдээгүй'),
    'Эрхийн бүртгэл: '+(e?'байна':'ОЛДСОНГҮЙ'),'Эрхийн төлөв: '+(e?e.status:'—'),
