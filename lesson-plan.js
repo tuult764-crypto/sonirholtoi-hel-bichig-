@@ -145,6 +145,7 @@
       S.plan = C.sanitizePlan(data.plan, { totalMinutes: minutes });
       if (data.access) showAccess(data.access);
       S.warnings = data.warnings || [];
+      S.review = data.review || null;
       save(); render();
       $('lpStatus').textContent = '';
       $('lpResult').scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -219,6 +220,15 @@
       h('h3', { text: 'Боловсруулсан төлөвлөгөө' }),
       h('p', { text: 'Бүх хэсгийг засч болно. Алхам нэмэх, устгах, зөөх боломжтой. Алхмын тоо тогтмол биш.' })));
     if (S.warnings.length) root.append(h('div', { class: 'lp-warn' }, h('b', { text: 'Анхаарах: ' }), S.warnings.join(' · ')));
+    if (S.review) {
+      const rv = S.review, n = (rv.notes || []).length, u = (rv.unsure || []).length;
+      root.append(h('div', { class: 'lp-warn', style: 'background:#eef6ee;border-color:#9cc59c' },
+        h('b', { text: rv.done ? 'Онол, агуулгын автомат шалгалт хийгдсэн. ' : 'Автомат шалгалт хийгдсэнгүй — онол, нэр томьёо, бодлогын хариуг өөрөө шалгана уу. ' }),
+        rv.done ? h('span', { text: n ? n + ' алдаа засагдсан' + (u ? ', ' + u + ' зүйлийг өөрөө шалгана уу.' : '.') : 'Алдаа илрээгүй' + (u ? ', гэхдээ ' + u + ' зүйлийг өөрөө шалгана уу.' : '.') }) : null,
+        n ? h('ul', {}, ...rv.notes.map(x => h('li', { text: (x.where ? x.where + ': ' : '') + x.problem + (x.fix ? ' → ' + x.fix : '') }))) : null,
+        u ? h('ul', {}, h('b', { text: 'Өөрөө шалгах:' }), ...rv.unsure.map(x => h('li', { text: x }))) : null,
+        h('small', { class: 'lp-hint', text: 'AI алдаагүй гэж баталгаа өгч чадахгүй. Хичээлд ашиглахын өмнө онол, хариуг сурах бичгийн ном, багшийн гарын авлагатай тулгана уу.' })));
+    }
 
     root.append(h('div', { class: 'lp-card' },
       h('div', { class: 'lp-grid2' },
@@ -363,7 +373,7 @@ ${arr(P.textbookTasks).length?`<div class="ob"><h2>Хавсралт: сурах 
   function printPlan(){openView(true);}
 
   function reset() {
-    S.plan = null; S.warnings = []; try { localStorage.removeItem(DRAFT_KEY); } catch (e) { /* */ }
+    S.plan = null; S.warnings = []; S.review = null; try { localStorage.removeItem(DRAFT_KEY); } catch (e) { /* */ }
     render(); window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 

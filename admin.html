@@ -31,6 +31,17 @@ table{width:100%;border-collapse:collapse;display:block;overflow-x:auto}td,th{bo
 <p class="muted">Хүлээгдэж буй жагсаалтад харагдахгүй байгаа захиалга энд төлөвтэйгөө харагдана (хүлээгдэж байна, баталгаажсан, амжилтгүй).</p>
 <table><thead><tr><th>Захиалгын код</th><th>И-мэйл</th><th>Үйлчилгээ</th><th>Дүн</th><th>Төлөв</th><th>Огноо</th></tr></thead><tbody id="recentOrders"></tbody></table>
 
+<h2>Ажлын хуудасны загварууд</h2>
+<p class="muted">Энд тохируулсан нэгдсэн дизайнуудыг Багшийн туслахын ажлын хуудас бэлтгэгчид хэрэглэгчид сонгож хэрэглэнэ (хэвлэх, PDF, Word). Идэвхгүй болгосон загвар хэрэглэгчид харагдахгүй.</p>
+<div class="panel" id="tplPanel"><div id="tplList" style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px"></div>
+<div style="display:grid;grid-template-columns:minmax(260px,420px) 1fr;gap:16px;align-items:start" id="tplEditor">
+ <div class="f"><label>Нэр<input id="tName" maxlength="60"></label><label>Дараалал (бага нь түрүүлж)<input id="tSort" type="number" value="100"></label>
+ <label>Үндсэн өнгө<input id="tPrimary" type="color" value="#3b2fbf"></label><label>Тодотгох өнгө<input id="tAccent" type="color" value="#ffc21a"></label><label>Сул өнгө (дэвсгэр)<input id="tTint" type="color" value="#f3f1ff"></label>
+ <label>Үсэг<select id="tFont"></select></label><label>Толгой хэсэг<select id="tHeader"></select></label><label>Асуултын дугаар<select id="tNumbering"></select></label><label>Бичих мөр<select id="tLines"></select></label><label>Хуудасны хүрээ<select id="tBorder"></select></label><label>Хэсгийн гарчиг<select id="tLevel"></select></label>
+ <label><input id="tActive" type="checkbox" checked> Хэрэглэгчид харагдана</label>
+ <div><button type="button" id="tSave">Хадгалах</button> <button type="button" class="sec" id="tNew">Шинэ загвар</button> <button type="button" class="sec" id="tClone">Хуулбарлах</button></div><div class="msg" id="tMsg"></div></div>
+ <div style="background:#d9d6ee;border-radius:12px;padding:10px;overflow:hidden"><div id="tPaper" style="margin:0 auto;background:#fff;overflow:hidden"><iframe id="tPv" title="Загварын үлгэр" style="border:0;width:794px;height:700px;transform-origin:0 0;display:block"></iframe></div></div></div></div>
+<script src="/ws-render.js"></script>
 <h2>Анирын тэмдэглэл · Зохиол бичих</h2>
 <div class="panel f" style="max-width:900px">
   <input id="diaryId" type="hidden">
@@ -194,7 +205,30 @@ async function saveDiary(){
 }
 
 /* ---- нэвтрэлт: түлхүүр буруу бол нэвтрэх хэсэг нээлттэй хэвээр үлдэнэ ---- */
-async function reloadAll(){await Promise.allSettled([loadPayments(),loadRecent(),loadMaterials(),loadDiary()])}
+
+/* ---- Ажлын хуудасны загварууд ---- */
+let TPL=[],TSEL=null;
+async function wapi(path,body){const r=await fetch('/api/worksheet/admin/'+path,{method:body?'POST':'GET',headers:{'Content-Type':'application/json','x-admin-key':KEY},body:body?JSON.stringify(body):undefined});let j;try{j=await r.json()}catch{throw new Error('Сервер JSON хариу өгсөнгүй (HTTP '+r.status+')')}if(!r.ok)throw new Error(j.error||('Алдаа (HTTP '+r.status+')'));return j}
+function fillSel(id,list){const s=$(id);if(s.options.length)return;list.forEach(([v,t])=>s.add(new Option(t,v)))}
+function tplCfg(){return{primary:$('tPrimary').value,accent:$('tAccent').value,tint:$('tTint').value,font:$('tFont').value,header:$('tHeader').value,numbering:$('tNumbering').value,lines:$('tLines').value,border:$('tBorder').value,levelStyle:$('tLevel').value}}
+function tplPreview(){if(!window.WsRender)return;const f=$('tPv');f.srcdoc=WsRender.html(WsRender.sample(),tplCfg(),{school:'Сургуулийн нэр',footer:'Хөл хэсэг',studentFields:true,answerKey:false});const k=Math.min(1,($('tPaper').parentElement.clientWidth-20)/794);f.style.transform='scale('+k+')';$('tPaper').style.width=(794*k)+'px';$('tPaper').style.height=(700*k)+'px'}
+function tplFill(t){TSEL=t&&t.id||null;const c=(t&&t.config)||{};$('tName').value=t?t.name:'Шинэ загвар';$('tSort').value=t?t.sort:100;$('tActive').checked=t?t.active:true;
+ $('tPrimary').value=c.primary||'#3b2fbf';$('tAccent').value=c.accent||'#ffc21a';$('tTint').value=c.tint||'#f3f1ff';
+ [['tFont','font'],['tHeader','header'],['tNumbering','numbering'],['tLines','lines'],['tBorder','border'],['tLevel','levelStyle']].forEach(([id,k])=>{$(id).value=c[k]||$(id).options[0].value});tplPreview();$('tMsg').textContent=''}
+async function loadTpl(){
+ const O=WsRender.OPTIONS;fillSel('tFont',O.font);fillSel('tHeader',O.header);fillSel('tNumbering',O.numbering);fillSel('tLines',O.lines);fillSel('tBorder',O.border);fillSel('tLevel',O.levelStyle);
+ const box=$('tplList');
+ try{TPL=await wapi('templates');box.replaceChildren();
+  TPL.forEach(t=>box.append(mkBtn(t.name+(t.active?'':' (идэвхгүй)'),t.id===TSEL?'':'sec',()=>{tplFill(t);loadTplBtns()})));
+  if(!TSEL&&TPL.length)tplFill(TPL[0]);else if(!TPL.length)tplFill(null);loadTplBtns()
+ }catch(e){box.textContent='Загвар татаж чадсангүй: '+e.message}
+}
+function loadTplBtns(){const box=$('tplList');box.replaceChildren();TPL.forEach(t=>box.append(mkBtn(t.name+(t.active?'':' (идэвхгүй)'),t.id===TSEL?'':'sec',()=>{tplFill(t);loadTplBtns()})))}
+['tPrimary','tAccent','tTint','tFont','tHeader','tNumbering','tLines','tBorder','tLevel'].forEach(id=>$(id).addEventListener('input',tplPreview));
+$('tNew').onclick=()=>{tplFill(null);loadTplBtns()};
+$('tClone').onclick=()=>{TSEL=null;$('tName').value=$('tName').value+' (хуулбар)';loadTplBtns();$('tMsg').textContent='Хуулбар үүслээ — хадгалах дарна уу.'};
+$('tSave').onclick=async()=>{try{const r=await wapi('templates',{id:TSEL||undefined,name:$('tName').value,sort:$('tSort').value,active:$('tActive').checked,config:tplCfg()});TSEL=r.id;$('tMsg').className='msg ok';$('tMsg').textContent='Хадгалагдлаа';await loadTpl()}catch(e){$('tMsg').className='msg';$('tMsg').textContent=e.message}};
+async function reloadAll(){await Promise.allSettled([loadPayments(),loadRecent(),loadTpl(),loadMaterials(),loadDiary()])}
 async function login(){
  KEY=$('k').value.trim();
  if(KEY.length<12)return say('Админ түлхүүрээ шалгана уу (12+ тэмдэгт).');

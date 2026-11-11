@@ -459,6 +459,30 @@ const LESSON_SYS = `Та Монгол Улсын ерөнхий боловсро
 
 JSON БҮТЭЦ (талбаруудыг энэ дарааллаар бич, textbookTasks болон pictureTasks-ыг ЭХЭНД):
 {\"textbookTasks\":[\"\"],\"pictureTasks\":[{\"ref\":\"Дасгал 3 (х.45)\",\"type\":\"\",\"scene\":\"\",\"process\":[\"\"],\"prompts\":[\"\"],\"sample\":[\"\"],\"criteria\":[\"\"],\"materials\":\"\"}],\"subject\":\"\",\"lessonTopic\":\"\",\"unitTopic\":\"\",\"organization\":[\"Хичээлийн төрөл: ...\",\"Ажлын хэлбэр: ...\"],\"methods\":[\"\"],\"goal\":\"\",\"objectives\":[\"\"],\"materials\":[\"\"],\"stages\":[{\"name\":\"Эхлэл\",\"steps\":[{\"title\":\"\",\"minutes\":5,\"goal\":\"\",\"teacher\":\"\",\"student\":\"\",\"materials\":\"\",\"result\":\"\",\"questions\":[\"\"],\"tasks\":[\"\"],\"taskPlans\":[\"\"]}]},{\"name\":\"Өрнөл\",\"steps\":[]},{\"name\":\"Төгсгөл\",\"steps\":[]}],\"homework\":\"\",\"assessment\":[\"\"],\"warnings\":[]}`;
+const REVIEW_SYS = `Та сургуулийн ерөнхий боловсролын агуулга, онолын нарийн мэдлэгтэй ХАТУУ ШАЛГАГЧ редактор. Танд сурах бичгийн хуудас (зураг эсвэл эх) болон түүн дээр үндэслэн AI-ийн бэлтгэсэн ээлжит хичээлийн төлөвлөгөөний ноорог JSON өгнө. Төлөвлөгөөг мөр мөрөөр нь шалгаж, дараахийг засна:
+1. Онол, ойлголт, нэр томьёоны алдаа (тодорхойлолт буруу, ойлголт хольсон, түүхэн баримт, огноо, нэр буруу).
+2. Тооцоо, бодлого, хариуны алдаа: «Хариу»-г өөрөө дахин бодож шалга; зөв биш бол засна.
+3. Монгол хэлний зөв бичих дүрэм, үг хэллэг, зүйр цэцэн үг, уран зохиолын ишлэлийн алдаа.
+4. Сурах бичигт байхгүй, зохиомол мэдээлэл, зургаас харагдахгүй зүйлийг «харагдаж байна» гэж бичсэн эсэх. Ийм зүйлийг хас эсвэл харагдсан зүйлээр солино.
+5. Ангийн насны түвшинд таараагүй ойлголт, судлагдахууны онцлогт нийцээгүй арга.
+6. Дасгал, даалгаврын дугаар, хуудас сурах бичигтэй таарч байгаа эсэх.
+Дүрэм: мэдэхгүй, эргэлзэж буй зүйлийг баттай мэт бүү бич — «unsure» жагсаалтад оруулж, төлөвлөгөөнд ерөнхий, найдвартай хэлбэрээр үлдээ. Алдаагүй хэсгийг өөрчлөхгүй. Бүтэц, талбарын нэр, минутын нийлбэрийг хэвээр хадгал.
+Хариуг ЗӨВХӨН дараах JSON-оор өг: {\"plan\": <засагдсан бүрэн төлөвлөгөө, ноорогтой яг ижил бүтэцтэй>, \"reviewNotes\": [{\"where\": \"алхам/талбар\", \"problem\": \"юу буруу байсан\", \"fix\": \"яаж зассан\"}], \"unsure\": [\"багш өөрөө шалгах ёстой эргэлзээтэй зүйл\"]}. Алдаа олдоогүй бол reviewNotes хоосон [] байна.`;
+async function reviewPlan(info, images, draft) {
+  const ctl = new AbortController(), timer = setTimeout(() => ctl.abort(), 120e3);
+  try {
+    const content = [{ type: 'text', text: info + '\n\nААЛ-ИЙН НООРОГ ТӨЛӨВЛӨГӨӨ (шалгах):\n' + JSON.stringify(draft) }, ...images.map(u => ({ type: 'image_url', image_url: { url: u, detail: 'high' } }))];
+    const r = await fetch((process.env.OPENAI_BASE_URL || 'https://api.openai.com') + '/v1/chat/completions', {
+      method: 'POST', signal: ctl.signal, headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + process.env.OPENAI_API_KEY },
+      body: JSON.stringify({ model: LESSON_MODEL, temperature: 0.1, max_tokens: 11000, response_format: { type: 'json_object' }, messages: [{ role: 'system', content: REVIEW_SYS }, { role: 'user', content }] })
+    });
+    const d = await r.json().catch(() => ({}));
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    const out = JSON.parse(d.choices[0].message.content);
+    if (!out || typeof out.plan !== 'object' || !out.plan.stages) throw new Error('бүтэц буруу');
+    return { plan: out.plan, notes: Array.isArray(out.reviewNotes) ? out.reviewNotes : [], unsure: Array.isArray(out.unsure) ? out.unsure : [], usage: d.usage || {} };
+  } catch (e) { console.error('lesson review:', e.message); return null; } finally { clearTimeout(timer); }
+}
 app.post('/api/lesson-plan', limit(30, 3600e3), express.json({ limit: '25mb' }), ah(async (req, res) => {
   if (!process.env.OPENAI_API_KEY) return res.status(503).json({ error: 'AI хараахан тохируулагдаагүй байна (OPENAI_API_KEY).' });
   const b = req.body || {}, t = (v, n) => String(v == null ? '' : v).trim().slice(0, n);
@@ -481,7 +505,7 @@ app.post('/api/lesson-plan', limit(30, 3600e3), express.json({ limit: '25mb' }),
     r = await fetch((process.env.OPENAI_BASE_URL || 'https://api.openai.com') + '/v1/chat/completions', {
       method: 'POST', signal: ctl.signal,
       headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + process.env.OPENAI_API_KEY },
-      body: JSON.stringify({ model: LESSON_MODEL, temperature: 0.4, max_tokens: 11000, response_format: { type: 'json_object' }, messages: [{ role: 'system', content: LESSON_SYS }, { role: 'user', content }] })
+      body: JSON.stringify({ model: LESSON_MODEL, temperature: 0.25, max_tokens: 11000, response_format: { type: 'json_object' }, messages: [{ role: 'system', content: LESSON_SYS }, { role: 'user', content }] })
     });
     data = await r.json().catch(() => ({}));
   } catch (e) {
@@ -489,13 +513,18 @@ app.post('/api/lesson-plan', limit(30, 3600e3), express.json({ limit: '25mb' }),
   } finally { clearTimeout(timer); }
   if (!r.ok) { console.error('lesson-plan OpenAI:', r.status, data && data.error && data.error.message); return res.status(502).json({ error: 'AI үйлчилгээ хариулсангүй. Түр хүлээгээд дахин оролдоно уу.' }); }
   let raw; try { raw = JSON.parse(data.choices[0].message.content); } catch { return res.status(502).json({ error: 'AI-ийн хариуг уншиж чадсангүй. Дахин оролдоно уу.' }); }
+  // Хоёр дахь шатны шалгалт: онол, нэр томьёо, тооцоо, хариу, зохиомол мэдээллийг тусдаа дахин шалгаж засна
+  const rev = await reviewPlan(info, images, raw);
+  const reviewNotes = rev ? rev.notes.slice(0, 20).map(n => ({ where: t(n && n.where, 120), problem: t(n && n.problem, 300), fix: t(n && n.fix, 300) })).filter(n => n.problem) : [];
+  const unsure = rev ? rev.unsure.slice(0, 10).map(x => t(x, 300)).filter(Boolean) : [];
+  if (rev) { const dw = Array.isArray(raw.warnings) ? raw.warnings : []; raw = rev.plan; if (!Array.isArray(raw.warnings)) raw.warnings = dw; }
   const plan = lesson.sanitizePlan(raw, { totalMinutes: minutes, grade: inp.grade, subject: inp.subject || t(raw.subject, 60), lessonTopic: inp.lessonTopic, unitTopic: inp.unitTopic });
   if (lesson.allSteps(plan).length < 3) return res.status(502).json({ error: 'AI бүрэн төлөвлөгөө гаргаж чадсангүй. Дахин оролдоно уу.' });
   await q('UPDATE lesson_packages SET used_pages=used_pages+$2 WHERE id=$1', [access.package.id, 1]);
   await q('INSERT INTO lesson_usage(user_id,package_id,source_pages,input_tokens,output_tokens,model,created_at) VALUES($1,$2,$3,$4,$5,$6,$7)', [user.id, access.package.id, sourcePages, Number(data.usage?.prompt_tokens||0), Number(data.usage?.completion_tokens||0), LESSON_MODEL, Date.now()]);
   const warnings = (Array.isArray(raw.warnings) ? raw.warnings : []).slice(0, 5).map(w => t(w, 200)).filter(Boolean);
   if (images.length && !plan.textbookTasks.length) warnings.push('Зургаас дасгал, даалгавар илрээгүй. Хуудас тод, бүтэн орсон эсэхийг шалгаж, шаардлагатай бол эхийг «Сурах бичгийн эх» талбарт буулгана уу.');
-  res.json({ plan, warnings, usage: { sourcePages, inputTokens: Number(data.usage?.prompt_tokens||0), outputTokens: Number(data.usage?.completion_tokens||0) }, access: await currentLessonPackage(user.id) });
+  res.json({ plan, warnings, review: { done: !!rev, notes: reviewNotes, unsure }, usage: { sourcePages, inputTokens: Number(data.usage?.prompt_tokens||0) + Number(rev?.usage?.prompt_tokens||0), outputTokens: Number(data.usage?.completion_tokens||0) + Number(rev?.usage?.completion_tokens||0) }, access: await currentLessonPackage(user.id) });
 }));
 
 // ---- Анирын тэмдэглэл: админ бичиж/засаж, нийтэлсэн бичвэрийг сайт харуулна ----

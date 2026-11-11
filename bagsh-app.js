@@ -37,6 +37,7 @@ ALTER TABLE users ADD COLUMN IF NOT EXISTS free_hold BIGINT NOT NULL DEFAULT 0;
 ALTER TABLE users ADD COLUMN IF NOT EXISTS free_done BOOLEAN NOT NULL DEFAULT false;
 ALTER TABLE users ADD COLUMN IF NOT EXISTS credits INTEGER NOT NULL DEFAULT 0;
 ALTER TABLE payments ADD COLUMN IF NOT EXISTS qty INTEGER NOT NULL DEFAULT 1;
+CREATE TABLE IF NOT EXISTS ws_templates(id SERIAL PRIMARY KEY, name TEXT NOT NULL, config JSONB NOT NULL, active BOOLEAN NOT NULL DEFAULT true, sort INTEGER NOT NULL DEFAULT 100, created_at BIGINT NOT NULL);
 ALTER TABLE payments ADD COLUMN IF NOT EXISTS bank_reference TEXT; ALTER TABLE payments ADD COLUMN IF NOT EXISTS confirmed_at BIGINT;
 CREATE INDEX IF NOT EXISTS usage_user_ts ON usage(user_id, ts);
 CREATE INDEX IF NOT EXISTS payments_user ON payments(user_id);`);
@@ -130,12 +131,22 @@ router.post('/generate', auth, express.json({ limit: '10mb' }), ah(async (req, r
     res.status(502).json({ error: 'AI түр алдаа гаргалаа. Дахин оролдоно уу (эрх хасагдаагүй).' });
   }
 }));
-// багшийн засварласан асуултаас Word файл үүсгэх (төлбөр хасахгүй)
-router.post('/docx', auth, limit(40, 3600e3), express.json({ limit: '200kb' }), ah(async (req, res) => {
-  try { const d = sheet.clean({ title: req.body.title, levels: req.body.levels }); res.json({ docx: await sheet.make(d), title: d.title }); }
-  catch { res.status(400).json({ error: 'Асуулт дутуу байна' }); }
+// Загварууд: хэрэглэгчид идэвхтэй загваруудыг харуулна
+router.get('/templates', ah(async (req, res) => {
+  res.json((await q('SELECT id, name, config FROM ws_templates WHERE active ORDER BY sort, id')).rows.map(r => ({ id: r.id, name: r.name, config: sheet.cleanTemplate(r.config) })));
 }));
-
+async function tplOf(id) {
+  const r = id ? (await q('SELECT config FROM ws_templates WHERE id=$1', [parseInt(id) || 0])).rows[0] : null;
+  return sheet.cleanTemplate(r ? r.config : sheet.DEFAULT_TEMPLATES[0].config);
+}
+// багшийн засварласан/өөрөө бичсэн асуултаас Word файл үүсгэх (төлбөр хасахгүй)
+router.post('/docx', auth, limit(40, 3600e3), express.json({ limit: '300kb' }), ah(async (req, res) => {
+  try {
+    const d = sheet.clean({ title: req.body.title, subtitle: req.body.subtitle, levels: req.body.levels });
+    const o = req.body.options || {};
+    res.json({ docx: await sheet.make(d, await tplOf(req.body.template), { studentFields: o.studentFields !== false, answerKey: o.answerKey !== false, school: o.school, footer: o.footer }), title: d.title });
+  } catch { res.status(400).json({ error: 'Асуулт дутуу байна' }); }
+}));
 // ---- төлбөр ----
 async function activate(orderNo, bankReference = null) {
   const c = await pool.connect();
@@ -198,6 +209,23 @@ const adminAuth = (req, res, next) => {
   if (!valid) return res.status(401).json({ error: 'Админ түлхүүр буруу' });
   next();
 };
+// Админ: загвар удирдах (админ түлхүүртэй)
+router.get('/admin/templates', limit(60, 900e3), adminAuth, ah(async (req, res) => {
+  res.json((await q('SELECT id, name, config, active, sort FROM ws_templates ORDER BY sort, id')).rows.map(r => ({ ...r, config: sheet.cleanTemplate(r.config) })));
+}));
+router.post('/admin/templates', limit(60, 900e3), adminAuth, ah(async (req, res) => {
+  const b = req.body || {}, name = String(b.name || '').trim().slice(0, 60);
+  if (!name) return res.status(400).json({ error: 'Загварын нэрийг бичнэ үү.' });
+  const cfg = JSON.stringify(sheet.cleanTemplate(b.config)), sort = Math.max(0, Math.min(999, parseInt(b.sort) || 100)), active = b.active !== false;
+  if (b.id) {
+    const r = await q('UPDATE ws_templates SET name=$2, config=$3, sort=$4, active=$5 WHERE id=$1', [parseInt(b.id), name, cfg, sort, active]);
+    if (!r.rowCount) return res.status(404).json({ error: 'Загвар олдсонгүй' });
+    return res.json({ ok: true, id: parseInt(b.id) });
+  }
+  const r = await q('INSERT INTO ws_templates(name,config,sort,active,created_at) VALUES($1,$2,$3,$4,$5) RETURNING id', [name, cfg, sort, active, Date.now()]);
+  res.status(201).json({ ok: true, id: r.rows[0].id });
+}));
+
 router.get('/admin/pending', limit(60, 900e3), adminAuth, ah(async (req, res) => {
   res.json((await q(`SELECT p.order_no "orderNo", p.amount, p.created_at "createdAt", u.email FROM payments p JOIN users u ON u.id=p.user_id
     WHERE p.status='pending' AND p.invoice_id LIKE 'MANUAL-%' ORDER BY p.created_at DESC LIMIT 100`)).rows);
@@ -231,5 +259,9 @@ async function adminConfirmPayment(orderNo, bankReference) {
   return activate(orderNo, bankReference);
 }
 
-async function initBagsh() { if (!DATABASE_URL || !JWT_SECRET || JWT_SECRET.length < 24) throw new Error('BAGSH_DATABASE_URL эсвэл BAGSH_JWT_SECRET тохируулаагүй'); await init(); ready = true; console.log('Багшийн туслах өгөгдлийн сан бэлэн. QPay:', qpay.MODE); }
+async function seedTemplates() {
+  if ((await q('SELECT COUNT(*)::int n FROM ws_templates')).rows[0].n) return;
+  for (const t of sheet.DEFAULT_TEMPLATES) await q('INSERT INTO ws_templates(name,config,sort,created_at) VALUES($1,$2,$3,$4)', [t.name, JSON.stringify(sheet.cleanTemplate(t.config)), t.sort, Date.now()]);
+}
+async function initBagsh() { if (!DATABASE_URL || !JWT_SECRET || JWT_SECRET.length < 24) throw new Error('BAGSH_DATABASE_URL эсвэл BAGSH_JWT_SECRET тохируулаагүй'); await init(); await seedTemplates(); ready = true; console.log('Багшийн туслах өгөгдлийн сан бэлэн. QPay:', qpay.MODE); }
 module.exports = { router, initBagsh, pool, adminPendingPayments, adminRecentPayments, adminConfirmPayment };
